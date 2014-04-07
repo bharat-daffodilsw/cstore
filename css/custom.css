@@ -93,8 +93,9 @@ a {
 .username {
     color:#FFF;
     font-size:18px;
-    float:left;
-    margin:35px 3% 0 0;}
+    float:right;
+    margin:35px 3% 0 0;
+    width:14%;}
 
 .blank {
     width:15%;}
@@ -453,7 +454,8 @@ a {
     position:absolute;
     float: left;
     margin-top:14px;
-    width: 200px;}
+    width: 200px;
+    margin-left: 5px;}
 
 .setup ul li {
     padding:0;
@@ -658,8 +660,3 @@ a {
 .search_addcart {
     float:left;
     width:53%;}
-/* 7th april
-*/
-.signOut{
-    display:none;z-index:100000
-}

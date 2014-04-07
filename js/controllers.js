@@ -13,7 +13,10 @@ cstore.config(
             when('/store-manager', {
             templateUrl:'../store-manager',
             controller:'storeManager'
-        }).otherwise(
+        }).when('/product/:productid',{
+                templateUrl:'../productdetail',
+                controller:'productDetailCtrl'
+            }).otherwise(
 //            {"redirectTo":"/login.html"}
         );
     });
@@ -24,7 +27,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.displayData = {};
     if (!$scope.currentUser["data"]) {
         alert();
-        window.location.href("http://127.0.0.1:5400/login.html");
+        window.location.href="http://127.0.0.1:5400/login.html";
     }
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
@@ -50,6 +53,23 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
 //            window.location.href = "/#/home";
         }
     }
+    $scope.logOut = function () {
+        $appService.deleteAllCookie();
+        window.location.href="http://127.0.0.1:5400/login.html";
+    }
+
+    $scope.getProductCategories = function(){
+        var query={"table":"product_categories__cstore"};
+        query.columns=["name"];
+        var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(productCategoryData){
+            $scope.productCategories = productCategoryData.data;
+            //console.log(JSON.stringify(productCategoryData.data));
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getProductCategories();
 
 
 });
@@ -77,3 +97,18 @@ cstore.controller('storeManager', function ($scope, $appService) {
     $scope.getPopularProducts(8);
 });
 
+cstore.controller('productDetailCtrl',function($scope,$appService,$routeParams){
+    $scope.getProductDetail = function(){
+        var query={"table":"products__cstore"};
+        query.columns=["cost","description","image","name","short_description",{"expression":"product_category","columns":["_id","name"]},{"expression":"vendor","columns":["firstname"]},"quantity","soldcount"];
+        query.filter = {"_id":$routeParams.productid};
+        var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(productDetailData){
+            $scope.product = productDetailData.data[0];
+            //console.log(JSON.stringify(productDetailData));
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getProductDetail();
+});
