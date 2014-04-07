@@ -1,7 +1,10 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Administrator
- * Date: 7/4/14
- * Time: 11:21 AM
- * To change this template use File | Settings | File Templates.
- */
+'use strict';
+var BAAS_SERVER = "/rest";
+var ASK = "531829f47754938f0ecfd3c7";
+var OSK = "531972e05fccddeb550a04a3";
+
+// Declare app level module which depends on filters, and services
+var cstore = angular.module('cstore', ['ngRoute','$appstrap.services']);
+
+
+
