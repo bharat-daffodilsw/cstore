@@ -1,0 +1,18 @@
+{
+  "name": "CStore",
+  "version": "0.0.0",
+  "description": "CStore ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bharat-daffodilsw/cstore"
+  },
+  "author": "bharat bhushan",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/bharat-daffodilsw/cstore/issues"
+  }
+}
