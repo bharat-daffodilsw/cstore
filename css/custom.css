@@ -658,3 +658,8 @@ a {
 .search_addcart {
     float:left;
     width:53%;}
+/* 7th april
+*/
+.signOut{
+    display:none;z-index:100000
+}

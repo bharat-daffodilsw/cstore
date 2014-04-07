@@ -1,13 +1,13 @@
 cstore.directive('topHeader',['$appService', function($appService,$scope){
     return{
         restrict:"E",
-        template:'<div class="header"><div id="cm"> <img src="images/dropdown.png">' +
+        template:'<div class="header"><div ng-show="displayData.options" id="cm"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown"><div class="logo"><img src="images/logo.jpg">' +
-            '</div><store-header></store-header><div class="username"><div class="user">Rich Gold</div>' +
-            '<div id="my_profile"><img src="images/logout.png"><div id="sign_out" style="display:none;z-index:100000">' +
+            '</div><store-header ng-show="displayData.cart"></store-header><div class="username"><div class="user">Rich Gold</div>' +
+            '<div id="my_profile"><img src="images/logout.png"><div class="signOut" id="sign_out" ">' +
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a href>' +
             'Sign Out</a></li></ul></div></div></div><div class="logo1"><img src="images/logo.jpg"></div></div>' +
-            '<drop-down></drop-down><admin-menu></admin-menu></div>'
+            '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'
     }
 }]);
 
