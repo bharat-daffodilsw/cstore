@@ -1,11 +1,11 @@
 cstore.directive('topHeader',['$appService', function($appService,$scope){
     return{
         restrict:"E",
-        template:'<div id="cm"> <img src="images/17 12x12.png.png">' +
+        template:'<div class="header"><div id="cm"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown"><div class="logo"><img src="images/logo.jpg">' +
             '</div><store-header></store-header><div class="username"><div class="user">Rich Gold</div>' +
-            '<div id="my_profile"><img src="images/log out.png"><div id="sign_out" style="display:none;z-index:100000">' +
-            '<ul><li class="active"><a href="#">Profile</a></li><li><a href="#">Change Password</a></li><li><a href="#">' +
+            '<div id="my_profile"><img src="images/logout.png"><div id="sign_out" style="display:none;z-index:100000">' +
+            '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a href>' +
             'Sign Out</a></li></ul></div></div></div><div class="logo1"><img src="images/logo.jpg"></div></div>' +
             '<drop-down></drop-down><admin-menu></admin-menu></div>'
     }
@@ -29,7 +29,7 @@ cstore.directive('storeHeader',['$appService', function($appService,$scope){
             '<div class="search_sign"><a href><img src="images/Search.png"></a></div></div><div class="location">' +
             ' <a href><span class="where_i">I am in</span><span class="loction_img"><img src="images/location.png">' +
             '</span><span class="country">India</span></a></div><div class="add_cart"><div class="addcart_link"><a href>' +
-            '<img src="images/final cart.png"></a></div><div class="add_count">( 0 )</div></div></div>'
+            '<img src="images/finalcart.png"></a></div><div class="add_count">( 0 )</div></div></div>'
     }
 }]);
 
