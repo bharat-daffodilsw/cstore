@@ -24,7 +24,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.displayData = {};
     if (!$scope.currentUser["data"]) {
         alert();
-        window.location.href("http://127.0.0.1:5400/login.html");
+        window.location.href="http://127.0.0.1:5400/login.html";
     }
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
@@ -39,34 +39,56 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
 
-    if ($scope.displayData["role"]["storeManager"]) {
-        window.location.href="#!/store-manager";
-    } else if ($scope.displayData["role"]["admin"]) {
-        window.location.href="#!/admin";
-    }
     $scope.auth = function () {
         var currentSession = $scope.getSession();
         if (currentSession) {
 //            window.location.href = "/#/home";
         }
     }
-
-
+    $scope.getProductList = function () {
+        var query = {"table":"product_categories__cstore"};
+        query.columns = ["name"];
+        query.childs=[{"alias":"categoryWiseData","query":{"table":"products__cstore","columns":["name","image","short_description","cost"],"orders":{"__createdon":"desc"}},"relatedcolumn":"product_category","parentcolumn":"_id"}];
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        console.log(JSON.stringify(query));
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+            $scope.popularProducts = productData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getProductList();
 });
 cstore.controller('storeManager', function ($scope, $appService) {
-
     $scope.getPopularProducts = function (maxRow) {
         var query = {"table":"products__cstore"};
         query.columns = ["name", "image", "short_description", "cost", "soldcount"];
         query.orders = {"soldcount":"desc"};
         if (maxRow) {
-
             query.max_rows = maxRow;
         }
         else {
             query.max_rows = 8;
         }
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+            $scope.popularProducts = productData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getPopularProducts(8);
+});
+cstore.controller('allCategory', function ($scope, $appService) {
+
+    $scope.getProductList = function () {
+        var query = {"table":"product_categories__cstore"};
+        query.columns = ["name"];
+        query.child=[{"alias":"categoryWiseData","query":{"table":"products__cstore","columns":["name","image","short_description","cost"],"orders":{"__createdon":"desc"}},"relatedcolumn":"name"}];
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        console.log(JSON.stringify(query));
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
             $scope.popularProducts = productData.response.data;

@@ -1,5 +1,8 @@
 var ASK = "531829f47754938f0ecfd3c7";
 var OSK = "531972e05fccddeb550a04a3";
+var STOREMANAGER = "531d4aa0bd1515ea1a9bbaf6";
+var ADMIN = "531d4a79bd1515ea1a9bbaf5";
+
 var delete_cookie = function (name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
@@ -35,6 +38,26 @@ app.controller("loginCtrl", function ($scope) {
             dataType:dataType,
             async:true
         });
+    }
+    $scope.getCookie = function (usk) {
+        var c_value = document.cookie;
+        var c_start = c_value.indexOf(" " + usk + "=");
+        // alert('c_start='+c_start+" c_value="+c_value+" usk="+usk);
+        if (c_start == -1) {
+            c_start = c_value.indexOf(usk + "=");
+        }
+        if (c_start == -1) {
+            c_value = null;
+        }
+        else {
+            c_start = c_value.indexOf("=", c_start) + 1;
+            var c_end = c_value.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = c_value.length;
+            }
+            c_value = unescape(c_value.substring(c_start, c_end));
+        }
+        return c_value;
     }
     $scope.login = function () {
         var username = $("#username").val();
@@ -83,7 +106,6 @@ app.controller("loginCtrl", function ($scope) {
                         var firstname = callBackData.response.data[0].userid.firstname;
                         var userid = callBackData.response.data[0].userid._id;
                         if(callBackData.response.data[0] && callBackData.response.data[0]["storeid"]){
-
                             var storeid = callBackData.response.data[0]["storeid"]._id;
                         }
                         var c_name = "usk";
@@ -98,7 +120,16 @@ app.controller("loginCtrl", function ($scope) {
                             var c_name = "storeid";
                             document.cookie = c_name + "=" + escape(storeid);
                         }
-                        window.location.href='/';
+                        if($scope.getCookie("roleid")==ADMIN){
+                            window.location.href='cstore.daffodilapps.com/#!/admin';
+                        }
+                        else if($scope.getCookie("roleid")==STOREMANAGER) {
+                            window.location.href='http://127.0.0.1:5400/#!/store-manager';
+                        }
+                        else{
+                            window.location.href="http://127.0.0.1:5400/login.html";
+                        }
+
                     }, function (err) {
 
                         alert("error while making request");
