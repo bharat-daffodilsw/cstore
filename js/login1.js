@@ -3,10 +3,9 @@ var OSK = "531972e05fccddeb550a04a3";
 var delete_cookie = function (name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
-var app=angular.module("myApp",[]);
-app.controller("loginCtrl",function($scope){
- $scope.getDataFromJQuery=function(url, requestBody, callType, dataType, callback, errcallback) {
-        console.log("called");
+var app = angular.module("myApp", []);
+app.controller("loginCtrl", function ($scope) {
+    $scope.getDataFromJQuery = function (url, requestBody, callType, dataType, callback, errcallback) {
         $.support.cors = true;
         $.ajax({
             type:callType,
@@ -14,20 +13,15 @@ app.controller("loginCtrl",function($scope){
             data:requestBody,
             crossDomain:true,
             success:function (returnData, status, xhr) {
-                console.log("done");
                 callback(returnData);
             },
             error:function (jqXHR, exception) {
-                console.log("ex"+exception);
-                console.log("error in ajax"+JSON.stringify(jqXHR));
                 if (jqXHR.status == 417 && jqXHR.responseText) {
                     var error_resp = JSON.parse(jqXHR.responseText);
                     if (error_resp.code && error_resp.code == 34) {
                         delete_cookie('usk');
-                        console.log("before login");
                     }
                 }
-
                 if (errcallback) {
                     errcallback(jqXHR, exception);
                 } else {
@@ -64,22 +58,22 @@ app.controller("loginCtrl",function($scope){
         params.password = password;
         params.ask = ASK;
         params.osk = OSK;
-//    http://cstore.daffodilapps.co/m
-        console.log("65"+params);
         $scope.getDataFromJQuery("/rest/login", params, "GET", "JSON", function (callBackData) {
-            console.log("errrr");
-            loginUserData = callBackData;
-            if (!callBackData.usk) {
-                alert("Username and Password didn't match ");
-                return;
+            if (callBackData.code && callBackData.code == 8) {
+                alert(callBackData.response);
+                return false;
             }
-            else {
-                var usk = loginUserData.usk;
+            else if (callBackData.code && callBackData.code == 3) {
+                alert(callBackData.response);
+                return false;
+            }
+            else if (callBackData.code && callBackData.code == 200) {
+                var usk = callBackData.response ? callBackData.response.usk : null;
                 if (usk) {
-                    var query = {"table": "user_profiles__cstore"};
+                    var query = {"table":"user_profiles__cstore"};
                     query.columns = ["userid", "roleid", "storeid"];
-                    query.filter = {"userid": "{_CurrentUserId}"};
-                    var params = {"query": JSON.stringify(query), "ask": ASK, "osk": OSK, "usk": usk};
+                    query.filter = {"userid":"{_CurrentUserId}"};
+                    var params = {"query":JSON.stringify(query), "ask":ASK, "osk":OSK, "usk":usk};
                     $scope.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
                         delete_cookie("usk");
                         delete_cookie("userid");
@@ -88,7 +82,10 @@ app.controller("loginCtrl",function($scope){
                         var roleid = callBackData.response.data[0].roleid._id;
                         var firstname = callBackData.response.data[0].userid.firstname;
                         var userid = callBackData.response.data[0].userid._id;
-                        var storeid = callBackData.data[0].storeid._id;
+                        if(callBackData.response.data[0] && callBackData.response.data[0]["storeid"]){
+
+                            var storeid = callBackData.response.data[0]["storeid"]._id;
+                        }
                         var c_name = "usk";
                         document.cookie = c_name + "=" + escape(usk);
                         var c_name = "roleid";
@@ -101,17 +98,21 @@ app.controller("loginCtrl",function($scope){
                             var c_name = "storeid";
                             document.cookie = c_name + "=" + escape(storeid);
                         }
+                        window.location.href='/';
                     }, function (err) {
 
-                        alert(JSON.stringify(err));
+                        alert("error while making request");
                     });
 
                 }
-                // window.location.href = "/#/home";
+
+            }
+            else{
+               /*for messgae*/
             }
 
         }, function (jqxhr, error) {
-            alert("bbb"+JSON.stringify(jqxhr));
+            alert("error while making request");
         });
 
     }
