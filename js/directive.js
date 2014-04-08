@@ -66,18 +66,32 @@ cstore.directive('popularProducts',['$appService', function($appService,$scope){
         restrict:"E",
         template:'<div class="category"><div class="pop_products">Popular products <a href="/#/product">( View all )</a>' +
             '</div><div class="products" ng-repeat="product in popularProducts"><div class="products_img">' +
-            '<a href="/#/product/{{product._id}}"><img title="{{product.name}}" src="/rest/file/render?filekey={{product.image[0].key}}&ask=531829f47754938f0ecfd3c7&osk=531972e05fccddeb550a04a3"/>' +
+            '<a href="/#/product?productid={{product._id}}"><img title="{{product.name}}" src="/rest/file/render?filekey={{product.image[0].key}}&ask=531829f47754938f0ecfd3c7&osk=531972e05fccddeb550a04a3"/>' +
             '</a></div><div class="name"><a href="/#/product/{{product._id}}">{{product.name}}</a></div><div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href="/#/product/{{product._id}}">{{product.cost.amount | currency}}</a></div>' +
             '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div>'
     }
 }]);
 
+cstore.directive('allproducts',['$appService', function($appService,$scope){
+    return{
+        restrict:'E',
+        template:'<div class="m_bar"><div class="category" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
+            '<div class="pop_products">{{product.name}} <a href="">( View all )</a></div><div class="products" ng-repeat="childproduct in product.categoryWiseData">' +
+            '<div class="products_img"><a href="#!/product/{{childproduct._id}}"><img src></a></div><div class="name"><a href="#!/product/{{childproduct._id}}">' +
+            '{{childproduct.name}}</a></div><div class="product_details">' +
+            '{{childproduct.short_description}}</div><div class="price">' +
+            '<a href="#!/product/{{childproduct._id}}">{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>Add To Cart</a></div></div>' +
+            '</div></div>'
+    }
+}]);
+
+
 cstore.directive('productDetail',['$appService', function($appService,$scope){
     return{
         restrict:"E",
         template:'<div class="category"><div class="pop_products">{{product.name}}</div><div class="img_product">' +
-            '<img title="{{product.name}}" src="/rest/file/render?filekey={{product.image[0].key}}&ask=531829f47754938f0ecfd3c7&osk=531972e05fccddeb550a04a3"/></div>' +
+            '<img title="{{product.name}}" ng-src= /></div>' +
             '<div class="details_product"><div class="short_details">{{product.short_description}}</div><div class="Qty">' +
             '<select class="form-control search_select"><option>Qty*</option><option>1</option><option>2</option><option>3</option>' +
             '<option>4</option><option>5</option></select><div class="final_price">{{product.cost.amount}}</div><div class="add_to_btn">' +
