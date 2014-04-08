@@ -66,7 +66,9 @@ cstore.directive('popularProducts',['$appService', function($appService,$scope){
         restrict:"E",
         template:'<div class="category"><div class="pop_products">Popular products <a href="/#/product">( View all )</a>' +
             '</div><div class="products" ng-repeat="product in popularProducts"><div class="products_img">' +
+
             '<a href="/#/product?productid={{product._id}}"><img title="{{product.name}}" src="/rest/file/render?filekey={{product.image[0].key}}&ask=531829f47754938f0ecfd3c7&osk=531972e05fccddeb550a04a3"/>' +
+
             '</a></div><div class="name"><a href="/#/product/{{product._id}}">{{product.name}}</a></div><div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href="/#/product/{{product._id}}">{{product.cost.amount | currency}}</a></div>' +
             '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div>'

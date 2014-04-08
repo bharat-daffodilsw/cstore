@@ -118,6 +118,33 @@ appStrapServices.factory('$appService', [
                 async:true
             });
         }
+        $appService.setUrls = function (data, size, height) {
+
+            for (var i = 0; i < data.length; i++) {
+                if (size) {
+                    if (height) {
+                        data[i]["imageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":' + size + ',"height":' + height + '}&convert={"type":"png"}';
+                    }
+                    else {
+
+                        data[i]["imageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":' + size + '}&convert={"type":"png"}';
+                    }
+                }
+                else {
+                    if (height) {
+                        data[i]["imageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":216,"height":' + height + '}&convert={"type":"png"}';
+                    }
+
+                    else {
+                        data[i]["imageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":216}&convert={"type":"png"}';
+                    }
+                }
+
+                console.log(data[i]["imageUrl"]);
+
+            }
+            return angular.copy(data);
+        }
         $appService.getSession = function () {
             var currentSession = {};
             if (!$appService.getCookie("usk")) {
