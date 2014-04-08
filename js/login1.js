@@ -121,16 +121,17 @@ app.controller("loginCtrl", function ($scope) {
                             var c_name = "storeid";
                             document.cookie = c_name + "=" + escape(storeid);
                         }
-                        if($scope.getCookie("roleid")==ADMIN){
-                            window.location.href="http://"+window.location.host+'/#!/admin';
-                        }
-                        else if($scope.getCookie("roleid")==STOREMANAGER) {
-                            window.location.href="http://"+window.location.host+'/#!/store-manager';
-                        }
-                        else{
-                            window.location.href="http://"+window.location.host+'/login.html';
-
-                        }
+//                        if($scope.getCookie("roleid")==ADMIN){
+//                            window.location.href="http://"+window.location.host+'/#!/admin';
+//                        }
+//                        else if($scope.getCookie("roleid")==STOREMANAGER) {
+//                            window.location.href="http://"+window.location.host+'/#!/store-manager';
+//                        }
+//                        else{
+//                            window.location.href="http://"+window.location.host+'/login.html';
+//
+//                        }
+                        window.location.href="/";
 
                     }, function (err) {
 
