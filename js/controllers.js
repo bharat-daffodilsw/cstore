@@ -135,9 +135,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
 
 
 });
-//cstore.controller('storeManager', function ($scope, $appService) {
-//
-//});
+
 cstore.controller('allCategory', function ($scope, $appService) {
 
     $scope.getProductList = function () {

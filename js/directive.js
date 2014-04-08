@@ -3,8 +3,10 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
         restrict:"E",
         template:'<div class="header"><div ng-show="displayData.options" id="cm"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown"><div class="logo"><img src="images/logo.jpg">' +
+
             '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo1"><img src="images/logo.jpg"></div><div class="username"><div ng-show="displayData.loggedIn" class="user">Rich Gold</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile"><img src="images/logout.png"><div class="signOut" id="sign_out" ">' +
+
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
             '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'
@@ -35,16 +37,35 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
 cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div id="primary" style="display:none;z-index:100000"><ul ><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
+
+        template:'<div id="primary" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
             '</ul></div>'
     }
 }]);
+/*cstore.directive('activeLink', ['$location', function(location) {
+ return {
+ restrict: 'A',
+ link: function(scope, element, attrs, controller) {
+ var clazz = attrs.activeLink;
+ var path = attrs.href;
+ path = path.substring(1); //hack because path does bot return including hashbang
+ scope.location = location;
+ scope.$watch('location.path()', function(newPath) {
+ if (path === newPath) {
+ element.addClass(clazz);
+ } else {
+ element.removeClass(clazz);
+ }
+ });
+ }
 
+ };
+ }]);*/
 
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="category"><div class="pop_products">Popular products <a href="/#/all-products">( View all )</a>' +
+        template:'<div class="category"><div class="pop_products">Popular products <a href="#!/all-products">( View all )</a>' +
             '</div><div class="products" ng-repeat="product in popularProducts"><div class="products_img">' +
 
 
@@ -69,7 +90,6 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
             '</div></div>'
     }
 }]);
-
 
 cstore.directive('productDetail', ['$appService', function ($appService, $scope) {
     return{
@@ -107,7 +127,15 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
 cstore.directive('citySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="qty_select" style="width: 266px;" ng-model="vendor.city" ng-options="city.name for city in cities"></select>'
+        template:'<select class="qty_select" style="width: 266px;" ng-model="vendor.city" ' +
+            'ng-options="city.name for city in cities"></select>',
+        compile:function () {
+            return {
+                pre:function () {
+                    $appService.getCities();
+                }
+            }
+        }
     }
 }]);
 
@@ -187,6 +215,10 @@ cstore.directive('addvendor', ['$appService', function ($appService, $scope) {
 
     }
 }]);
+
+cstore.directive('editvendor',['$appService', function($appService,$scope){
+}]);
+
 cstore.directive('productCategoryDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict:'E',
