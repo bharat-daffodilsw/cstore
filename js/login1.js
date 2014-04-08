@@ -102,6 +102,7 @@ app.controller("loginCtrl", function ($scope) {
                         delete_cookie("userid");
                         delete_cookie("firstname");
                         delete_cookie("storeid");
+                        console.log(window.location.host);
                         var roleid = callBackData.response.data[0].roleid._id;
                         var firstname = callBackData.response.data[0].userid.firstname;
                         var userid = callBackData.response.data[0].userid._id;
@@ -121,13 +122,14 @@ app.controller("loginCtrl", function ($scope) {
                             document.cookie = c_name + "=" + escape(storeid);
                         }
                         if($scope.getCookie("roleid")==ADMIN){
-                            window.location.href='cstore.daffodilapps.com/#!/admin';
+                            window.location.href="http://"+window.location.host+'/#!/admin';
                         }
                         else if($scope.getCookie("roleid")==STOREMANAGER) {
-                            window.location.href='http://127.0.0.1:5400/#!/store-manager';
+                            window.location.href="http://"+window.location.host+'/#!/store-manager';
                         }
                         else{
-                            window.location.href="http://127.0.0.1:5400/login.html";
+                            window.location.href="http://"+window.location.host+'/login.html';
+
                         }
 
                     }, function (err) {
