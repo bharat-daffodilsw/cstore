@@ -66,7 +66,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
-            $scope.productCategories = productCategoryData.data;
+            $scope.productCategories = productCategoryData.response.data;
             //console.log(JSON.stringify(productCategoryData.data));
         }, function (jqxhr, error) {
         })
@@ -97,6 +97,7 @@ cstore.controller('storeManager', function ($scope, $appService) {
     }
     $scope.getPopularProducts(8);
 });
+
 cstore.controller('allCategory', function ($scope, $appService) {
 
     $scope.getProductList = function () {

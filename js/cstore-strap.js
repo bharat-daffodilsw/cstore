@@ -167,6 +167,42 @@ appStrapServices.factory('$appService', [
             $appService.delete_cookie("storeid");
             $appService.delete_cookie("storename");
         }
+        $appService.getCities =function(){
+            var cities = {};
+            var query = {"table":"cities__cstore"};
+            query.columns = ["name",{"expression":"stateid","columns":["_id","name"]}];
+            var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            var serviceUrl = "/rest/data";
+            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(cityData){
+                cities = cityData.response.data;
+            }, function (jqxhr, error) {
+            })
+            return cities;
+        }
+        $appService.getStates =function(){
+            var states = {};
+            var query = {"table":"states__cstore"};
+            query.columns = ["name",{"expression":"countryid","columns":["_id","name"]}];
+            var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            var serviceUrl = "/rest/data";
+            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(stateData){
+                states = stateData.response.data;
+            }, function (jqxhr, error) {
+            })
+            return states;
+        }
+        $appService.getCountries =function(){
+            var countries = {};
+            var query = {"table":"countries__cstore"};
+            query.columns = ["name","_id"];
+            var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            var serviceUrl = "/rest/data";
+            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(countryData){
+                countries = countryData.response.data;
+            }, function (jqxhr, error) {
+            })
+            return countries;
+        }
         return $appService;
     }
 ]);
