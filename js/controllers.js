@@ -20,6 +20,9 @@ cstore.config(
             }).when('/product', {
                 templateUrl:'../productdetail',
                 controller:'productDetailCtrl'
+            }).when('/product-category', {
+                templateUrl:'../product-category',
+                controller:'productCategoryDetailCtrl'
             }).otherwise(
 //            {"redirectTo":"/login.html"}
         );
@@ -45,14 +48,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         $scope.displayData["menu"] = true;
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
-
     $scope.auth = function () {
         var currentSession = $scope.getSession();
         if (currentSession) {
 //            window.location.href = "/#/home";
         }
     }
-
 
     $scope.logOut = function () {
         $appService.deleteAllCookie();
@@ -117,9 +118,9 @@ cstore.controller('allCategory', function ($scope, $appService) {
 
                     rawData[i]["categoryWiseData"] = $appService.setUrls(rawData[i]["categoryWiseData"]);
                 }
-                console.log("bbb"+rawData[i]["categoryWiseData"]);
+                console.log("bbb" + rawData[i]["categoryWiseData"]);
             }
-            $scope.products=rawData;
+            $scope.products = rawData;
 
         }, function (jqxhr, error) {
             alert("exception in making request");
@@ -142,4 +143,61 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
         })
     }
     $scope.getProductDetail();
+});
+cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
+    $scope.categoryData = {"loadingData":false};
+    $scope.products = [];
+    $scope.getProductDetail = function (cursor, filter) {
+        if ($scope.categoryData.loadingData) {
+            return false;
+        }
+        $scope.categoryData.loadingData = true;
+        var query = {"table":"products__cstore"};
+        query.columns = ["cost", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, {"expression":"vendor", "columns":["firstname"]} ];
+        if (filter && filter != undefined && filter != "undefined") {
+
+            query.filter = {"product_category._id":filter};
+        }
+        else {
+            alert("Not Valid");
+            return false;
+        }
+        query.maxrow = 8;
+        query.cursor = cursor;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
+            var rawData = $appService.setUrls(productDetailData.response.data);
+
+            if ($scope.products.length) {
+                for (var i = 0; i < rawData.length; i++) {
+                    $scope.products.push(rawData[i]);
+                }
+            }
+            if (!$scope.products.length) {
+                $scope.products = rawData;
+            }
+
+            console.log("data" + JSON.stringify($scope.products));
+            $scope.categoryData.loadingData = false;
+            $scope.cursor = productDetailData.response.cursor;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getProductDetail($scope.cursor, $routeParams.q);
+                        }
+                    }
+                }
+            });
+
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getInitialData = function (cursor) {
+        $scope.getProductDetail(cursor, $routeParams.q)
+    }
 });

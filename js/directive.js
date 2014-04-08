@@ -77,7 +77,7 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:'E',
         template:'<div class="m_bar"><div class="category" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
-            '<div class="pop_products">{{product.name}} <a href="">( View all )</a></div><div class="products" ng-repeat="childproduct in product.categoryWiseData">' +
+            '<div class="pop_products">{{product.name}} <a href="#!/product-category?q={{product._id}}">( View all )</a></div><div class="products" ng-repeat="childproduct in product.categoryWiseData">' +
             '<div class="products_img"><a href="#!/product?productid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/product?productid={{childproduct._id}}">' +
             '{{childproduct.name}}</a></div><div class="product_details">' +
             '{{childproduct.short_description}}</div><div class="price">' +
@@ -201,5 +201,23 @@ cstore.directive('addvendor', ['$appService', function ($appService, $scope) {
             }
         }
 
+    }
+}]);
+cstore.directive('productCategoryDetail', ['$appService', function ($appService, $scope) {
+    return{
+        restrict:'E',
+        template:'<div class="m_bar"><div class="category"><div class="pop_products">{{products[0].product_category.name}}</div>' +
+            '<div class="products" ng-repeat="product in products"><div class="products_img"><a href="#!/product?productid={{product._id}}">' +
+            '<img src="{{product.imageUrl}}"/></a>' +
+            '</div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
+            '<div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>' +
+            'Add To Cart</a></div></div></div></div><div id="scrollDiv"></div>',
+        compile:function () {
+            return {
+                pre:function ($scope) {
+                    $scope.getInitialData(0);
+                }
+            }
+        }
     }
 }]);
