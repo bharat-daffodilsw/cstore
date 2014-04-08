@@ -130,8 +130,7 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
-            $scope.product = productDetailData.data[0];
-            //console.log(JSON.stringify(productDetailData));
+            $scope.product = $appService.setUrls(productDetailData.response.data);
         }, function (jqxhr, error) {
         })
     }
