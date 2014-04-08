@@ -3,8 +3,8 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
         restrict:"E",
         template:'<div class="header"><div ng-show="displayData.options" id="cm"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown"><div class="logo"><img src="images/logo.jpg">' +
-            '</div><store-header ng-show="displayData.cart"></store-header><div class="logo1"><img src="images/logo.jpg"></div><div class="username"><div class="user">Rich Gold</div>' +
-            '<div id="my_profile"><img src="images/logout.png"><div class="signOut" id="sign_out" ">' +
+            '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo1"><img src="images/logo.jpg"></div><div class="username"><div ng-show="displayData.loggedIn" class="user">Rich Gold</div>' +
+            '<div ng-show="displayData.loggedIn" id="my_profile"><img src="images/logout.png"><div class="signOut" id="sign_out" ">' +
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
             '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'

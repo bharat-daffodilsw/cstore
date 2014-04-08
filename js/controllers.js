@@ -25,6 +25,9 @@ cstore.config(
             }).when('/product-category', {
                 templateUrl:'../product-category',
                 controller:'productCategoryDetailCtrl'
+            }).when('/vendors', {
+                templateUrl:'../vendors',
+                controller:'vendorCtrl'
             }).otherwise(
 //            {"redirectTo":"/login.html"}
         );
@@ -33,21 +36,24 @@ cstore.config(
 cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.currentUser = {"data":""};
     $scope.currentUser["data"] = $appService.getSession();
+    console.log(JSON.stringify($scope.currentUser["data"]));
     $scope.displayData = {};
-    if (!$scope.currentUser["data"]) {
-        alert();
+    if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
         window.location.href = "#!/login";
+        return false;
     }
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
         $scope.displayData["menu"] = false;
+        $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":false, "storeManager":true};
     }
     else {
         $scope.displayData["options"] = false;
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = true;
+        $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
     $scope.auth = function () {
@@ -59,7 +65,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
 
     $scope.logOut = function () {
         $appService.deleteAllCookie();
-        window.location.href = "http://" + window.location.host + '/login.html';
+        $scope.displayData["options"] = false;
+        $scope.displayData["cart"] = false;
+        $scope.displayData["menu"] = false;
+        $scope.displayData["role"] = {"admin":false, "storeManager":false};
+        $scope.displayData["loggedIn"] = false;
+
+        window.location.href = "#!/login";
     }
 
     $scope.getProductCategories = function () {
@@ -97,39 +109,28 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
             alert("exception in making request");
         })
     }
-    $scope.getAllVendors = function () {
-        var query = {"table":"vendors__cstore"};
-        query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
-        query.max_rows = 10;
-        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
-        var serviceUrl = "/rest/data";
-        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
-            $scope.vendors = vendorData.response.data;
-        }, function (jqxhr, error) {
-            alert("exception in making request");
-        })
-    }
-    $scope.setAdminView = function (viewName) {
-        var c_name = "adminView"
-        if (viewName) {
 
-            document.cookie = c_name + "=" + escape(viewName);
+    if ($scope.currentUser["data"]) {
+        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+
+            $scope.getPopularProducts(8);
+
+            $scope.homeView = {"storeManager":true, "admin":false};
         }
-        else {
-            document.cookie = c_name + "=" + escape("vendor");
+        else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
+            $scope.homeView = {"storeManager":false, "admin":true};
+            var pathToBeSet = $appService.getCookie("adminView");
+            if (pathToBeSet) {
+                $appService.setAdminView(pathToBeSet);
+            }
+            else {
+                $appService.setAdminView("vendor");
+            }
+
         }
-
     }
-    if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
-
-        $scope.getPopularProducts(8);
-
-        $scope.homeView = {"storeManager":true, "admin":false};
-    }
-    else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
-        $scope.homeView = {"storeManager":false, "admin":true};
-
-        $scope.getAllVendors();
+    else {
+        window.location.href = "#!/login";
     }
 
 
@@ -241,9 +242,6 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
     }
 });
 cstore.controller('loginCtrl', function ($scope, $appService, $location) {
-    if ($appService.getSession()) {
-        window.location.href = "/";
-    }
     $scope.login = function () {
         var username = $("#username").val();
         var password = $("#password").val();
@@ -320,6 +318,22 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         });
 
     }
+
+});
+cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
+    $scope.getAllVendors = function () {
+        var query = {"table":"vendors__cstore"};
+        query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
+        query.max_rows = 10;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+            $scope.vendors = vendorData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllVendors();
 
 });
 

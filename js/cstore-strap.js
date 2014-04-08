@@ -147,6 +147,17 @@ appStrapServices.factory('$appService', [
             }
             return angular.copy(data);
         }
+        $appService.setAdminView = function (viewName) {
+            var c_name = "adminView"
+            if (viewName) {
+                document.cookie = c_name + "=" + escape(viewName);
+                window.location.href = "#!/" + viewName;
+            }
+            else {
+                document.cookie = c_name + "=" + escape("vendor");
+                window.location.href = "#!/vendor";
+            }
+        }
         $appService.getSession = function () {
             var currentSession = {};
             if (!$appService.getCookie("usk")) {
