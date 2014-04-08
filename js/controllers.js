@@ -14,13 +14,13 @@ cstore.config(
             templateUrl:'../store-manager',
             controller:'storeManager'
 
-        }).when('/all-products',{
+        }).when('/all-products', {
                 templateUrl:'../all-products',
                 controller:'allCategory'
-            }).when('/product',{
-         templateUrl:'../productdetail',
+            }).when('/product', {
+                templateUrl:'../productdetail',
                 controller:'productDetailCtrl'
-        }).otherwise(
+            }).otherwise(
 //            {"redirectTo":"/login.html"}
         );
     });
@@ -52,7 +52,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
 //            window.location.href = "/#/home";
         }
     }
-
 
 
     $scope.logOut = function () {
@@ -104,17 +103,24 @@ cstore.controller('allCategory', function ($scope, $appService) {
         query.columns = ["name"];
 
         query.childs = [
-            {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id"}];
+            {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id"}
+        ];
 
 
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         console.log(JSON.stringify(query));
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
-            $scope.products = productData.response.data;
-            for(var i = 0; i<$scope.products.length; i ++){
-                //$scope.products.categoryWiseData = $appService.setUrls(productData.response.data);
+            var rawData = productData.response.data;
+            for (var i = 0; i < rawData.length; i++) {
+                if (rawData[i] && rawData[i]["categoryWiseData"] && rawData[i]["categoryWiseData"].length) {
+
+                    rawData[i]["categoryWiseData"] = $appService.setUrls(rawData[i]["categoryWiseData"]);
+                }
+                console.log("bbb"+rawData[i]["categoryWiseData"]);
             }
+            $scope.products=rawData;
+
         }, function (jqxhr, error) {
             alert("exception in making request");
         })
