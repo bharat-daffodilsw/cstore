@@ -10,11 +10,13 @@ cstore.config(
     function ($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('!');
         $routeProvider.
-            when('/store-manager', {
+            when('/', {
             templateUrl:'../store-manager',
-            controller:'storeManager'
-
-        }).when('/all-products', {
+            controller:'homeCtrl'
+        }).when('/login', {
+                templateUrl:'../login',
+                controller:'loginCtrl'
+            }).when('/all-products', {
                 templateUrl:'../all-products',
                 controller:'allCategory'
             }).when('/product', {
@@ -34,7 +36,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.displayData = {};
     if (!$scope.currentUser["data"]) {
         alert();
-        window.location.href = "http://127.0.0.1:5400/login.html";
+        window.location.href = "#!/login";
     }
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
@@ -66,8 +68,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
-            $scope.productCategories = productCategoryData.data;
-            //console.log(JSON.stringify(productCategoryData.data));
+            $scope.productCategories = productCategoryData.response.data;
         }, function (jqxhr, error) {
         })
     }
@@ -75,7 +76,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
 
 
 });
-cstore.controller('storeManager', function ($scope, $appService) {
+cstore.controller('homeCtrl', function ($scope, $appService, $location) {
+    $scope.homeView = {};
     $scope.getPopularProducts = function (maxRow) {
         var query = {"table":"products__cstore"};
         query.columns = ["name", "image", "short_description", "cost", "soldcount"];
@@ -95,8 +97,46 @@ cstore.controller('storeManager', function ($scope, $appService) {
             alert("exception in making request");
         })
     }
-    $scope.getPopularProducts(8);
+    $scope.getAllVendors = function () {
+        var query = {"table":"vendors__cstore"};
+        query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
+        query.max_rows = 10;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+            $scope.vendors = vendorData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.setAdminView = function (viewName) {
+        var c_name = "adminView"
+        if (viewName) {
+
+            document.cookie = c_name + "=" + escape(viewName);
+        }
+        else {
+            document.cookie = c_name + "=" + escape("vendor");
+        }
+
+    }
+    if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+
+        $scope.getPopularProducts(8);
+
+        $scope.homeView = {"storeManager":true, "admin":false};
+    }
+    else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
+        $scope.homeView = {"storeManager":false, "admin":true};
+
+        $scope.getAllVendors();
+    }
+
+
 });
+//cstore.controller('storeManager', function ($scope, $appService) {
+//
+//});
 cstore.controller('allCategory', function ($scope, $appService) {
 
     $scope.getProductList = function () {
@@ -200,3 +240,86 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
         $scope.getProductDetail(cursor, $routeParams.q)
     }
 });
+cstore.controller('loginCtrl', function ($scope, $appService, $location) {
+    if ($appService.getSession()) {
+        window.location.href = "/";
+    }
+    $scope.login = function () {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        if (regEmail.test(username) == false) {
+            alert("Please Enter A Valid Email");
+            return false;
+        }
+        if (username == "" || username == undefined) {
+            alert("Please enter vaild user name ");
+            return false;
+        }
+        if (!password) {
+            alert("enter your password");
+            return false;
+        }
+        var params = {};
+        params.username = username;
+        params.password = password;
+        params.ask = ASK;
+        params.osk = OSK;
+        $appService.getDataFromJQuery("/rest/login", params, "GET", "JSON", function (callBackData) {
+            if (callBackData.code && callBackData.code == 8) {
+                alert(callBackData.response);
+                return false;
+            }
+            else if (callBackData.code && callBackData.code == 3) {
+                alert(callBackData.response);
+                return false;
+            }
+            else if (callBackData.code && callBackData.code == 200) {
+                var usk = callBackData.response ? callBackData.response.usk : null;
+                if (usk) {
+                    var query = {"table":"user_profiles__cstore"};
+                    query.columns = ["userid", "roleid", "storeid"];
+                    query.filter = {"userid":"{_CurrentUserId}"};
+                    var params = {"query":JSON.stringify(query), "ask":ASK, "osk":OSK, "usk":usk};
+                    $appService.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
+                        $appService.deleteAllCookie();
+                        var roleid = callBackData.response.data[0].roleid._id;
+                        var firstname = callBackData.response.data[0].userid.firstname;
+                        var userid = callBackData.response.data[0].userid._id;
+                        if (callBackData.response.data[0] && callBackData.response.data[0]["storeid"]) {
+                            var storeid = callBackData.response.data[0]["storeid"]._id;
+                        }
+                        var c_name = "usk";
+                        document.cookie = c_name + "=" + escape(usk);
+                        var c_name = "roleid";
+                        document.cookie = c_name + "=" + escape(roleid);
+                        var c_name = "userid";
+                        document.cookie = c_name + "=" + escape(userid);
+                        var c_name = "firstname";
+                        document.cookie = c_name + "=" + escape(firstname);
+                        if (storeid) {
+                            var c_name = "storeid";
+                            document.cookie = c_name + "=" + escape(storeid);
+                        }
+                        window.location.href = "/";
+
+                    }, function (err) {
+
+                        alert("error while making request");
+                    });
+
+                }
+
+            }
+            else {
+                /*for messgae*/
+            }
+
+        }, function (jqxhr, error) {
+            alert("error while making request");
+        });
+
+    }
+
+});
+

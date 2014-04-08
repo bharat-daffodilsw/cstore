@@ -10,7 +10,6 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
             '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'
     }
 }]);
-
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
@@ -36,30 +35,11 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
 cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div id="primary" style="display:none;z-index:100000"><ul ng-repeat="productCategory in productCategories"><li class="active"><a href>{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" style="display:none;z-index:100000"><ul ><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
             '</ul></div>'
     }
 }]);
 
-/*cstore.directive('activeLink', ['$location', function(location) {
- return {
- restrict: 'A',
- link: function(scope, element, attrs, controller) {
- var clazz = attrs.activeLink;
- var path = attrs.href;
- path = path.substring(1); //hack because path does bot return including hashbang
- scope.location = location;
- scope.$watch('location.path()', function(newPath) {
- if (path === newPath) {
- element.addClass(clazz);
- } else {
- element.removeClass(clazz);
- }
- });
- }
-
- };
- }]);*/
 
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
@@ -112,7 +92,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             '</div><div class="nxt_btn"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
-            '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}} {{vendor.lastname}}</td><td>{{vendor.address}}' +
+            '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city}}</td><td>{{vendor.state}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td>' +
             '<a class="edit_btn" href>Edit</a></td></tr></table></div>',
         compile:function () {
