@@ -1,4 +1,4 @@
-cstore.directive('topHeader',['$appService', function($appService,$scope){
+cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="header"><div ng-show="displayData.options" id="cm"> <img src="images/dropdown.png">' +
@@ -11,7 +11,7 @@ cstore.directive('topHeader',['$appService', function($appService,$scope){
     }
 }]);
 
-cstore.directive('adminMenu',['$appService', function($appService,$scope){
+cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="admin_menu"><ul><li><a href>Vendor</a></li><li><a href>Store Manager</a></li>' +
@@ -22,7 +22,7 @@ cstore.directive('adminMenu',['$appService', function($appService,$scope){
     }
 }]);
 
-cstore.directive('storeHeader',['$appService', function($appService,$scope){
+cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="search_addcart"><div class="search"><input type="text" placeholder="Search by product" name="search_theme_form"id="edit-search-theme-form-1" size="15" value="" title="Enter the terms you wish to search for." class="search">' +
@@ -33,7 +33,7 @@ cstore.directive('storeHeader',['$appService', function($appService,$scope){
     }
 }]);
 
-cstore.directive('dropDown',['$appService', function($appService,$scope){
+cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div id="primary" style="display:none;z-index:100000"><ul ng-repeat="productCategory in productCategories"><li class="active"><a href>{{productCategory.name}}</a></li>' +
@@ -42,54 +42,56 @@ cstore.directive('dropDown',['$appService', function($appService,$scope){
 }]);
 
 /*cstore.directive('activeLink', ['$location', function(location) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs, controller) {
-            var clazz = attrs.activeLink;
-            var path = attrs.href;
-            path = path.substring(1); //hack because path does bot return including hashbang
-            scope.location = location;
-            scope.$watch('location.path()', function(newPath) {
-                if (path === newPath) {
-                    element.addClass(clazz);
-                } else {
-                    element.removeClass(clazz);
-                }
-            });
-        }
+ return {
+ restrict: 'A',
+ link: function(scope, element, attrs, controller) {
+ var clazz = attrs.activeLink;
+ var path = attrs.href;
+ path = path.substring(1); //hack because path does bot return including hashbang
+ scope.location = location;
+ scope.$watch('location.path()', function(newPath) {
+ if (path === newPath) {
+ element.addClass(clazz);
+ } else {
+ element.removeClass(clazz);
+ }
+ });
+ }
 
-    };
-}]);*/
+ };
+ }]);*/
 
-cstore.directive('popularProducts',['$appService', function($appService,$scope){
+cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="category"><div class="pop_products">Popular products <a href="/#/all-products">( View all )</a>' +
             '</div><div class="products" ng-repeat="product in popularProducts"><div class="products_img">' +
 
+
             '<a href="#!/product?productid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
 
             '</a></div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div>' +
+
             '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div>'
     }
 }]);
 
-cstore.directive('allproducts',['$appService', function($appService,$scope){
+cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:'E',
         template:'<div class="m_bar"><div class="category" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
             '<div class="pop_products">{{product.name}} <a href="">( View all )</a></div><div class="products" ng-repeat="childproduct in product.categoryWiseData">' +
-            '<div class="products_img"><a href="#!/product/{{childproduct._id}}"><img src></a></div><div class="name"><a href="#!/product/{{childproduct._id}}">' +
+            '<div class="products_img"><a href="#!/product?productid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/product?productid={{childproduct._id}}">' +
             '{{childproduct.name}}</a></div><div class="product_details">' +
             '{{childproduct.short_description}}</div><div class="price">' +
-            '<a href="#!/product/{{childproduct._id}}">{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>Add To Cart</a></div></div>' +
+            '<a href="#!/product?productid={{childproduct._id}}">{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>Add To Cart</a></div></div>' +
             '</div></div>'
     }
 }]);
 
 
-cstore.directive('productDetail',['$appService', function($appService,$scope){
+cstore.directive('productDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="category"><div class="pop_products">{{product[0].name}}</div><div class="img_product">' +
@@ -101,7 +103,7 @@ cstore.directive('productDetail',['$appService', function($appService,$scope){
     }
 }]);
 
-cstore.directive('vendor',['$appService', function($appService,$scope){
+cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         template:'<div class="add_delete"><div class="add_btn"><button type="button">Add</button>' +
@@ -122,21 +124,21 @@ cstore.directive('vendor',['$appService', function($appService,$scope){
     }
 }]);
 
-cstore.directive('citySelect',['$appService', function($appService,$scope){
+cstore.directive('citySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         template:'<select class="qty_select" style="width: 266px;" ng-model="vendor.city" ng-options="city.name for city in cities"></select>'
     }
 }]);
 
-cstore.directive('stateSelect',['$appService', function($appService,$scope){
+cstore.directive('stateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         template:'<select class="qty_select" style="width: 266px;" ng-model="vendor.state" ng-options="state.name for state in states"></select>'
     }
 }]);
 
-cstore.directive('addvendor',['$appService', function($appService,$scope){
+cstore.directive('addvendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         replace:'true',
@@ -154,13 +156,13 @@ cstore.directive('addvendor',['$appService', function($appService,$scope){
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close">' +
             '<div class="add_btn"><button type="button">Save</button></div><div class="delete_btn"><button type="button">Close</button>' +
             '</div></div></td></tr></table></div>',
-        compile:function(){
+        compile:function () {
             return {
                 pre:function ($scope) {
                     $scope.newVendor = {};
                 },
-                post:function($scope) {
-                    $scope.saveVendor =function(){
+                post:function ($scope) {
+                    $scope.saveVendor = function () {
                         if ($scope.newVendor.firstname == "" || $scope.newVendor.firstname == undefined) {
                             alert("please enter firstname");
                             return false;
@@ -169,19 +171,19 @@ cstore.directive('addvendor',['$appService', function($appService,$scope){
                             alert("please enter email");
                             return false;
                         }
-                        if(!$scope.vendor.city){
+                        if (!$scope.vendor.city) {
                             alert("please select product");
                             return false;
                         }
-                        if(!$scope.vendor.state){
+                        if (!$scope.vendor.state) {
                             alert("please select promotion");
                             return false;
                         }
 
                         var query = {};
                         query.table = "vendors__cstore";
-                        $scope.newVendor["city"] = {"name":$scope.vendor.city.name,"_id":$scope.vendor.city._id};
-                        $scope.newVendor["state"] = {"name":$scope.vendor.state.name,"_id":$scope.vendor.state._id};
+                        $scope.newVendor["city"] = {"name":$scope.vendor.city.name, "_id":$scope.vendor.city._id};
+                        $scope.newVendor["state"] = {"name":$scope.vendor.state.name, "_id":$scope.vendor.state._id};
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (!callBackData["insert"]) {
@@ -191,8 +193,8 @@ cstore.directive('addvendor',['$appService', function($appService,$scope){
                                 $scope.addVendor = false;
                                 alert("Saved Successfully");
                                 $scope.newVendor = {};
-                                $scope.vendor.city={};
-                                $scope.vendor.state={};
+                                $scope.vendor.city = {};
+                                $scope.vendor.state = {};
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
