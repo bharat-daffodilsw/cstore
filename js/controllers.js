@@ -11,7 +11,7 @@ cstore.config(
         $locationProvider.hashPrefix('!');
         $routeProvider.
             when('/', {
-            templateUrl:'../store-manager',
+            templateUrl:'../home',
             controller:'homeCtrl'
         }).when('/login', {
                 templateUrl:'../login',
@@ -28,7 +28,14 @@ cstore.config(
             }).when('/vendors', {
                 templateUrl:'../vendors',
                 controller:'vendorCtrl'
-            }).otherwise(
+            }).when('/store-managers', {
+                templateUrl:'../store-managers',
+                controller:'storeManagerList'
+            }).when('/products', {
+                templateUrl:'../products',
+                controller:'productList'
+            })
+            .otherwise(
 //            {"redirectTo":"/login.html"}
         );
     });
@@ -319,10 +326,16 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 
 });
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
-    $scope.getAllVendors = function () {
+    $scope.getAllVendors = function (cursor) {
         var query = {"table":"vendors__cstore"};
         query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
         query.max_rows = 10;
+        if (cursor) {
+            query.cursor = cursor;
+        }
+        else {
+            query.cusrsor = 0;
+        }
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
@@ -333,5 +346,49 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     }
     $scope.getAllVendors();
 
+});
+
+cstore.controller('storeManagerList', function ($scope, $appService) {
+    $scope.getAllStoreManagers = function (cursor) {
+        var query = {"table":"storemanagers__cstore"};
+        query.columns = ["storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.max_rows = 10;
+        if (cursor) {
+            query.cursor = cursor;
+        }
+        else {
+            query.cusrsor = 0;
+        }
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeManagerData) {
+            $scope.storeManagers = storeManagerData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllStoreManagers();
+});
+
+cstore.controller('productList', function ($scope, $appService) {
+    $scope.getAllProducts = function (cursor) {
+        var query = {"table":"storemanagers__cstore"};
+        query.columns = ["name","image","short_description",{"expression":"product_category", "columns":["_id", "name"]},"cost","soldcount"];
+        query.max_rows = 10;
+        if (cursor) {
+            query.cursor = cursor;
+        }
+        else {
+            query.cusrsor = 0;
+        }
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+            $scope.products = productData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllProducts();
 });
 
