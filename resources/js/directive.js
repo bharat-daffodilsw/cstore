@@ -1,11 +1,11 @@
 cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="header"><div ng-show="displayData.options" id="cm"> <img src="images/dropdown.png">' +
-            '</div><div class="dropdown"><div class="logo"><img src="images/logo.jpg">' +
+        template:'<div class="header"><div ng-show="displayData.options" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
+            '</div><div class="dropdown pull-left"><div class="logo pull-left"><img src="images/logo.jpg">' +
 
-            '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo1"><img src="images/logo.jpg"></div><div class="username"><div ng-show="displayData.loggedIn" class="user">{{currentUser.data.firstname}}</div>' +
-            '<div ng-show="displayData.loggedIn" id="my_profile"><img src="images/logout.png"><div class="signOut" id="sign_out" ">' +
+            '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo1 pull-right"><img src="images/logo.jpg"></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
+            '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
 
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
@@ -16,9 +16,9 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="admin_menu"><ul><li><a href active-link="active">Vendor</a></li><li><a href="#!/store-managers" active-link="active">Store Manager</a></li>' +
+        template:'<div class="admin_menu pull-left"><ul><li><a href active-link="active">Vendor</a></li><li><a href="#!/store-managers" active-link="active">Store Manager</a></li>' +
             '<li><a href="#!/products" active-link="active">Product</a></li><li><a active-link="active" href>Promotion</a></li><li><a active-link="active" href>Training Session</a></li><li>' +
-            '<a href active-link="active">Survey</a></li><li><a href active-link="active">Setup</a><div class="setup"><ul><li><a href active-link="active">Training Category</a>' +
+            '<a href active-link="active">Survey</a></li><li><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li><a href active-link="active">Training Category</a>' +
             '</li><li><a href active-link="active">Product Category</a></li><li><a href active-link="active">Cities</a></li><li><a href active-link="active">States</a></li><li>' +
             '<a href active-link="active">Countries</a></li></ul></div></li></ul></div>'
     }
@@ -27,11 +27,11 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
 cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="search_addcart"><div class="search"><input type="text" placeholder="Search by product" name="search_theme_form"id="edit-search-theme-form-1" size="15" value="" title="Enter the terms you wish to search for." class="search">' +
-            '<div class="search_sign"><a href><img src="images/Search.png"></a></div></div><div class="location">' +
-            ' <a href><span class="where_i">I am in</span><span class="loction_img"><img src="images/location.png">' +
-            '</span><span class="country">India</span></a></div><div class="add_cart"><div class="addcart_link"><a href>' +
-            '<img src="images/finalcart.png"></a></div><div class="add_count">( 0 )</div></div></div>'
+        template:'<div class="search_addcart pull-left"><div class="search pull-left"><input type="text" placeholder="Search by product" name="search_theme_form"id="edit-search-theme-form-1" size="15" value="" title="Enter the terms you wish to search for." class="search">' +
+            '<div class="search_sign pull-left"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
+            ' <a href><span class="where_i">I am in</span><span class="loction_img pull-left"><img src="images/location.png">' +
+            '</span><span class="country">India</span></a></div><div class="add_cart pull-right"><div class="addcart_link pull-left"><a href>' +
+            '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">( 0 )</div></div></div>'
     }
 }]);
 
@@ -39,7 +39,7 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
 
-        template:'<div id="primary" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
             '</ul></div>'
     }
 }]);
@@ -66,8 +66,8 @@ cstore.directive('activeLink', ['$location', function(location) {
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="category"><div class="pop_products">Popular products <a href="#!/all-products">( View all )</a>' +
-            '</div><div class="products" ng-repeat="product in popularProducts"><div class="products_img">' +
+        template:'<div class="category pull-left"><div class="pop_products">Popular products <a href="#!/all-products">( View all )</a>' +
+            '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
 
 
             '<a href="#!/product?productid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
@@ -82,8 +82,8 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
 cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:'E',
-        template:'<div class="m_bar"><div class="category" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
-            '<div class="pop_products">{{product.name}} <a href="#!/product-category?q={{product._id}}">( View all )</a></div><div class="products" ng-repeat="childproduct in product.categoryWiseData">' +
+        template:'<div class="m_bar pull-left"><div class="category pull-left" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
+            '<div class="pop_products">{{product.name}} <a href="#!/product-category?q={{product._id}}">( View all )</a></div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="childproduct in product.categoryWiseData">' +
             '<div class="products_img"><a href="#!/product?productid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/product?productid={{childproduct._id}}">' +
             '{{childproduct.name}}</a></div><div class="product_details">' +
             '{{childproduct.short_description}}</div><div class="price">' +
@@ -95,23 +95,23 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
 cstore.directive('productDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="category"><div class="pop_products">{{product[0].name}}</div><div class="img_product">' +
+        template:'<div class="category pull-left"><div class="pop_products">{{product[0].name}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{product[0].imageUrl}}" /></div>' +
-            '<div class="details_product"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">' +
-            '<select class="form-control search_select"><option>Qty*</option><option>1</option><option>2</option><option>3</option>' +
+            '<div class="details_product pull-right"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">' +
+            '<select class="qty_select"><option>Qty*</option><option>1</option><option>2</option><option>3</option>' +
             '<option>4</option><option>5</option></select><div class="final_price">{{product[0].cost.amount}}</div><div class="add_to_btn">' +
-            '<a href>ADD TO CART</a></div></div></div><div class="product_description">{{product[0].description}}</div></div>'
+            '<a href>ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>'
     }
 }]);
 
 cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete"><div class="add_btn"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
-            '</div><div class="delete_btn"><button  type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
-            '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
-            '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
+            '</div><div class="delete_btn pull-left"><button  type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
+            '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
@@ -179,7 +179,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         replace:'true',
-        template:'<div class="table_1"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
+        template:'<div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
             '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
@@ -190,8 +190,8 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<div class="margin_top">Contact No.</div></td></tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td><td>' +
             '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><input type="email" ng-model="data.email">' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close">' +
-            '<div class="add_btn"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
+            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
             '</div></div></td></tr></table></div>',
         compile:function () {
             return {
@@ -258,14 +258,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-cstore.directive('editvendor', ['$appService', function ($appService, $scope) {
-}]);
-
 cstore.directive('productCategoryDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict:'E',
-        template:'<div class="m_bar"><div class="category"><div class="pop_products">{{products[0].product_category.name}}</div>' +
-            '<div class="products" ng-repeat="product in products"><div class="products_img"><a href="#!/product?productid={{product._id}}">' +
+        template:'<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{products[0].product_category.name}}</div>' +
+            '<div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in products"><div class="products_img"><a href="#!/product?productid={{product._id}}">' +
             '<img src="{{product.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
             '<div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>' +
@@ -283,11 +280,11 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
 cstore.directive('storeManagerList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete"><div class="add_btn"><button type="button"><a href="">Add</a>' +
-            '</button></div><div class="delete_btn"><button type="button"><a href="">Delete</a></button></div>' +
-            '<div class="prv_btn" ng-click="getMore()" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">' +
-            '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table_3"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Store Name</th>' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"><a href="">Add</a>' +
+            '</button></div><div class="delete_btn pull-left"><button type="button"><a href="">Delete</a></button></div>' +
+            '<div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Store Name</th>' +
             '<th>Shift</th><th>POS Type</th><th>POS Version</th><th>Loyalty Status</th><th>Reward Points</th><th>Brands</th><th>' +
             'Email</th><th>Contact</th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
             '<input id="" name="" type="checkbox" value="1"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.pos_type}}</td><td>' +
@@ -307,10 +304,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
 cstore.directive('productList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete"><div class="add_btn"><button type="button"><a href="#!/add-product">Add</a></button>' +
-            '</div><div class="delete_btn"><button type="button"><a href="">Delete</a></button></div><div  ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
-            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
-            '<div class="nxt_btn" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table">' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"><a href="#!/add-product">Add</a></button>' +
+            '</div><div class="delete_btn pull-left"><button type="button"><a href="">Delete</a></button></div><div  ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Product Name</th><th>Product Image' +
             '</th><th>Product Category</th><th>Sold Count</th><th>Price</th><th></th></tr><tr ng-repeat="product in products"><td>' +
             '<input id="" name="" type="checkbox" value="1"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
@@ -344,10 +341,10 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
         restrict:'E',
         replace:'true',
         template:'<div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Name</div></td></tr><tr><td><input style="width:735px; height:50px;" type="text" placeholder="" ng-model="data.name">' +
+            '<div class="margin_top">Name</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="data.name">' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Detailed Description</div></td></tr><tr><td><textarea style="width: 745px; height:80px;" ng-model="data.description"> ' +
-            '</textarea></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
+            'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="data.description"> ' +
+            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
             'Short Description</div></td><td><div class="margin_top">Product Categroy</div></td></tr><tr><td>' +
             '<input type="text" placeholder="" ng-model="data.short_description"></td><td><product-category-select></product-category-select>' +
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
