@@ -107,12 +107,12 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         template:'<div class="add_delete"><div class="add_btn"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
-            '</div><div class="delete_btn"><button  type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
+            '</div><div class="delete_btn"><button ng-click="deleteUsers()"  type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
-            '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
+            '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div>',
         compile:function () {
@@ -120,6 +120,41 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                 pre:function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
+                    }
+                    $scope.deleteUserArray = [];
+                    $scope.deleteUsers = function () {
+                        for (var i = 0; i < $scope.vendors.length; i++) {
+                            if ($scope.vendors[i].deleteStatus) {
+                                $scope.deleteUserArray.push({"_id":$scope.vendors[i]._id, "__type__":"delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "vendors__cstore";
+                        query.operations = angular.copy($scope.deleteUserArray);
+                        $scope.deleteUserArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.vendors.length; i++) {
+                                    if ($scope.vendors[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.vendors.splice(i, 1);
+                                    }
+                                }
+
+                                alert("Deleted");
+                            }
+                            else {
+                                alert("some err while deleting");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+
                     }
                     $scope.setUserState = function (vendor) {
                         $scope.data["firstname"] = vendor.firstname;
@@ -248,6 +283,8 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
+                        }, function (err) {
+                            alert(err);
                         });
                     }
                 }

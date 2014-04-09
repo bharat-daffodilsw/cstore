@@ -427,6 +427,9 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
             $scope.loadingVenderData = false;
             $scope.show.currentCursor = vendorData.response.cursor;
             $scope.vendors = vendorData.response.data;
+            for (var i = 0; i < $scope.vendors.length; i++) {
+                $scope.vendors[i]["deleteStatus"] = false;
+            }
 
         }, function (jqxhr, error) {
             alert("exception in making request");
