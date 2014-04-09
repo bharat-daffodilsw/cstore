@@ -107,9 +107,9 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         template:'<div class="add_delete"><div class="add_btn"><button type="button">Add</button>' +
-            '</div><div class="delete_btn"><button type="button">Delete</button></div><div class="prv_btn">' +
-            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">1-11 from start' +
-            '</div><div class="nxt_btn"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '</div><div class="delete_btn"><button type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
+            '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
+            '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
@@ -216,7 +216,7 @@ cstore.directive('addvendor', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-cstore.directive('editvendor',['$appService', function($appService,$scope){
+cstore.directive('editvendor', ['$appService', function ($appService, $scope) {
 }]);
 
 cstore.directive('productCategoryDetail', ['$appService', function ($appService, $scope) {
