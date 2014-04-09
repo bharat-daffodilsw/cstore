@@ -4,7 +4,7 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
         template:'<div class="header"><div ng-show="displayData.options" id="cm"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown"><div class="logo"><img src="images/logo.jpg">' +
 
-            '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo1"><img src="images/logo.jpg"></div><div class="username"><div ng-show="displayData.loggedIn" class="user">Rich Gold</div>' +
+            '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo1"><img src="images/logo.jpg"></div><div class="username"><div ng-show="displayData.loggedIn" class="user">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile"><img src="images/logout.png"><div class="signOut" id="sign_out" ">' +
 
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
@@ -232,6 +232,51 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
             return {
                 pre:function ($scope) {
                     $scope.getInitialData(0);
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('storeManager', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<div class="add_delete"><div class="add_btn"><button type="button"><a href="">Add</a>' +
+            '</button></div><div class="delete_btn"><button type="button"><a href="">Delete</a></button></div>' +
+            '<div class="prv_btn"><a href="#"><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">' +
+            '1-11 from start</div><div class="nxt_btn"><a href="#"><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table_3"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Store Name</th>' +
+            '<th>Shift</th><th>POS Type</th><th>POS Version</th><th>Loyalty Status</th><th>Reward Points</th><th>Brands</th><th>' +
+            'Email</th><th>Contact</th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
+            '<input id="" name="" type="checkbox" value="1"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.pos_type}}</td><td>' +
+            '{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td><td>{{storeManager.brands}}</td><td>{{storeManager.email}}</td><td>{{storeManager.contact}}</td>' +
+            '<td><a class="edit_btn" href>Edit</a></td></tr><tr><td>' +
+            '</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>' +
+            '<td></td></tr></table></div>',
+        compile:function () {
+            return {
+                pre:function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('productList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<div class="add_delete"><div class="add_btn"><button type="button"><a href="">Add</a></button>' +
+            '</div><div class="delete_btn"><button type="button"><a href="">Delete</a></button></div><div class="prv_btn">' +
+            '<a href="#"><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">1-11 from start</div>' +
+            '<div class="nxt_btn"><a href="#"><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Product Name</th><th>Product Image' +
+            '</th><th>Product Category</th><th>Sold Count</th><th>Price</th><th></th></tr><tr ng-repeat="product in products"><td>' +
+            '<input id="" name="" type="checkbox" value="1"></td><td>{{product.name}}</td><td>{{product.image}}</td><td>' +
+            '{{product.product_category.name}}</td><td>{{product.soldcount}}</td><td>{{product.cost.amount | currency}}</td>' +
+            '<td><a class="edit_btn" href>Edit</a></td></tr></table></div>',
+        compile:function () {
+            return {
+                pre:function ($scope) {
                 }
             }
         }

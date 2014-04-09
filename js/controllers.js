@@ -12,7 +12,7 @@ cstore.config(
         $locationProvider.hashPrefix('!');
         $routeProvider.
             when('/', {
-            templateUrl:'../store-manager',
+            templateUrl:'../home',
             controller:'homeCtrl'
         }).when('/login', {
                 templateUrl:'../login',
@@ -29,7 +29,14 @@ cstore.config(
             }).when('/vendors', {
                 templateUrl:'../vendors',
                 controller:'vendorCtrl'
-            }).otherwise(
+            }).when('/store-managers', {
+                templateUrl:'../store-managers',
+                controller:'storeManagerList'
+            }).when('/products', {
+                templateUrl:'../products',
+                controller:'productList'
+            })
+            .otherwise(
 //            {"redirectTo":"/login.html"}
         );
     });
@@ -313,6 +320,31 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
     }
 
 });
+
+
+cstore.controller('storeManagerList', function ($scope, $appService) {
+    $scope.getAllStoreManagers = function (cursor) {
+        var query = {"table":"storemanagers__cstore"};
+        query.columns = ["storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.max_rows = 10;
+        if (cursor) {
+            query.cursor = cursor;
+        }
+        else {
+            query.cusrsor = 0;
+        }
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeManagerData) {
+            $scope.storeManagers = storeManagerData.response.data;
+        }, function (jqxhr, error) {
+            alert("error while making request");
+        });
+    }
+    $scope.getAllStoreManagers();
+    });
+
+
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingVenderData = false;
@@ -340,6 +372,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
             $scope.loadingVenderData = false;
             $scope.show.currentCursor = vendorData.response.cursor;
             $scope.vendors = vendorData.response.data;
+
         }, function (jqxhr, error) {
             alert("exception in making request");
         })
@@ -352,5 +385,30 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.getAllVendors(0, 1);
     }
 
+});
+
+
+
+
+cstore.controller('productList', function ($scope, $appService) {
+    $scope.getAllProducts = function (cursor) {
+        var query = {"table":"storemanagers__cstore"};
+        query.columns = ["name","image","short_description",{"expression":"product_category", "columns":["_id", "name"]},"cost","soldcount"];
+        query.max_rows = 10;
+        if (cursor) {
+            query.cursor = cursor;
+        }
+        else {
+            query.cusrsor = 0;
+        }
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+            $scope.products = productData.response.data;
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllProducts();
 });
 
