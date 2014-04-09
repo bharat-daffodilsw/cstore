@@ -338,11 +338,57 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeManagerData) {
             $scope.storeManagers = storeManagerData.response.data;
         }, function (jqxhr, error) {
+            alert("error while making request");
+        });
+    }
+    $scope.getAllStoreManagers();
+    });
+
+
+cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingVenderData = false;
+    $scope.vendors = [];
+    $appService.auth();
+    $scope.getAllVendors = function (direction, limit) {
+        if ($scope.loadingVenderData) {
+            return false;
+        }
+        if(direction == 1){
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingVenderData = true;
+        var query = {"table":"vendors__cstore"};
+        query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+            $scope.loadingVenderData = false;
+            $scope.show.currentCursor = vendorData.response.cursor;
+            $scope.vendors = vendorData.response.data;
+
+        }, function (jqxhr, error) {
             alert("exception in making request");
         })
     }
-    $scope.getAllStoreManagers();
+    $scope.getAllVendors(1, 1);
+    $scope.getMore = function () {
+        $scope.getAllVendors(1, 1);
+    }
+    $scope.getLess = function () {
+        $scope.getAllVendors(0, 1);
+    }
+
 });
+
+
+
 
 cstore.controller('productList', function ($scope, $appService) {
     $scope.getAllProducts = function (cursor) {

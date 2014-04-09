@@ -661,3 +661,6 @@ a {
 .search_addcart {
     float:left;
     width:53%;}
+.visible{
+    visibility: hidden;
+}
