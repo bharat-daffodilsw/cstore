@@ -1,5 +1,6 @@
 var BAAS_SERVER;
 BAAS_SERVER = "/rest";
+var VENDOR = "vendors";
 var appStrapDirectives = angular.module('$appstrap.directives', []);
 var appStrapServices = angular.module('$appstrap.services', []);
 /**
@@ -154,8 +155,8 @@ appStrapServices.factory('$appService', [
                 window.location.href = "#!/" + viewName;
             }
             else {
-                document.cookie = c_name + "=" + escape("vendor");
-                window.location.href = "#!/vendor";
+                document.cookie = c_name + "=" + escape(VENDOR);
+                window.location.href = "#!/" + VENDOR;
             }
         }
         $appService.getSession = function () {
@@ -179,38 +180,45 @@ appStrapServices.factory('$appService', [
             $appService.delete_cookie("firstname");
             $appService.delete_cookie("storeid");
             $appService.delete_cookie("storename");
+            $appService.delete_cookie("adminView");
         }
-        $appService.getCities =function(){
+        $appService.getCities = function () {
             var cities = {};
             var query = {"table":"cities__cstore"};
-            query.columns = ["name",{"expression":"stateid","columns":["_id","name"]}];
-            var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            query.columns = ["name", {"expression":"stateid", "columns":["_id", "name"]}];
+            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
             var serviceUrl = "/rest/data";
-            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(cityData){
+            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
                 cities = cityData.response.data;
             }, function (jqxhr, error) {
             })
             return cities;
         }
-        $appService.getStates =function(){
+        $appService.getStates = function () {
             var states = {};
             var query = {"table":"states__cstore"};
-            query.columns = ["name",{"expression":"countryid","columns":["_id","name"]}];
-            var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            query.columns = ["name", {"expression":"countryid", "columns":["_id", "name"]}];
+            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
             var serviceUrl = "/rest/data";
-            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(stateData){
+            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
                 states = stateData.response.data;
             }, function (jqxhr, error) {
             })
             return states;
         }
-        $appService.getCountries =function(){
+
+        $appService.auth = function () {
+            if ($appService.getSession() == null || $appService.getSession() == "null") {
+                window.location.href = "#!/login";
+            }
+        }
+        $appService.getCountries = function () {
             var countries = {};
             var query = {"table":"countries__cstore"};
-            query.columns = ["name","_id"];
-            var queryParams ={query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            query.columns = ["name", "_id"];
+            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
             var serviceUrl = "/rest/data";
-            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON",function(countryData){
+            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
                 countries = countryData.response.data;
             }, function (jqxhr, error) {
             })

@@ -3,6 +3,7 @@ var ASK = "531829f47754938f0ecfd3c7";
 var OSK = "531972e05fccddeb550a04a3";
 var STOREMANAGER = "531d4aa0bd1515ea1a9bbaf6";
 var ADMIN = "531d4a79bd1515ea1a9bbaf5";
+var VENDOR = "vendors";
 
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services']);
@@ -43,7 +44,6 @@ cstore.config(
 cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.currentUser = {"data":""};
     $scope.currentUser["data"] = $appService.getSession();
-    console.log(JSON.stringify($scope.currentUser["data"]));
     $scope.displayData = {};
     if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
         window.location.href = "#!/login";
@@ -63,12 +63,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
-    $scope.auth = function () {
-        var currentSession = $scope.getSession();
-        if (currentSession) {
-//            window.location.href = "/#/home";
-        }
-    }
+
 
     $scope.logOut = function () {
         $appService.deleteAllCookie();
@@ -131,7 +126,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
                 $appService.setAdminView(pathToBeSet);
             }
             else {
-                $appService.setAdminView("vendor");
+                $appService.setAdminView(VENDOR);
             }
 
         }
@@ -325,28 +320,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
     }
 
 });
-cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
-    $scope.getAllVendors = function (cursor) {
-        var query = {"table":"vendors__cstore"};
-        query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
-        query.max_rows = 10;
-        if (cursor) {
-            query.cursor = cursor;
-        }
-        else {
-            query.cusrsor = 0;
-        }
-        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
-        var serviceUrl = "/rest/data";
-        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
-            $scope.vendors = vendorData.response.data;
-        }, function (jqxhr, error) {
-            alert("exception in making request");
-        })
-    }
-    $scope.getAllVendors();
 
-});
 
 cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.getAllStoreManagers = function (cursor) {
