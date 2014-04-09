@@ -113,7 +113,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             '<div class="table"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
-            '</td><td>{{vendor.city}}</td><td>{{vendor.state}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td>' +
+            '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td>' +
             '<a class="edit_btn" href>Edit</a></td></tr></table></div>',
         compile:function () {
             return {
