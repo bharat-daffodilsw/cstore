@@ -44,10 +44,11 @@ appStrapServices.factory('$appService', [
             var that = this;
 
             var url = BAAS_SERVER + "/data";
-            this.getDataFromJQuery(url, params, "POST", "JSON", function (callBackData) {
+            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
                 callBack(callBackData);
             });
         }
+
 
         $appService.delete_cookie = function (name) {
             document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -182,30 +183,8 @@ appStrapServices.factory('$appService', [
             $appService.delete_cookie("storename");
             $appService.delete_cookie("adminView");
         }
-        $appService.getCities = function () {
-            var cities = {};
-            var query = {"table":"cities__cstore"};
-            query.columns = ["name", {"expression":"stateid", "columns":["_id", "name"]}];
-            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
-            var serviceUrl = "/rest/data";
-            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
-                cities = cityData.response.data;
-            }, function (jqxhr, error) {
-            })
-            return cities;
-        }
-        $appService.getStates = function () {
-            var states = {};
-            var query = {"table":"states__cstore"};
-            query.columns = ["name", {"expression":"countryid", "columns":["_id", "name"]}];
-            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
-            var serviceUrl = "/rest/data";
-            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
-                states = stateData.response.data;
-            }, function (jqxhr, error) {
-            })
-            return states;
-        }
+
+
 
         $appService.auth = function () {
             if ($appService.getSession() == null || $appService.getSession() == "null") {

@@ -29,6 +29,12 @@ cstore.config(
             }).when('/vendors', {
                 templateUrl:'../vendors',
                 controller:'vendorCtrl'
+            }).when('/add-new-vendor', {
+                templateUrl:'../add-new-vendor',
+                controller:'addNewVendorCtrl'
+            }).when('/edit-vendor', {
+                templateUrl:'../add-new-vendor',
+                controller:'addNewVendorCtrl'
             }).when('/store-managers', {
                 templateUrl:'../store-managers',
                 controller:'storeManagerList'
@@ -43,6 +49,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.currentUser = {"data":""};
+    $scope.data = {"cities":[], "states":[], "selectedCity":"", "selectedState":""};
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
     if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
@@ -64,7 +71,55 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
 
+    $scope.getCities = function (stateid, cityid) {
+        var query = {"table":"cities__cstore"};
+        query.columns = ["name"];
+        $scope.defaultCity = cityid;
+        if (stateid && stateid != null && stateid != "null") {
+            query.filter = {"stateid._id":stateid};
+        }
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
+            $scope.data.cities = cityData.response.data;
+            if ($scope.defaultCity) {
+                for (var i = 0; i < $scope.data.cities.length; i++) {
+                    if ($scope.data.cities[i]._id == $scope.defaultCity) {
+                        $scope.data.selectedCity = $scope.data.cities[i];
+                        break;
+                    }
+                }
+            } else {
 
+                $scope.data.selectedCity = $scope.data.cities[0];
+            }
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getStates = function () {
+        var states = {};
+        var query = {"table":"states__cstore"};
+        query.columns = ["name"];
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
+            $scope.data.states = stateData.response.data;
+            $scope.data.selectedState = $scope.data.states[0];
+            $scope.getCities($scope.data.states[0]._id, false);
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.clearContent = function () {
+        $scope.data["firstname"] = "";
+        $scope.data["lastname"] = "";
+        $scope.data["contact"] = "";
+        $scope.data["postalCode"] = "";
+        $scope.data["address"] = "";
+        $scope.data["email"] = "";
+        $scope.data.selectedState = $scope.data.states[0];
+        $scope.data.selectedCity = $scope.data.cities[0];
+
+    }
     $scope.logOut = function () {
         $appService.deleteAllCookie();
         $scope.displayData["options"] = false;
@@ -325,7 +380,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.getAllStoreManagers = function (cursor) {
         var query = {"table":"storemanagers__cstore"};
-        query.columns = ["storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.columns = ["storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point"];
         query.max_rows = 10;
         if (cursor) {
             query.cursor = cursor;
@@ -342,7 +397,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         });
     }
     $scope.getAllStoreManagers();
-    });
+});
 
 
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
@@ -354,7 +409,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         if ($scope.loadingVenderData) {
             return false;
         }
-        if(direction == 1){
+        if (direction == 1) {
             $scope.show.preCursor = $scope.show.currentCursor;
         } else {
             $scope.show.preCursor = $scope.show.preCursor - limit;
@@ -377,23 +432,33 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
             alert("exception in making request");
         })
     }
-    $scope.getAllVendors(1, 1);
+    $scope.getAllVendors(1, 5);
     $scope.getMore = function () {
-        $scope.getAllVendors(1, 1);
+        $scope.getAllVendors(1, 5);
     }
     $scope.getLess = function () {
-        $scope.getAllVendors(0, 1);
+        $scope.getAllVendors(0, 5);
+    }
+    $scope.getStates();
+});
+cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    var vendorId = $routeParams.q;
+    if (vendorId && vendorId != undefined && vendorId != "undefined") {
+        $scope.data["userid"] = vendorId
+    }
+    else {
+        delete $scope.data["userid"];
+
     }
 
 });
 
 
-
-
 cstore.controller('productList', function ($scope, $appService) {
     $scope.getAllProducts = function (cursor) {
         var query = {"table":"storemanagers__cstore"};
-        query.columns = ["name","image","short_description",{"expression":"product_category", "columns":["_id", "name"]},"cost","soldcount"];
+        query.columns = ["name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount"];
         query.max_rows = 10;
         if (cursor) {
             query.cursor = cursor;

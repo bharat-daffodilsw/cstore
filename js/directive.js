@@ -106,18 +106,37 @@ cstore.directive('productDetail', ['$appService', function ($appService, $scope)
 cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete"><div class="add_btn"><button type="button">Add</button>' +
-            '</div><div class="delete_btn"><button type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
+        template:'<div class="add_delete"><div class="add_btn"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
+            '</div><div class="delete_btn"><button  type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input id="" name="" type="checkbox" value="1"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
-            '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td>' +
-            '<a class="edit_btn" href>Edit</a></td></tr></table></div>',
+            '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
+            '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.setUserState = function (vendor) {
+                        $scope.data["firstname"] = vendor.firstname;
+                        $scope.data["lastname"] = vendor.lastname;
+                        $scope.data["contact"] = vendor.contact;
+                        $scope.data["postalCode"] = vendor.postalCode;
+                        $scope.data["address"] = vendor.address;
+                        $scope.data["email"] = vendor.email;
+                        for (var i = 0; i < $scope.data.states.length; i++) {
+                            if ($scope.data.states[i]._id == vendor.state._id) {
+                                $scope.data.selectedState = $scope.data.states[i];
+                                break;
+                            }
+                        }
+                        $scope.getCities($scope.data.selectedState._id, vendor.city._id);
+                        window.location.href = "#!edit-vendor?q=" + vendor._id;
+                    }
                 }
             }
         }
@@ -127,12 +146,12 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
 cstore.directive('citySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="qty_select" style="width: 266px;" ng-model="vendor.city" ' +
-            'ng-options="city.name for city in cities"></select>',
+        template:'<select class="qty_select" style="width: 266px;" ng-model="data.selectedCity" ' +
+            'ng-options="city.name for city in data.cities"></select>',
         compile:function () {
             return {
                 pre:function () {
-                    $appService.getCities();
+
                 }
             }
         }
@@ -142,67 +161,89 @@ cstore.directive('citySelect', ['$appService', function ($appService, $scope) {
 cstore.directive('stateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="qty_select" style="width: 266px;" ng-model="vendor.state" ng-options="state.name for state in states"></select>'
+        template:'<select class="qty_select" style="width: 266px;" ng-change="getCities(data.selectedState._id)" ng-model="data.selectedState" ng-options="state.name for state in data.states"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
     }
 }]);
 
-cstore.directive('addvendor', ['$appService', function ($appService, $scope) {
+cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         replace:'true',
         template:'<div class="table_1"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
-            '<td><input type="text" placeholder="" ng-model="newVendor.firstname"></td><td><input type="text" placeholder=""ng-model="newVendor.lastname"></td></tr></table>' +
+            '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
-            '</td></tr><tr><td><textarea style="width: 650px; height:80px;" ng-model="newVendor.address"> </textarea></td></tr></table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">City</div>' +
-            '</td><td><div class="margin_top">State</div></td></tr><tr><td><city-select></city-select></td><td>' +
-            '<state-select></state-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td><td>' +
-            '<div class="margin_top">Contact No.</div></td></tr><tr><td><input type="text" placeholder="" ng-model="newVendor.contact"></td><td>' +
-            '<input type="text" placeholder=""></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><textarea style="width: 650px; height:50px;"ng-model="newVendor.email"> </textarea>' +
+            '</td></tr><tr><td><textarea style="width: 650px; height:80px;" ng-model="data.address"> </textarea></td></tr></table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">State</div>' +
+            '</td><td><div class="margin_top">City</div></td></tr><tr><td><state-select></state-select></td><td>' +
+            '<city-select></city-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td><td>' +
+            '<div class="margin_top">Contact No.</div></td></tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td><td>' +
+            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><input type="email" ng-model="data.email">' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close">' +
-            '<div class="add_btn"><button type="button">Save</button></div><div class="delete_btn"><button type="button">Close</button>' +
+            '<div class="add_btn"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
             '</div></div></td></tr></table></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
                     $scope.newVendor = {};
+                    $scope.setPathforVender = function (path) {
+                        $scope.clearContent();
+                        window.location.href = "#!/" + path;
+                    }
                 },
                 post:function ($scope) {
                     $scope.saveVendor = function () {
-                        if ($scope.newVendor.firstname == "" || $scope.newVendor.firstname == undefined) {
+                        $scope.newVendor = {};
+                        if ($scope.data.firstname == "" || $scope.data.firstname == undefined) {
                             alert("please enter firstname");
                             return false;
                         }
-                        if ($scope.newVendor.email == "" || $scope.newVendor.email == undefined) {
-                            alert("please enter email");
+                        var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                        var email = $scope.data.email;
+                        if (regEmail.test(email) == false) {
+                            alert("please enter a valid email");
                             return false;
                         }
-                        if (!$scope.vendor.city) {
-                            alert("please select product");
-                            return false;
-                        }
-                        if (!$scope.vendor.state) {
-                            alert("please select promotion");
+                        $scope.newVendor.email = email;
+                        if (!$scope.data.selectedState) {
+                            alert("please select state first ");
                             return false;
                         }
 
+                        if (!$scope.data.selectedCity) {
+                            alert("please select city first ");
+                            return false;
+                        }
+                        if ($scope.data["userid"]) {
+                            $scope.newVendor["_id"] = $scope.data["userid"];
+                        }
+                        $scope.newVendor["firstname"] = $scope.data.firstname;
+                        $scope.newVendor["lastname"] = $scope.data.lastname;
+                        $scope.newVendor["address"] = $scope.data.address;
+                        $scope.newVendor["city"] = {"_id":$scope.data.selectedCity._id, "name":$scope.data.selectedCity.name}
+                        $scope.newVendor["state"] = {"_id":$scope.data.selectedState._id, "name":$scope.data.selectedState.name}
+                        $scope.newVendor["postalcode"] = $scope.data.postalCode;
+                        $scope.newVendor["contact"] = $scope.data.contact;
+                        $scope.newVendor["email"] = $scope.data.email;
                         var query = {};
                         query.table = "vendors__cstore";
-                        $scope.newVendor["city"] = {"name":$scope.vendor.city.name, "_id":$scope.vendor.city._id};
-                        $scope.newVendor["state"] = {"name":$scope.vendor.state.name, "_id":$scope.vendor.state._id};
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (!callBackData["insert"]) {
-                                alert(callBackData);
-                            }
-                            else {
-                                $scope.addVendor = false;
-                                alert("Saved Successfully");
-                                $scope.newVendor = {};
-                                $scope.vendor.city = {};
-                                $scope.vendor.state = {};
+                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                                $scope.clearContent();
+                                alert("Updated");
+                            } else {
+                                alert("some error while saving");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
