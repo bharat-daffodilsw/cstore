@@ -164,7 +164,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         })
     }
     $scope.getProductCategories();
-
+    $scope.getFileExtension = function (filename) {
+        var ext = /^.+\.([^.]+)$/.exec(filename);
+        return ext == null ? "" : ext[1];
+    }
 
 });
 cstore.controller('homeCtrl', function ($scope, $appService, $location) {
