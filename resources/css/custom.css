@@ -15,8 +15,8 @@ a {
     color:#000;}
 
 a:hover, a:focus {
-    color: #000;
-    text-decoration: none;
+    color: #000!important:
+text-decoration: none;
 }
 
 .header{
@@ -402,7 +402,9 @@ a:hover, a:focus {
     color:#FFF;}
 
 .admin_menu ul li a{
-    padding:10px 5px;}
+    padding:10px 5px;
+    color:black;
+}
 
 .matter {
     border-bottom:1px solid #CCC;
@@ -715,8 +717,8 @@ tr {
 .qty_select {
     width:150px;}
 
-.qty_1 input{
-    width:35px;}
+.qty_1 .qty_select {
+    width:80px;}
 
 .name_input input {
     width:90%;
