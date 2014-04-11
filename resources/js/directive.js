@@ -39,7 +39,7 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
 
-        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productdata.productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
             '</ul></div>'
     }
 }]);
@@ -345,17 +345,77 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"><a href="#!/add-product">Add</a></button>' +
-            '</div><div class="delete_btn pull-left"><button type="button"><a href="">Delete</a></button></div><div  ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteProduct()"><a href>Delete</a></button></div><div  ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Product Name</th><th>Product Image' +
             '</th><th>Product Category</th><th>Sold Count</th><th>Price</th><th></th></tr><tr ng-repeat="product in products"><td>' +
-            '<input id="" name="" type="checkbox" value="1"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
+            '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
             '{{product.product_category.name}}</td><td>{{product.soldcount}}</td><td>{{product.cost.amount | currency}}</td>' +
-            '<td><a class="edit_btn" ng-click="setUserState(vendor)" href>Edit</a></td></tr></table></div>',
+            '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.deleteProductArray = [];
+                    $scope.deleteProduct = function () {
+                        for (var i = 0; i < $scope.products.length; i++) {
+                            if ($scope.products[i].deleteStatus) {
+                                $scope.deleteProductArray.push({"_id":$scope.products[i]._id, "__type__":"delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "products__cstore";
+                        query.operations = angular.copy($scope.deleteProductArray);
+                        $scope.deleteProductArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.products.length; i++) {
+                                    if ($scope.products[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.products.splice(i, 1);
+                                    }
+                                }
+
+                                alert("Deleted");
+                            }
+                            else {
+                                alert("some err while deleting");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+
+                    }
+                    $scope.setProductState = function (product) {
+                        console.log(product);
+                        $scope.productdata["name"] = product.name;
+                        $scope.productdata["cost"] = product.cost;
+                        $scope.productdata["description"] = product.description;
+                        $scope.productdata["short_description"] = product.short_description;
+                        $scope.productdata["soldcount"] = product.soldcount;
+                        $scope.productdata["image"] = product.image;
+                        for (var i = 0; i < $scope.productdata.vendors.length; i++) {
+                            if ($scope.productdata.vendors[i]._id == product.vendor._id) {
+                                $scope.productdata.selectedVendor = $scope.productdata.vendors[i];
+                                break;
+                            }
+                        }
+                        for (var j = 0; j < $scope.productdata.productCategories.length; i++) {
+                            if ($scope.productdata.productCategories[i]._id == product.product_category._id) {
+                                $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[i];
+                                break;
+                            }
+                        }
+                        window.location.href = "#!edit-product?q=" + product._id;
+                    }
                 }
             }
         }
@@ -365,14 +425,14 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
 cstore.directive('vendorSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="form-control search_select" style="width: 265px;padding: 7px;" ng-model="data.selectedVendor" ng-options="vendor.firstname for vendor in data.vendors"></select>'
+        template:'<select class="form-control search_select" style="width: 265px;padding: 7px;" ng-model="productdata.selectedVendor" ng-options="vendor.firstname for vendor in productdata.vendors"></select>'
     }
 }]);
 
 cstore.directive('productCategorySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="form-control search_select" style="width: 265px;padding: 7px;" ng-model="data.selectedProductCategory" ng-options="productCategory.name for productCategory in productCategories"></select>'
+        template:'<select class="form-control search_select" style="width: 265px;padding: 7px;" ng-model="productdata.selectedProductCategory" ng-options="productCategory.name for productCategory in productdata.productCategories"></select>'
     }
 }]);
 
@@ -381,19 +441,19 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
         restrict:'E',
         replace:'true',
         template:'<div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Name</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="data.name">' +
+            '<div class="margin_top">Name</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.name">' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="data.description"> ' +
+            'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"> ' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
             'Short Description</div></td><td><div class="margin_top">Product Categroy</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="data.short_description"></td><td><product-category-select></product-category-select>' +
+            '<input type="text" placeholder="" ng-model="productdata.short_description"></td><td><product-category-select></product-category-select>' +
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
-            '</td></tr><tr><td><input type="text" placeholder="" ng-model="data.soldcount"></td><td><vendor-select></vendor-select>' +
+            '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
             '</td></tr><tr><td><div class="margin_top">Price</div></td><td><div class="margin_top">Image</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="data.cost.amount"></td><td style="position: absolute;"><app-file-upload><app-file-upload></td></tr>' +
+            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td style="position: absolute;"><app-file-upload><app-file-upload></td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforProduct(\'products\')"><a href="">Close</a></button></div></div></td></tr></table></div>',
+            '<button type="button" ng-click="setPathforProduct(\'products\')"><a href>Close</a></button></div></div></td></tr></table></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -405,52 +465,59 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                 },
                 post:function ($scope) {
                     $scope.saveProduct = function () {
-                        if ($scope.data.name == "" || $scope.data.name == undefined) {
+                        if ($scope.productdata.name == "" || $scope.productdata.name == undefined) {
                             alert("please enter product name");
                             return false;
                         }
-                        if ($scope.data.cost.amount == "" || $scope.data.cost.amount == undefined) {
+                        if ($scope.productdata.cost.amount == "" || $scope.productdata.cost.amount == undefined) {
                             alert("please enter cost");
                             return false;
                         }
-                        //if (document.getElementById('uploadfile').files.length === 0) {
-                        //  alert("please select media first");
-                        //return false;
-                        //}
-                        if (!$scope.data.selectedProductCategory) {
+                        if (document.getElementById('uploadfile').files.length === 0) {
+                          alert("please select media first");
+                        return false;
+                        }
+                        if (!$scope.productdata.selectedProductCategory) {
                             alert("please select product category");
                             //return false;
                         }
 
-                        // var current_file = {};
-                        //current_file.name = $scope.oFile.name;
-                        //current_file.type = $scope.oFile.type;
-                        //current_file.contents = $scope.oFile.data;
-                        //current_file.ask = ASK;
-                        //current_file.ask="531829f47754938f0ecfd3c7";
-                        //current_file.osk = OSK;
+                         var current_file = {};
+                        current_file.name = $scope.oFile.name;
+                        current_file.type = $scope.oFile.type;
+                        current_file.contents = $scope.oFile.data;
+                        current_file.ask = ASK;
+                        current_file.ask="531829f47754938f0ecfd3c7";
+                        current_file.osk = OSK;
 
-                        //$appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                        //if (data) {
-                        //  alert(data);
+                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                        if (data) {
+                          alert(data);
                         var query = {};
                         query.table = "products__cstore";
-                        $scope.newProduct["name"]=$scope.data.name;
-                        $scope.newProduct["description"]=$scope.data.description;
-                        $scope.newProduct["short_description"]=$scope.data.short_description;
-                        $scope.newProduct["soldcount"]=$scope.data.soldcount;
-                        $scope.newProduct["vendor"] = {"firstname":$scope.data.selectedVendor.firstname,"_id":$scope.data.selectedVendor._id};
-                        $scope.newProduct["product_category"] = {"name":$scope.data.selectedProductCategory.name,"_id":$scope.data.selectedProductCategory._id};
-                        $scope.newProduct["cost"]={"amount":$scope.data.cost.amount,"type":{"currency":"usd"}};
-                        //$scope.newProduct["image"] = data;
+                        if ($scope.productdata["productid"]) {
+                            $scope.newProduct["_id"] = $scope.productdata["productid"];
+                        }
+                        $scope.newProduct["name"]=$scope.productdata.name;
+                        $scope.newProduct["description"]=$scope.productdata.description;
+                        $scope.newProduct["short_description"]=$scope.productdata.short_description;
+                        $scope.newProduct["soldcount"]=$scope.productdata.soldcount;
+                        $scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname,"_id":$scope.productdata.selectedVendor._id};
+                        $scope.newProduct["product_category"] = {"name":$scope.productdata.selectedProductCategory.name,"_id":$scope.productdata.selectedProductCategory._id};
+                        $scope.newProduct["cost"]={"amount":$scope.productdata.cost.amount,"type":{"currency":"usd"}};
+                        $scope.newProduct["image"] = data;
                         query.operations = [$scope.newProduct];
-                        //console.log("productdata"+$scope.newProduct);
+
                         $scope.uploading = true;
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             //$scope.uploading = false;
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                $scope.clearProductContent();
+                                if (!$scope.productdata["productid"]) {
+                                    $scope.clearProductContent();
+                                }
+
                                 alert("Updated");
+                                window.location.href="#!/products"
                             } else {
                                 alert("some error while saving");
                             }
@@ -458,13 +525,13 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $scope.$apply();
                             }
                         });
-                        //}
+                        }
                         //else {
                         //  $scope.uploading = false;
                         // }
-                        //}, function (callbackerror) {
-                        //    alert("error");
-                        //});
+                        }, function (callbackerror) {
+                            alert("error");
+                        });
                     };
                 }
             }
