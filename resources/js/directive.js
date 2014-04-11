@@ -492,76 +492,81 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                 },
                 post:function ($scope) {
                     $scope.saveProduct = function () {
-                        if ($scope.productdata.name == "" || $scope.productdata.name == undefined) {
-                            alert("please enter product name");
-                            return false;
-                        }
-                        if ($scope.productdata.cost.amount == "" || $scope.productdata.cost.amount == undefined) {
-                            alert("please enter cost");
-                            return false;
-                        }
-                        if (document.getElementById('uploadfile').files.length === 0) {
-                          alert("please select media first");
-                        return false;
-                        }
-                        if (!$scope.productdata.selectedProductCategory) {
-                            alert("please select product category");
-                            //return false;
-                        }
-
-                         var current_file = {};
-                        current_file.name = $scope.oFile.name;
-                        current_file.type = $scope.oFile.type;
-                        current_file.contents = $scope.oFile.data;
-                        current_file.ask = ASK;
-                        current_file.ask="531829f47754938f0ecfd3c7";
-                        current_file.osk = OSK;
-
-                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                        if (data) {
-                          alert(data);
-                        var query = {};
-                        query.table = "products__cstore";
-
-                        if ($scope.productdata["productid"]) {
-                            $scope.newProduct["_id"] = $scope.productdata["productid"];
-                        }
-                        $scope.newProduct["name"]=$scope.productdata.name;
-                        $scope.newProduct["description"]=$scope.productdata.description;
-                        $scope.newProduct["short_description"]=$scope.productdata.short_description;
-                        $scope.newProduct["soldcount"]=$scope.productdata.soldcount;
-                        $scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname,"_id":$scope.productdata.selectedVendor._id};
-                        $scope.newProduct["product_category"] = {"name":$scope.productdata.selectedProductCategory.name,"_id":$scope.productdata.selectedProductCategory._id};
-                        $scope.newProduct["cost"]={"amount":$scope.productdata.cost.amount,"type":{"currency":"usd"}};
-                        $scope.newProduct["image"] = data;
-
-                        query.operations = [$scope.newProduct];
-
-                        $scope.uploading = true;
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            //$scope.uploading = false;
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
-                                if (!$scope.productdata["productid"]) {
-                                    $scope.clearProductContent();
-                                }
-
-                                alert("Updated");
-                                window.location.href="#!/products"
-                            } else {
-                                alert("some error while saving");
+                        $scope.CSession = $appService.getSession();
+                        if ($scope.CSession) {
+                            if ($scope.productdata.name == "" || $scope.productdata.name == undefined) {
+                                alert("please enter product name");
+                                return false;
                             }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
+                            if ($scope.productdata.cost.amount == "" || $scope.productdata.cost.amount == undefined) {
+                                alert("please enter cost");
+                                return false;
                             }
-                        });
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                alert("please select image first");
+                                return false;
+                            }
+                            if (!$scope.productdata.selectedProductCategory) {
+                                alert("please select product category");
+                                //return false;
+                            }
+                            var query = {};
+                            query.table = "products__cstore";
+
+                            if ($scope.productdata["productid"]) {
+                                $scope.newProduct["_id"] = $scope.productdata["productid"];
+                            }
+                            $scope.newProduct["name"] = $scope.productdata.name;
+                            $scope.newProduct["description"] = $scope.productdata.description;
+                            $scope.newProduct["short_description"] = $scope.productdata.short_description;
+                            $scope.newProduct["soldcount"] = $scope.productdata.soldcount;
+                            $scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
+                            $scope.newProduct["product_category"] = {"name":$scope.productdata.selectedProductCategory.name, "_id":$scope.productdata.selectedProductCategory._id};
+                            $scope.newProduct["cost"] = {"amount":$scope.productdata.cost.amount, "type":{"currency":"usd"}};
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                delete $scope.newProduct["image"];
+                                query.operations = [$scope.newProduct];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                var current_file = {};
+                                current_file.name = $scope.oFile.name;
+                                current_file.type = $scope.oFile.type;
+                                current_file.contents = $scope.oFile.data;
+                                current_file.ask = ASK;
+                                current_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                    if (data.response) {
+                                        $scope.newProduct["image"] = data.response;
+                                        query.operations = [$scope.newProduct];
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
+                                        alert("some error while uploading image please try again ");
+                                    }
+                                }, function (callbackerror) {
+                                    alert("error");
+                                });
+                            }
                         }
-                        //else {
-                        //  $scope.uploading = false;
-                        // }
-                        }, function (callbackerror) {
-                            alert("error");
-                        });
+                        else {
+                            alert("please login first");
+                        }
                     };
+                    $scope.saveFunction = function (query) {
+
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            if (callBackData.response.insert) {
+                                alert("new product added");
+                            }
+                            else {
+                                alert("err while saving");
+                            }
+                        }, function (err) {
+                            console.log(err.stack);
+
+                        });
+                    }
                 }
             }
         }
