@@ -16,11 +16,12 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="admin_menu pull-left"><ul><li><a href active-link="active">Vendor</a></li><li><a href="#!/store-managers" active-link="active">Store Manager</a></li>' +
-            '<li><a href="#!/products" active-link="active">Product</a></li><li><a active-link="active" href>Promotion</a></li><li><a active-link="active" href>Training Session</a></li><li>' +
+        template:'<div class="admin_menu pull-left"><ul><li><a href="#!/vendors" active-link="active">Vendor</a></li><li><a  href="#!/store-managers" active-link="active">Store Manager</a></li>' +
+            '<li><a  href="#!/products" active-link="active">Product</a></li><li><a active-link="active" href >Promotion</a></li><li><a active-link="active" href>Training Session</a></li><li>' +
             '<a href active-link="active">Survey</a></li><li><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li><a href active-link="active">Training Category</a>' +
             '</li><li><a href active-link="active">Product Category</a></li><li><a href active-link="active">Cities</a></li><li><a href active-link="active">States</a></li><li>' +
-            '<a href active-link="active">Countries</a></li></ul></div></li></ul></div>'
+            '<a href active-link="active">Countries</a></li></ul></div></li></ul></div>',
+
     }
 }]);
 
@@ -39,20 +40,20 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
 
-        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productCategories" class="active"><a href>{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productCategories" class="active"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
             '</ul></div>'
     }
 }]);
 
-cstore.directive('activeLink', ['$location', function(location) {
+cstore.directive('activeLink', ['$location', function (location) {
     return {
-        restrict: 'A',
-        link: function(scope, element, attrs, controller) {
+        restrict:'A',
+        link:function (scope, element, attrs, controller) {
             var clazz = attrs.activeLink;
             var path = attrs.href;
             path = path.substring(2); //hack because path does bot return including hashbang
             scope.location = location;
-            scope.$watch('location.path()', function(newPath) {
+            scope.$watch('location.path()', function (newPath) {
                 if (path === newPath) {
                     element.addClass(clazz);
                 } else {
@@ -110,11 +111,12 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
 
 
         template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
-            '</div><div class="delete_btn pull-left"><button ng-click="deleteUsers()"  type="button">Delete</button></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '</div><div class="delete_btn pull-left"><button ng-click="deleteUsers()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><input type="text" placeholder="Search by product" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
-
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
@@ -124,6 +126,11 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                 pre:function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllVendors(1, 5, $scope.searchby.value, $scope.searchContent);
                     }
                     $scope.deleteUserArray = [];
                     $scope.deleteUsers = function () {
@@ -136,28 +143,33 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         query.table = "vendors__cstore";
                         query.operations = angular.copy($scope.deleteUserArray);
                         $scope.deleteUserArray = [];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
-                                for (var i = 0; i < $scope.vendors.length; i++) {
-                                    if ($scope.vendors[i].deleteStatus) {
-                                        console.log("delete items" + i);
-                                        $scope.vendors.splice(i, 1);
+                        if (query.operations.length) {
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.vendors.length; i++) {
+                                        if ($scope.vendors[i].deleteStatus) {
+                                            console.log("delete items" + i);
+                                            $scope.vendors.splice(i, 1);
+                                        }
                                     }
-                                }
 
-                                alert("Deleted");
-                            }
-                            else {
-                                alert("some err while deleting");
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            alert(err);
-                        });
+                                    alert("Deleted");
+                                }
+                                else {
+                                    alert("some err while deleting");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
+                        else {
+                            alert("please select at least one vendor before delete");
+                        }
 
                     }
                     $scope.setUserState = function (vendor) {
@@ -187,6 +199,19 @@ cstore.directive('citySelect', ['$appService', function ($appService, $scope) {
         restrict:'E',
         template:'<select class="qty_select" style="width: 266px;" ng-model="data.selectedCity" ' +
             'ng-options="city.name for city in data.cities"></select>',
+        compile:function () {
+            return {
+                pre:function () {
+
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('searchBy', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" ng-model="searchby" ng-options="search.name for search in venderSearch"></select>',
         compile:function () {
             return {
                 pre:function () {
@@ -435,13 +460,13 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         //  alert(data);
                         var query = {};
                         query.table = "products__cstore";
-                        $scope.newProduct["name"]=$scope.data.name;
-                        $scope.newProduct["description"]=$scope.data.description;
-                        $scope.newProduct["short_description"]=$scope.data.short_description;
-                        $scope.newProduct["soldcount"]=$scope.data.soldcount;
-                        $scope.newProduct["vendor"] = {"firstname":$scope.data.selectedVendor.firstname,"_id":$scope.data.selectedVendor._id};
-                        $scope.newProduct["product_category"] = {"name":$scope.data.selectedProductCategory.name,"_id":$scope.data.selectedProductCategory._id};
-                        $scope.newProduct["cost"]={"amount":$scope.data.cost.amount,"type":{"currency":"usd"}};
+                        $scope.newProduct["name"] = $scope.data.name;
+                        $scope.newProduct["description"] = $scope.data.description;
+                        $scope.newProduct["short_description"] = $scope.data.short_description;
+                        $scope.newProduct["soldcount"] = $scope.data.soldcount;
+                        $scope.newProduct["vendor"] = {"firstname":$scope.data.selectedVendor.firstname, "_id":$scope.data.selectedVendor._id};
+                        $scope.newProduct["product_category"] = {"name":$scope.data.selectedProductCategory.name, "_id":$scope.data.selectedProductCategory._id};
+                        $scope.newProduct["cost"] = {"amount":$scope.data.cost.amount, "type":{"currency":"usd"}};
                         //$scope.newProduct["image"] = data;
                         query.operations = [$scope.newProduct];
                         //console.log("productdata"+$scope.newProduct);

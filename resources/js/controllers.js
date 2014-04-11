@@ -4,7 +4,6 @@ var OSK = "531972e05fccddeb550a04a3";
 var STOREMANAGER = "531d4aa0bd1515ea1a9bbaf6";
 var ADMIN = "531d4a79bd1515ea1a9bbaf5";
 var VENDOR = "vendors";
-
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services']);
 cstore.config(
@@ -176,13 +175,16 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
             $scope.homeView = {"storeManager":false, "admin":true};
-            var pathToBeSet = $appService.getCookie("adminView");
-            if (pathToBeSet) {
-                $appService.setAdminView(pathToBeSet);
-            }
-            else {
-                $appService.setAdminView(VENDOR);
-            }
+//            var pathToBeSet = $appService.getCookie("adminView");
+//            if (pathToBeSet) {
+////                $appService.setAdminView(pathToBeSet);
+//                window.location
+//            }
+//            else {
+////                $appService.setAdminView(VENDOR);
+//            }
+
+            window.location.href="#!/vendors";
 
         }
     }
@@ -240,7 +242,7 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
     $scope.getProductDetail();
 });
 cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
-    $scope.categoryData = {"loadingData":false};
+    $scope.categoryData = {"loadingData":false, "available":false};
     $scope.products = [];
     $scope.getProductDetail = function (cursor, filter) {
         if ($scope.categoryData.loadingData) {
@@ -271,11 +273,18 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
             }
             if (!$scope.products.length) {
                 $scope.products = rawData;
-            }
 
-            console.log("data" + JSON.stringify($scope.products));
+            }
             $scope.categoryData.loadingData = false;
             $scope.cursor = productDetailData.response.cursor;
+            if ($scope.products.length) {
+                /*wee need string for ng-switch*/
+                $scope.categoryData.available = "true";
+            }
+            else {
+                $scope.categoryData.available = "false";
+            }
+
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -379,9 +388,14 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingVenderData = false;
+    $scope.venderSearch = [
+        {"value":"firstname", "name":"First Name"},
+        {"value":"address", "name":"Address"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.vendors = [];
     $appService.auth();
-    $scope.getAllVendors = function (direction, limit) {
+    $scope.getAllVendors = function (direction, limit, column, searchText) {
         if ($scope.loadingVenderData) {
             return false;
         }
@@ -394,6 +408,10 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.loadingVenderData = true;
         var query = {"table":"vendors__cstore"};
         query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -443,7 +461,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         if ($scope.loadingStoreData) {
             return false;
         }
-        if(direction == 1){
+        if (direction == 1) {
             $scope.show.preCursor = $scope.show.currentCursor;
         } else {
             $scope.show.preCursor = $scope.show.preCursor - limit;
@@ -451,7 +469,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         }
         $scope.loadingVenderData = true;
         var query = {"table":"storemanagers__cstore"};
-        query.columns = ["storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.columns = ["storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point"];
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
@@ -482,7 +500,7 @@ cstore.controller('productList', function ($scope, $appService) {
         if ($scope.loadingProductData) {
             return false;
         }
-        if(direction == 1){
+        if (direction == 1) {
             $scope.show.preCursor = $scope.show.currentCursor;
         } else {
             $scope.show.preCursor = $scope.show.preCursor - limit;
@@ -490,7 +508,7 @@ cstore.controller('productList', function ($scope, $appService) {
         }
         $scope.loadingProductData = true;
         var query = {"table":"products__cstore"};
-        query.columns = ["name","image","short_description",{"expression":"product_category", "columns":["_id", "name"]},"cost","soldcount"];
+        query.columns = ["name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount"];
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
