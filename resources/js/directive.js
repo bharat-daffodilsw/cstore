@@ -562,7 +562,7 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                         var file_ext = $scope.getFileExtension(file.name);
                         if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
                             $scope.showimage = true;
-                            $scope.videoAudio = false;
+                            //$scope.videoAudio = false;
                             $scope.imageData = file.result;
                             if (!$scope.$$phase) {
                                 $scope.$apply();
