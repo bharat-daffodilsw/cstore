@@ -537,7 +537,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 current_file.osk = OSK;
                                 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                     if (data.response) {
-                                        $scope.newProduct["image"] = data.response;
+                                        $scope.newProduct["image"] = data.response.data;
                                         query.operations = [$scope.newProduct];
                                         $scope.saveFunction(query);
                                     }
@@ -585,18 +585,17 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
             return {
                 post:function ($scope, iElement) {
                     $scope.loadFile = function (evt) {
-                        file = {};
-                        file.name = $scope.oFile.name;
-                        file.result = evt.target.result;
+                        $scope.file={};
+                        $scope.file.name = $scope.oFile.name;
+                        $scope.file.result = evt.target.result;
                         $scope.oFile['data'] = evt.target.result;
-                        $scope.showUploadedFile(file);
+                        $scope.showUploadedFile($scope.file);
                     };
                     $scope.showUploadedFile = function (file) {
 
                         var file_ext = $scope.getFileExtension(file.name);
                         if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
                             $scope.showimage = true;
-                            //$scope.videoAudio = false;
                             $scope.imageData = file.result;
                             if (!$scope.$$phase) {
                                 $scope.$apply();

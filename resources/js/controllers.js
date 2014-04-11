@@ -54,6 +54,8 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.currentUser = {"data":""};
+    $scope.file = {};
+    $scope.oFile={};
     $scope.data = {"cities":[], "states":[], "selectedCity":"", "selectedState":""};
     $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
     $scope.currentUser["data"] = $appService.getSession();
@@ -151,14 +153,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     }
 
     $scope.getProductCategories = function () {
-        var productCategories={};
+        var productCategories = {};
         var query = {"table":"product_categories__cstore"};
         query.columns = ["name"];
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
             $scope.productdata.productCategories = productCategoryData.response.data;
-            $scope.productdata.selectedProductCategory =$scope.productdata.productCategories[0];
+            $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         }, function (jqxhr, error) {
         })
     }
@@ -209,7 +211,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
 ////                $appService.setAdminView(VENDOR);
 //            }
 
-            window.location.href="#!/vendors";
+            window.location.href = "#!/vendors";
 
         }
     }
@@ -494,7 +496,7 @@ cstore.controller('productList', function ($scope, $appService) {
 
         $scope.loadingProductData = true;
         var query = {"table":"products__cstore"};
-        query.columns = ["description","name","image","short_description",{"expression":"product_category", "columns":["_id", "name"]},"cost","soldcount",{"expression":"vendor", "columns":["_id", "firstname"]}];
+        query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount", {"expression":"vendor", "columns":["_id", "firstname"]}];
 
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
@@ -522,7 +524,7 @@ cstore.controller('productList', function ($scope, $appService) {
     $scope.getVendors();
 });
 
-cstore.controller('addProductCtrl', function ($scope, $appService,$routeParams) {
+cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     $scope.clearProductContent = function () {
         $scope.productdata["name"] = "";
@@ -530,7 +532,7 @@ cstore.controller('addProductCtrl', function ($scope, $appService,$routeParams) 
         $scope.productdata["description"] = "";
         $scope.productdata["short_description"] = "";
         $scope.productdata["soldcount"] = "";
-        $scope.productdata["image"]="";
+        $scope.productdata["image"] = "";
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         $scope.productdata.selectedVendor = $scope.productdata.vendors[0];
 
@@ -563,7 +565,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 
         $scope.loadingVenderData = true;
         var query = {"table":"storemanagers__cstore"};
-        query.columns = ["storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.columns = ["storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point"];
 
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
