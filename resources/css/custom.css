@@ -14,11 +14,6 @@ a {
     text-decoration:none;
     color:#000;}
 
-a:hover, a:focus {
-    color: #000!important;
-text-decoration: none;
-}
-
 .header{
     background-color:#000;
     color:#FFF;
@@ -86,7 +81,7 @@ text-decoration: none;
 
 .username {
     color:#FFF;
-    font-size:18px;
+    font-size:17px;
     margin:35px 3% 0 0;
     width:14%;}
 
@@ -107,7 +102,9 @@ text-decoration: none;
     font-weight:bold;
     min-height:40px;
     max-height:40px;
-    overflow:hidden;}
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
 
 #cm {
     width: 45px;
@@ -131,7 +128,7 @@ text-decoration: none;
 #primary ul{
     list-style-type:none;
     padding:0px;
-    font-size:18px;
+    font-size:17px;
     margin-left:5px;
     text-transform:uppercase;}
 
@@ -191,7 +188,11 @@ text-decoration: none;
     margin:5px 0;
     max-height:50px;
     min-height:50px;
-    overflow:hidden;}
+    overflow:hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;}
 
 .name {
     font-size:13px;
@@ -199,7 +200,9 @@ text-decoration: none;
     text-transform:uppercase;
     min-height:15px;
     max-height:15px;
-    overflow:hidden;}
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
 
 .pop_products {
     font-size:16px;
@@ -273,7 +276,7 @@ text-decoration: none;
 .short_details {
     margin-top:10px;
     padding:10px;
-    font-size:18px;
+    font-size:17px;
     border-bottom:1px solid #CCC;
     border-left:1px solid #CCC;
     border-top:1px solid #CCC;
@@ -282,7 +285,7 @@ text-decoration: none;
 .Qty {
     margin-top:10px;
     padding:5px 10px 15px 5px;
-    font-size:18px;
+    font-size:17px;
     border-bottom:1px solid #CCC;
     border-left:1px solid #CCC;
     border-top:1px solid #CCC;
@@ -290,7 +293,7 @@ text-decoration: none;
 
 .final_price {
     margin:10px 0;
-    font-size:18px;}
+    font-size:17px;}
 
 .add_btn a {
     background-color:#e7c271;
@@ -354,7 +357,7 @@ text-decoration: none;
 .forget_password {
     width:100%;
     text-align:center;
-    font-size:18px;
+    font-size:17px;
     margin-top:20px;}
 
 .login_page .user_name {
@@ -383,14 +386,13 @@ text-decoration: none;
     display:inline;
     padding:0px 5px;
     color:#000;
-    font-size:18px;
-    font-weight:bold;
+    font-size:17px;
     position:relative;
     list-style:none;}
 
 .admin_menu ul li a:hover {
     background-color:#000;
-    font-size:18px;
+    font-size:17px;
     color:#FFF;}
 
 .admin_menu ul li:hover > div {
@@ -398,13 +400,11 @@ text-decoration: none;
 
 .admin_menu ul li a.active {
     background-color:#000;
-    font-size:18px;
+    font-size:17px;
     color:#FFF;}
 
 .admin_menu ul li a{
-    padding:10px 5px;
-    color:black;
-}
+    padding:10px 5px;}
 
 .matter {
     border-bottom:1px solid #CCC;
@@ -419,21 +419,21 @@ text-decoration: none;
     display:none;
     background-color:#e7c271;
     position:absolute;
-    margin-top:45px;
-    width: 200px;;}
+    margin-top:8px;
+    width: 200px;;
+    margin-left:5px;}
 
 .setup ul li {
     padding:0;
     color:#000;
     font-size:16px;
-    font-weight:bold;
     list-style:none;
     width:100%;
     display:block;}
 
 .setup ul li a:hover{
     background-color:#000;
-    font-size:18px;
+    font-size:17px;
     color:#FFF;}
 
 .setup ul{
@@ -442,7 +442,7 @@ text-decoration: none;
 .setup li a{
     width:93%;
     padding:5px 0 5px 15px!important;
-    font-size:18px;}
+    font-size:17px;}
 
 .table {
     text-align:center;
@@ -455,6 +455,7 @@ text-decoration: none;
     min-height:500px;}
 
 .table_3 {
+    width:100%;
     text-align:center;
     margin-top:10px;
     font-size:14px;
@@ -487,11 +488,15 @@ text-decoration: none;
     padding-right:5px;
     max-width:150px;
     overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
 }
 
 tr {
     max-height:42px;
-    overflow:hidden;}
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
 
 .table_3 td{
     border-bottom:1px solid #CCC;
@@ -499,6 +504,8 @@ tr {
     padding-right:5px;
     max-width:150px;
     overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
 }
 
 .table_1 table td input {
@@ -518,16 +525,21 @@ tr {
 
 .table th{background-color:#e7c271;
     padding:7px;
-    font-size: 18px;
+    font-size: 17px;
     text-align: center;}
 
 .table_3 th{background-color:#e7c271;
     padding:7px;
-    font-size: 18px;
+    font-size: 17px;
     text-align: center;}
 
 .edit_btn {
     background-color:#e7c271;
+    text-decoration:underline;
+    padding:5px;}
+
+.assign_btn {
+    text-decoration:underline;
     padding:5px;}
 
 .add_delete {
@@ -588,6 +600,8 @@ tr {
     padding-right: 5px;
     max-width:150px;
     overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
 }
 
 .Add_state .table td {
@@ -605,7 +619,9 @@ tr {
 .products_img {
     min-height:170px;
     max-height:170px;
-    overflow:hidden;}
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
 
 .add_to_btn a {
     background-color:#e7c271;
@@ -641,7 +657,7 @@ tr {
 
 .saved_address {
     margin-left:50px;
-    font-size:18px;
+    font-size:17px;
     margin-bottom:15px;}
 
 .fix_address {
@@ -651,7 +667,9 @@ tr {
 
 .address {
     height:60px;
-    overflow:hidden;}
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
 
 .saved_1 {
     padding:0 10px;}
@@ -667,6 +685,7 @@ tr {
     width:44%;
     padding:0px;
     margin:10px;}
+
 
 .saved_r_bar {
 
@@ -689,7 +708,7 @@ tr {
     padding:10px;
     width:30%;
     font-weight:bold;
-    font-size:18px;
+    font-size:17px;
     text-align:center;}
 
 .active_1 {
@@ -741,4 +760,43 @@ th {
 .table table td input {
     padding: 7px;
     width: 95%;
+}
+
+.s_bar {
+    width:44%;}
+
+.s_bar .saved_l_bar {
+    border-bottom:1px solid #CCC;
+    border-left:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;
+    width:95%;
+    padding:0px;
+    margin:10px;}
+
+.item_remove a {
+    text-decoration:underline;}
+
+.assign_popup {
+    display:none;
+    top:400px;
+    left:500px;
+    background-color:#FFF;
+    position:absolute;
+    font-size:17px;
+    width:30%;
+    padding:10px;
+    border-bottom:1px solid #CCC;
+    border-left:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;}
+
+.store_manager .qty_select {
+    margin-left:20px; }
+
+.store_manager  {
+    margin:10px 0; }
+
+.other_input {
+    margin-top: 10px;
 }

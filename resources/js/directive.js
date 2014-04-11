@@ -277,7 +277,9 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 $scope.clearContent();
                                 alert("Updated");
@@ -320,24 +322,365 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
 cstore.directive('storeManagerList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"><a href="">Add</a>' +
-            '</button></div><div class="delete_btn pull-left"><button type="button"><a href="">Delete</a></button></div>' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-store-manager\')"><a href="">Add</a>' +
+            '</button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStoreManagers()"><a href>Delete</a></button></div>' +
             '<div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Store Name</th>' +
             '<th>Shift</th><th>POS Type</th><th>POS Version</th><th>Loyalty Status</th><th>Reward Points</th><th>Brands</th><th>' +
             'Email</th><th>Contact</th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
-            '<input id="" name="" type="checkbox" value="1"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.pos_type}}</td><td>' +
+            '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.pos_type}}</td><td>' +
             '{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td><td>{{storeManager.brands}}</td><td>{{storeManager.email}}</td><td>{{storeManager.contact}}</td>' +
-            '<td><a class="edit_btn" href>Edit</a></td></tr><tr><td>' +
+            '<td><a class="edit_btn" ng-click="setStoreState(storeManager)"href>Edit</a></td></tr><tr><td>' +
             '</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>' +
             '</tr></table></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.deleteStoreArray = [];
+                    $scope.deleteStoreManagers = function () {
+                        for (var i = 0; i < $scope.storeManagers.length; i++) {
+                            if ($scope.storeManagers[i].deleteStatus) {
+                                $scope.deleteStoreArray.push({"_id":$scope.storeManagers[i]._id, "__type__":"delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "storemanagers__cstore";
+                        query.operations = angular.copy($scope.deleteStoreArray);
+                        $scope.deleteStoreArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.vendors.length; i++) {
+                                    if ($scope.storeManagers[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.storeManagers.splice(i, 1);
+                                    }
+                                }
+
+                                alert("Deleted");
+                            }
+                            else {
+                                alert("some err while deleting");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+
+                    }
+                    $scope.setStoreState = function (store) {
+                        $scope.storedata["address"] = store.address||"";
+                        $scope.storedata["brands"] = store.brands||"";
+                        $scope.storedata["contact"] = store.contact||"";
+                        $scope.storedata["loyalty_status"] = store.loyalty_status||"";
+                        $scope.storedata["pos_type"] = store.pos_type||"";
+                        $scope.storedata["email"] = store.email||"";
+                        $scope.storedata["pos_version"] = store.pos_version||"";
+                        $scope.storedata["postalcode"] = store.postalcode||"";
+                        $scope.storedata["reward_point"] = store.reward_point||"";
+                        $scope.storedata["shift"] = store.shift||"";
+                        $scope.storedata["storename"] = store.storename||"";
+                        $scope.storedata["manager"]["address"] = store.manager.address||"";
+                        $scope.storedata["manager"]["contact"] = store.manager.contact||"";
+                        $scope.storedata["manager"]["email"] = store.manager.email||"";
+                        $scope.storedata["manager"]["name"] = store.manager.name||"";
+                        $scope.storedata["manager"]["postalcode"] = store.manager.postalcode||"";
+                        for (var i = 0; i < $scope.storedata.countries.length; i++) {
+                            if ($scope.storedata.countries[i]._id == store.countryid._id) {
+                                $scope.storedata.selectedCountry = $scope.storedata.countries[i];
+                                break;
+                            }
+                        }
+                        $scope.getStatesNew($scope.storedata.selectedCountry._id, store.stateid._id);
+                        //$scope.getCitiesNew($scope.storedata.selectedState._id, store.cityid._id);
+                        for (var i = 0; i < $scope.storedata.manager.countries.length; i++) {
+                            if ($scope.storedata.manager.countries[i]._id == store.manager.countryid._id) {
+                                $scope.storedata.manager.selectedCountry = $scope.storedata.manager.countries[i];
+                                break;
+                            }
+                        }
+                        $scope.getStatesNew($scope.storedata.manager.selectedCountry._id, store.manager.stateid._id);
+                        //$scope.getCitiesNew($scope.storedata.manager.selectedState._id, store..manager.cityid._id);
+                        window.location.href = "#!edit-store-manager?q=" + store._id;
+                    }
                 }
             }
         }
+    }
+}]);
+
+cstore.directive('storeCitySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" style="width: 266px;" ng-model="storedata.selectedCity" ' +
+            'ng-options="city.name for city in storedata.cities"></select>',
+        compile:function () {
+            return {
+                pre:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('storeStateSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" style="width: 266px;" ng-change="getCitiesNew(storedata.selectedState._id)" ng-model="storedata.selectedState" ng-options="state.name for state in storedata.states"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('storeCountrySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" style="width: 266px;" ng-change="getStatesNew(storedata.selectedCountry._id)" ng-model="storedata.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('managerCitySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" style="width: 266px;" ng-model="storedata.manager.selectedCity" ' +
+            'ng-options="city.name for city in storedata.cities"></select>',
+        compile:function () {
+            return {
+                pre:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('managerStateSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" style="width: 266px;" ng-change="getCitiesNew(storedata.manager.selectedState._id)" ng-model="storedata.manager.selectedState" ng-options="state.name for state in storedata.states"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('managerCountrySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="qty_select" style="width: 266px;" ng-change="getStatesNew(storedata.selectedCountry._id)" ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('posVersionSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="brands" ng-model="storedata.pos_version" ng-options="posVersion.name for posVersion in posVersions"></select>' +
+            '<input type="text" placeholder="" ng-show = "storedata.pos_version == \'Others\'" ng-model="storedata.pos_version" class="other_input pull-left" >',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('rewardPoint', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="brands" ng-model="storedata.reward_point" ng-options="rewardPoint.name for rewardPoint in rewardPoints"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('brand', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="brands" ng-model="storedata.brand" ng-options="brand.name for brand in brands"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('addStoreManager', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        replace:'true',
+        template:'<div class="table_1 pull-left"><div class="l_bar pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Store Name</div>' +
+            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
+            '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.contact">' +
+            '</td></tr><tr><td><div class="margin_top">Shift</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.shift">' +
+            '</td></tr><tr><td><div class="margin_top">POS Type</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.pos_type">' +
+            '</td></tr><tr><td><div class="margin_top">POS Version</div></td></tr><tr><td><pos-version-select></pos-version-select></td>' +
+            '</tr><tr><td><div class="margin_top">Loyalty Status</div></td></tr><tr><td>' +
+            '<input type="text" placeholder="" ng-model="storedata.loyalty_status"></td></tr><tr><td><div class="margin_top">Reward Point</div>' +
+            '</td></tr><tr><td><reward-point></reward-point></td></tr><tr><td>' +
+            '<div class="margin_top">Brands</div></td></tr><tr><td><brand></brand></td></tr>' +
+            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.email"></td>' +
+            '</tr><tr><td><div class="margin_top">Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address"></td></tr>' +
+            '<tr><td><div class="margin_top">Country </div></td></tr><tr><td><store-country-select></store-country-select></td></tr><tr><td>' +
+            '<div class="margin_top">State </div></td></tr><tr><td><store-state-select></store-state-select></td></tr><tr><td>' +
+            '<div class="margin_top">City</div></td></tr><tr><td></td></tr><tr><td><div class="margin_top">' +
+            'Postal Code</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.postalcode"></td></tr></table></div>' +
+            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
+            '<div class="margin_top">Manager Name</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.name"></td></tr>' +
+            '<tr><td><div class="margin_top">Manager Phone</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.contact"></td></tr><tr><td>' +
+            '<div class="margin_top">Manager Email Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
+            '</tr><tr><td><div class="margin_top">Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.address"></td></tr><tr><td><div class="margin_top">Country </div>' +
+            '</td></tr><tr><td><manager-country-select></manager-country-select></td></tr><tr><td><div class="margin_top">State </div></td></tr>' +
+            '<tr><td><manager-state-select></manager-state-select></td></tr><tr><td><div class="margin_top">City</div></td></tr><tr><td>' +
+            '</td></tr><tr><td><div class="margin_top">Postal Code</div></td></tr><tr><td>' +
+            '<input type="text" placeholder=""ng-model="storedata.manager.postalcode"></td></tr><tr><td><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforStore(\'store-managers\')"><a href="">Close</a></button></div></div></td></tr></table></div></div>',
+        compile:function () {
+            return {
+                pre:function ($scope) {
+                    $scope.newStore = {};
+                    $scope.setPathforStore = function (path) {
+                        $scope.clearStoreContent();
+                        window.location.href = "#!/" + path;
+                    }
+                },
+                post:function ($scope) {
+                    $scope.saveStore = function () {
+                        $scope.newStore = {};
+                        $scope.newStore["manager"] ={};
+                        if ($scope.storedata.storename == "" || $scope.storedata.storename == undefined) {
+                            alert("please enter storename");
+                            return false;
+                        }
+                        var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                        var email = $scope.storedata.email;
+                        if (regEmail.test(email) == false) {
+                            alert("please enter a valid email");
+                            return false;
+                        }
+                        $scope.newStore.email = email;
+                        //if (!$scope.storedata.selectedCity) {
+                          //  alert("please select city first ");
+                           // return false;
+                       // }
+
+                        //if (!$scope.storedata.selectedState) {
+                        //    alert("please select state first ");
+                        //    return false;
+                       // }
+
+                        //if (!$scope.storedata.selectedCity) {
+                         //   alert("please select city first ");
+                          //  return false;
+                        //}
+                        if ($scope.storedata["storeid"]) {
+                            $scope.newStore["_id"] = $scope.storedata["storeid"];
+                        }
+                        $scope.newStore["storename"] = $scope.storedata.storename;
+                        $scope.newStore["address"] = $scope.storedata.lastname;
+                        $scope.newStore["brands"] = $scope.storedata.brand.name;
+                        $scope.newStore["contact"] = $scope.storedata.contact;
+                        $scope.newStore["email"] = $scope.storedata.email;
+                        $scope.newStore["countryid"] = {"_id":$scope.storedata.selectedCountry._id, "name":$scope.storedata.selectedCountry.name};
+                        $scope.newStore["stateid"] = {"_id":$scope.storedata.selectedState._id, "name":$scope.storedata.selectedState.name};
+                        //$scope.newStore["cityid"] = {"_id":$scope.storedata.selectedCity._id, "name":$scope.storedata.selectedCity.name};
+                        $scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
+                        $scope.newStore["pos_type"] = $scope.storedata.pos_type;
+                        $scope.newStore["pos_version"] = $scope.storedata.pos_version.name;
+                        $scope.newStore["postalcode"] = $scope.storedata.postalcode;
+                        $scope.newStore["reward_point"] = $scope.storedata.reward_point.name;
+                        $scope.newStore["shift"] = $scope.storedata.shift;
+                        $scope.newStore["manager"]["address"] = $scope.storedata.manager.address;
+                        $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
+                        $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
+                        $scope.newStore["manager"]["name"] = $scope.storedata.manager.name;
+                        $scope.newStore["manager"]["postalcode"] = $scope.storedata.manager.postalcode;
+                        //$scope.newStore["manager"]["cityid"] = {"_id":$scope.storedata.manager.selectedCity._id, "name":$scope.storedata.manager.selectedCity.name};
+                        $scope.newStore["manager"]["countryid"] = {"_id":$scope.storedata.manager.selectedCountry._id, "name":$scope.storedata.manager.selectedCountry.name};
+                        $scope.newStore["manager"]["stateid"] = {"_id":$scope.storedata.manager.selectedState._id, "name":$scope.storedata.manager.selectedState.name};
+                        var query = {};
+                        query.table = "storemanagers__cstore";
+                        query.operations = [$scope.newStore];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                                if (!$scope.storedata["storeid"]) {
+                                    $scope.clearStoreContent();
+                                }
+
+                                alert("Updated");
+                                window.location.href="#!/store-managers"
+                            } else {
+                                alert("some error while saving");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+                    }
+                }
+            }
+        }
+
     }
 }]);
 
@@ -508,8 +851,10 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         $scope.newProduct["image"] = data;
                         query.operations = [$scope.newProduct];
 
-                        $scope.uploading = true;
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        //$scope.uploading = true;
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             //$scope.uploading = false;
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 if (!$scope.productdata["productid"]) {
@@ -546,7 +891,7 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
 //        scope:true,
         template:"<p>" +
             "<input type='file' id='uploadfile' style=' float: left;width: 206px;'> " +
-            "<img id='img_thumbnail' ng-show='showimage' ng-src='{{imageData}}' class='thumbnail' style='float: left;height: 142px;width: 200px;margin-top:-37px'></p>",
+            "<img id='img_thumbnail' ng-show='showimage' ng-src='{{imageData}}' class='thumbnail' style='float: left;height: 142px;width: 200px;margin-top:-27px'></p>",
         compile:function () {
             return {
                 post:function ($scope, iElement) {
