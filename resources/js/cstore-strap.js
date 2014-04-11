@@ -149,17 +149,17 @@ appStrapServices.factory('$appService', [
             }
             return angular.copy(data);
         }
-        $appService.setAdminView = function (viewName) {
-            var c_name = "adminView"
-            if (viewName) {
-                document.cookie = c_name + "=" + escape(viewName);
-                window.location.href = "#!/" + viewName;
-            }
-            else {
-                document.cookie = c_name + "=" + escape(VENDOR);
-                window.location.href = "#!/" + VENDOR;
-            }
-        }
+//        $appService.setAdminView = function (viewName) {
+//            var c_name = "adminView"
+//            if (viewName) {
+//                document.cookie = c_name + "=" + escape(viewName);
+////                window.location.href = "#!/" + viewName;
+//            }
+//            else {
+//                document.cookie = c_name + "=" + escape(VENDOR);
+////                window.location.href = "#!/" + VENDOR;
+//            }
+//        }
         $appService.getSession = function () {
             var currentSession = {};
             if (!$appService.getCookie("usk")) {
@@ -183,7 +183,6 @@ appStrapServices.factory('$appService', [
             $appService.delete_cookie("storename");
             $appService.delete_cookie("adminView");
         }
-
 
 
         $appService.auth = function () {

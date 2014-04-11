@@ -62,6 +62,8 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.currentUser = {"data":""};
+    $scope.file = {};
+    $scope.oFile={};
     $scope.data = {"cities":[], "states":[], "selectedCity":"", "selectedState":""};
     $scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
     $scope.posVersions =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
@@ -243,14 +245,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     }
 
     $scope.getProductCategories = function () {
-        var productCategories={};
+        var productCategories = {};
         var query = {"table":"product_categories__cstore"};
         query.columns = ["name"];
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
             $scope.productdata.productCategories = productCategoryData.response.data;
-            $scope.productdata.selectedProductCategory =$scope.productdata.productCategories[0];
+            $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         }, function (jqxhr, error) {
         })
     }
@@ -292,13 +294,16 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
             $scope.homeView = {"storeManager":false, "admin":true};
-            var pathToBeSet = $appService.getCookie("adminView");
-            if (pathToBeSet) {
-                $appService.setAdminView(pathToBeSet);
-            }
-            else {
-                $appService.setAdminView(VENDOR);
-            }
+//            var pathToBeSet = $appService.getCookie("adminView");
+//            if (pathToBeSet) {
+////                $appService.setAdminView(pathToBeSet);
+//                window.location
+//            }
+//            else {
+////                $appService.setAdminView(VENDOR);
+//            }
+
+            window.location.href = "#!/vendors";
 
         }
     }
@@ -356,7 +361,7 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
     $scope.getProductDetail();
 });
 cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
-    $scope.categoryData = {"loadingData":false};
+    $scope.categoryData = {"loadingData":false, "available":false};
     $scope.products = [];
     $scope.getProductDetail = function (cursor, filter) {
         if ($scope.categoryData.loadingData) {
@@ -387,11 +392,18 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
             }
             if (!$scope.products.length) {
                 $scope.products = rawData;
-            }
 
-            console.log("data" + JSON.stringify($scope.products));
+            }
             $scope.categoryData.loadingData = false;
             $scope.cursor = productDetailData.response.cursor;
+            if ($scope.products.length) {
+                /*wee need string for ng-switch*/
+                $scope.categoryData.available = "true";
+            }
+            else {
+                $scope.categoryData.available = "false";
+            }
+
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -495,9 +507,14 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingVenderData = false;
+    $scope.venderSearch = [
+        {"value":"firstname", "name":"First Name"},
+        {"value":"address", "name":"Address"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.vendors = [];
     $appService.auth();
-    $scope.getAllVendors = function (direction, limit) {
+    $scope.getAllVendors = function (direction, limit, column, searchText) {
         if ($scope.loadingVenderData) {
             return false;
         }
@@ -510,6 +527,10 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.loadingVenderData = true;
         var query = {"table":"vendors__cstore"};
         query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -558,15 +579,17 @@ cstore.controller('productList', function ($scope, $appService) {
         if ($scope.loadingProductData) {
             return false;
         }
-        if(direction == 1){
+        if (direction == 1) {
             $scope.show.preCursor = $scope.show.currentCursor;
         } else {
             $scope.show.preCursor = $scope.show.preCursor - limit;
             $scope.show.currentCursor = $scope.show.preCursor;
         }
+
         $scope.loadingProductData = true;
         var query = {"table":"products__cstore"};
-        query.columns = ["description","name","image","short_description",{"expression":"product_category", "columns":["_id", "name"]},"cost","soldcount",{"expression":"vendor", "columns":["_id", "firstname"]}];
+        query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount", {"expression":"vendor", "columns":["_id", "firstname"]}];
+
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -593,7 +616,7 @@ cstore.controller('productList', function ($scope, $appService) {
     $scope.getVendors();
 });
 
-cstore.controller('addProductCtrl', function ($scope, $appService,$routeParams) {
+cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     $scope.clearProductContent = function () {
         $scope.productdata["name"] = "";
@@ -601,7 +624,7 @@ cstore.controller('addProductCtrl', function ($scope, $appService,$routeParams) 
         $scope.productdata["description"] = "";
         $scope.productdata["short_description"] = "";
         $scope.productdata["soldcount"] = "";
-        $scope.productdata["image"]="";
+        $scope.productdata["image"] = "";
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         $scope.productdata.selectedVendor = $scope.productdata.vendors[0];
 
@@ -625,15 +648,18 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         if ($scope.loadingStoreData) {
             return false;
         }
-        if(direction == 1){
+        if (direction == 1) {
             $scope.show.preCursor = $scope.show.currentCursor;
         } else {
             $scope.show.preCursor = $scope.show.preCursor - limit;
             $scope.show.currentCursor = $scope.show.preCursor;
         }
+
         $scope.loadingVenderData = true;
         var query = {"table":"storemanagers__cstore"};
+
         query.columns = ["address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
