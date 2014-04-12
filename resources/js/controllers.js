@@ -54,6 +54,21 @@ cstore.config(
             }).when('/edit-store-manager', {
                 templateUrl:'../add-store-manager',
                 controller:'addStoreManagerCtrl'
+            }).when('/countries', {
+                templateUrl:'../countries',
+                controller:'countryCtrl'
+            }).when('/product-categories', {
+                templateUrl:'../product-categories',
+                controller:'productCategoryCtrl'
+            }).when('/training-categories', {
+                templateUrl:'../training-categories',
+                controller:'trainingCategoryCtrl'
+            }).when('/states', {
+                templateUrl:'../states',
+                controller:'stateCtrl'
+            }).when('/cities', {
+                templateUrl:'../cities',
+                controller:'cityCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -67,11 +82,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.data = {"cities":[], "states":[], "selectedCity":"", "selectedState":""};
     $scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
     $scope.posVersions =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
-    $scope.storedata.pos_version=$scope.posVersions[1];
-    $scope.rewardPoints = [{"name":"Cents Per Gallon"},{"name":"Points/Clubs"},{"name":"Clubs Only"},{"name":"Mobile Only"}];
-    $scope.storedata.reward_point = $scope.rewardPoints[0];
+    //$scope.storedata.pos_version=$scope.posVersions[0];
+    $scope.rewardPoints = [{"name":"Cents Per Gallon"},{"name":"Points/Clubs"},{"name":"Clubs Only"},{"name":"Mobile Only"},{"name":"Others"}];
+    //$scope.storedata.reward_point = $scope.rewardPoints[0];
     $scope.brands =[{"name":"Shell"},{"name":"CITGO"},{"name":"BP"},{"name":"Mobil"},{"name":"Exxon"},{"name":"Marathon"},{"name":"Conoco"},{"name":"Phillips 66"},{"name":"Valero"},{"name":"Chevron"},{"name":"Others"}];
-    $scope.storedata.brand =$scope.brands[0];
+    //$scope.storedata.brand =$scope.brands[0];
     $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
@@ -105,6 +120,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
             console.log("countryData::" + JSON.stringify(countryData));
             $scope.storedata.countries = countryData.response.data;
             $scope.storedata.selectedCountry = $scope.storedata.countries[0];
+            $scope.storedata.manager.selectedCountry = $scope.storedata.countries[0];
             $scope.getStatesNew($scope.storedata.countries[0]._id, false);
         }, function (jqxhr, error) {
         })
@@ -123,21 +139,21 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
             $scope.storedata.states = stateData.response.data;
-            console.log($scope.storedata.states);
+            console.log($scope.storedata.states.length);
 
                 if ($scope.defaultState) {
                     for (var i = 0; i < $scope.storedata.states.length; i++) {
                         if ($scope.storedata.states[i]._id == $scope.defaultState) {
                             $scope.storedata.selectedState = $scope.storedata.states[i];
+                            $scope.storedata.manager.selectedState = $scope.storedata.states[i];
                             break;
                         }
                     }
                 } else {
-
                     $scope.storedata.selectedState = $scope.storedata.states[0];
-                    //alert($scope.storedata.states[0]);
+                    $scope.storedata.manager.selectedState = $scope.storedata.states[0];
                 }
-            if($scope.storedata.states!=null){
+            if($scope.storedata.states.length){
                 $scope.getCitiesNew($scope.storedata.states[0]._id, false);
             }
 
@@ -154,17 +170,20 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
+            console.log(JSON.stringify(cityData));
             $scope.storedata.cities = cityData.response.data;
             if ($scope.defaultCity) {
                 for (var i = 0; i < $scope.storedata.cities.length; i++) {
                     if ($scope.storedata.cities[i]._id == $scope.defaultCity) {
                         $scope.storedata.selectedCity = $scope.storedata.cities[i];
+                        $scope.storedata.manager.selectedCity = $scope.storedata.cities[i];
                         break;
                     }
                 }
             } else {
 
                 $scope.storedata.selectedCity = $scope.storedata.cities[0];
+                $scope.storedata.manager.selectedCity = $scope.storedata.cities[0];
             }
         }, function (jqxhr, error) {
         })
@@ -557,6 +576,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     }
     $scope.getStates();
 });
+
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     var vendorId = $routeParams.q;
@@ -658,7 +678,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $scope.loadingVenderData = true;
         var query = {"table":"storemanagers__cstore"};
 
-        query.columns = ["address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.columns = ["manager.email","manager.cityid","manager.stateid","manager.countryid","manager.postalcode","manager.contact","manager.name","address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
 
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
@@ -668,6 +688,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
             $scope.loadingStoreData = false;
             $scope.show.currentCursor = storeManagerData.response.cursor;
             $scope.storeManagers = storeManagerData.response.data;
+            console.log("storemanager length::::" + $scope.storeManagers.length);
             for (var i = 0; i < $scope.storeManagers.length; i++) {
                 $scope.storeManagers[i]["deleteStatus"] = false;
             }
@@ -718,3 +739,223 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
     }
 });
 
+  /**************************************** Set up Ctrl****************************************************/
+cstore.controller('countryCtrl', function ($scope, $appService) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingCountryData = false;
+    $scope.countries = [];
+    $appService.auth();
+    $scope.getAllCountries = function (direction, limit) {
+        if ($scope.loadingCountryData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingCountryData = true;
+        var query = {"table":"countries__cstore"};
+        query.columns = ["name"];
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
+            $scope.loadingCountryData = false;
+            $scope.show.currentCursor = countryData.response.cursor;
+            $scope.countries = countryData.response.data;
+            for (var i = 0; i < $scope.countries.length; i++) {
+                $scope.countries[i]["deleteStatus"] = false;
+            }
+
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllCountries(1, 10);
+    $scope.getMore = function () {
+        $scope.getAllCountries(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllCountries(0, 10);
+    }
+});
+
+cstore.controller('productCategoryCtrl', function ($scope, $appService) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingProductCategoryData = false;
+    $scope.productCategories = [];
+    $appService.auth();
+    $scope.getAllProductCategories = function (direction, limit) {
+        if ($scope.loadingCountryData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingProductCategoryData = true;
+        var query = {"table":"product_categories__cstore"};
+        query.columns = ["name","description"];
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
+            $scope.loadingProductCategoryData = false;
+            $scope.show.currentCursor = productCategoryData.response.cursor;
+            $scope.productCategories = productCategoryData.response.data;
+            for (var i = 0; i < $scope.productCategories.length; i++) {
+                $scope.productCategories[i]["deleteStatus"] = false;
+            }
+
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllProductCategories(1, 10);
+    $scope.getMore = function () {
+        $scope.getAllProductCategories(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllProductCategories(0, 10);
+    }
+});
+
+cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingTrainingCategoryData = false;
+    $scope.trainingCategories = [];
+    $appService.auth();
+    $scope.getAllTrainingCategories = function (direction, limit) {
+        if ($scope.loadingTrainingCategoryData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingTrainingCategoryData = true;
+        var query = {"table":"training_categories__cstore"};
+        query.columns = ["name","description"];
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryData) {
+            $scope.loadingTrainingCategoryData = false;
+            $scope.show.currentCursor = trainingCategoryData.response.cursor;
+            $scope.trainingCategories = trainingCategoryData.response.data;
+            for (var i = 0; i < $scope.productCategories.length; i++) {
+                $scope.trainingCategories[i]["deleteStatus"] = false;
+            }
+
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllTrainingCategories(1, 10);
+    $scope.getMore = function () {
+        $scope.getAllTrainingCategories(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllTrainingCategories(0, 10);
+    }
+});
+
+cstore.controller('stateCtrl', function ($scope, $appService) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingStateData = false;
+    $scope.states = [];
+    $appService.auth();
+    $scope.getAllStates = function (direction, limit) {
+        if ($scope.loadingStateData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingCountryData = true;
+        var query = {"table":"states__cstore"};
+        query.columns = ["name","countryid"];
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
+            $scope.loadingStateData = false;
+            $scope.show.currentCursor = stateData.response.cursor;
+            $scope.states = stateData.response.data;
+            for (var i = 0; i < $scope.states.length; i++) {
+                $scope.countries[i]["deleteStatus"] = false;
+            }
+
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllStates(1, 10);
+    $scope.getMore = function () {
+        $scope.getAllStates(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllStates(0, 10);
+    }
+});
+
+cstore.controller('cityCtrl', function ($scope, $appService) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingCityData = false;
+    $scope.cities = [];
+    $appService.auth();
+    $scope.getAllCities = function (direction, limit) {
+        if ($scope.loadingCityData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingCityData = true;
+        var query = {"table":"cities__cstore"};
+        query.columns = ["name","stateid"];
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
+            $scope.loadingCityData = false;
+            $scope.show.currentCursor = cityData.response.cursor;
+            $scope.states = stateData.response.data;
+            for (var i = 0; i < $scope.states.length; i++) {
+                $scope.countries[i]["deleteStatus"] = false;
+            }
+
+        }, function (jqxhr, error) {
+            alert("exception in making request");
+        })
+    }
+    $scope.getAllStates(1, 10);
+    $scope.getMore = function () {
+        $scope.getAllStates(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllStates(0, 10);
+    }
+});
