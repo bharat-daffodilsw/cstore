@@ -18,8 +18,8 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
         restrict:"E",
         template:'<div class="admin_menu pull-left"><ul><li><a href ng-click="setPath(\'vendors\')" active-link="active">Vendor</a></li><li><a  href ng-click="setPath(\'store-managers\')" active-link="active">Store Manager</a></li>' +
             '<li><a  href ng-click="setPath(\'products\')" active-link="active">Product</a></li><li><a active-link="active" href >Promotion</a></li><li><a active-link="active" href>Training Session</a></li><li>' +
-            '<a href active-link="active">Survey</a></li><li><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li><a href active-link="active">Training Category</a>' +
-            '</li><li><a href active-link="active">Product Category</a></li><li><a href active-link="active">Cities</a></li><li><a href active-link="active">States</a></li><li>' +
+            '<a href active-link="active">Survey</a></li><li><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li><a href ng-click="setPath(\'training-categories\')" active-link="active">Training Category</a>' +
+            '</li><li><a href ng-click="setPath(\'product-categories\')" active-link="active">Product Category</a></li><li><a href ng-click="setPath(\'cities\')" active-link="active">Cities</a></li><li><a href ng-click="setPath(\'states\')" active-link="active">States</a></li><li>' +
             '<a href ng-click="setPath(\'countries\')" active-link="active">Countries</a></li></ul></div></li></ul></div>',
         compile:function () {
             return {
@@ -1102,8 +1102,8 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
 cstore.directive('productCategoryList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveCountries()"><a href="">' +
-            'Save</a></button></div><div class="delete_btn pull-left"><button type="button"><a href="">Delete</a>' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveProductCategories()"><a href="">' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button"  ng-click="deleteProductCategories()"><a href="">Delete</a>' +
             '</button></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
             '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + productCategories.length}} from start</div>' +
@@ -1111,7 +1111,8 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Product Category</th><th>Description</th>' +
             '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus">' +
-            '</td><td><span  ng-click="editProductCategory=true" ng-hide="editProductCategory">{{productCategory.name}}</span><input type="text" ng-show="editProductCategory" ng-model="productCategory.name"></td><td><span  ng-click="editProductCategoryDesc=true" ng-hide="editProductCategoryDesc">{{productCategory.description}}</span><input type="text" ng-show="editProductCategoryDesc" ng-model="productCategory.description"></td></tr>' +
+            '</td><td  ng-click="editProductCategory=true"><span ng-hide="editProductCategory">{{productCategory.name}}</span>' +
+            '<input type="text" ng-show="editProductCategory" ng-model="productCategory.name"></td><td ng-click="editProductCategoryDesc=true"><span ng-hide="editProductCategoryDesc">{{productCategory.description}}</span><input type="text" ng-show="editProductCategoryDesc" ng-model="productCategory.description"></td></tr>' +
             '</table><div ng-click="addNewProductCategory()" class="add_new"><a href>' +
             '+ Click Here To Add New Product Category</a></div></div>',
         compile:function () {
@@ -1184,6 +1185,210 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 alert("Updated");
                                 window.location.href = "#!/product-categories";
+                            } else {
+                                alert("some error while saving");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('trainingCategoryList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveTrainingCategories()"><a href="">' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingCategories()"><a href="">Delete</a>' +
+            '</button></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
+            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '{{show.preCursor}}-{{show.preCursor + trainingCategories.length}} from start</div>' +
+            '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
+            '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Training Category</th><th>Description</th>' +
+            '</tr><tr ng-repeat="trainingCategory in trainingCategories"><td><input type="checkbox" ng-model="trainingCategory.deleteStatus">' +
+            '</td><td  ng-click="editTrainingCategory=true"><span ng-hide="editTrainingCategory">{{trainingCategory.name}}</span>' +
+            '<input type="text" ng-show="editTrainingCategory" ng-model="trainingCategory.name"></td><td ng-click="editTrainingCategoryDesc=true"><span ng-hide="editTrainingCategoryDesc">{{trainingCategory.description}}</span><input type="text" ng-show="editTrainingCategoryDesc" ng-model="trainingCategory.description"></td></tr>' +
+            '</table><div ng-click="addNewTrainingCategory()" class="add_new"><a href>' +
+            '+ Click Here To Add New Training Category</a></div></div>',
+        compile:function () {
+            return {
+                pre:function ($scope) {
+                    $scope.addNewTrainingCategory = function() {
+                        $scope.trainingCategories.push( { name : '',description : '' } );
+                    }
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.deleteTrainingCategoryArray = [];
+                    var currentSession = $appService.getSession();
+                    var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                    $scope.deleteTrainingCategories = function () {
+                        for (var i = 0; i < $scope.trainingCategories.length; i++) {
+                            if ($scope.trainingCategories[i].deleteStatus) {
+                                $scope.deleteTrainingCategoryArray.push({"_id":$scope.trainingCategories[i]._id, "__type__":"delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "training_categories__cstore";
+                        query.operations = angular.copy($scope.deleteTrainingCategoryArray);
+                        $scope.deleteTrainingCategoryArray = [];
+                        if (query.operations.length) {
+
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.trainingCategories.length; i++) {
+                                        if ($scope.trainingCategories[i].deleteStatus) {
+                                            console.log("delete items" + i);
+                                            $scope.trainingCategories.splice(i, 1);
+                                        }
+                                    }
+
+                                    alert("Deleted");
+                                }
+                                else {
+                                    alert("some err while deleting");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
+                        else {
+                            alert("please select at least one training category before delete");
+                        }
+
+                    }
+                },
+                post:function($scope){
+                    $scope.saveTrainingCategories = function () {
+                        $scope.addtrainingCategoryArray = [];
+                        for(var i = 0; i < $scope.trainingCategories.length; i++){
+                            if($scope.trainingCategories[i]._id) {
+                                $scope.addtrainingCategoryArray.push({"name":$scope.trainingCategories[i].name,"description":$scope.trainingCategories[i].description,"_id":$scope.trainingCategories[i]._id})
+                            }
+                            else {
+                                $scope.addtrainingCategoryArray.push({"name":$scope.trainingCategories[i].name,"description":$scope.trainingCategories[i].description})
+                            }
+                        }
+                        var query = {};
+                        query.table = "training_categories__cstore";
+                        query.operations = angular.copy($scope.addtrainingCategoryArray);
+                        $scope.addtrainingCategoryArray = [];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                                alert("Updated");
+                                window.location.href = "#!/training-categories";
+                            } else {
+                                alert("some error while saving");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('stateList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveStates()"><a href="">' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStates()"><a href="">Delete</a>' +
+            '</button></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
+            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
+            '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
+            '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>State</th><th>Country</th>' +
+            '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus">' +
+            '</td><td  ng-click="editState=true"><span ng-hide="editState">{{state.name}}</span>' +
+            '<input type="text" ng-show="editState" ng-model="state.name"></td><td ng-click="editStateCountry=true"><span ng-hide="editStateCountry">{{state.country.name}}</span><input type="text" ng-show="editStateCountry" ng-model="state.country"></td></tr>' +
+            '</table><div ng-click="addNewState()" class="add_new"><a href>' +
+            '+ Click Here To Add New State</a></div></div>',
+        compile:function () {
+            return {
+                pre:function ($scope) {
+                    $scope.addNewState = function() {
+                        $scope.states.push( { name : '',countryid : '' } );
+                    }
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.deleteTrainingCategoryArray = [];
+                    var currentSession = $appService.getSession();
+                    var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                    $scope.deleteTrainingCategories = function () {
+                        for (var i = 0; i < $scope.trainingCategories.length; i++) {
+                            if ($scope.trainingCategories[i].deleteStatus) {
+                                $scope.deleteTrainingCategoryArray.push({"_id":$scope.trainingCategories[i]._id, "__type__":"delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "training_categories__cstore";
+                        query.operations = angular.copy($scope.deleteTrainingCategoryArray);
+                        $scope.deleteTrainingCategoryArray = [];
+                        if (query.operations.length) {
+
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.trainingCategories.length; i++) {
+                                        if ($scope.trainingCategories[i].deleteStatus) {
+                                            console.log("delete items" + i);
+                                            $scope.trainingCategories.splice(i, 1);
+                                        }
+                                    }
+
+                                    alert("Deleted");
+                                }
+                                else {
+                                    alert("some err while deleting");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
+                        else {
+                            alert("please select at least one training category before delete");
+                        }
+
+                    }
+                },
+                post:function($scope){
+                    $scope.saveTrainingCategories = function () {
+                        $scope.addtrainingCategoryArray = [];
+                        for(var i = 0; i < $scope.trainingCategories.length; i++){
+                            if($scope.trainingCategories[i]._id) {
+                                $scope.addtrainingCategoryArray.push({"name":$scope.trainingCategories[i].name,"description":$scope.trainingCategories[i].description,"_id":$scope.trainingCategories[i]._id})
+                            }
+                            else {
+                                $scope.addtrainingCategoryArray.push({"name":$scope.trainingCategories[i].name,"description":$scope.trainingCategories[i].description})
+                            }
+                        }
+                        var query = {};
+                        query.table = "training_categories__cstore";
+                        query.operations = angular.copy($scope.addtrainingCategoryArray);
+                        $scope.addtrainingCategoryArray = [];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                                alert("Updated");
+                                window.location.href = "#!/training-categories";
                             } else {
                                 alert("some error while saving");
                             }

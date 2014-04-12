@@ -819,12 +819,12 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
             alert("exception in making request");
         })
     }
-    $scope.getAllProductCategories(1, 10);
+    $scope.getAllProductCategories(1, 5);
     $scope.getMore = function () {
-        $scope.getAllProductCategories(1, 10);
+        $scope.getAllProductCategories(1, 5);
     }
     $scope.getLess = function () {
-        $scope.getAllProductCategories(0, 10);
+        $scope.getAllProductCategories(0, 5);
     }
 });
 
