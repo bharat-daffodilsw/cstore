@@ -811,8 +811,8 @@ cstore.directive('managerStateSelect', ['$appService', function ($appService, $s
 cstore.directive('managerCountrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand" ng-change="getStatesNew(storedata.selectedCountry._id)" ' +
-            'ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
+        template:'<select class="brand" ng-change="getStatesNew(storedata.selectedCountry._id)" ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries">' +
+            '</select>',
         compile:function () {
             return{
                 pre:function () {
