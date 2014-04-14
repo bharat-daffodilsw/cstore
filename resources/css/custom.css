@@ -14,6 +14,10 @@ a {
     text-decoration:none;
     color:#000;}
 
+a:hover {
+    text-decoration:none;
+    color:#000;}
+
 .header{
     background-color:#000;
     color:#FFF;
@@ -133,6 +137,7 @@ a {
     text-transform:uppercase;}
 
 #primary li{
+    float:left;
     padding:5px;
     width: 95%;}
 
@@ -140,6 +145,7 @@ a {
     background-color:black;}
 
 #primary li:hover a{
+    float:left;
     color:white;
     width: 100%;}
 
@@ -159,6 +165,7 @@ a {
     padding:0px;}
 
 #sign_out li{
+    float:left;
     padding:5px;
     width: 93%;}
 
@@ -169,6 +176,7 @@ a {
     background-color:black;}
 
 #sign_out li:hover a{
+    float:left;
     color:white;
     width: 100%;}
 
@@ -296,7 +304,6 @@ a {
     font-size:17px;}
 
 .add_btn a {
-    background-color:#e7c271;
     font-size:16px;
     padding:10px;}
 
@@ -419,19 +426,23 @@ a {
     display:none;
     background-color:#e7c271;
     position:absolute;
-    margin-top:8px;
-    width: 200px;;
-    margin-left:5px;}
+    margin-top:5px;
+    width: 200px;
+    margin-left:5px;
+    z-index: 1000;}
 
 .setup ul li {
     padding:0;
     color:#000;
+    float:left;
     font-size:16px;
     list-style:none;
     width:100%;
     display:block;}
 
 .setup ul li a:hover{
+    float:left;
+    width:100%;
     background-color:#000;
     font-size:17px;
     color:#FFF;}
@@ -440,8 +451,9 @@ a {
     padding:0;}
 
 .setup li a{
-    width:93%;
-    padding:5px 0 5px 15px!important;
+    float:left;
+    width:100%;
+    padding:2px 0 2px 15px!important;
     font-size:17px;}
 
 .table {
@@ -455,7 +467,6 @@ a {
     min-height:500px;}
 
 .table_3 {
-    width:100%;
     text-align:center;
     margin-top:10px;
     font-size:14px;
@@ -475,7 +486,7 @@ a {
 
 .table_4{
     width:100%;
-    margin-top:10px;
+    padding:15px;
     font-size:16px;
     border-bottom:1px solid #CCC;
     border-top:1px solid #CCC;
@@ -486,6 +497,7 @@ a {
     border-bottom:1px solid #CCC;
     padding:10px 0;
     padding-right:5px;
+    min-width:25px;
     max-width:150px;
     overflow:hidden;
     text-overflow: ellipsis;
@@ -502,6 +514,7 @@ tr {
     border-bottom:1px solid #CCC;
     padding:10px 0;
     padding-right:5px;
+    min-width:25px;
     max-width:150px;
     overflow:hidden;
     text-overflow: ellipsis;
@@ -517,7 +530,7 @@ tr {
     padding:5px;	}
 
 .table_1 table td .brand {
-    padding:7px;
+    padding:5px;
     width:95%;
 }
 
@@ -555,6 +568,18 @@ tr {
     outline:0px;
     padding: 5px 25px;}
 
+.pop_btn button{
+    background-color:#e7c271;
+    font-size: 16px;
+    outline:0px;
+    padding: 5px;}
+
+.pop_btn button a{
+    background-color:#e7c271;
+    font-size: 16px;
+    outline:0px;
+    padding: 5px 20px;}
+
 .save_close {
     margin:20px;
     width:100%;}
@@ -589,15 +614,11 @@ tr {
     background-size: 25px;
     cursor:pointer;}
 
-.qty_select {
-    padding:5px;
-    width:50px;}
-
-
 .Add_city .table td {
     border-bottom: 1px solid #CCC;
     padding: 5px 0;
     padding-right: 5px;
+    min-width:25px;
     max-width:150px;
     overflow:hidden;
     text-overflow: ellipsis;
@@ -726,6 +747,14 @@ tr {
     border-left:1px solid #CCC;
     padding:10px;}
 
+.table_5  .saved_l_bar{
+    width:100%;
+    float:left;
+    text-align:left;
+    padding: 0px;
+    margin: 0px;
+    border:0;}
+
 #hider {
     height: 100%;
     width: 100%;
@@ -734,6 +763,7 @@ tr {
     display:none; }
 
 .qty_select {
+    padding:5px;
     width:150px;}
 
 .qty_1 .qty_select {
@@ -758,10 +788,9 @@ th {
     text-align:center;}
 
 .table table td input {
-    padding: 7px;
+    padding: 5px;
     width: 95%;
 }
-
 
 .s_bar {
     width:44%;}
@@ -798,17 +827,15 @@ th {
 .store_manager  {
     margin:10px 0; }
 
-.other_input {
-    margin-top: 10px;
-}
 .search_2 input{
     margin-top: 0px;
     position:absolute;
     width: 50%;
-    padding: 5px;}
+    padding: 5px 0;}
+
 .search_2 {
     position:relative;
-    width:50%;
+    width:40%;
     margin-left:15px;}
 
 .search_sign_2{
@@ -820,10 +847,21 @@ th {
 
 .search_by {
     font-size:18px;
+    width:31%;
+    text-align:center;}
+
+.search_by .qty_select {
     margin-left:10px;}
 
-/***************** 14-04 *************************/
-.table table td .edit_input {
-    padding: 7px;
+.border_none td {
+    border:none;}
+
+.Question {
+    font-size:17px;
+    font-weight:bold;
+    margin-top:30px;}
+
+.edit_input {
+    padding: 5px;
     width:50%;
 }
