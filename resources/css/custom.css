@@ -469,6 +469,7 @@ a:hover {
 .table_3 {
     text-align:center;
     margin-top:10px;
+    width:100%;
     font-size:14px;
     border-bottom:1px solid #CCC;
     border-top:1px solid #CCC;
@@ -770,19 +771,18 @@ tr {
     width:80px;}
 
 .name_input input {
-    width:90%;
+    width:91%!important;
     height:50px;}
 
 .search_select {
-    width: 85%;
+    width: 82.5%;
     padding: 7px;}
 
 .text_area textarea{
-    width: 98%;
-    height:80px;}
+    width: 97.5%;}
 
 .city input {
-    width:98%;}
+    width:97.7%!important;}
 
 th {
     text-align:center;}
@@ -864,4 +864,8 @@ th {
 .edit_input {
     padding: 5px;
     width:50%;
+}
+.select_city {
+    width: 95%;
+    padding:5px;
 }
