@@ -117,7 +117,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
-            console.log("countryData::" + JSON.stringify(countryData));
+            //console.log("countryData::" + JSON.stringify(countryData));
             $scope.storedata.countries = countryData.response.data;
             $scope.storedata.selectedCountry = $scope.storedata.countries[0];
             $scope.storedata.manager.selectedCountry = $scope.storedata.countries[0];
@@ -132,9 +132,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         if (countryid && countryid != null && countryid != "null") {
             query.filter = {"countryid._id":countryid};
         }
-        else {
-            query.filter ={"countryid._id":DEFAULTCOUNTRY};
-        }
+        //else {
+          //  query.filter ={"countryid._id":DEFAULTCOUNTRY};
+       // }
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
@@ -769,6 +769,7 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
             $scope.countries = countryData.response.data;
             for (var i = 0; i < $scope.countries.length; i++) {
                 $scope.countries[i]["deleteStatus"] = false;
+                $scope.countries[i]["editStatus"] = false;
             }
 
         }, function (jqxhr, error) {
@@ -813,18 +814,19 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
             $scope.productCategories = productCategoryData.response.data;
             for (var i = 0; i < $scope.productCategories.length; i++) {
                 $scope.productCategories[i]["deleteStatus"] = false;
+                $scope.productCategories[i]["editStatus"] = false;
             }
 
         }, function (jqxhr, error) {
             alert("exception in making request");
         })
     }
-    $scope.getAllProductCategories(1, 5);
+    $scope.getAllProductCategories(1, 10);
     $scope.getMore = function () {
-        $scope.getAllProductCategories(1, 5);
+        $scope.getAllProductCategories(1, 10);
     }
     $scope.getLess = function () {
-        $scope.getAllProductCategories(0, 5);
+        $scope.getAllProductCategories(0, 10);
     }
 });
 
@@ -855,8 +857,9 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
             $scope.loadingTrainingCategoryData = false;
             $scope.show.currentCursor = trainingCategoryData.response.cursor;
             $scope.trainingCategories = trainingCategoryData.response.data;
-            for (var i = 0; i < $scope.productCategories.length; i++) {
+            for (var i = 0; i < $scope.trainingCategories.length; i++) {
                 $scope.trainingCategories[i]["deleteStatus"] = false;
+                $scope.trainingCategories[i]["editStatus"] = false;
             }
 
         }, function (jqxhr, error) {
@@ -873,6 +876,21 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
 });
 
 cstore.controller('stateCtrl', function ($scope, $appService) {
+    $scope.statedata = {"countries":[],"selectedCountry":""};
+    $scope.getStateCountries = function () {
+        var countries = {};
+        var query = {"table":"countries__cstore"};
+        query.columns = ["name"];
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
+            //console.log("countryData::" + JSON.stringify(countryData));
+            $scope.statedata.countries = countryData.response.data;
+            $scope.statedata.selectedCountry = $scope.storedata.countries[0];
+        }, function (jqxhr, error) {
+        })
+    }
+
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingStateData = false;
     $scope.states = [];
@@ -900,7 +918,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
             $scope.show.currentCursor = stateData.response.cursor;
             $scope.states = stateData.response.data;
             for (var i = 0; i < $scope.states.length; i++) {
-                $scope.countries[i]["deleteStatus"] = false;
+                $scope.states[i]["deleteStatus"] = false;
+                $scope.states[i]["editStatus"] = false;
             }
 
         }, function (jqxhr, error) {
@@ -914,6 +933,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllStates(0, 10);
     }
+    $scope.getStateCountries();
 });
 
 cstore.controller('cityCtrl', function ($scope, $appService) {
@@ -942,20 +962,21 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
             $scope.loadingCityData = false;
             $scope.show.currentCursor = cityData.response.cursor;
-            $scope.states = stateData.response.data;
-            for (var i = 0; i < $scope.states.length; i++) {
-                $scope.countries[i]["deleteStatus"] = false;
+            $scope.cities = cityData.response.data;
+            for (var i = 0; i < $scope.cities.length; i++) {
+                $scope.cities[i]["deleteStatus"] = false;
             }
 
         }, function (jqxhr, error) {
             alert("exception in making request");
         })
     }
-    $scope.getAllStates(1, 10);
+    $scope.getAllCities(1, 10);
     $scope.getMore = function () {
-        $scope.getAllStates(1, 10);
+        $scope.getAllCities(1, 10);
     }
     $scope.getLess = function () {
-        $scope.getAllStates(0, 10);
+        $scope.getAllCities(0, 10);
     }
+    $scope.getStates();
 });
