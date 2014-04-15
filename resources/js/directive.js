@@ -556,7 +556,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 current_file.osk = OSK;
                                 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                     if (data.response) {
-                                        $scope.newProduct["image"] = data.response.data;
+                                        $scope.newProduct["image"] = data.response;
                                         query.operations = [$scope.newProduct];
                                         $scope.saveFunction(query);
                                     }
