@@ -626,7 +626,7 @@ cstore.controller('productList', function ($scope, $appService) {
             $scope.show.currentCursor = productData.response.cursor;
             //$scope.products = productData.response.data;
             $scope.products = $appService.setUrls(productData.response.data);
-            console.log($scope.products);
+            //console.log($scope.products);
             for (var i = 0; i < $scope.products.length; i++) {
                 $scope.products[i]["deleteStatus"] = false;
             }
@@ -778,6 +778,7 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
             for (var i = 0; i < $scope.countries.length; i++) {
                 $scope.countries[i]["deleteStatus"] = false;
                 $scope.countries[i]["editStatus"] = false;
+                $scope.countries[i]["oldstatus"] =true;
             }
 
         }, function (jqxhr, error) {
@@ -790,6 +791,21 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
     }
     $scope.getLess = function () {
         $scope.getAllCountries(0, 10);
+    }
+    $scope.refreshCountries=function(index,refreshCountryId){
+            var query = {"table":"countries__cstore"};
+            query.columns = ["name"];
+            query.filter ={"_id":refreshCountryId};
+            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            var serviceUrl = "/rest/data";
+            $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
+                $scope.countries[index] = countryData.response.data[0];
+                console.log($scope.countries[index]);
+                if (!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            }, function (jqxhr, error) {
+            })
     }
 });
 
@@ -823,6 +839,7 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
             for (var i = 0; i < $scope.productCategories.length; i++) {
                 $scope.productCategories[i]["deleteStatus"] = false;
                 $scope.productCategories[i]["editStatus"] = false;
+                $scope.productCategories[i]["oldstatus"] =true;
             }
 
         }, function (jqxhr, error) {
@@ -835,6 +852,20 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
     }
     $scope.getLess = function () {
         $scope.getAllProductCategories(0, 10);
+    }
+    $scope.refreshProductCategories=function(index,refreshProductCategoryId){
+        var query = {"table":"product_categories__cstore"};
+        query.columns = ["name","description"];
+        query.filter ={"_id":refreshProductCategoryId};
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
+            $scope.productCategories[index] = productCategoryData.response.data[0];
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+        })
     }
 });
 
@@ -885,7 +916,7 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
 
 cstore.controller('stateCtrl', function ($scope, $appService) {
     $scope.getStateCountries = function () {
-        $scope.state = {"countries":[],"selectedCountry":""};
+        $scope.countryList = {};
         var countries = {};
         var query = {"table":"countries__cstore"};
         query.columns = ["name"];
@@ -893,8 +924,11 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
             //console.log("countryData::" + JSON.stringify(countryData));
-            $scope.state.countries = countryData.response.data;
-            $scope.state.selectedCountry = $scope.storedata.countries[0];
+            $scope.countryList = countryData.response.data;
+            //$scope.countryList.selectedCountry = $scope.state.countries[0];
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
         }, function (jqxhr, error) {
         })
     }
@@ -928,6 +962,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
             for (var i = 0; i < $scope.states.length; i++) {
                 $scope.states[i]["deleteStatus"] = false;
                 $scope.states[i]["editStatus"] = false;
+                $scope.states[i]["oldstatus"] =true;
             }
 
         }, function (jqxhr, error) {
@@ -942,6 +977,20 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         $scope.getAllStates(0, 10);
     }
     $scope.getStateCountries();
+    $scope.refreshStates=function(index,refreshStateId){
+        var query = {"table":"states__cstore"};
+        query.columns = ["name","countryid"];
+        query.filter ={"_id":refreshStateId};
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
+            $scope.states[index] = stateData.response.data[0];
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+        })
+    }
 });
 
 cstore.controller('cityCtrl', function ($scope, $appService) {
@@ -974,6 +1023,7 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
             for (var i = 0; i < $scope.cities.length; i++) {
                 $scope.cities[i]["deleteStatus"] = false;
                 $scope.cities[i]["editStatus"] = false;
+                $scope.cities[i]["oldstatus"] =true;
             }
 
         }, function (jqxhr, error) {
@@ -988,15 +1038,33 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         $scope.getAllCities(0, 10);
     }
     $scope.getCityStates = function () {
+        $scope.stateList = {};
+        var states = {};
         var query = {"table":"states__cstore"};
         query.columns = ["name"];
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
-            $scope.states = stateData.response.data;
-            //$scope.statedata.selectedCountry = $scope.storedata.countries[0];
+            $scope.stateList = stateData.response.data;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
         }, function (jqxhr, error) {
         })
     }
     $scope.getCityStates();
+    $scope.refreshCities=function(index,refreshCityId){
+        var query = {"table":"cities__cstore"};
+        query.columns = ["name","stateid"];
+        query.filter ={"_id":refreshCityId};
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
+            $scope.cities[index] = cityData.response.data[0];
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+        })
+    }
 });

@@ -1087,7 +1087,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             '</tr><tr ng-repeat="country in countries"><td><input type="checkbox" ng-model="country.deleteStatus">' +
             '</td><td><span ng-hide="country.editStatus">{{country.name}}</span><input ng-show="country.editStatus" class="edit_input" type="text" ng-model="country.name"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="country.editStatus = true" ng-hide="country.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="remove($index)" ng-show="country.editStatus">Cancel</a></td></tr>' +
+            '<a class="edit_btn" ng-click="remove($index,country._id)" ng-show="country.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewCountry()" class="add_new"><a href>' +
             '+ Click Here To Add New Country</a></div></div>',
         compile:function () {
@@ -1101,14 +1101,6 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
-                    }
-                    $scope.remove = function(index){
-                        if($scope.productCategories.length-1 == index) {
-                            $scope.productCategories.splice(index, 1);
-                        }
-                        else {
-                            $scope.productCategories[index]["editStatus"] = false;
-                        }
                     }
                     $scope.deleteCountryArray = [];
                     $scope.deleteCountries = function () {
@@ -1152,20 +1144,22 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post:function($scope){
-                    $scope.saveCountries = function () {
-                        $scope.addCountryArray = [];
-                        for(var i = 0; i < $scope.countries.length; i++){
-                            if($scope.countries[i]._id) {
-                                $scope.addCountryArray.push({"name":$scope.countries[i].name,"_id":$scope.countries[i]._id})
+                    $scope.remove = function(index,refreshCountryId){
+                            if(!$scope.countries[index]["oldstatus"]){
+                                $scope.countries.splice(index, 1);
                             }
                             else {
-                                $scope.addCountryArray.push({"name":$scope.countries[i].name})
+                                $scope.refreshCountries(index,refreshCountryId);
                             }
                         }
+
+                    $scope.saveCountries = function () {
+                        var countryList = $scope.countries.filter(function (el) {
+                            return el.editStatus == true;
+                        });
                         var query = {};
                         query.table = "countries__cstore";
-                        query.operations = angular.copy($scope.addCountryArray);
-                        $scope.addCountryArray = [];
+                        query.operations = countryList;
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 alert("Saved");
@@ -1205,7 +1199,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '<input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.name"></td><td><span ng-hide="productCategory.editStatus">' +
             '{{productCategory.description}}</span><input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.description"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="productCategory.editStatus = true" ng-hide="productCategory.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="remove($index)" ng-show="productCategory.editStatus">Cancel</a></td></tr>' +
+            '<a class="edit_btn" ng-click="remove($index,productCategory._id)" ng-show="productCategory.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewProductCategory()" class="add_new"><a href>' +
             '+ Click Here To Add New Product Category</a></div></div>',
         compile:function () {
@@ -1272,20 +1266,21 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                     }
                 },
                 post:function($scope){
-                    $scope.saveProductCategories = function () {
-                        $scope.addproductCategoryArray = [];
-                        for(var i = 0; i < $scope.productCategories.length; i++){
-                            if($scope.productCategories[i]._id) {
-                                $scope.addproductCategoryArray.push({"name":$scope.productCategories[i].name,"description":$scope.productCategories[i].description,"_id":$scope.productCategories[i]._id})
-                            }
-                            else {
-                                $scope.addproductCategoryArray.push({"name":$scope.productCategories[i].name,"description":$scope.productCategories[i].description})
-                            }
+                    $scope.remove = function(index,refreshProductCategoryId){
+                        if(!$scope.productCategories[index]["oldstatus"]){
+                            $scope.productCategories.splice(index, 1);
                         }
+                        else {
+                            $scope.refreshProductCategories(index,refreshProductCategoryId);
+                        }
+                    }
+                    $scope.saveProductCategories = function () {
+                        var productCategoryList = $scope.productCategories.filter(function (el) {
+                            return el.editStatus == true;
+                        });
                         var query = {};
                         query.table = "product_categories__cstore";
-                        query.operations = angular.copy($scope.addproductCategoryArray);
-                        $scope.addproductCategoryArray = [];
+                        query.operations = productCategoryList;
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 alert("Saved");
@@ -1422,7 +1417,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
 cstore.directive('countrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="qty_select" ng-model="state.selectedCountry" ng-options="country.name for country in state.countries"></select>',
+        template:'<select class="qty_select" ng-model="state.countryid" ng-options="country.name for country in countryList"></select>',
         compile:function () {
             return{
                 pre:function () {
@@ -1450,8 +1445,8 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
             '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
             '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
-            '<a class="edit_btn" ng-click="state.editStatus=true; setState(state)" ng-hide="state.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="remove($index)" ng-show="state.editStatus">Cancel</a></td></tr>' +
+            '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
+            '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewState()" class="add_new"><a href>' +
             '+ Click Here To Add New State</a></div></div>',
         compile:function () {
@@ -1463,14 +1458,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             $scope.states[$scope.states.length-1]["editStatus"] = true;
                         //}
                     }
-                    $scope.remove = function(index){
-                        if($scope.states.length-1 == index) {
-                            $scope.states.splice(index, 1);
-                        }
-                        else {
-                            $scope.states[index]["editStatus"] = false;
-                        }
-                    }
+
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
@@ -1517,19 +1505,21 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post:function($scope){
-                    $scope.saveStates = function () {
-                        $scope.addStateArray = [];
-                        for(var i = 0; i < $scope.states.length; i++){
-                            if($scope.states[i]._id) {
-                                $scope.addStateArray.push({"name":$scope.states[i].name,"_id":$scope.states[i]._id,"countryid":{"_id":$scope.states[i].countryid._id,"name":$scope.states[i].countryid.name}})
-                            }
-                            else {
-                                $scope.addStateArray.push({"name":$scope.states[i].name,"countryid":{"_id":$scope.states[i].countryid._id,"name":$scope.states[i].countryid.name}})
-                            }
+                    $scope.remove = function(index,refreshStateId){
+                        if(!$scope.states[index]["oldstatus"]){
+                            $scope.states.splice(index, 1);
                         }
+                        else {
+                            $scope.refreshStates(index,refreshStateId);
+                        }
+                    }
+                    $scope.saveStates = function () {
+                        var stateList = $scope.states.filter(function (el) {
+                            return el.editStatus == true;
+                        });
                         var query = {};
                         query.table = "states__cstore";
-                        query.operations = angular.copy($scope.addStateArray);
+                        query.operations =stateList;
                         $scope.addStateArray = [];
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
@@ -1552,20 +1542,20 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                     $scope.setState = function (state) {
                         //$scope.states[state].editStatus = true;
                         //for (var i = 0; i < $scope.data.states.length; i++) {
-                          //  if ($scope.data.states[i]._id == vendor.state._id) {
-                            //    $scope.data.selectedState = $scope.data.states[i];
-                              //  break;
-                           // }
-                       // }
-                        for (var i = 0; i < $scope.state.countries.length; i++) {
-                            if ($scope.state.countries[i]._id == state.countryid._id) {
-                                $scope.state.selectedCountry = $scope.state.countries[i];
+                        //  if ($scope.data.states[i]._id == vendor.state._id) {
+                        //    $scope.data.selectedState = $scope.data.states[i];
+                        //  break;
+                        // }
+                        // }
+                        for (var i = 0; i < $scope.countryList.length; i++) {
+                            if ($scope.countryList[i]._id == state.countryid._id) {
+                                state.countryid = $scope.countryList[i];
                                 break;
                             }
                         }
-                        $scope.state["name"]=state.name;
 
                     }
+
                 }
             }
         }
@@ -1575,7 +1565,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
 cstore.directive('cityStateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select ng-show="editCityState" class="qty_select" ng-model="city.stateid" ng-options="state.name for state in data.states"></select>',
+        template:'<select class="qty_select" ng-model="city.stateid" ng-options="state.name for state in stateList"></select>',
         compile:function () {
             return{
                 pre:function () {
@@ -1598,11 +1588,13 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '{{show.preCursor}}-{{show.preCursor + cities.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>City</th><th>State</th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>City</th><th>State</th><th></th>' +
             '</tr><tr ng-repeat="city in cities"><td><input type="checkbox" ng-model="city.deleteStatus">' +
-            '</td><td  ng-click="editCity=true"><span ng-hide="editCity">{{city.name}}</span>' +
-            '<input type="text" ng-show="editCity" ng-model="city.name"></td><td ng-click="editCityState=true">' +
-            '<span ng-hide="editCityState">{{city.stateid.name}}</span><city-state-select></city-state-select></td></tr>' +
+            '</td><td><span ng-hide="city.editStatus">{{city.name}}</span>' +
+            '<input type="text" ng-show="city.editStatus" ng-model="city.name"></td><td>' +
+            '<span ng-hide="city.editStatus">{{city.stateid.name}}</span><city-state-select ng-show="city.editStatus"></city-state-select></td><td style="cursor: pointer">' +
+            '<a class="edit_btn" ng-click="city.editStatus=true;setCity(city)" ng-hide="city.editStatus">Edit</a>' +
+            '<a class="edit_btn" ng-click="remove($index,city._id)" ng-show="city.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewCity()" class="add_new"><a href>' +
             '+ Click Here To Add New City</a></div></div>',
         compile:function () {
@@ -1610,7 +1602,11 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                 pre:function ($scope) {
                     $scope.addNewCity = function() {
                         $scope.cities.push( { name : '',stateid : '' } );
+                        //for (var i = 0; i < $scope.countries.length; i++) {
+                        $scope.cities[$scope.cities.length-1]["editStatus"] = true;
+                        //}
                     }
+
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
@@ -1633,7 +1629,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         if ($scope.cities[i].deleteStatus) {
-                                            console.log("delete items" + i);
+                                            //console.log("delete items" + i);
                                             $scope.cities.splice(i, 1);
                                         }
                                     }
@@ -1657,26 +1653,29 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post:function($scope){
-                    $scope.saveCities = function () {
-                        $scope.addCityArray = [];
-                        for(var i = 0; i < $scope.cities.length; i++){
-                            if($scope.cities[i]._id) {
-                                $scope.addCityArray.push({"name":$scope.cities[i].name,"_id":$scope.cities[i]._id,"stateid":{"_id":$scope.cities[i].stateid._id,"name":$scope.cities[i].stateid.name}})
-                            }
-                            else {
-                                $scope.addCityArray.push({"name":$scope.cities[i].name,"stateid":{"_id":$scope.cities[i].stateid._id,"name":$scope.cities[i].stateid.name}})
-                            }
+                    $scope.remove = function(index,refreshCityId){
+                        if(!$scope.cities[index]["oldstatus"]){
+                            $scope.cities.splice(index, 1);
                         }
+                        else {
+                            $scope.refreshCities(index,refreshCityId);
+                        }
+                    }
+                    $scope.saveCities = function () {
+                        var cityList = $scope.cities.filter(function (el) {
+                            return el.editStatus == true;
+                        });
                         var query = {};
                         query.table = "cities__cstore";
-                        query.operations = angular.copy($scope.addCityArray);
-                        $scope.addCityArray = [];
+                        query.operations =cityList;
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Updated");
-                                window.location.href = "#!/cities";
+                                alert("Saved");
+                                for (var i = 0; i < $scope.cities.length; i++) {
+                                    $scope.cities[i]["editStatus"] = false;
+                                }
                             } else {
                                 alert("some error while saving");
                             }
@@ -1687,6 +1686,23 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                             alert(err);
                         });
                     }
+                    $scope.setCity = function (city) {
+                        //$scope.states[state].editStatus = true;
+                        //for (var i = 0; i < $scope.data.states.length; i++) {
+                        //  if ($scope.data.states[i]._id == vendor.state._id) {
+                        //    $scope.data.selectedState = $scope.data.states[i];
+                        //  break;
+                        // }
+                        // }
+                        for (var i = 0; i < $scope.stateList.length; i++) {
+                            if ($scope.stateList[i]._id == city.stateid._id) {
+                                city.stateid = $scope.stateList[i];
+                                break;
+                            }
+                        }
+
+                    }
+
                 }
             }
         }
