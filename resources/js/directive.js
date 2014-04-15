@@ -65,6 +65,8 @@ cstore.directive('activeLink', ['$location', function (location) {
         link:function (scope, element, attrs, controller) {
             var clazz = attrs.activeLink;
             var path = attrs.href;
+            var click = attrs.ng-click;
+            //console.log(click);
             path = path.substring(2); //hack because path does bot return including hashbang
             scope.location = location;
             scope.$watch('location.path()', function (newPath) {
