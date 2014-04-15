@@ -422,13 +422,13 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
 
                     }
                     $scope.setProductState = function (product) {
-
                         $scope.productdata["name"] = product.name ? product.name: "";
                         $scope.productdata["cost"] = product.cost ? product.cost : "";
                         $scope.productdata["description"] = product.description ? product.description : "";
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["soldcount"] = product.soldcount ? product.soldcount : "";
-                        $scope.productdata["image"] = product.image;
+                        $scope.productdata["image"] = product.imageUrl;
+                        //console.log($scope.productdata.image);
                         if(product.vendor){
                             for (var i = 0; i < $scope.productdata.vendors.length; i++) {
                                 if ($scope.productdata.vendors[i]._id == product.vendor._id) {
@@ -437,7 +437,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                 }
                             }
                         }
-                        //alert(product.product_category._id);
+
                         if(product.product_category._id) {
                             for (var j = 0; j < $scope.productdata.productCategories.length; j++) {
                                 if ($scope.productdata.productCategories[j]._id == product.product_category._id)
@@ -484,7 +484,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
             '</td></tr><tr><td><div class="margin_top">Price</div></td><td><div class="margin_top">Image</div></td></tr><tr><td>' +
             '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td style="position: absolute;"><app-file-upload><app-file-upload>' +
-            '<img  ng-src="" style="float: left;height: 142px;width: 200px;margin-top:-37px">{{productdata.image}}</td></tr>' +
+            '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforProduct(\'products\')"><a href>Close</a></button></div></div></td></tr></table></div>',
@@ -587,7 +587,7 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
 //        scope:true,
         template:"<p>" +
             "<input type='file' id='uploadfile' style=' float: left;width: 206px;'> " +
-            "<img id='img_thumbnail' ng-show='showimage' ng-src='{{imageData}}' class='thumbnail' style='float: left;height: 142px;width: 200px;margin-top:-37px'></p>",
+            "<img id='img_thumbnail' ng-src='{{productdata.image}}' class='thumbnail' style='float: left;height: 142px;width: 200px;margin-top:-37px'></p>",
         compile:function () {
             return {
                 post:function ($scope, iElement) {

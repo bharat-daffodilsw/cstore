@@ -143,7 +143,7 @@ appStrapServices.factory('$appService', [
                         }
                     }
 
-                    console.log(data[i]["imageUrl"]);
+                    //console.log(data[i]["imageUrl"]);
 
                 }
             }

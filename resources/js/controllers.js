@@ -622,7 +622,9 @@ cstore.controller('productList', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
             $scope.loadingProductData = false;
             $scope.show.currentCursor = productData.response.cursor;
-            $scope.products = productData.response.data;
+            //$scope.products = productData.response.data;
+            $scope.products = $appService.setUrls(productData.response.data);
+            console.log($scope.products);
             for (var i = 0; i < $scope.products.length; i++) {
                 $scope.products[i]["deleteStatus"] = false;
             }
