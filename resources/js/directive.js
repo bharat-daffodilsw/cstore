@@ -373,7 +373,7 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
 cstore.directive('productList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"><a href="#!/add-product">Add</a></button>' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"><a href ng-click="setPath(\'add-product\')">Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteProduct()"><a href>Delete</a></button></div><div  ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
@@ -486,8 +486,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
             '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
             '</td></tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><img ng-src="{{productdata.image}}" ng-hide="productdata.editImage"/><button class="edit_image" ng-click="editImage()">Edit Image</button></td><td style="position: absolute;">' +
-            '<app-file-upload ng-show=productdata.editImage><app-file-upload>' +
+            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><img ng-src="{{productdata.image}}" ng-hide="productdata.editImage"/></td><td style="position: absolute;">' +
+            '<app-file-upload><app-file-upload>' +
             '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
@@ -500,14 +500,9 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         $scope.clearProductContent();
                         window.location.href = "#!/" + path;
                     }
-
-                    $scope.removeImage = function (){
-                            console.log($scope.productdata.image);
-                    }
                     $scope.editImage= function()
                     {
                         $scope.productdata["editImage"]=true;
-                        $scope.removeImage();
                     }
 
                 },
@@ -727,10 +722,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                             if(store.manager.stateid){
-                                $scope.getStatesNew($scope.storedata.manager.selectedCountry._id, store.manager.stateid._id);
+                                $scope.getStatesNew($scope.storedata.manager, store.manager.stateid._id);
                             }
                             if(store.manager.cityid){
-                                $scope.getCitiesNew($scope.storedata.manager.selectedState._id, store.manager.cityid._id,false);
+                                $scope.getCitiesNew($scope.storedata.manager, store.manager.cityid._id);
                             }
                         }
                         else {
@@ -749,10 +744,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             }
                         }
                         if(store.stateid) {
-                            $scope.getStatesNew($scope.storedata.selectedCountry._id, store.stateid._id);
+                            $scope.getStatesNew($scope.storedata, store.stateid._id);
                         }
                         if(store.cityid) {
-                            $scope.getCitiesNew($scope.storedata.selectedState._id, store.cityid._id,true);
+                            $scope.getCitiesNew($scope.storedata, store.cityid._id);
                         }
                         window.location.href = "#!edit-store-manager?q=" + store._id;
                     }
@@ -780,7 +775,7 @@ cstore.directive('storeCitySelect', ['$appService', function ($appService, $scop
 cstore.directive('storeStateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand" ng-change="getCitiesNew(storedata.selectedState._id,null,true)" ng-model="storedata.selectedState" ng-options="state.name for state in storedata.states"></select>',
+        template:'<select class="brand" ng-change="getCitiesNew(storedata,null)" ng-model="storedata.selectedState" ng-options="state.name for state in storedata.states"></select>',
         compile:function () {
             return{
                 pre:function () {
@@ -796,7 +791,7 @@ cstore.directive('storeStateSelect', ['$appService', function ($appService, $sco
 cstore.directive('storeCountrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand"  ng-change="getStatesNew(storedata.selectedCountry._id)" ng-model="storedata.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
+        template:'<select class="brand"  ng-change="getStatesNew(storedata,null)" ng-model="storedata.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
         compile:function () {
             return{
                 pre:function () {
@@ -813,7 +808,7 @@ cstore.directive('managerCitySelect', ['$appService', function ($appService, $sc
     return {
         restrict:'E',
         template:'<select class="brand"  ng-model="storedata.manager.selectedCity" ' +
-            'ng-options="city.name for city in storedata.cities"></select>',
+            'ng-options="city.name for city in storedata.manager.cities"></select>',
         compile:function () {
             return {
                 pre:function () {
@@ -827,7 +822,7 @@ cstore.directive('managerCitySelect', ['$appService', function ($appService, $sc
 cstore.directive('managerStateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand"  ng-change="getCitiesNew(storedata.manager.selectedState._id,null,false)" ng-model="storedata.manager.selectedState" ng-options="state.name for state in storedata.states"></select>',
+        template:'<select class="brand"  ng-change="getCitiesNew(storedata.manager,null)" ng-model="storedata.manager.selectedState" ng-options="state.name for state in storedata.manager.states"></select>',
         compile:function () {
             return{
                 pre:function () {
@@ -843,7 +838,7 @@ cstore.directive('managerStateSelect', ['$appService', function ($appService, $s
 cstore.directive('managerCountrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand" ng-change="getStatesNew(storedata.manager.selectedCountry._id)" ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries">' +
+        template:'<select class="brand" ng-change="getStatesNew(storedata.manager,null)" ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries">' +
             '</select>',
         compile:function () {
             return{
@@ -902,7 +897,7 @@ cstore.directive('rewardPoint', ['$appService', function ($appService, $scope) {
 cstore.directive('brand', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand" ng-model="storedata.brand" ng-options="brand.name for brand in brands"></select>' +
+        template:'<select class="brand" multiple ng-multiple="true" ng-model="storedata.brand" ng-options="brand.name for brand in brands"></select>' +
             '<input type="text" placeholder="" ng-show = "storedata.brand.name == \'Others\'" ng-model="brandName" class="other_input pull-left" ng-blur="addBrand()">',
         compile:function () {
             return{
@@ -994,15 +989,15 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             alert("please select city first ");
                             return false;
                         }
-                        if(!$scope.storedata.brand.name){
+                        if(!$scope.storedata.brand){
                             alert("please select brand first ");
                             return false;
                         }
-                        if(!$scope.storedata.pos_version.name){
+                        if(!$scope.storedata.pos_version){
                             alert("please select pos version first ");
                             return false;
                         }
-                        if(!$scope.storedata.reward_point.name){
+                        if(!$scope.storedata.reward_point){
                             alert("please select reward point first");
                             return false;
                         }
@@ -1020,7 +1015,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         }
                         $scope.newStore["storename"] = $scope.storedata.storename;
                         $scope.newStore["address"] = $scope.storedata.lastname;
-                        $scope.newStore["brands"] = $scope.storedata.brand.name;
+                        $scope.newStore["brands"] = [$scope.storedata.brand.name];
                         $scope.newStore["contact"] = $scope.storedata.contact;
                         $scope.newStore["email"] = $scope.storedata.email;
                         if($scope.storedata.selectedCountry && $scope.storedata.selectedCountry!=null && $scope.storedata.selectedCountry!=undefined && $scope.storedata.selectedCountry!="undefined" && $scope.storedata.selectedCountry!="null"){
@@ -1427,7 +1422,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
 cstore.directive('countrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="qty_select" ng-model="statedata.selectedCountry" ng-options="country.name for country in statedata.countries"></select>',
+        template:'<select class="qty_select" ng-model="state.selectedCountry" ng-options="country.name for country in state.countries"></select>',
         compile:function () {
             return{
                 pre:function () {
@@ -1456,7 +1451,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
             '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="state.editStatus=true; setState(state)" ng-hide="state.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="remove()" ng-show="state.editStatus">Cancel</a></td></tr>' +
+            '<a class="edit_btn" ng-click="remove($index)" ng-show="state.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewState()" class="add_new"><a href>' +
             '+ Click Here To Add New State</a></div></div>',
         compile:function () {
@@ -1562,13 +1557,13 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                               //  break;
                            // }
                        // }
-                        for (var i = 0; i < $scope.statedata.countries.length; i++) {
-                            if ($scope.statedata.countries[i]._id == state.countryid._id) {
-                                $scope.statedata.selectedCountry = $scope.statedata.countries[i];
+                        for (var i = 0; i < $scope.state.countries.length; i++) {
+                            if ($scope.state.countries[i]._id == state.countryid._id) {
+                                $scope.state.selectedCountry = $scope.state.countries[i];
                                 break;
                             }
                         }
-                        $scope.statedata["name"]=state.name;
+                        $scope.state["name"]=state.name;
 
                     }
                 }

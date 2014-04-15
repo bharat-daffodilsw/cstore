@@ -251,7 +251,7 @@ a:hover {
     text-align:center;
     width:25%;
     color: #000;
-    margin-top:20px;}
+    margin-top:25px;}
 
 .footer_4 {
     text-align:center;
@@ -403,9 +403,9 @@ a:hover {
     display:none;
     background-color:#e7c271;
     position:absolute;
-    margin-top:5px;
+    margin-top:6px;
     width: 200px;
-    margin-left:5px;
+    right:0;
     z-index: 1000;}
 
 .setup ul li {
@@ -559,7 +559,7 @@ tr {
     padding: 5px 20px;}
 
 .save_close {
-    margin:20px;
+    margin:20px 0;
     width:100%;}
 
 .save_close button{
@@ -797,23 +797,25 @@ th {
     margin-top: 0px;
     position:absolute;
     width: 50%;
-    padding: 7px 0;}
+    padding: 5px 0;}
 
 .search_2 {
+    margin-top:3px;
     position:relative;
     width:40%;
-    margin-left:-20px;}
+    margin-left:-35px;}
 
 .search_sign_2{
     width: 30px;
     height: 0px;
     position: absolute;
-    margin-left: 40%;
+    margin-left: 35%;
     margin-top:0; }
 
 .search_by {
-    font-size:18px;
     width:31%;
+    color:#999;
+    margin-top:3px;
     text-align:center;}
 
 .search_by .qty_select {
@@ -839,7 +841,7 @@ th {
     height: 120px;
     width: 170px;
     position: absolute;
-    margin-left: 125px;
+    margin-left: 170px;
     margin-top: -20px;
 }
 .thumbnail {
@@ -865,6 +867,16 @@ th {
 	position:absolute;
 	margin-top:5px;
 	width: 200px;
-	margin-left:630px;
+	margin-left:461px;
 	z-index: 1000;}
                     }
+
+If IE  
+.setup {
+    display:none;
+    background-color:#e7c271;
+    position:absolute;
+    margin-top:6px;
+    width: 200px;
+    right:0;
+    z-index: 1000;}
