@@ -86,6 +86,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.rewardPoints = [{"name":"Cents Per Gallon"},{"name":"Points/Clubs"},{"name":"Clubs Only"},{"name":"Mobile Only"},{"name":"Others"}];
     //$scope.storedata.reward_point = $scope.rewardPoints[0];
     $scope.brands =[{"name":"Shell"},{"name":"CITGO"},{"name":"BP"},{"name":"Mobil"},{"name":"Exxon"},{"name":"Marathon"},{"name":"Conoco"},{"name":"Phillips 66"},{"name":"Valero"},{"name":"Chevron"},{"name":"Others"}];
+    $scope.shifts =[{"name":"Day"},{"name":"Night"}];
     //$scope.storedata.brand =$scope.brands[0];
     $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
     $scope.currentUser["data"] = $appService.getSession();

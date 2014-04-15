@@ -915,6 +915,21 @@ cstore.directive('brand', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('shift', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="brand"ng-model="storedata.shift" ng-options="shift.name for shift in shifts"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
 cstore.directive('addStoreManager', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
@@ -923,7 +938,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Store Name</div>' +
             '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
             '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact">' +
-            '</td></tr><tr><td><div class="margin_top">Shift</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.shift">' +
+            '</td></tr><tr><td><div class="margin_top">Shift</div></td></tr><tr><td><shift></shift>' +
             '</td></tr><tr><td><div class="margin_top">POS Type</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.pos_type">' +
             '</td></tr><tr><td><div class="margin_top">POS Version</div></td></tr><tr><td><pos-version-select></pos-version-select></td>' +
             '</tr><tr><td>' +
@@ -1032,7 +1047,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         $scope.newStore["pos_version"] = $scope.storedata.pos_version.name;
                         $scope.newStore["postalcode"] = $scope.storedata.postalcode;
                         $scope.newStore["reward_point"] = $scope.storedata.reward_point.name;
-                        $scope.newStore["shift"] = $scope.storedata.shift;
+                        $scope.newStore["shift"] = $scope.storedata.shift.name;
                         $scope.newStore["manager"]["address"] = $scope.storedata.manager.address;
                         $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                         $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
