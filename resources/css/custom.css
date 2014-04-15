@@ -29,8 +29,12 @@ a:hover {
     width:15%;
     text-align:center;
     color:#FFF;
-    padding-top:1%; }
+    padding-top:1%;
+    margin-top:-.5%;}
 
+.logo img {
+    width: 75%;
+}
 .add_cart{
     background-color:#000;
     width:100px;
@@ -248,7 +252,7 @@ a:hover {
 
 .footer {
     border:1px solid #000;
-    background-color:#000;
+    background-color:#e7c271;
     color:#FFF;
     margin-top:10px;
     width: 100%;
@@ -257,8 +261,17 @@ a:hover {
 
 .footer_3 {
     text-align:center;
-    width:33%;}
+    width:25%;
+    color: #000;
+    margin-top:20px;}
 
+.footer_4 {
+    text-align:center;
+    width:25%;
+}
+.footer_4 img {
+    width:50%;
+}
 .price {
     font-size:15px;
     font-weight:bold;}
