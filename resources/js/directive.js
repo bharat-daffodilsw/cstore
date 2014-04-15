@@ -483,7 +483,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<input type="text" placeholder="" ng-model="productdata.short_description"></td><td><product-category-select></product-category-select>' +
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
             '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
-            '</td></tr><tr><td><div class="margin_top">Price</div></td><td><div class="margin_top">Image</div></td></tr><tr><td>' +
+            '</td></tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
             '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><img ng-src="{{productdata.image}}" ng-hide="productdata.editImage"/><button class="edit_image" ng-click="editImage()">Edit Image</button></td><td style="position: absolute;">' +
             '<app-file-upload ng-show=productdata.editImage><app-file-upload>' +
             '</td></tr>' +
@@ -600,8 +600,8 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
         replace:true,
 //        scope:true,
         template:"<p>" +
-            "<input type='file' id='uploadfile'> " +
-            "<img id='img_thumbnail ng-src='{{imageData}}' class='thumbnail'></p>",
+            "<input class ='edit_image' type='file' id='uploadfile'> " +
+            "</p>",
         compile:function () {
             return {
                 post:function ($scope, iElement) {
@@ -841,7 +841,7 @@ cstore.directive('managerStateSelect', ['$appService', function ($appService, $s
 cstore.directive('managerCountrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand" ng-change="getStatesNew(storedata.selectedCountry._id)" ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries">' +
+        template:'<select class="brand" ng-change="getStatesNew(storedata.manager.selectedCountry._id)" ng-model="storedata.manager.selectedCountry" ng-options="country.name for country in storedata.countries">' +
             '</select>',
         compile:function () {
             return{

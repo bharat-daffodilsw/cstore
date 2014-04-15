@@ -117,10 +117,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
-            //console.log("countryData::" + JSON.stringify(countryData));
             $scope.storedata.countries = countryData.response.data;
             $scope.storedata.selectedCountry = $scope.storedata.countries[0];
+            console.log($scope.storedata.selectedCountry);
             $scope.storedata.manager.selectedCountry = $scope.storedata.countries[0];
+            console.log($scope.storedata.manager.selectedCountry);
             $scope.getStatesNew($scope.storedata.countries[0]._id, false);
         }, function (jqxhr, error) {
         })
@@ -145,13 +146,17 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
                     for (var i = 0; i < $scope.storedata.states.length; i++) {
                         if ($scope.storedata.states[i]._id == $scope.defaultState) {
                             $scope.storedata.selectedState = $scope.storedata.states[i];
+                            console.log($scope.storedata.selectedState);
                             $scope.storedata.manager.selectedState = $scope.storedata.states[i];
+                            console.log($scope.storedata.manager.selectedState);
                             break;
                         }
                     }
                 } else {
                     $scope.storedata.selectedState = $scope.storedata.states[0];
+                    console.log($scope.storedata.selectedState);
                     $scope.storedata.manager.selectedState = $scope.storedata.states[0];
+                    console.log($scope.storedata.manager.selectedState);
                 }
             if($scope.storedata.states.length){
                 $scope.getCitiesNew($scope.storedata.states[0]._id, false);
@@ -177,9 +182,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
                     if ($scope.storedata.cities[i]._id == $scope.defaultCity) {
                         if(view){
                             $scope.storedata.selectedCity = $scope.storedata.cities[i];
+                            console.log($scope.storedata.selectedCity);
                         }
                         else {
                             $scope.storedata.manager.selectedCity = $scope.storedata.cities[i];
+                            console.log($scope.storedata.manager.selectedCity);
                         }
                         break;
                     }
