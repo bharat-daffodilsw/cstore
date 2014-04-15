@@ -971,6 +971,7 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
             $scope.cities = cityData.response.data;
             for (var i = 0; i < $scope.cities.length; i++) {
                 $scope.cities[i]["deleteStatus"] = false;
+                $scope.cities[i]["editStatus"] = false;
             }
 
         }, function (jqxhr, error) {
@@ -984,5 +985,16 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllCities(0, 10);
     }
-    $scope.getStates();
+    $scope.getCityStates = function () {
+        var query = {"table":"states__cstore"};
+        query.columns = ["name"];
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
+            $scope.states = stateData.response.data;
+            //$scope.statedata.selectedCountry = $scope.storedata.countries[0];
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getCityStates();
 });

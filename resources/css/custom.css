@@ -882,3 +882,24 @@ th {
     width: 95%;
     padding:5px;
 }
+.product_image img {
+    height: 120px;
+    width: 170px;
+    position: absolute;
+    margin-left: 125px;
+    margin-top: -20px;
+}
+.thumbnail {
+    float: left;
+    height: 135px;
+    width: 202px;
+    margin-top: -60px;
+    margin-left: -260px;
+    position: absolute;
+}
+.edit_image {
+    background-color: #e7c271;
+    font-size: 16px;
+    outline: 0px;
+    padding: 5px 25px;
+}

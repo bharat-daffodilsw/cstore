@@ -428,7 +428,8 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["soldcount"] = product.soldcount ? product.soldcount : "";
                         $scope.productdata["image"] = product.imageUrl;
-                        //console.log($scope.productdata.image);
+                        $scope.productdata["editImage"]=false;
+                        console.log($scope.productdata.image);
                         if(product.vendor){
                             for (var i = 0; i < $scope.productdata.vendors.length; i++) {
                                 if ($scope.productdata.vendors[i]._id == product.vendor._id) {
@@ -483,7 +484,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
             '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
             '</td></tr><tr><td><div class="margin_top">Price</div></td><td><div class="margin_top">Image</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td style="position: absolute;"><app-file-upload><app-file-upload>' +
+            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><img ng-src="{{productdata.image}}" ng-hide="productdata.editImage"/><button class="edit_image" ng-click="editImage()">Edit Image</button></td><td style="position: absolute;">' +
+            '<app-file-upload ng-show=productdata.editImage><app-file-upload>' +
             '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
@@ -496,6 +498,16 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         $scope.clearProductContent();
                         window.location.href = "#!/" + path;
                     }
+
+                    $scope.removeImage = function (){
+                            console.log($scope.productdata.image);
+                    }
+                    $scope.editImage= function()
+                    {
+                        $scope.productdata["editImage"]=true;
+                        $scope.removeImage();
+                    }
+
                 },
                 post:function ($scope) {
                     $scope.saveProduct = function () {
@@ -530,7 +542,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                             $scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
                             $scope.newProduct["product_category"] = {"name":$scope.productdata.selectedProductCategory.name, "_id":$scope.productdata.selectedProductCategory._id};
                             $scope.newProduct["cost"] = {"amount":$scope.productdata.cost.amount, "type":{"currency":"usd"}};
-                            if (document.getElementById('uploadfile').files.length === 0) {
+                            if (document.getElementById('uploadfile').files.length === 0 ) {
                                 delete $scope.newProduct["image"];
                                 query.operations = [$scope.newProduct];
                                 $scope.saveFunction(query);
@@ -586,8 +598,8 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
         replace:true,
 //        scope:true,
         template:"<p>" +
-            "<input type='file' id='uploadfile' style=' float: left;width: 206px;'> " +
-            "<img id='img_thumbnail' ng-src='{{productdata.image}}' class='thumbnail' style='float: left;height: 142px;width: 200px;margin-top:-37px'></p>",
+            "<input type='file' id='uploadfile'> " +
+            "<img id='img_thumbnail ng-src='{{imageData}}' class='thumbnail'></p>",
         compile:function () {
             return {
                 post:function ($scope, iElement) {
