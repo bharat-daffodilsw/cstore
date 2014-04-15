@@ -573,13 +573,15 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         }
                     };
                     $scope.saveFunction = function (query) {
-
+                        console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                            if (callBackData.response.insert) {
-                                alert("new product added");
+                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                                alert("Saved");
+                            } else {
+                                alert("some error while saving");
                             }
-                            else {
-                                alert("err while saving");
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
                             }
                         }, function (err) {
                             console.log(err.stack);
