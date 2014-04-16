@@ -133,7 +133,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
-            '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
+            '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}} {{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',
         compile:function () {
@@ -173,7 +173,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     alert("Deleted");
                                 }
                                 else {
-                                    alert("some err while deleting");
+                                    alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
@@ -332,9 +332,9 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 $scope.clearContent();
-                                alert("Updated");
+                                alert("Saved");
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -414,7 +414,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                 alert("Deleted");
                             }
                             else {
-                                alert("some err while deleting");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -564,7 +564,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                         alert("some error while uploading image please try again ");
                                     }
                                 }, function (callbackerror) {
-                                    alert("error");
+                                    alert(callbackerror);
                                 });
                             }
                         }
@@ -578,7 +578,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 alert("Saved");
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -704,7 +704,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 alert("Deleted");
                             }
                             else {
-                                alert("some err while deleting");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -1095,7 +1095,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 alert("Saved");
                                 window.location.href="#!/store-managers"
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -1169,7 +1169,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                     alert("Deleted");
                                 }
                                 else {
-                                    alert("some err while deleting");
+                                    alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
@@ -1196,7 +1196,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
 
                     $scope.saveCountries = function () {
                         var countryList = $scope.countries.filter(function (el) {
-                            return el.editStatus == true;
+                            return el.editStatus == true && el.name!="";
                         });
                         var query = {};
                         query.table = "countries__cstore";
@@ -1209,7 +1209,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                 }
 
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -1291,7 +1291,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                     alert("Deleted");
                                 }
                                 else {
-                                    alert("some err while deleting");
+                                    alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
@@ -1317,7 +1317,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                     }
                     $scope.saveProductCategories = function () {
                         var productCategoryList = $scope.productCategories.filter(function (el) {
-                            return el.editStatus == true;
+                            return el.editStatus == true && el.name != "";
                         });
                         var query = {};
                         query.table = "product_categories__cstore";
@@ -1329,7 +1329,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                     $scope.productCategories[i]["editStatus"] = false;
                                 }
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -1403,7 +1403,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                     alert("Deleted");
                                 }
                                 else {
-                                    alert("some err while deleting");
+                                    alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
@@ -1440,7 +1440,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                     $scope.trainingCategories[i]["editStatus"] = false;
                                 }
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -1530,7 +1530,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                     alert("Deleted");
                                 }
                                 else {
-                                    alert("some err while deleting");
+                                    alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
@@ -1556,7 +1556,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.saveStates = function () {
                         var stateList = $scope.states.filter(function (el) {
-                            return el.editStatus == true;
+                            return el.editStatus == true && el.name != "";
                         });
                         var query = {};
                         query.table = "states__cstore";
@@ -1571,7 +1571,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                     $scope.states[i]["editStatus"] = false;
                                 }
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -1678,7 +1678,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     alert("Deleted");
                                 }
                                 else {
-                                    alert("some err while deleting");
+                                    alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
@@ -1704,7 +1704,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.saveCities = function () {
                         var cityList = $scope.cities.filter(function (el) {
-                            return el.editStatus == true;
+                            return el.editStatus == true && el.name!="";
                         });
                         var query = {};
                         query.table = "cities__cstore";
@@ -1718,7 +1718,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     $scope.cities[i]["editStatus"] = false;
                                 }
                             } else {
-                                alert("some error while saving");
+                                alert(callBackData.response);
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
