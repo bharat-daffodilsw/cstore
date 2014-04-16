@@ -92,7 +92,7 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
             '</a></div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div>' +
 
-            '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div>'
+            '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>'
     }
 }]);
 
@@ -105,7 +105,7 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
             '{{childproduct.name}}</a></div><div class="product_details">' +
             '{{childproduct.short_description}}</div><div class="price">' +
             '<a href="#!/product?productid={{childproduct._id}}">{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>Add To Cart</a></div></div>' +
-            '</div></div>'
+            '</div></div><div class="loadingImage" ng-hide="!loadingAllProductData"><img src="images/loading.gif"></div>'
     }
 }]);
 
@@ -117,15 +117,14 @@ cstore.directive('productDetail', ['$appService', function ($appService, $scope)
             '<div class="details_product pull-right"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">' +
             '<select class="qty_select"><option>Qty*</option><option>1</option><option>2</option><option>3</option>' +
             '<option>4</option><option>5</option></select><div class="final_price">{{product[0].cost.amount}}</div><div class="add_to_btn">' +
-            '<a href>ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>'
+            '<a href>ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>' +
+            '<div class="loadingImage" ng-hide="!loadingProductDetailData"><img src="images/loading.gif"></div>'
     }
 }]);
 
 cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-
-
         template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
             '</div><div class="delete_btn pull-left"><button ng-click="deleteUsers()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
@@ -136,7 +135,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             'Name</th><th>Address</th><th>City</th><th>State</th><th>Email</th><th>Contact No.</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}}{{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
-            '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div>',
+            '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -264,7 +263,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         replace:'true',
-        template:'<div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
+        template:'<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
             '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
@@ -277,10 +276,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<tr><td><div class="margin_top">Email</div></td></tr><tr><td class="city"><input type="email" ng-model="data.email">' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
-            '</div></div></td></tr></table></div>',
+            '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
+                    $scope.loadingAddVenderData=true;
                     $scope.newVendor = {};
                     $scope.setPathforVender = function (path) {
                         $scope.clearContent();
@@ -288,6 +288,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post:function ($scope) {
+                    $scope.loadingAddVenderData=false;
                     $scope.saveVendor = function () {
                         $scope.newVendor = {};
                         if ($scope.data.firstname == "" || $scope.data.firstname == undefined) {
@@ -357,7 +358,7 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
             '<img src="{{product.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
             '<div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>' +
-            'Add To Cart</a></div></div></div></div><div id="scrollDiv"></div>',
+            'Add To Cart</a></div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -381,7 +382,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
             '</th><th>Product Category</th><th>Sold Count</th><th>Price</th><th></th></tr><tr ng-repeat="product in products"><td>' +
             '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
             '{{product.product_category.name}}</td><td>{{product.soldcount}}</td><td>{{product.cost.amount | currency}}</td>' +
-            '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div>',
+            '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProductData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -430,8 +431,13 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["soldcount"] = product.soldcount ? product.soldcount : "";
                         $scope.productdata["image"] = product.imageUrl;
-                        $scope.productdata["editImage"]=false;
                         console.log($scope.productdata.image);
+                        if($scope.productdata.image){
+                            $scope.productdata["editImage"]=true;
+                        }
+                        else {
+                            $scope.productdata["editImage"]=false;
+                        }
                         if(product.vendor){
                             for (var i = 0; i < $scope.productdata.vendors.length; i++) {
                                 if ($scope.productdata.vendors[i]._id == product.vendor._id) {
@@ -476,7 +482,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         replace:'true',
-        template:'<div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
+        template:'<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">Name</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.name">' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
             'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"> ' +
@@ -486,15 +492,16 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
             '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
             '</td></tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><img ng-src="{{productdata.image}}" ng-hide="productdata.editImage"/></td><td style="position: absolute;">' +
-            '<app-file-upload><app-file-upload>' +
+            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><app-file-upload ng-show="!productdata.editImage"></app-file-upload><img ng-src="{{productdata.image}}" ng-show="productdata.editImage"/><img src="images/icon_cross.gif" ng-show="productdata.editImage" ng-click="editImage()"></td><td style="position: absolute;">'+
             '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforProduct(\'products\')"><a href>Close</a></button></div></div></td></tr></table></div>',
+            '<button type="button" ng-click="setPathforProduct(\'products\')"><a href>Close</a></button></div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
+                    $scope.productdata["editImage"]=false;
+                    $scope.loadingAddProductData=true;
                     $scope.newProduct = {};
                     $scope.setPathforProduct = function (path) {
                         $scope.clearProductContent();
@@ -502,11 +509,12 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     }
                     $scope.editImage= function()
                     {
-                        $scope.productdata["editImage"]=true;
+                        $scope.productdata["editImage"]=false;
                     }
 
                 },
                 post:function ($scope) {
+                    $scope.loadingAddProductData=false;
                     $scope.saveProduct = function () {
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
@@ -651,7 +659,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             'Email</th><th>Contact</th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
             '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.pos_type}}</td><td>' +
             '{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td><td>{{storeManager.brands}}</td><td>{{storeManager.email}}</td><td>{{storeManager.contact}}</td>' +
-            '<td><a class="edit_btn" ng-click="setStoreState(storeManager)"href>Edit</a></td></tr></table></div>',
+            '<td><a class="edit_btn" ng-click="setStoreState(storeManager)"href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingStoreData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -934,7 +942,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
     return {
         restrict:'E',
         replace:'true',
-        template:'<div class="table_1 pull-left"><div class="l_bar pull-left">' +
+        template:'<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Store Name</div>' +
             '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
             '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact">' +
@@ -961,10 +969,11 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<manager-city-select></manager-city-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td></tr><tr><td>' +
             '<input type="text" placeholder=""ng-model="storedata.manager.postalcode"></td></tr><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforStore(\'store-managers\')"><a href="">Close</a></button></div></div></td></tr></table></div></div>',
+            '<button type="button" ng-click="setPathforStore(\'store-managers\')"><a href="">Close</a></button></div></div></td></tr></table></div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
+                    $scope.loadingAddStoreData=true;
                     $scope.newStore = {};
                     $scope.setPathforStore = function (path) {
                         $scope.clearStoreContent();
@@ -972,6 +981,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     }
                 },
                 post:function ($scope) {
+                    $scope.loadingAddStoreData=false;
                     $scope.saveStore = function () {
                         $scope.newStore = {};
                         $scope.newStore["manager"] ={};
@@ -1030,7 +1040,10 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         }
                         $scope.newStore["storename"] = $scope.storedata.storename;
                         $scope.newStore["address"] = $scope.storedata.lastname;
-                        $scope.newStore["brands"] = [$scope.storedata.brand.name];
+                        for(var i=0;i<$scope.storedata.brand.length;i++){
+                            var selectedBrands = $scope.storedata.brand[i].name
+                        }
+                        $scope.newStore["brands"] = [selectedBrands];
                         $scope.newStore["contact"] = $scope.storedata.contact;
                         $scope.newStore["email"] = $scope.storedata.email;
                         if($scope.storedata.selectedCountry && $scope.storedata.selectedCountry!=null && $scope.storedata.selectedCountry!=undefined && $scope.storedata.selectedCountry!="undefined" && $scope.storedata.selectedCountry!="null"){
@@ -1104,7 +1117,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="country.editStatus = true" ng-hide="country.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,country._id)" ng-show="country.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewCountry()" class="add_new"><a href>' +
-            '+ Click Here To Add New Country</a></div></div>',
+            '+ Click Here To Add New Country</a></div></div><div class="loadingImage" ng-hide="!loadingCountryData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -1216,7 +1229,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="productCategory.editStatus = true" ng-hide="productCategory.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCategory._id)" ng-show="productCategory.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewProductCategory()" class="add_new"><a href>' +
-            '+ Click Here To Add New Product Category</a></div></div>',
+            '+ Click Here To Add New Product Category</a></div></div><div class="loadingImage" ng-hide="!loadingProductCategoryData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -1463,7 +1476,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewState()" class="add_new"><a href>' +
-            '+ Click Here To Add New State</a></div></div>',
+            '+ Click Here To Add New State</a></div></div><div class="loadingImage" ng-hide="!loadingStateData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -1611,7 +1624,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '<a class="edit_btn" ng-click="city.editStatus=true;setCity(city)" ng-hide="city.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,city._id)" ng-show="city.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewCity()" class="add_new"><a href>' +
-            '+ Click Here To Add New City</a></div></div>',
+            '+ Click Here To Add New City</a></div></div><div class="loadingImage" ng-hide="!loadingCityData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {

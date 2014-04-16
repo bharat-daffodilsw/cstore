@@ -291,7 +291,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
 });
 cstore.controller('homeCtrl', function ($scope, $appService, $location) {
     $scope.homeView = {};
+    $scope.loadingPopularProductData = false;
     $scope.getPopularProducts = function (maxRow) {
+        $scope.loadingPopularProductData = true;
         var query = {"table":"products__cstore"};
         query.columns = ["name", "image", "short_description", "cost", "soldcount"];
         query.orders = {"soldcount":"desc"};
@@ -304,7 +306,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
-
+            $scope.loadingPopularProductData = false;
             $scope.popularProducts = $appService.setUrls(productData.response.data);
         }, function (jqxhr, error) {
             alert("exception in making request");
@@ -343,6 +345,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
 cstore.controller('allCategory', function ($scope, $appService) {
 
     $scope.getProductList = function () {
+        $scope.loadingAllProductData=true;
         var query = {"table":"product_categories__cstore"};
         query.columns = ["name"];
 
@@ -355,6 +358,7 @@ cstore.controller('allCategory', function ($scope, $appService) {
         //console.log(JSON.stringify(query));
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+            $scope.loadingAllProductData=false;
             var rawData = productData.response.data;
             for (var i = 0; i < rawData.length; i++) {
                 if (rawData[i] && rawData[i]["categoryWiseData"] && rawData[i]["categoryWiseData"].length) {
@@ -374,12 +378,14 @@ cstore.controller('allCategory', function ($scope, $appService) {
 
 cstore.controller('productDetailCtrl', function ($scope, $appService, $routeParams) {
     $scope.getProductDetail = function () {
+        $scope.loadingProductDetailData=true;
         var query = {"table":"products__cstore"};
         query.columns = ["cost", "description", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, {"expression":"vendor", "columns":["firstname"]}, "quantity", "soldcount"];
         query.filter = {"_id":$routeParams.productid};
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
+            $scope.loadingProductDetailData=false;
             $scope.product = $appService.setUrls(productDetailData.response.data);
         }, function (jqxhr, error) {
         })
@@ -800,6 +806,8 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
             var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
+                countryData.response.data[0].deleteStatus = false;
+                countryData.response.data[0].oldstatus = true;
                 $scope.countries[index] = countryData.response.data[0];
                 console.log($scope.countries[index]);
                 if (!$scope.$$phase) {
@@ -861,6 +869,8 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
+            productCategoryData.response.data[0].deleteStatus = false;
+            productCategoryData.response.data[0].oldstatus = true;
             $scope.productCategories[index] = productCategoryData.response.data[0];
             if (!$scope.$$phase) {
                 $scope.$apply();
@@ -985,6 +995,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
+            stateData.response.data[0].deleteStatus = false;
+            stateData.response.data[0].oldstatus = true;
             $scope.states[index] = stateData.response.data[0];
             if (!$scope.$$phase) {
                 $scope.$apply();
@@ -1061,6 +1073,8 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
+            cityData.response.data[0].deleteStatus = false;
+            cityData.response.data[0].oldstatus = true;
             $scope.cities[index] = cityData.response.data[0];
             if (!$scope.$$phase) {
                 $scope.$apply();

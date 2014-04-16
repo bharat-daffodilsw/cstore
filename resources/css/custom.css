@@ -126,6 +126,7 @@ a:hover {
 
 
 #primary {
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     display: block;
     width: 200px;
     position: absolute;
@@ -154,6 +155,7 @@ a:hover {
     width: 100%;}
 
 #sign_out{
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     display: block;
     width: 175px;
     z-index: 100000;
@@ -400,6 +402,7 @@ a:hover {
     margin-top:10px;}
 
 .setup {
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     display:none;
     background-color:#e7c271;
     position:absolute;
@@ -800,10 +803,10 @@ th {
     padding: 5px 0;}
 
 .search_2 {
-    margin-top:3px;
+    margin-top:4px;
     position:relative;
     width:40%;
-    margin-left:-35px;}
+    margin-left:-1%;}
 
 .search_sign_2{
     width: 30px;
@@ -815,7 +818,7 @@ th {
 .search_by {
     width:31%;
     color:#999;
-    margin-top:3px;
+    margin-top:4px;
     text-align:center;}
 
 .search_by .qty_select {
@@ -861,22 +864,24 @@ th {
 
 /*This will work for firefox*/
 @-moz-document url-prefix() {
-                        .setup {
+.setup {
 	display:none;
 	background-color:#e7c271;
 	position:absolute;
 	margin-top:5px;
 	width: 200px;
 	margin-left:461px;
-	z-index: 1000;}
-                    }
+	z-index: 1000;
+}
+}
 
-If IE  
-.setup {
-    display:none;
-    background-color:#e7c271;
-    position:absolute;
-    margin-top:6px;
-    width: 200px;
-    right:0;
-    z-index: 1000;}
+
+.m_bar {
+    width:100%;}
+
+.loadingImage img {
+    width: 1%;
+    position: absolute;
+    right: 50%;
+    top: 50%;
+}
