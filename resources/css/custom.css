@@ -79,7 +79,8 @@ a:hover {
     margin:0 5px; }
 
 .country{
-    color:#A20B0B;}
+    color:#A20B0B;
+    margin-left:5px;}
 
 .add_count {
     margin-top:15px;
@@ -144,7 +145,7 @@ a:hover {
 #primary li{
     float:left;
     padding:5px;
-    width: 95%;}
+    width: 97%;}
 
 #primary li:hover{
     background-color:black;}
@@ -173,7 +174,7 @@ a:hover {
 #sign_out li{
     float:left;
     padding:5px;
-    width: 93%;}
+    width: 100%;}
 
 #sign_out li{
     color:#000;}
@@ -189,8 +190,8 @@ a:hover {
 .products {
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding:10px;
-    min-height:323px;
-    max-height:323px;
+    min-height:353px;
+    max-height:353px;
     overflow:hidden;}
 
 
@@ -641,8 +642,8 @@ tr {
 }
 
 .products_img {
-    min-height:170px;
-    max-height:170px;
+    min-height:200px;
+    max-height:200px;
     overflow:hidden;
     text-overflow: ellipsis;
     white-space:nowrap;}
@@ -903,12 +904,12 @@ th {
 }
 
 .country {
-color: #e7c271;
+color:#A20B0B;
 margin-left: 5px;}
 
 ul, ol {
-margin-top: 9px;
-margin-bottom: 9px;
+margin-top: 9px!important;
+margin-bottom: 9px!important:
 }
 }
 
@@ -925,7 +926,7 @@ margin-bottom: 9px;
 
 .details_product {
     width:54.5%;
-    max-height:370px
+    max-height:370px;
     min-height: 370px;
     margin-top: .5%;
     box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);
@@ -933,3 +934,9 @@ margin-bottom: 9px;
 
 .content {
     float:left;}
+
+.menu_bottom {
+    margin-bottom: 7px;}
+
+.visible {
+    visibility:hidden;}

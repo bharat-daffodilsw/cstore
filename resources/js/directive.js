@@ -1,10 +1,10 @@
 cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="header"><div ng-show="displayData.options" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
+        template:'<div class="header"><div ng-class="{visible:!displayData.options}" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown pull-left"><div class="logo1 pull-left"><a href="/"><img src="/images/main_logo.png"/></a>' +
 
-            '</div><store-header ng-show="displayData.cart"></store-header><div  class="logo pull-right"><a href="/"><img src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
+            '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
 
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
@@ -62,7 +62,7 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
         restrict:"E",
 
 
-        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li ng-class="{menu_bottom:$lastr}" ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
 
             '</ul></div>',
         compile:function(){
