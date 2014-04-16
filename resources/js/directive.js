@@ -573,7 +573,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         }
                     };
                     $scope.saveFunction = function (query) {
-                        console.log(query);
+                        //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 alert("Saved");
