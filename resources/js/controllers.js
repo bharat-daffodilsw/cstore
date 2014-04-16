@@ -722,7 +722,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
             $scope.show.currentCursor = $scope.show.preCursor;
         }
 
-        $scope.loadingVenderData = true;
+        $scope.loadingStoreData = true;
         var query = {"table":"storemanagers__cstore"};
 
         query.columns = ["manager.email","manager.cityid","manager.stateid","manager.countryid","manager.postalcode","manager.contact","manager.name","address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
@@ -990,7 +990,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
             $scope.show.preCursor = $scope.show.preCursor - limit;
             $scope.show.currentCursor = $scope.show.preCursor;
         }
-        $scope.loadingCountryData = true;
+        $scope.loadingStateData = true;
         var query = {"table":"states__cstore"};
         query.columns = ["name","countryid"];
         query.max_rows = limit;
