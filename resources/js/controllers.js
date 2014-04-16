@@ -571,8 +571,12 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingVenderData = false;
     $scope.venderSearch = [
-        {"value":"firstname", "name":"First Name"},
-        {"value":"address", "name":"Address"}
+        {"value":"firstname", "name":"Name"},
+        {"value":"address", "name":"Address"},
+        {"value":"city.name", "name":"City"},
+        {"value":"state.name", "name":"State"},
+        {"value":"email", "name":"Email"},
+        {"value":"contact", "name":"Contact"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.vendors = [];
@@ -637,9 +641,17 @@ cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParam
 cstore.controller('productList', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingProductData = false;
+    $scope.venderSearch = [
+        {"value":"name", "name":" Product Name"},
+        {"value":"image.name", "name":"Image"},
+        {"value":"product_category.name", "name":"Product Category"},
+        {"value":"soldcount", "name":"Sold Count"},
+        {"value":"cost.amount", "name":"Price"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.products = [];
     $appService.auth();
-    $scope.getAllProducts = function (direction, limit) {
+    $scope.getAllProducts = function (direction, limit,column, searchText) {
         if ($scope.loadingProductData) {
             return false;
         }
@@ -653,7 +665,10 @@ cstore.controller('productList', function ($scope, $appService) {
         $scope.loadingProductData = true;
         var query = {"table":"products__cstore"};
         query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount", {"expression":"vendor", "columns":["_id", "firstname"]}];
-
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -709,9 +724,21 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
 cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingStoreData = false;
+    $scope.venderSearch = [
+        {"value":"storename", "name":"Store Name"},
+        {"value":"shift", "name":"Shift"},
+        {"value":"pos_type", "name":"POS Type"},
+        {"value":"pos_version", "name":"POS Version"},
+        {"value":"loyalty_status", "name":"Loyalty Status"},
+        {"value":"reward_point", "name":"Reward Points"},
+        {"value":"brands", "name":"Brands"},
+        {"value":"email", "name":"Email"},
+        {"value":"contact", "name":"Contact"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.storeManagers = [];
     $appService.auth();
-    $scope.getAllStoreManagers = function (direction, limit) {
+    $scope.getAllStoreManagers = function (direction, limit, column, searchText) {
         if ($scope.loadingStoreData) {
             return false;
         }
@@ -726,7 +753,10 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         var query = {"table":"storemanagers__cstore"};
 
         query.columns = ["manager.email","manager.cityid","manager.stateid","manager.countryid","manager.postalcode","manager.contact","manager.name","address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
-
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
@@ -790,9 +820,13 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
 cstore.controller('countryCtrl', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingCountryData = false;
+    $scope.venderSearch = [
+        {"value":"name", "name":"Country"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.countries = [];
     $appService.auth();
-    $scope.getAllCountries = function (direction, limit) {
+    $scope.getAllCountries = function (direction, limit,column,searchText) {
         if ($scope.loadingCountryData) {
             return false;
         }
@@ -805,6 +839,10 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
         $scope.loadingCountryData = true;
         var query = {"table":"countries__cstore"};
         query.columns = ["name"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -853,9 +891,14 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
 cstore.controller('productCategoryCtrl', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingProductCategoryData = false;
+    $scope.venderSearch = [
+        {"value":"name", "name":"Product Category"},
+        {"value":"description", "name":"Description"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.productCategories = [];
     $appService.auth();
-    $scope.getAllProductCategories = function (direction, limit) {
+    $scope.getAllProductCategories = function (direction, limit, column, searchText) {
         if ($scope.loadingCountryData) {
             return false;
         }
@@ -868,6 +911,10 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
         $scope.loadingProductCategoryData = true;
         var query = {"table":"product_categories__cstore"};
         query.columns = ["name","description"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -978,9 +1025,14 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
 
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingStateData = false;
+    $scope.venderSearch = [
+        {"value":"name", "name":"State"},
+        {"value":"countryid.name", "name":"Country"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     //$scope.states = [];
     $appService.auth();
-    $scope.getAllStates = function (direction, limit) {
+    $scope.getAllStates = function (direction, limit, column,searchText) {
         if ($scope.loadingStateData) {
             return false;
         }
@@ -993,6 +1045,10 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         $scope.loadingStateData = true;
         var query = {"table":"states__cstore"};
         query.columns = ["name","countryid"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -1041,9 +1097,14 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
 cstore.controller('cityCtrl', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingCityData = false;
+    $scope.venderSearch = [
+        {"value":"name", "name":"City"},
+        {"value":"stateid.name", "name":"State"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.cities = [];
     $appService.auth();
-    $scope.getAllCities = function (direction, limit) {
+    $scope.getAllCities = function (direction, limit,column,searchText) {
         if ($scope.loadingCityData) {
             return false;
         }
@@ -1056,6 +1117,10 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         $scope.loadingCityData = true;
         var query = {"table":"cities__cstore"};
         query.columns = ["name","stateid"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;

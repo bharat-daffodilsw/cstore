@@ -19,24 +19,22 @@ a:hover {
     color:#000;}
 
 .header{
-    background-color:#000;
+    background-color:#e7c271;
     color:#FFF;
     height:97px;
     width:100%; }
 
 .logo {
-    background-color:#000;
     width:15%;
     text-align:center;
     color:#FFF;
     padding-top:1%;
-    margin-top:-1%;}
+    margin-top:-.7%;}
 
 .logo img {
-    width: 75%;
+    width: 70%;
 }
 .add_cart{
-    background-color:#000;
     width:100px;
     color:#FFF;
     margin-top:20px; }
@@ -81,14 +79,17 @@ a:hover {
     margin:0 5px; }
 
 .country{
-    color:#e7c271;}
+    color:#A20B0B;}
 
 .add_count {
-    margin-top:15px; }
+    margin-top:15px;
+    color:#000;}
 
+.where_i {
+    color:#000;}
 
 .username {
-    color:#FFF;
+    color:#000;
     font-size:17px;
     margin:35px 3% 0 0;
     width:14%;}
@@ -98,8 +99,7 @@ a:hover {
 
 .logo1 {
     width:15%;
-    text-align:center;
-    padding-top:1%;}
+    text-align:center;}
 
 .add_to_cart {
     background-color:#F2F0F0;
@@ -227,7 +227,6 @@ a:hover {
     text-transform:capitalize;}
 
 .category {
-    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     margin-bottom:10px;
     width:100%; }
 
@@ -242,7 +241,7 @@ a:hover {
 
 .footer {
     border:1px solid #000;
-    background-color:#e7c271;
+    background-color:#000;
     color:#FFF;
     margin-top:10px;
     width: 100%;
@@ -252,8 +251,8 @@ a:hover {
 .footer_3 {
     text-align:center;
     width:25%;
-    color: #000;
-    margin-top:25px;}
+    color: #FFF;
+    margin-top:20px;}
 
 .footer_4 {
     text-align:center;
@@ -269,7 +268,8 @@ a:hover {
 .img_product {
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    width: 44%;
+    max-width: 44%;
+    min-width:44%;
     margin: .5%;}
 
 .detail_product {
@@ -359,17 +359,21 @@ a:hover {
 }
 
 @media (max-width: 1200px) {
-    .logo, .logo1 {padding-top:2%}
+    .logo{padding-top:2%}
+    .logo1 {
+        margin-top:10px;}
 }
 
 @media (max-width: 1080px) {
     .img_product {width:44%;}
     .details_product { width:44.9%;}
+    .footer_3 { margin-top:10px; }
+    .logo img { width:80%;}
 }
 
 .admin_menu {
     width:100%;
-    background-color:#e7c271;}
+    background-color:#000;}
 
 .admin_menu ul li {
     display:inline;
@@ -380,19 +384,20 @@ a:hover {
     list-style:none;}
 
 .admin_menu ul li a:hover {
-    background-color:#000;
+    background-color:#e7c271;
     font-size:17px;
-    color:#FFF;}
+    color:#000;}
 
 .admin_menu ul li:hover > div {
     display:block;}
 
 .admin_menu ul li a.active {
-    background-color:#000;
+    background-color:#e7c271;
     font-size:17px;
-    color:#FFF;}
+    color:#000;}
 
 .admin_menu ul li a{
+    color:#FFF;
     padding:10px 5px;}
 
 .matter {
@@ -430,9 +435,10 @@ a:hover {
 .setup ul{
     padding:0;}
 
-.setup li a{
+.setup ul li a{
     float:left;
     width:100%;
+    color:#000;
     padding:2px 0 2px 15px!important;
     font-size:17px;}
 
@@ -572,7 +578,11 @@ tr {
     padding: 5px 25px;}
 
 
-.prv_btn, .nxt_btn, .line_count{
+.prv_btn, .nxt_btn {
+    width:25px;
+    margin-top:8px;}
+
+.line_count{
     width:25px;
     margin-top:5px;}
 
@@ -799,24 +809,23 @@ th {
 .search_2 input{
     margin-top: 0px;
     position:absolute;
-    width: 50%;
+    width: 190px;
     padding: 5px 0;}
 
 .search_2 {
     margin-top:4px;
     position:relative;
-    width:40%;
-    margin-left:-1%;}
+    width:190px;}
 
 .search_sign_2{
     width: 30px;
     height: 0px;
     position: absolute;
-    margin-left: 35%;
+    margin-left: 155px;
     margin-top:0; }
 
 .search_by {
-    width:31%;
+    width:250px;
     color:#999;
     margin-top:4px;
     text-align:center;}
@@ -878,6 +887,10 @@ th {
 	margin-left:461px;
 	z-index: 1000;
 }
+
+.country {
+color: #e7c271;
+margin-left: 5px;}
 }
 
 
