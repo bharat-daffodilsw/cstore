@@ -25,17 +25,17 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="admin_menu pull-left"><ul><li><a href ng-click="setPath(\'vendors\')" active-link="active">Vendor</a></li><li><a  href ng-click="setPath(\'store-managers\')" active-link="active">Store Manager</a></li>' +
-            '<li><a  href ng-click="setPath(\'products\')" active-link="active">Product</a></li><li><a active-link="active" href >Promotion</a></li><li><a active-link="active" href>Training Session</a></li><li>' +
-            '<a href active-link="active">Survey</a></li><li><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li><a href ng-click="setPath(\'training-categories\')" active-link="active">Training Category</a>' +
-            '</li><li><a href ng-click="setPath(\'product-categories\')" active-link="active">Product Category</a></li><li><a href ng-click="setPath(\'cities\')" active-link="active">Cities</a></li><li><a href ng-click="setPath(\'states\')" active-link="active">States</a></li><li>' +
-            '<a href ng-click="setPath(\'countries\')" active-link="active">Countries</a></li></ul></div></li></ul></div>',
+        template:'<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/store-managers" active-link="active">Store Manager</a></li>' +
+            '<li id="products"><a href="#!/products" active-link="active">Product</a></li><li id="promotions"><a active-link="active" href >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
+            '<a href active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="training-categories"><a href active-link="active">Training Category</a>' +
+            '</li><li id="product-categories"><a href="#!/product-categories" active-link="active">Product Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li id="states"><li><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
+            '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
-                    }
+                        }
                 },
                 post:function () {
 
@@ -62,9 +62,18 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
         restrict:"E",
 
 
-        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productdata.productCategories" class="active"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li  ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
 
-            '</ul></div>'
+            '</ul></div>',
+        compile:function(){
+            return {
+                pre:function($scope){
+                  $scope.hideOptions=function(){
+                      $("#primary").hide();
+                  }
+                }
+            }
+        }
     }
 }]);
 
@@ -74,7 +83,6 @@ cstore.directive('activeLink', ['$location', function (location) {
         link:function (scope, element, attrs, controller) {
             var clazz = attrs.activeLink;
             var path = attrs.href;
-            var click = attrs.ng-click;
             //console.log(click);
             path = path.substring(2); //hack because path does bot return including hashbang
             scope.location = location;
@@ -123,7 +131,7 @@ cstore.directive('productDetail', ['$appService', function ($appService, $scope)
         restrict:"E",
         template:'<div class="category pull-left"><div class="pop_products">{{product[0].name}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{product[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-right"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">' +
+            '<div class="details_product pull-left"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">' +
             '<select class="qty_select"><option>Qty*</option><option>1</option><option>2</option><option>3</option>' +
             '<option>4</option><option>5</option></select><div class="final_price">{{product[0].cost.amount}}</div><div class="add_to_btn">' +
             '<a href>ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>' +
@@ -182,6 +190,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     alert("Deleted");
                                 }
                                 else {
+                                    console.log(callBackData);
                                     alert(callBackData.response);
                                 }
                                 if (!$scope.$$phase) {

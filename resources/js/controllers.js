@@ -338,7 +338,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
             $scope.loadingPopularProductData = false;
-            $scope.popularProducts = $appService.setUrls(productData.response.data);
+            $scope.popularProducts = $appService.setUrls(productData.response.data,291,196);
         }, function (jqxhr, error) {
             alert("exception in making request");
         })
@@ -394,7 +394,7 @@ cstore.controller('allCategory', function ($scope, $appService) {
             for (var i = 0; i < rawData.length; i++) {
                 if (rawData[i] && rawData[i]["categoryWiseData"] && rawData[i]["categoryWiseData"].length) {
 
-                    rawData[i]["categoryWiseData"] = $appService.setUrls(rawData[i]["categoryWiseData"]);
+                    rawData[i]["categoryWiseData"] = $appService.setUrls(rawData[i]["categoryWiseData"],291,196);
                 }
                 //console.log("bbb" + rawData[i]["categoryWiseData"]);
             }
@@ -417,7 +417,7 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
             $scope.loadingProductDetailData=false;
-            $scope.product = $appService.setUrls(productDetailData.response.data);
+            $scope.product = $appService.setUrls(productDetailData.response.data,550,350);
         }, function (jqxhr, error) {
         })
     }
@@ -446,7 +446,7 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
-            var rawData = $appService.setUrls(productDetailData.response.data);
+            var rawData = $appService.setUrls(productDetailData.response.data,291,196);
 
             if ($scope.products.length) {
                 for (var i = 0; i < rawData.length; i++) {
