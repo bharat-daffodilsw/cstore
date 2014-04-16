@@ -79,6 +79,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.currentUser = {"data":""};
     $scope.file = {};
     $scope.oFile={};
+    $scope.readonlyrow = {};
+    $scope.row = {};
+    $scope.colmetadata = {"expression":"postfile","type":"file"};
+    var FILE_KEY = 'key';
     $scope.data = {"cities":[], "states":[], "selectedCity":"", "selectedState":""};
     $scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
     $scope.posVersions =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
@@ -286,6 +290,33 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
     $scope.getFileExtension = function (filename) {
         var ext = /^.+\.([^.]+)$/.exec(filename);
         return ext == null ? "" : ext[1];
+    }
+    $scope.showFile = function (file, updateScope) {
+        if(updateScope){
+            if( (/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(file[0].name)){
+                $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask="+ASK +"&osk="+OSK;
+                $scope.readonlyrow.fileType  = "imagefile";
+                $scope.readonlyrow.filenotexist = false;
+                $scope.readonlyrow.imgWidth = 75;
+                $scope.readonlyrow.imgHeight = 75;
+            }
+            else{
+                $scope.readonlyrow.filenotexist = true;
+                $scope.popuptext="Please Upload Image File only";
+                $('#pop_forgt').toggle("slide");
+            }
+            $scope.row[$scope.colmetadata.expression] = file;
+        }
+        else if(file && file.length > 0){
+            $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask="+ASK +"&osk="+OSK;
+            $scope.readonlyrow.fileType  = "imagefile";
+            $scope.readonlyrow.filenotexist = false;
+            $scope.readonlyrow.imgWidth = 75;
+            $scope.readonlyrow.imgHeight = 75;
+        }
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
     }
 
 });
@@ -632,7 +663,7 @@ cstore.controller('productList', function ($scope, $appService) {
             $scope.loadingProductData = false;
             $scope.show.currentCursor = productData.response.cursor;
             //$scope.products = productData.response.data;
-            $scope.products = $appService.setUrls(productData.response.data);
+            $scope.products = productData.response.data;
             //console.log($scope.products);
             for (var i = 0; i < $scope.products.length; i++) {
                 $scope.products[i]["deleteStatus"] = false;
@@ -660,6 +691,7 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
         $scope.productdata["short_description"] = "";
         $scope.productdata["soldcount"] = "";
         $scope.productdata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         $scope.productdata.selectedVendor = $scope.productdata.vendors[0];
 

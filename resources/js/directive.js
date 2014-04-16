@@ -430,14 +430,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["description"] = product.description ? product.description : "";
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["soldcount"] = product.soldcount ? product.soldcount : "";
-                        $scope.productdata["image"] = product.imageUrl;
-                        console.log($scope.productdata.image);
-                        if($scope.productdata.image){
-                            $scope.productdata["editImage"]=true;
-                        }
-                        else {
-                            $scope.productdata["editImage"]=false;
-                        }
+                        //$scope.productdata["image"] = product.image;
+                        $scope.showFile(product.image,false);
+                        //console.log($scope.productdata.image);
                         if(product.vendor){
                             for (var i = 0; i < $scope.productdata.vendors.length; i++) {
                                 if ($scope.productdata.vendors[i]._id == product.vendor._id) {
@@ -492,7 +487,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
             '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
             '</td></tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><app-file-upload ng-show="!productdata.editImage"></app-file-upload><img ng-src="{{productdata.image}}" ng-show="productdata.editImage"/><img src="images/icon_cross.gif" ng-show="productdata.editImage" ng-click="editImage()"></td><td style="position: absolute;">'+
+            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><app-file-upload></app-file-upload></td><td style="position: absolute;">'+
             '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
@@ -604,12 +599,30 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
         restrict:"E",
         replace:true,
 //        scope:true,
-        template:"<p>" +
-            "<input class ='edit_image' type='file' id='uploadfile'> " +
-            "</p>",
+        template:"<div>" +
+            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>'+
+            "<span><input ng-show='readonlyrow.filenotexist' type='file' id='uploadfile'/></span>" +
+            "<div ng-hide='readonlyrow.filenotexist'>" +
+            "<span>" +
+            "<div class='pic_preview'><img ng-src='{{readonlyrow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "</span>"+
+            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
+            "</div>"+
+            "</div>",
         compile:function () {
             return {
                 post:function ($scope, iElement) {
+                    $scope.removeFile = function () {
+                        delete $scope.row[$scope.colmetadata.expression];
+                        $("#uploadfile").val("");
+                        $scope.readonlyrow.filenotexist = true;
+                    };
+                    if ($scope.row[$scope.colmetadata.expression]) {
+                        $scope.showFile($scope.row[$scope.colmetadata.expression],false);
+
+                    }else if(!$scope.readonlyrow.fileurl) {
+                        $scope.readonlyrow.filenotexist = true;
+                    }
                     $scope.loadFile = function (evt) {
                         $scope.file = {};
                         $scope.file.name = $scope.oFile.name;

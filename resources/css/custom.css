@@ -844,8 +844,8 @@ th {
     height: 120px;
     width: 170px;
     position: absolute;
-    margin-left: 170px;
-    margin-top: -20px;
+    margin-left: 65px;
+    margin-top: -30px;
 }
 .thumbnail {
     float: left;
@@ -860,6 +860,11 @@ th {
     font-size: 16px;
     outline: 0px;
     padding: 5px 25px;
+}
+.cross_icon {
+    height: 3%!important;
+    width: 2%!important;
+    right: 31%!important;
 }
 
 /*This will work for firefox*/
