@@ -1198,25 +1198,36 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                         var countryList = $scope.countries.filter(function (el) {
                             return el.editStatus == true && el.name!="";
                         });
-                        var query = {};
-                        query.table = "countries__cstore";
-                        query.operations = countryList;
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Saved");
-                                for (var i = 0; i < $scope.countries.length; i++) {
-                                    $scope.countries[i]["editStatus"] = false;
-                                }
+                        for (var i =0; i < countryList.length; i++){
+                            if(!countryList[i].name){
+                                alert("Please enter country name");
+                                return false ;
+                            }
+                        }
+                        if(countryList && countryList.length > 0 ){
+                            var query = {};
+                            query.table = "countries__cstore";
+                            query.operations = countryList;
+                            $appService.save(query, ASK, OSK, null, function (callBackData) {
+                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                    alert("Saved");
+                                    for (var i = 0; i < $scope.countries.length; i++) {
+                                        $scope.countries[i]["editStatus"] = false;
+                                    }
 
-                            } else {
-                                alert(callBackData.response);
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            alert(err);
-                        });
+                                } else {
+                                    alert(callBackData.response);
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
+                        else {
+                            alert("No Data Found For Saving");
+                        }
                     }
                 }
             }
@@ -1317,26 +1328,38 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                     }
                     $scope.saveProductCategories = function () {
                         var productCategoryList = $scope.productCategories.filter(function (el) {
-                            return el.editStatus == true && el.name != "";
+                            return el.editStatus == true && (el.name != "" || el.description != "");
                         });
-                        var query = {};
-                        query.table = "product_categories__cstore";
-                        query.operations = productCategoryList;
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Saved");
-                                for (var i = 0; i < $scope.productCategories.length; i++) {
-                                    $scope.productCategories[i]["editStatus"] = false;
+                        for (var i =0; i < productCategoryList.length; i++){
+                            if(!productCategoryList[i].name){
+                                alert("Please enter product category name");
+                                return false ;
+                            }
+                            if(!productCategoryList[i].description){
+                                alert("Please enter product category description");
+                                return false;
+                            }
+                        }
+                        if(productCategoryList && productCategoryList.length > 0) {
+                            var query = {};
+                            query.table = "product_categories__cstore";
+                            query.operations = productCategoryList;
+                            $appService.save(query, ASK, OSK, null, function (callBackData) {
+                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                    alert("Saved");
+                                    for (var i = 0; i < $scope.productCategories.length; i++) {
+                                        $scope.productCategories[i]["editStatus"] = false;
+                                    }
+                                } else {
+                                    alert(callBackData.response);
                                 }
-                            } else {
-                                alert(callBackData.response);
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            alert(err);
-                        });
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
                     }
                 }
             }
@@ -1556,29 +1579,41 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.saveStates = function () {
                         var stateList = $scope.states.filter(function (el) {
-                            return el.editStatus == true && el.name != "";
+                            return el.editStatus == true && (el.name != "" || el.countryid != "");
                         });
-                        var query = {};
-                        query.table = "states__cstore";
-                        query.operations =stateList;
-                        $scope.addStateArray = [];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Saved");
-                                for (var i = 0; i < $scope.states.length; i++) {
-                                    $scope.states[i]["editStatus"] = false;
+                        for (var i =0; i < stateList.length; i++){
+                            if(!stateList[i].name){
+                                alert("Please enter state name");
+                                return false ;
+                            }
+                            if(!stateList[i].countryid){
+                                alert("Please select country");
+                                return false;
+                            }
+                        }
+                        if(stateList && stateList.length > 0) {
+                            var query = {};
+                            query.table = "states__cstore";
+                            query.operations =stateList;
+                            $scope.addStateArray = [];
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                    alert("Saved");
+                                    for (var i = 0; i < $scope.states.length; i++) {
+                                        $scope.states[i]["editStatus"] = false;
+                                    }
+                                } else {
+                                    alert(callBackData.response);
                                 }
-                            } else {
-                                alert(callBackData.response);
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            alert(err);
-                        });
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
                     }
                     $scope.setState = function (state) {
                         //$scope.states[state].editStatus = true;
@@ -1704,28 +1739,44 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.saveCities = function () {
                         var cityList = $scope.cities.filter(function (el) {
-                            return el.editStatus == true && el.name!="";
+                            return el.editStatus == true && (el.name!="" || el.stateid!="");
                         });
-                        var query = {};
-                        query.table = "cities__cstore";
-                        query.operations =cityList;
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Saved");
-                                for (var i = 0; i < $scope.cities.length; i++) {
-                                    $scope.cities[i]["editStatus"] = false;
+                        for (var i =0; i < cityList.length; i++){
+                            if(!cityList[i].name){
+                                alert("Please enter city name");
+                                return false ;
+                            }
+                            if(!cityList[i].stateid){
+                                alert("Please select state");
+                                return false;
+                            }
+                        }
+
+                        if(cityList && cityList.length > 0) {
+                            var query = {};
+                            query.table = "cities__cstore";
+                            query.operations =cityList;
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                    alert("Saved");
+                                    for (var i = 0; i < $scope.cities.length; i++) {
+                                        $scope.cities[i]["editStatus"] = false;
+                                    }
+                                } else {
+                                    alert(callBackData.response);
                                 }
-                            } else {
-                                alert(callBackData.response);
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            alert(err);
-                        });
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                alert(err);
+                            });
+                        }
+                        else {
+                            alert("No Data found for saving")
+                        }
                     }
                     $scope.setCity = function (city) {
                         //$scope.states[state].editStatus = true;
