@@ -28,14 +28,15 @@ a:hover {
     width:100%; }
 
 .logo {
-    width:10%;
+    width:15%;
     text-align:center;
     color:#FFF;
     padding-top:1%;
-    margin-top:-.7%;}
+    margin-top:-.6%;}
 
 .logo img {
-    width:100%;
+    max-width: 140px;
+    max-height: 88px;
 }
 .add_cart{
     width:85px;
@@ -393,21 +394,20 @@ a:hover {
     width:100%;}
 
 @media (min-width: 1450px) {
-    .logo, .logo1 {width:11%;}
+    .logo1 {width:11%;}
 }
 
 @media (max-width: 1200px) {
-    .logo{padding-top:2%}
-    .logo1 {
-        margin-top:10px;}
+    .logo{padding-top:1%}
+    .logo1 {margin-top:10px;}
 }
 
 @media (max-width: 1080px) {
     .img_product {width:44%;}
+    .logo{padding-top:1%}
     .details_product { width:44.9%;}
     .footer_3 { margin-top:10px; }
-    .logo img { width:80%;}
-    .logo, .logo1 {width:10%;}
+    .logo1 {margin-top:15px;}
 }
 
 .admin_menu {
