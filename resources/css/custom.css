@@ -28,12 +28,11 @@ a:hover {
     width:100%; }
 
 .logo {
-    width:15%;
+    width:10%;
     text-align:center;
     color:#FFF;
     padding-top:1%;
-    margin-top:-.7%;
-    margin-right:-20px;}
+    margin-top:-.7%;}
 
 .logo img {
     width: 70%;
@@ -48,12 +47,12 @@ a:hover {
     margin-top:10px;
     min-height:550px;}
 
-.location {
+\.location {
     margin-top:33px; }
 
 .search {
     position:relative;
-    width:35%;
+    width:48%;
     margin-top:30px;
     margin-left:5px;}
 
@@ -67,7 +66,7 @@ a:hover {
     width: 30px;
     height: 0px;
     position: absolute;
-    margin-left: 75%;
+    margin-left: 77%;
     margin-top:0; }
 
 .dropdown {
@@ -93,7 +92,7 @@ a:hover {
     color:#000;
     font-size:17px;
     margin:35px 3% 0 0;
-    width:14%;}
+    width:18%;}
 
 .blank {
     width:15%;}
@@ -213,8 +212,8 @@ a:hover {
     font-size:13px;
     font-weight:bold;
     text-transform:uppercase;
-    min-height:15px;
-    max-height:15px;
+    min-height:16px;
+    max-height:16px;
     overflow:hidden;
     text-overflow: ellipsis;
     white-space:nowrap;}
@@ -299,7 +298,8 @@ a:hover {
     left: 0;
     right: 0;
     top: 0;
-    bottom: 0;}
+    bottom: 0;
+    padding:5px;}
 
 .detail_product {
     padding:10px;
@@ -407,6 +407,7 @@ a:hover {
     .details_product { width:44.9%;}
     .footer_3 { margin-top:10px; }
     .logo img { width:80%;}
+    .logo, .logo1 {width:10%;}
 }
 
 .admin_menu {
@@ -703,7 +704,7 @@ tr {
 
 
 .search_addcart {
-    width:50%;}
+    width:48%;}
 
 .item {
     padding:5px;}
