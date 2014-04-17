@@ -4,7 +4,7 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
         template:'<div class="header"><div ng-class="{visible:!displayData.options}" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown pull-left"><div class="logo1 pull-left"><a href="/"><img src="/images/main_logo.png"/></a>' +
 
-            '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
+            '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
 
             '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
@@ -51,7 +51,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
         restrict:"E",
         template:'<div class="search_addcart pull-left"><div class="search pull-left"><input type="text" placeholder="Search by product" name="search_theme_form"id="edit-search-theme-form-1" size="15" value="" title="Enter the terms you wish to search for." class="search">' +
             '<div class="search_sign pull-left"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
-            ' <a href><span class="where_i">I am in</span><span class="loction_img pull-left"><img src="images/location.png">' +
+            ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
             '</span><span class="country">India</span></a></div><div class="add_cart pull-right"><div class="addcart_link pull-left"><a href>' +
             '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">( 0 )</div></div></div>'
     }
@@ -759,7 +759,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["reward_point"] = store.reward_point ? store.reward_point : "" ;
                         $scope.storedata["shift"] = store.shift ? store.shift : "" ;
                         $scope.storedata["storename"] = store.storename ? store.storename : "" ;
-                        $scope.storedata["username"] = store.username ? store.username : "";
+                        //$scope.storedata["username"] = store.username ? store.username : "";
                         $scope.showFile(store.company_logo,false);
                         if(store.manager){
                             $scope.storedata["manager"]["address"] = store.manager.address ? store.manager.address : "" ;
@@ -1072,10 +1072,12 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             alert("please enter a valid manager email");
                             return false;
                         }
-                        var username = $scope.storedata.username;
-                        if (regEmail.test(username) == false) {
-                            alert("please enter a valid username");
-                            return false;
+                        if(!$scope.storedata["storeid"]) {
+                            var username = $scope.storedata.username;
+                            if (regEmail.test(username) == false) {
+                                alert("please enter a valid username");
+                                return false;
+                            }
                         }
                         if (!$scope.storedata.selectedCountry) {
                           alert("please select city first ");

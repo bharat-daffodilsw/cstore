@@ -105,6 +105,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":false, "storeManager":true};
+        if($scope.currentUser["data"]["companyLogoUrl"]){
+            $scope.displayData["companyLogo"] = true;
+        }
+        else {
+            $scope.displayData["companyLogo"] = false;
+        }
+
     }
     else {
         $scope.displayData["options"] = false;
@@ -423,7 +430,7 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
     }
     $scope.getProductDetail();
 });
-cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
+cstore.controller('productCategoryDetailCtrl', function ($scope, $appService,$routeParams) {
     $scope.categoryData = {"loadingData":false, "available":false};
     $scope.products = [];
     $scope.getProductDetail = function (cursor, filter) {
@@ -522,7 +529,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                 var usk = callBackData.response ? callBackData.response.usk : null;
                 if (usk) {
                     var query = {"table":"user_profiles__cstore"};
-                    query.columns = ["userid", "roleid", "storeid"];
+                    query.columns = ["userid", "roleid", "storeid","storeid.company_logo"];
                     query.filter = {"userid":"{_CurrentUserId}"};
                     var params = {"query":JSON.stringify(query), "ask":ASK, "osk":OSK, "usk":usk};
                     $appService.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
@@ -532,6 +539,15 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                         var userid = callBackData.response.data[0].userid._id;
                         if (callBackData.response.data[0] && callBackData.response.data[0]["storeid"]) {
                             var storeid = callBackData.response.data[0]["storeid"]._id;
+                            var image =[{"image":""}];
+                            for(var i=0; i < callBackData.response.data.length; i++){
+                                image[i]["image"]=callBackData.response.data[i].storeid.company_logo;
+                                //console.log(image);
+                            }
+                            var setCompanyLogo =$appService.setUrls(image);
+                            var companyLogoUrl = setCompanyLogo[0].imageUrl;
+                            //console.log(setCompanyLogo[0].imageUrl);
+
                         }
                         var c_name = "usk";
                         document.cookie = c_name + "=" + escape(usk);
@@ -544,6 +560,8 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                         if (storeid) {
                             var c_name = "storeid";
                             document.cookie = c_name + "=" + escape(storeid);
+                            var c_name ="companyLogoUrl";
+                            document.cookie =document.cookie = c_name + "=" + escape(companyLogoUrl);
                         }
                         window.location.href = "/";
 
@@ -752,7 +770,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $scope.loadingStoreData = true;
         var query = {"table":"storemanagers__cstore"};
 
-        query.columns = ["manager.email","manager.cityid","manager.stateid","manager.countryid","manager.postalcode","manager.contact","manager.name","address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point"];
+        query.columns = ["manager.email","manager.cityid","manager.stateid","manager.countryid","manager.postalcode","manager.contact","manager.name","address","manager.address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point","username","company_logo"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
