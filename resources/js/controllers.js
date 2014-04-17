@@ -544,7 +544,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                                 image[i]["image"]=callBackData.response.data[i].storeid.company_logo;
                                 //console.log(image);
                             }
-                            var setCompanyLogo =$appService.setUrls(image);
+                            var setCompanyLogo =$appService.setUrls(image,140,88);
                             var companyLogoUrl = setCompanyLogo[0].imageUrl;
                             //console.log(setCompanyLogo[0].imageUrl);
 
