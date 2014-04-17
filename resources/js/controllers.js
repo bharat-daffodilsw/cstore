@@ -805,7 +805,7 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
         $scope.storedata["manager"]["name"] = "";
         $scope.storedata["manager"]["postalcode"] = "";
         $scope.storedata["password"]="";
-        $scope.storedata["image"] = "";
+        $scope.storedata["company_logo"] = "";
         $scope.readonlyrow.fileurl = "";
         $scope.storedata.selectedCountry = "";
         $scope.storedata.selectedCity = "";

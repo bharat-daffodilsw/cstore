@@ -747,7 +747,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                     $scope.setStoreState = function (store) {
                         //$scope.storedata.pos_version.name = store.pos_version;
                         //console.log("pos version name :::: "+ $scope.storedata.pos_version.name);
-                        console.log(store.username);
+                        console.log(store.company_logo);
                         $scope.storedata["address"] = store.address ? store.address : "" ;
                         $scope.storedata["brands"] = store.brands ? store.brands : [] ;
                         $scope.storedata["contact"] = store.contact ? store.contact : "" ;
@@ -760,7 +760,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["shift"] = store.shift ? store.shift : "" ;
                         $scope.storedata["storename"] = store.storename ? store.storename : "" ;
                         $scope.storedata["username"] = store.username ? store.username : "";
-                        $scope.showFile(store.image,false);
+                        $scope.showFile(store.company_logo,false);
                         if(store.manager){
                             $scope.storedata["manager"]["address"] = store.manager.address ? store.manager.address : "" ;
                             $scope.storedata["manager"]["contact"] = store.manager.contact ? store.manager.contact : "";
@@ -1157,7 +1157,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         $scope.newStore["manager"]["countryid"] = {"_id":$scope.storedata.manager.selectedCountry._id, "name":$scope.storedata.manager.selectedCountry.name};
                         $scope.newStore["manager"]["stateid"] = {"_id":$scope.storedata.manager.selectedState._id, "name":$scope.storedata.manager.selectedState.name};
                             if (document.getElementById('uploadfile').files.length === 0 ) {
-                                delete $scope.newStore["image"];
+                                delete $scope.newStore["company_logo"];
                                 query.operations = [$scope.newStore];
                                 $scope.saveFunction(query);
                             }
@@ -1170,7 +1170,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 current_file.osk = OSK;
                                 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                     if (data.response) {
-                                        $scope.newStore["image"] = data.response;
+                                        $scope.newStore["company_logo"] = data.response;
                                         query.operations = [$scope.newStore];
                                         $scope.saveFunction(query);
                                     }
