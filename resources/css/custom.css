@@ -35,7 +35,7 @@ a:hover {
     margin-top:-.7%;}
 
 .logo img {
-    width: 70%;
+    width:100%;
 }
 .add_cart{
     width:85px;
@@ -47,7 +47,7 @@ a:hover {
     margin-top:10px;
     min-height:550px;}
 
-\.location {
+.location {
     margin-top:33px; }
 
 .search {
