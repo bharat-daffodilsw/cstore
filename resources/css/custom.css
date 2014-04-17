@@ -1,7 +1,7 @@
 body {
     font-family:Arial, Helvetica, sans-serif;
     font-size:14px;
-    width:98%;
+    width:99%;
     min-width:900px;
     margin:auto;}
 
@@ -139,13 +139,12 @@ a:hover {
     list-style-type:none;
     padding:0px;
     font-size:17px;
-    margin-left:5px;
     text-transform:uppercase;}
 
 #primary li{
     float:left;
     padding:5px;
-    width: 97%;}
+    width: 100%;}
 
 #primary li:hover{
     background-color:black;}
@@ -274,6 +273,7 @@ a:hover {
     text-overflow: ellipsis;
     white-space: nowrap;
     padding:10px;
+    text-align:center;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     max-width: 44%;
     min-width:44%;
@@ -909,7 +909,7 @@ margin-left: 5px;}
 
 ul, ol {
 margin-top: 9px!important;
-margin-bottom: 9px!important:
+margin-bottom: 9px!important;
 }
 }
 
@@ -931,12 +931,6 @@ margin-bottom: 9px!important:
     margin-top: .5%;
     box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);
 }
-
-.content {
-    float:left;}
-
-.menu_bottom {
-    margin-bottom: 7px;}
 
 .visible {
     visibility:hidden;}

@@ -62,7 +62,7 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
         restrict:"E",
 
 
-        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li ng-class="{menu_bottom:$lastr}" ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
 
             '</ul></div>',
         compile:function(){
