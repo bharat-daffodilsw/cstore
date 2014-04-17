@@ -129,11 +129,11 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
 cstore.directive('productDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="category pull-left"><div class="pop_products">{{product[0].name}}</div><div class="img_product pull-left">' +
+        template:'<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-products">POP Store</a> > <a href="#!/product-category?q={{product[0].product_category._id}}">{{product[0].product_category.name}}</a> > {{product[0].name}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{product[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">' +
-            '<select class="qty_select"><option>Qty*</option><option>1</option><option>2</option><option>3</option>' +
-            '<option>4</option><option>5</option></select><div class="final_price">{{product[0].cost.amount}}</div><div class="add_to_btn">' +
+            '<div class="details_product pull-left"><div class="short_details">{{product[0].short_description}}</div><div class="Qty">Quantity : ' +
+            '<select class="qty_select_1"><option>1</option><option>2</option><option>3</option>' +
+            '<option>4</option><option>5</option></select><div class="final_price">Price : <b>{{product[0].cost.amount | currency}}</b></div><div class="add_to_btn pull-left">' +
             '<a href>ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingProductDetailData"><img src="images/loading.gif"></div>'
     }
@@ -747,8 +747,9 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                     $scope.setStoreState = function (store) {
                         //$scope.storedata.pos_version.name = store.pos_version;
                         //console.log("pos version name :::: "+ $scope.storedata.pos_version.name);
+                        console.log(store.username);
                         $scope.storedata["address"] = store.address ? store.address : "" ;
-                        $scope.storedata["brands"] = store.brands ? store.brands : "" ;
+                        $scope.storedata["brands"] = store.brands ? store.brands : [] ;
                         $scope.storedata["contact"] = store.contact ? store.contact : "" ;
                         $scope.storedata["loyalty_status"] = store.loyalty_status ? store.loyalty_status : "" ;
                         $scope.storedata["pos_type"] = store.pos_type ? store.pos_type : "" ;
@@ -758,6 +759,8 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["reward_point"] = store.reward_point ? store.reward_point : "" ;
                         $scope.storedata["shift"] = store.shift ? store.shift : "" ;
                         $scope.storedata["storename"] = store.storename ? store.storename : "" ;
+                        $scope.storedata["username"] = store.username ? store.username : "";
+                        $scope.showFile(store.image,false);
                         if(store.manager){
                             $scope.storedata["manager"]["address"] = store.manager.address ? store.manager.address : "" ;
                             $scope.storedata["manager"]["contact"] = store.manager.contact ? store.manager.contact : "";
@@ -981,6 +984,24 @@ cstore.directive('shift', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('storeUser', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<div><tr><td><div class="margin_top">Username</div></td></tr><tr><td>' +
+            '<input ng-model="storedata.username" type="text" placeholder=""></td></tr><tr>' +
+            '<td><div class="margin_top">Password</div></td></tr><tr><td>' +
+            '<input type="password" placeholder="" ng-model="storedata.password"></td></tr></div>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
 cstore.directive('addStoreManager', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
@@ -1010,9 +1031,13 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '</td></tr><tr><td><manager-country-select></manager-country-select></td></tr><tr><td><div class="margin_top">State </div></td></tr>' +
             '<tr><td><manager-state-select></manager-state-select></td></tr><tr><td><div class="margin_top">City</div></td></tr><tr><td>' +
             '<manager-city-select></manager-city-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td></tr><tr><td>' +
-            '<input type="text" placeholder=""ng-model="storedata.manager.postalcode"></td></tr><tr><td><div class="save_close pull-left">' +
+            '<input type="text" placeholder=""ng-model="storedata.manager.postalcode"></td></tr><tr ng-show="passwordStatus"><td><div class="margin_top">Username</div></td></tr><tr ng-show="passwordStatus"><td>' +
+            '<input ng-model="storedata.username" type="text" placeholder=""></td></tr><tr ng-show="passwordStatus">' +
+            '<td><div class="margin_top">Password</div></td></tr><tr ng-show="passwordStatus"><td>' +
+            '<input type="password" placeholder="" ng-model="storedata.password"></td></tr><tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforStore(\'store-managers\')"><a href="">Close</a></button></div></div></td></tr></table></div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
+            '<button type="button" ng-click="setPathforStore(\'store-managers\')"><a href="">Close</a></button></div></div></td></tr></table>' +
+            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -1024,8 +1049,11 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     }
                 },
                 post:function ($scope) {
+                    $scope.CSession = $appService.getSession();
+                    var usk = $scope.CSession["usk"] ? $scope.CSession["usk"] : null;
                     $scope.loadingAddStoreData=false;
                     $scope.saveStore = function () {
+                        if($scope.CSession) {
                         $scope.newStore = {};
                         $scope.newStore["manager"] ={};
                         if ($scope.storedata.storename == "" || $scope.storedata.storename == undefined) {
@@ -1039,6 +1067,16 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             return false;
                         }
                         $scope.newStore.email = email;
+                        var managerEmail =$scope.storedata.manager.email;
+                        if (regEmail.test(managerEmail) == false) {
+                            alert("please enter a valid manager email");
+                            return false;
+                        }
+                        var username = $scope.storedata.username;
+                        if (regEmail.test(username) == false) {
+                            alert("please enter a valid username");
+                            return false;
+                        }
                         if (!$scope.storedata.selectedCountry) {
                           alert("please select city first ");
                          return false;
@@ -1073,7 +1111,10 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             alert("please select state first ");
                             return false;
                         }
-
+                        if ($scope.storedata.password == "" || $scope.storedata.password == undefined) {
+                            alert("please enter password");
+                            return false;
+                        }
                         if (!$scope.storedata.manager.selectedCity) {
                             alert("please select city first ");
                             return false;
@@ -1081,6 +1122,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         if ($scope.storedata["storeid"]) {
                             $scope.newStore["_id"] = $scope.storedata["storeid"];
                         }
+                        var query = {};
+                        query.table = "storemanagers__cstore";
                         $scope.newStore["storename"] = $scope.storedata.storename;
                         $scope.newStore["address"] = $scope.storedata.lastname;
                         for(var i=0;i<$scope.storedata.brand.length;i++){
@@ -1089,6 +1132,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         $scope.newStore["brands"] = [selectedBrands];
                         $scope.newStore["contact"] = $scope.storedata.contact;
                         $scope.newStore["email"] = $scope.storedata.email;
+                        $scope.newStore["username"] =$scope.storedata.username;
                         if($scope.storedata.selectedCountry && $scope.storedata.selectedCountry!=null && $scope.storedata.selectedCountry!=undefined && $scope.storedata.selectedCountry!="undefined" && $scope.storedata.selectedCountry!="null"){
                             $scope.newStore["countryid"] = {"_id":$scope.storedata.selectedCountry._id, "name":$scope.storedata.selectedCountry.name};
                         }
@@ -1112,12 +1156,70 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         $scope.newStore["manager"]["cityid"] = {"_id":$scope.storedata.manager.selectedCity._id, "name":$scope.storedata.manager.selectedCity.name};
                         $scope.newStore["manager"]["countryid"] = {"_id":$scope.storedata.manager.selectedCountry._id, "name":$scope.storedata.manager.selectedCountry.name};
                         $scope.newStore["manager"]["stateid"] = {"_id":$scope.storedata.manager.selectedState._id, "name":$scope.storedata.manager.selectedState.name};
-                        var query = {};
-                        query.table = "storemanagers__cstore";
-                        query.operations = [$scope.newStore];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            if (document.getElementById('uploadfile').files.length === 0 ) {
+                                delete $scope.newStore["image"];
+                                query.operations = [$scope.newStore];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                var current_file = {};
+                                current_file.name = $scope.oFile.name;
+                                current_file.type = $scope.oFile.type;
+                                current_file.contents = $scope.oFile.data;
+                                current_file.ask = ASK;
+                                current_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                    if (data.response) {
+                                        $scope.newStore["image"] = data.response;
+                                        query.operations = [$scope.newStore];
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
+                                        alert("some error while uploading image please try again ");
+                                    }
+                                }, function (callbackerror) {
+                                    alert(callbackerror);
+                                });
+                            }
+                        }
+                        else {
+                            alert("Please Login First");
+                        }
+
+                    }
+                    $scope.saveFunction = function(query) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                                if(callBackData.response.insert && callBackData.response.insert.length) {
+                                    $scope.saveUser(callBackData.response.insert[0]._id);
+                                }
+                                else {
+                                    if (!$scope.storedata["storeid"]) {
+                                        $scope.clearStoreContent();
+                                    }
+                                    alert("Saved");
+                                    window.location.href="#!/store-managers"
+                                }
+                            } else {
+                                alert(callBackData.response);
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            alert(err);
+                        });
+                    }
+                    $scope.saveUser = function (storeid) {
+                        $scope.newUser = {};
+                        $scope.newUser["userid"]={"emailid":$scope.storedata.username,"firstname":$scope.storedata.manager.name,"lastname":"","password":$scope.storedata.password,"username":$scope.storedata.username};
+                        $scope.newUser["roleid"]= {"_id":STOREMANAGER,"name":"store-manager"};
+                        $scope.newUser["username"]= $scope.storedata.username;
+                        $scope.newUser["storeid"]= {"_id":storeid,"storename":$scope.storedata.storename};
+                        var userquery = {};
+                        userquery.table = "user_profiles__cstore";
+                        userquery.operations = [$scope.newUser];
+                        $appService.save(userquery, ASK, OSK, usk, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                 if (!$scope.storedata["storeid"]) {
                                     $scope.clearStoreContent();

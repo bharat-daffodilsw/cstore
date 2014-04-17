@@ -12,10 +12,10 @@ img {
 
 a {
     text-decoration:none;
+    cursor:pointer;
     color:#000;}
 
 a:hover {
-    text-decoration:none;
     color:#000;}
 
 .header{
@@ -48,19 +48,16 @@ a:hover {
     margin-top:33px;
     margin-left:7px; }
 
-.location a {
-    color:#FFF; }
-
 .search {
     position:relative;
-    width:50%;
+    width:35%;
     margin-top:30px;
-    margin-left:15px;}
+    margin-left:10px;}
 
 .search input{
     margin-top: 0px;
     position:absolute;
-    width: 85%;
+    width: 90%;
     padding: 5px;}
 
 .search_sign {
@@ -80,7 +77,9 @@ a:hover {
 
 .country{
     color:#A20B0B;
-    margin-left:5px;}
+    margin-left:5px;
+    max-width:250px;
+    overflow:hidden;}
 
 .add_count {
     margin-top:15px;
@@ -118,7 +117,8 @@ a:hover {
 #cm {
     width: 45px;
     padding: 10px;
-    margin-top: 25px;}
+    margin-top: 25px;
+    cursor:pointer;}
 
 #my_profile {
     position:relative;
@@ -267,6 +267,7 @@ a:hover {
     font-weight:bold;}
 
 .img_product {
+    position:relative;
     min-height: 370px;
     max-height:370px;
     overflow: hidden;
@@ -279,32 +280,46 @@ a:hover {
     min-width:44%;
     margin: .5%;}
 
+.img_product img {
+    max-width:550px;
+    max-height:350px;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;}
+
 .detail_product {
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    width: 52%;
+    width: 54%;
     margin: .5%;
-    min-height:400px;
-    max-height:400px;}
+    min-height:370px;
+    max-height:370px;}
 
 .short_details {
-    margin-top:10px;
     padding:0 10px;
     font-size:17px;
     overflow: hidden;
+    max-height:165px;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 9;
+    -webkit-line-clamp: 7;
     -webkit-box-orient: vertical; }
 
 .Qty {
-    margin-top:10px;
-    padding:5px 10px 15px 5px;
-    font-size:17px;}
+    margin-top:15px;
+    padding:5px 5px 15px 5px;
+    font-size:17px;
+    border-top: 1px dotted #DDD;}
 
 .final_price {
     margin:10px 0;
-    font-size:17px;}
+    font-size:17px;
+    border-top: 1px dotted #DDD;
+    border-bottom: 1px dotted #DDD;
+    padding:10px 5px;}
 
 .add_btn a {
     font-size:16px;
@@ -645,8 +660,19 @@ tr {
     min-height:200px;
     max-height:200px;
     overflow:hidden;
+    position:relative;
     text-overflow: ellipsis;
     white-space:nowrap;}
+
+.products_img img {
+    max-width:291px;
+    max-height:196px;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;}
 
 .add_to_btn a {
     background-color:#e7c271;
@@ -764,11 +790,15 @@ tr {
     padding:5px;
     width:150px;}
 
+.qty_select_1 {
+    padding:5px;
+    width:60px;}
+
 .qty_1 .qty_select {
     width:80px;}
 
 .Qty .qty_select {
-    margin-top:10px;}
+    margin-top:5px;}
 
 .name_input input {
     width:91%!important;
@@ -934,3 +964,7 @@ margin-bottom: 9px!important;
 
 .visible {
     visibility:hidden;}
+
+
+.add_to_btn {
+    margin-top:10px;}

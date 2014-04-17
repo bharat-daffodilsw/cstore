@@ -785,9 +785,10 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routeParams) {
     $appService.auth();
+    $scope.passwordStatus=true;
     $scope.clearStoreContent = function () {
         $scope.storedata["address"] = "";
-        $scope.storedata["brands"] = "";
+        $scope.storedata["brands"] = [];
         $scope.storedata["contact"] = "";
         $scope.storedata["loyalty_status"] = "";
         $scope.storedata["pos_type"] = "";
@@ -797,19 +798,25 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
         $scope.storedata["reward_point"] = "";
         $scope.storedata["shift"] = "";
         $scope.storedata["storename"] = "";
+        $scope.storedata["username"] ="";
         $scope.storedata["manager"]["address"] = "";
         $scope.storedata["manager"]["contact"] = "";
         $scope.storedata["manager"]["email"] = "";
         $scope.storedata["manager"]["name"] = "";
         $scope.storedata["manager"]["postalcode"] = "";
+        $scope.storedata["password"]="";
+        $scope.storedata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
         $scope.storedata.selectedCountry = "";
         $scope.storedata.selectedCity = "";
         $scope.storedata.selectedState = "";
+
 
     }
     var storeId = $routeParams.q;
     if (storeId && storeId != undefined && storeId != "undefined") {
         $scope.storedata["storeid"] = storeId;
+        $scope.passwordStatus=false;
     }
     else {
         delete $scope.storedata["storeid"];
