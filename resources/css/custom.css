@@ -46,7 +46,7 @@ a:hover {
 .container {
     width:95%;
     margin-top:10px;
-    min-height:550px;}
+    min-height:500px;}
 
 .location {
     margin-top:33px; }
@@ -255,6 +255,17 @@ a:hover {
     width: 100%;
     padding: 10px 0;}
 
+.login_page .footer {
+    border:1px solid #000;
+    background-color:#000;
+    color:#FFF;
+    margin-top:10px;
+    width: 100%;
+    padding: 10px 0;
+    position:fixed;
+    bottom:0;
+    right:0;}
+
 
 .footer_3 {
     text-align:center;
@@ -322,12 +333,11 @@ a:hover {
 
 .Qty {
     margin-top:15px;
-    padding:5px 5px 15px 5px;
     font-size:17px;
     border-top: 1px dotted #DDD;}
 
 .final_price {
-    margin:10px 0;
+    margin:5px 0;
     font-size:17px;
     border-top: 1px dotted #DDD;
     border-bottom: 1px dotted #DDD;
@@ -358,10 +368,11 @@ a:hover {
     width:40%;
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    min-height:500px; }
+    min-height:500px;
+    position:relative; }
 
 .user_login {
-    margin-top:25%;
+    margin-top:5%;
     text-decoration:none;
     font-size:22px;}
 
@@ -407,7 +418,7 @@ a:hover {
     .logo{padding-top:1%}
     .details_product { width:44.9%;}
     .footer_3 { margin-top:10px; }
-    .logo1 {margin-top:15px;}
+    .logo1 {margin-top:20px;}
 }
 
 .admin_menu {
@@ -857,6 +868,25 @@ th {
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
 
+.location_popup {
+    display:none;
+    top:90px;
+    z-index:1000;
+    left:500px;
+    background-color:#FFF;
+    position:absolute;
+    font-size:17px;
+    width:30%;
+    padding:10px;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
+
+.popup_input input {
+    padding:5px;
+    margin:0 10px 10px 0;}
+
+.popup {
+    color:#000;}
+
 .store_manager .qty_select {
     margin-left:20px; }
 
@@ -984,3 +1014,48 @@ margin-bottom: 9px!important;
     max-height:25px;
     max-width:110px;
     overflow:hidden;}
+
+.quantity_border {
+    border-top:1px dotted #DDD;
+    padding-top:5px;}
+
+.profile {
+    width:650px;
+    margin:auto;
+    font-size:18px;}
+
+.male {
+    margin-right:10px;}
+
+.change_pass {
+    margin-top:10px;
+    margin-bottom: 15px;}
+
+.profile_edit {
+    width:210px;}
+
+.set_male {
+    width:22%;}
+
+.change-password-box {
+    display:none;}
+
+.profile input {
+    width:55%}
+
+.forget-password-box {
+    display:none;
+    background-color: #FFF;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    bottom: 133px;
+    font-size: 24px;
+    width: 520px;
+
+    min-height: 275px;}
+
+
+div.sortUp {     position: absolute;      top: 11px;      left: 130px;      right: 0;  margin-left: auto;  margin-right: auto;      border-color: #000 transparent; 	border-style: solid; 	border-width: 0 5px 5px 5px; 	height: 0;  width: 0; cursor:pointer;}
+div.sortDown { 	position: absolute; 	top: 21px; 	left: 130px; 	right: 0; 	margin-left: auto; 	margin-right: auto; 	border-color: #000 transparent; 	border-style: solid; 	border-width: 5px 5px 0 5px; 	height: 0; 	width: 0; cursor:pointer;}
+div.sortWrap{position:relative;}

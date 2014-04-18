@@ -7,7 +7,7 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY ="531d3e9b8826fc304706a460"; //united states
 
 // Declare app level module which depends on filters, and services
-var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services']);
+var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services','ui.bootstrap']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('!');
@@ -75,7 +75,7 @@ cstore.config(
         );
     });
 
-cstore.controller('mainCtrl', function ($scope, $appService, $location) {
+cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.currentUser = {"data":""};
     $scope.file = {};
     $scope.oFile={};
@@ -325,15 +325,47 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location) {
             $scope.$apply();
         }
     }
-
 });
-cstore.controller('homeCtrl', function ($scope, $appService, $location) {
+
+function TypeaheadCtrl($scope, $http) {
+
+
+    // Any function returning a promise object can be used to load values asynchronously
+    $scope.getLocation = function(val) {
+        return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+            params: {
+                address: val,
+                sensor: true
+            }
+        }).then(function(res){
+                var addresses = [];
+                angular.forEach(res.data.results, function(item){
+                    addresses.push(item.formatted_address);
+                });
+                return addresses;
+            });
+    };
+}
+
+cstore.controller('homeCtrl', function ($scope, $appService, $location,$routeParams) {
     $scope.homeView = {};
     $scope.loadingPopularProductData = false;
-    $scope.getPopularProducts = function (maxRow) {
+    $scope.getPopularProducts = function (maxRow, searchText) {
         $scope.loadingPopularProductData = true;
+        /*$scope.venderSearch = [
+            {"value":"name", "name":"Name"},
+            {"value":"short_description", "name":"Short Description"},
+            {"value":"cost.amount", "name":"Cost"},
+            {"value":"image.name", "name":"Image"},
+            {"value":"soldcount", "name":"Sold Count"}
+        ];
+        $scope.searchby = $scope.venderSearch[0]; */
         var query = {"table":"products__cstore"};
         query.columns = ["name", "image", "short_description", "cost", "soldcount"];
+        if (searchText && searchText != "") {
+            query.filter = {};
+            query.filter["name"] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
         query.orders = {"soldcount":"desc"};
         if (maxRow) {
             query.max_rows = maxRow;
@@ -353,8 +385,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
 
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
-
-            $scope.getPopularProducts(8);
+            //console.log($routeParams.q);
+            $scope.getPopularProducts(8,$routeParams.search);
 
             $scope.homeView = {"storeManager":true, "admin":false};
         }
@@ -380,9 +412,9 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location) {
 
 });
 
-cstore.controller('allCategory', function ($scope, $appService) {
+cstore.controller('allCategory', function ($scope, $appService,$routeParams) {
 
-    $scope.getProductList = function () {
+    $scope.getProductList = function (searchText) {
         $scope.loadingAllProductData=true;
         var query = {"table":"product_categories__cstore"};
         query.columns = ["name"];
@@ -390,8 +422,13 @@ cstore.controller('allCategory', function ($scope, $appService) {
         query.childs = [
             {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id"}
         ];
-
-
+        if (searchText && searchText != "") {
+            query.filter = {};
+            query.filter["name"] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+            //query.childs.filter = {};
+            //query.childs.filter["name"] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
+        //console.log(query.childs.query);
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         //console.log(JSON.stringify(query));
         var serviceUrl = "/rest/data";
@@ -411,7 +448,7 @@ cstore.controller('allCategory', function ($scope, $appService) {
             alert("exception in making request");
         })
     }
-    $scope.getProductList();
+    $scope.getProductList($routeParams.search);
 });
 
 cstore.controller('productDetailCtrl', function ($scope, $appService, $routeParams) {
@@ -430,10 +467,11 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
     }
     $scope.getProductDetail();
 });
+
 cstore.controller('productCategoryDetailCtrl', function ($scope, $appService,$routeParams) {
     $scope.categoryData = {"loadingData":false, "available":false};
     $scope.products = [];
-    $scope.getProductDetail = function (cursor, filter) {
+    $scope.getProductDetail = function (cursor, filter,searchText) {
         if ($scope.categoryData.loadingData) {
             return false;
         }
@@ -441,8 +479,11 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService,$ro
         var query = {"table":"products__cstore"};
         query.columns = ["cost", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, {"expression":"vendor", "columns":["firstname"]} ];
         if (filter && filter != undefined && filter != "undefined") {
-
-            query.filter = {"product_category._id":filter};
+            query.filter = {};
+            query.filter["product_category._id"]=filter;
+            if (searchText && searchText != "") {
+              query.filter["name"] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+            }
         }
         else {
             alert("Not Valid");
@@ -491,9 +532,10 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService,$ro
         })
     }
     $scope.getInitialData = function (cursor) {
-        $scope.getProductDetail(cursor, $routeParams.q)
+        $scope.getProductDetail(cursor, $routeParams.q,$routeParams.search);
     }
 });
+
 cstore.controller('loginCtrl', function ($scope, $appService, $location) {
     $scope.login = function () {
         var username = $("#username").val();
@@ -574,7 +616,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 
             }
             else {
-                /*for messgae*/
+                alert(callBackData.response);
             }
 
         }, function (jqxhr, error) {
@@ -616,6 +658,10 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -634,6 +680,12 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         })
     }
     $scope.getAllVendors(1, 5);
+    $scope.setOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0;
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllVendors(1, 5, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllVendors(1, 5);
     }
@@ -687,6 +739,10 @@ cstore.controller('productList', function ($scope, $appService) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -706,6 +762,12 @@ cstore.controller('productList', function ($scope, $appService) {
         })
     }
     $scope.getAllProducts(1, 10);
+    $scope.setProductOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllProducts(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllProducts(1, 10);
     }
@@ -775,6 +837,10 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
@@ -792,6 +858,12 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         });
     }
     $scope.getAllStoreManagers(1, 10);
+    $scope.setStoreOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllStoreManagers(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllStoreManagers(1, 10);
     }
@@ -868,6 +940,10 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -888,6 +964,12 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllCountries(1, 10);
+    $scope.setCountryOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllCountries(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllCountries(1, 10);
     }
@@ -940,6 +1022,10 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -960,6 +1046,12 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllProductCategories(1, 10);
+    $scope.setProductCatOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllProductCategories(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllProductCategories(1, 10);
     }
@@ -1074,6 +1166,10 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -1094,6 +1190,12 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllStates(1, 10);
+    $scope.setStateOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllStates(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllStates(1, 10);
     }
@@ -1146,6 +1248,10 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -1166,6 +1272,12 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllCities(1, 10);
+    $scope.setCityOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllCities(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllCities(1, 10);
     }
