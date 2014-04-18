@@ -7,7 +7,7 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY ="531d3e9b8826fc304706a460"; //united states
 
 // Declare app level module which depends on filters, and services
-var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services','ui.bootstrap']);
+var cstore = angular.module('cstore', ['ngRoute','ui.bootstrap' ,'$appstrap.services']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('!');
@@ -18,14 +18,14 @@ cstore.config(
         }).when('/login', {
                 templateUrl:'../login',
                 controller:'loginCtrl'
-            }).when('/all-products', {
-                templateUrl:'../all-products',
+            }).when('/all-pops', {
+                templateUrl:'../all-pops',
                 controller:'allCategory'
-            }).when('/product', {
-                templateUrl:'../productdetail',
+            }).when('/pop', {
+                templateUrl:'../popdetail',
                 controller:'productDetailCtrl'
-            }).when('/product-category', {
-                templateUrl:'../product-category',
+            }).when('/pop-category', {
+                templateUrl:'../pop-category',
                 controller:'productCategoryDetailCtrl'
             }).when('/vendors', {
                 templateUrl:'../vendors',
@@ -39,14 +39,14 @@ cstore.config(
             }).when('/store-managers', {
                 templateUrl:'../store-managers',
                 controller:'storeManagerList'
-            }).when('/products', {
-                templateUrl:'../products',
+            }).when('/pops', {
+                templateUrl:'../pops',
                 controller:'productList'
-            }).when('/add-product', {
-                templateUrl:'../add-product',
+            }).when('/add-pop', {
+                templateUrl:'../add-pop',
                 controller:'addProductCtrl'
-            }).when('/edit-product', {
-                templateUrl:'../add-product',
+            }).when('/edit-pop', {
+                templateUrl:'../add-pop',
                 controller:'addProductCtrl'
             }).when('/add-store-manager', {
                 templateUrl:'../add-store-manager',
@@ -57,8 +57,8 @@ cstore.config(
             }).when('/countries', {
                 templateUrl:'../countries',
                 controller:'countryCtrl'
-            }).when('/product-categories', {
-                templateUrl:'../product-categories',
+            }).when('/pop-categories', {
+                templateUrl:'../pop-categories',
                 controller:'productCategoryCtrl'
             }).when('/training-categories', {
                 templateUrl:'../training-categories',
@@ -327,9 +327,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     }
 });
 
-function TypeaheadCtrl($scope, $http) {
-
-
+cstore.controller('TypeaheadCtrl',function($scope, $http) {
     // Any function returning a promise object can be used to load values asynchronously
     $scope.getLocation = function(val) {
         return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
@@ -345,7 +343,7 @@ function TypeaheadCtrl($scope, $http) {
                 return addresses;
             });
     };
-}
+});
 
 cstore.controller('homeCtrl', function ($scope, $appService, $location,$routeParams) {
     $scope.homeView = {};
@@ -419,14 +417,17 @@ cstore.controller('allCategory', function ($scope, $appService,$routeParams) {
         var query = {"table":"product_categories__cstore"};
         query.columns = ["name"];
 
-        query.childs = [
-            {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id"}
-        ];
+
         if (searchText && searchText != "") {
-            query.filter = {};
-            query.filter["name"] = {"$regex":"(" + searchText + ")", "$options":"-i"};
-            //query.childs.filter = {};
-            //query.childs.filter["name"] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+            query.childs = [
+                {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id","filter":{"name":{"$regex":"(" + searchText + ")", "$options":"-i"}}}
+            ];
+
+        }
+        else {
+            query.childs = [
+                {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id"}
+            ];
         }
         //console.log(query.childs.query);
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
@@ -455,8 +456,8 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
     $scope.getProductDetail = function () {
         $scope.loadingProductDetailData=true;
         var query = {"table":"products__cstore"};
-        query.columns = ["cost", "description", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, {"expression":"vendor", "columns":["firstname"]}, "quantity", "soldcount"];
-        query.filter = {"_id":$routeParams.productid};
+        query.columns = ["cost", "description", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "quantity", "soldcount"];
+        query.filter = {"_id":$routeParams.popid};
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
@@ -477,7 +478,7 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService,$ro
         }
         $scope.categoryData.loadingData = true;
         var query = {"table":"products__cstore"};
-        query.columns = ["cost", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, {"expression":"vendor", "columns":["firstname"]} ];
+        query.columns = ["cost", "image", "name", "short_description", {"expression":"product_category", "columns":["_id", "name"]} ];
         if (filter && filter != undefined && filter != "undefined") {
             query.filter = {};
             query.filter["product_category._id"]=filter;
@@ -712,9 +713,9 @@ cstore.controller('productList', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingProductData = false;
     $scope.venderSearch = [
-        {"value":"name", "name":" Product Name"},
+        {"value":"name", "name":" POP Name"},
         {"value":"image.name", "name":"Image"},
-        {"value":"product_category.name", "name":"Product Category"},
+        {"value":"product_category.name", "name":"POP Category"},
         {"value":"soldcount", "name":"Sold Count"},
         {"value":"cost.amount", "name":"Price"}
     ];
@@ -734,7 +735,7 @@ cstore.controller('productList', function ($scope, $appService) {
 
         $scope.loadingProductData = true;
         var query = {"table":"products__cstore"};
-        query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount", {"expression":"vendor", "columns":["_id", "firstname"]}];
+        query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};

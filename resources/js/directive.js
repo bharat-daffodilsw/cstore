@@ -41,9 +41,9 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/store-managers" active-link="active">Store Manager</a></li>' +
-            '<li id="products"><a href="#!/products" active-link="active">Product</a></li><li id="promotions"><a active-link="active" href >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
+            '<li id="products"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
             '<a href active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="training-categories"><a href active-link="active">Training Category</a>' +
-            '</li><li id="product-categories"><a href="#!/product-categories" active-link="active">Product Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li id="states"><li><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
+            '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li id="states"><li><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
         compile:function () {
             return {
@@ -65,7 +65,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="search_addcart pull-left"><div class="search pull-left"><form ng-submit="search()">' +
-            '<input type="text" placeholder="Search by product" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
+            '<input type="text" placeholder="Search by pop" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
             '<input type="submit" style="display:none"></form>' +
             '<div class="search_sign pull-left"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
             ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
@@ -77,31 +77,20 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                     $scope.search = function () {
                         var hash = window.location.hash;
                         if($scope.searchContent!="" && $scope.searchContent!="undefined"){
-
-                            /*if(hash.indexOf("search") == -1 && hash == "#!/"){
-
-                            }*/
-                            if(hash == "#!/" && hash.indexOf("search") == -1) {
-                                window.location.href = "/#!/?search=" + $scope.searchContent;
-                            }
-                            else if(hash.indexOf("?q=") != -1 && hash.indexOf("search") == -1){
-                                window.location.href=hash+"&search="+$scope.searchContent;
-                                console.log(hash.indexOf("?q="))
-                            }
-                            else if(hash.indexOf("search") == -1) {
-                                    window.location.href=hash+"/?search="+$scope.searchContent;
-                            }
-                            /*
-                            }
-                            else {
-                                window.location.href = hash+"/?q="+$scope.searchContent;
-                            } */
-                        }
-                        else {
-                            window.location.href="/";
+                            //if(hash.indexOf("#!/")>0) {
+                                if(hash.indexOf("search")>0){
+                                    var searchIndex = hash.indexOf("search");
+                                    console.log(hash.indexOf("search"));
+                                    console.log(hash.substring(0,searchIndex-1));
+                                    var substr=hash.substring(0,searchIndex-1);
+                                    window.location.href = "/"+substr+"?search=" + $scope.searchContent;
+                                }
+                                else {
+                                    window.location.href = "/#!/?search=" + $scope.searchContent;
+                                }
+                            //}
                         }
                     }
-
                 },
                 post:function () {
 
@@ -116,7 +105,7 @@ cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
         restrict:"E",
 
 
-        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/product-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
+        template:'<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/pop-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
 
             '</ul></div>',
         compile:function(){
@@ -171,14 +160,14 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="category pull-left"><div class="pop_products">Popular products <a href="#!/all-products">( View all )</a>' +
+        template:'<div class="category pull-left"><div class="pop_products">Popular pops <a href="#!/all-pops">( View all )</a>' +
             '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
 
 
-            '<a href="#!/product?productid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
+            '<a href="#!/pop?popid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
 
-            '</a></div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">' +
-            '{{product.short_description}}</div><div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div>' +
+            '</a></div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details">' +
+            '{{product.short_description}}</div><div class="price"><a href="#!/pop?popid={{product._id}}">{{product.cost.amount | currency}}</a></div>' +
 
             '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>'
     }
@@ -188,11 +177,11 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict:'E',
         template:'<div class="m_bar pull-left"><div class="category pull-left" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
-            '<div class="pop_products">{{product.name}} <a href="#!/product-category?q={{product._id}}">( View all )</a></div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="childproduct in product.categoryWiseData">' +
-            '<div class="products_img"><a href="#!/product?productid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/product?productid={{childproduct._id}}">' +
+            '<div class="pop_products">{{product.name}} <a href="#!/pop-category?q={{product._id}}">( View all )</a></div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="childproduct in product.categoryWiseData">' +
+            '<div class="products_img"><a href="#!/pop?popid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/pop?popid={{childproduct._id}}">' +
             '{{childproduct.name}}</a></div><div class="product_details">' +
             '{{childproduct.short_description}}</div><div class="price">' +
-            '<a href="#!/product?productid={{childproduct._id}}">{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>Add To Cart</a></div></div>' +
+            '<a href="#!/pop?popid={{childproduct._id}}">{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>Add To Cart</a></div></div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAllProductData"><img src="images/loading.gif"></div>'
     }
 }]);
@@ -200,7 +189,7 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
 cstore.directive('productDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-products">POP Store</a> > <a href="#!/product-category?q={{product[0].product_category._id}}">{{product[0].product_category.name}}</a> > {{product[0].name}}</div><div class="img_product pull-left">' +
+        template:'<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-pops">POP Store</a> > <a href="#!/pop-category?q={{product[0].product_category._id}}">{{product[0].product_category.name}}</a> > {{product[0].name}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{product[0].imageUrl}}" /></div>' +
             '<div class="details_product pull-left"><div class="short_details">{{product[0].short_description}}</div><div class="Qty"><div class="quantity_border">Quantity : ' +
             '<select class="qty_select_1"><option>1</option><option>2</option><option>3</option>' +
@@ -443,10 +432,10 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
     return{
         restrict:'E',
         template:'<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{products[0].product_category.name}}</div>' +
-            '<div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in products"><div class="products_img"><a href="#!/product?productid={{product._id}}">' +
+            '<div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in products"><div class="products_img"><a href="#!/pop?popid={{product._id}}">' +
             '<img src="{{product.imageUrl}}"/></a>' +
-            '</div><div class="name"><a href="#!/product?productid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
-            '<div class="price"><a href="#!/product?productid={{product._id}}">{{product.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>' +
+            '</div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
+            '<div class="price"><a href="#!/pop?popid={{product._id}}">{{product.cost.amount | currency}}</a></div><div class="add_to_cart"><a href>' +
             'Add To Cart</a></div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
@@ -463,15 +452,15 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
 cstore.directive('productList', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-product\')"><a href>Add</a></button>' +
+        template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-pop\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteProduct()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Product Name<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</div></th><th>Product Image' +
-            '</th><th>Product Category<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</div></th><th>Sold Count<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'soldcount\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'soldcount\',\'desc\')"></div>	</div></th><th>Price<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</div></th><th></th></tr><tr ng-repeat="product in products"><td>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>POP Name<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</div></th><th>POP Image' +
+            '</th><th>POP Category<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</div></th><th>Price<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</div></th><th></th></tr><tr ng-repeat="product in products"><td>' +
             '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
-            '{{product.product_category.name}}</td><td>{{product.soldcount}}</td><td>{{product.cost.amount | currency}}</td>' +
+            '{{product.product_category.name}}</td><td>{{product.cost.amount | currency}}</td>' +
             '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProductData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
@@ -528,14 +517,6 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         //$scope.productdata["image"] = product.image;
                         $scope.showFile(product.image,false);
                         //console.log($scope.productdata.image);
-                        if(product.vendor){
-                            for (var i = 0; i < $scope.productdata.vendors.length; i++) {
-                                if ($scope.productdata.vendors[i]._id == product.vendor._id) {
-                                    $scope.productdata.selectedVendor = $scope.productdata.vendors[i];
-                                    break;
-                                }
-                            }
-                        }
 
                         if(product.product_category._id) {
                             for (var j = 0; j < $scope.productdata.productCategories.length; j++) {
@@ -546,7 +527,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                 }
                             }
                         }
-                        window.location.href = "#!edit-product?q=" + product._id;
+                        window.location.href = "#!edit-pop?q=" + product._id;
                     }
                 }
             }
@@ -577,16 +558,16 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
             'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"> ' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Short Description</div></td><td><div class="margin_top">Product Categroy</div></td></tr><tr><td>' +
+            'Short Description</div></td><td><div class="margin_top">POP Categroy</div></td></tr><tr><td>' +
             '<input type="text" placeholder="" ng-model="productdata.short_description"></td><td><product-category-select></product-category-select>' +
-            '</td></tr><tr><td><div class="margin_top">Sold Count</div></td><td><div class="margin_top">Vendor</div>' +
-            '</td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td><td><vendor-select></vendor-select>' +
-            '</td></tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
+            '</td></tr><tr><td><div class="margin_top">Sold Count</div></td>' +
+            '</tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td>' +
+            '</tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
             '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><app-file-upload></app-file-upload></td><td style="position: absolute;">'+
             '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforProduct(\'products\')"><a href>Close</a></button></div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div></div>',
+            '<button type="button" ng-click="setPathforProduct(\'pops\')"><a href>Close</a></button></div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -1457,7 +1438,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '{{show.preCursor}}-{{show.preCursor + productCategories.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Product Category<div class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'name\',\'desc\')"></div>	</div></th><th>Description<div class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'description\',\'desc\')"></div>	</div></th><th></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>POP Category<div class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'name\',\'desc\')"></div>	</div></th><th>Description<div class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'description\',\'desc\')"></div>	</div></th><th></th>' +
             '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus">' +
             '</td><td><span ng-hide="productCategory.editStatus">{{productCategory.name}}</span>' +
             '<input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.name"></td><td><span ng-hide="productCategory.editStatus">' +
@@ -1465,7 +1446,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="productCategory.editStatus = true" ng-hide="productCategory.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCategory._id)" ng-show="productCategory.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewProductCategory()" class="add_new"><a href>' +
-            '+ Click Here To Add New Product Category</a></div></div><div class="loadingImage" ng-hide="!loadingProductCategoryData"><img src="images/loading.gif"></div>',
+            '+ Click Here To Add New POP Category</a></div></div><div class="loadingImage" ng-hide="!loadingProductCategoryData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
                 pre:function ($scope) {
