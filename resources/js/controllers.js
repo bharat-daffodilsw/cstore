@@ -83,7 +83,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
     $scope.currentLoc ={"data":""};
     $scope.currentLoc["data"]=$appService.getLocation();
-    console.log($scope.currentLoc.data.selectedLoc);
+    //console.log($scope.currentLoc.data.selectedLoc);
     $scope.file = {};
     $scope.oFile={};
     $scope.readonlyrow = {};
