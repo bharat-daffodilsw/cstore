@@ -53,7 +53,7 @@ a:hover {
 
 .search {
     position:relative;
-    width:48%;
+    width:41%;
     margin-top:30px;
     margin-left:5px;}
 
@@ -462,10 +462,10 @@ a:hover {
     display:none;
     background-color:#e7c271;
     position:absolute;
-    margin-top:6px;
+    margin-top:7px;
     width: 200px;
-    right:0;
-    z-index: 100000000;}
+    right:5px;
+    z-index: 1000000;}
 
 .setup ul li {
     padding:0;
@@ -871,13 +871,13 @@ th {
 
 .location_popup {
     display:none;
-    top:90px;
+    top:70px;
     z-index:1000;
     left:500px;
     background-color:#FFF;
     position:absolute;
     font-size:17px;
-    width:30%;
+    width:330px;
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
 
@@ -965,16 +965,6 @@ th {
 
 /*This will work for firefox*/
 @-moz-document url-prefix() {
-.setup {
-	display:none;
-	background-color:#e7c271;
-	position:absolute;
-	margin-top:5px;
-	width: 200px;
-	margin-left:461px;
-	z-index: 1000;
-}
-
 .country {
 color:#A20B0B;
 margin-left: 5px;}
@@ -1023,7 +1013,8 @@ margin-bottom: 9px!important;
 .profile {
     width:650px;
     margin:auto;
-    font-size:18px;}
+    font-size:18px;
+    margin-top:10x;}
 
 .male {
     margin-right:10px;}
@@ -1038,11 +1029,9 @@ margin-bottom: 9px!important;
 .set_male {
     width:22%;}
 
-.change-password-box {
-    display:none;}
-
 .profile input {
-    width:55%}
+    width:55%;
+}
 
 .forget-password-box {
     background-color: #FFF;
@@ -1065,8 +1054,7 @@ margin-bottom: 9px!important;
     border-width: 0 5px 5px 5px;
     height: 0;
     width: 0;
-    cursor:pointer;
-    z-index:1000;}
+    cursor:pointer;}
 
 .sortDown {
     position: absolute;
@@ -1080,8 +1068,12 @@ margin-bottom: 9px!important;
     border-width: 5px 5px 0 5px;
     height: 0;
     width: 0;
-    cursor:pointer;
-    z-index:1000;}
+    cursor:pointer;}
 
 span.sortWrap {
-    position:relative!important;}
+    position:relative;
+    margin: 10px;}
+
+.forget_content {
+    text-align:center;
+    margin-bottom:10px;}

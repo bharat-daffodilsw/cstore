@@ -175,6 +175,14 @@ appStrapServices.factory('$appService', [
             }
             return currentSession;
         }
+        $appService.getLocation = function(){
+            var currentLocation ={};
+            if (!$appService.getCookie("usk")) {
+                return null;
+            }
+            currentLocation["selectedLoc"] = $appService.getCookie("selectedLoc");
+            return  currentLocation;
+        }
         $appService.deleteAllCookie = function () {
             $appService.delete_cookie("usk");
             $appService.delete_cookie("role");
@@ -184,6 +192,7 @@ appStrapServices.factory('$appService', [
             $appService.delete_cookie("storename");
             $appService.delete_cookie("adminView");
             $appService.delete_cookie("companyLogoUrl");
+            $appService.delete_cookie("selectedLoc");
         }
 
 

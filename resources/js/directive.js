@@ -19,17 +19,30 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
         restrict:"E",
         template:'<div class="location_popup pull-left"><div class="loction_img pull-left"><img src="images/location.png"></div><div class="popup">Help us to serve you better</div>' +
             '<div class="popup">Please provide your location details.</div><div class="pop_btn pull-left"><div class="popup_input pull-left">' +
-            '<input ng-controller="TypeaheadCtrl" type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
-            '</div><div class="delete_btn pull-right"><button type="button"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
+            '<input type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="selectedLocation()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
         compile:function () {
             return {
-                pre:function () {
-                },
-                post:function ($scope) {
+                pre:function ($scope) {
                     $scope.hidePopup=function(){
                         $(".location_popup").hide();
-                        console.log($scope.asyncSelected);
                     }
+                    /*$scope.selectedLocation=function(){
+                        //console.log($scope.asyncSelected);
+                        $appService.delete_cookie("selectedLoc");
+                        $scope.selectedLoc=$scope.asyncSelected;
+                        var c_name = "selectedLoc";
+                        if($scope.selectedLoc && $scope.selectedLoc!=null && $scope.selectedLoc!="null"){
+                            document.cookie = c_name + "=" + escape($scope.selectedLoc);
+                        }
+                        else {
+                            var defaultLocation ="United States";
+                            document.cookie = c_name + "=" + escape(defaultLocation);
+                        }
+                        $(".location_popup").hide();
+                    } */
+                },
+                post:function () {
                 }
             }
         }
@@ -41,7 +54,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
         template:'<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/store-managers" active-link="active">Store Manager</a></li>' +
-            '<li id="products"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
+            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
             '<a href active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="training-categories"><a href active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li id="states"><li><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
@@ -69,7 +82,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
             '<input type="submit" style="display:none"></form>' +
             '<div class="search_sign pull-left"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
             ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
-            '</span><span class="country">India</span></a></div><div class="add_cart pull-right"><div class="addcart_link pull-left"><a href>' +
+            '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></a></div><div class="add_cart pull-right"><div class="addcart_link pull-left"><a href>' +
             '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">( 0 )</div></div></div>',
         compile:function(){
             return {
@@ -499,8 +512,8 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>POP Name<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</div></th><th>POP Image' +
-            '</th><th>POP Category<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</div></th><th>Price<div class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</div></th><th></th></tr><tr ng-repeat="product in products"><td>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Name</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</span></th><th><span>POP Image' +
+            '</span></th><th>POP Category<span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</span></th><th><span>Price</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</span></th><th></th></tr><tr ng-repeat="product in products"><td>' +
             '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
             '{{product.product_category.name}}</td><td>{{product.cost.amount | currency}}</td>' +
             '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProductData"><img src="images/loading.gif"></div>',
@@ -786,9 +799,9 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Store Name</th>' +
-            '<th>Shift</th><th>POS Type</th><th>POS Version</th><th>Loyalty Status</th><th>Reward Points</th><th>Brands</th><th>' +
-            'Email</th><th>Contact</th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
+            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\')"></div>	</span></th>' +
+            '<th><span>Shift<span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\')"></div>	</span></th><th><span>POS Type</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_type\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'pos_type\',\'desc\')"></div>	</span></th><th><span>POS Version</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_version\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'pos_version\',\'desc\')"></div>	</span></th><th><span>Loyalty Status</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\')"></div>	</span></th><th><span>Reward Points</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\')"></div>	</span></th><th><span>Brands</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'brands\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'brands\',\'desc\')"></div>	</span></th><th><span>' +
+            'Email</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\')"></div>	</span></th><th><span>Contact</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\')"></div><div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\')"></div>	</span></th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
             '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.pos_type}}</td><td>' +
             '{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td><td>{{storeManager.brands}}</td><td>{{storeManager.email}}</td><td>{{storeManager.contact}}</td>' +
             '<td><a class="edit_btn" ng-click="setStoreState(storeManager)"href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingStoreData"><img src="images/loading.gif"></div>',
@@ -1353,7 +1366,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             '{{show.preCursor}}-{{show.preCursor + countries.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Country<div class="sortWrap"><div class="sortUp" ng-click="setCountryOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCountryOrder(\'name\',\'desc\')"></div>	</div></th><th></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setCountryOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCountryOrder(\'name\',\'desc\')"></div>	</span></th><th></th>' +
             '</tr><tr ng-repeat="country in countries"><td><input type="checkbox" ng-model="country.deleteStatus">' +
             '</td><td><span ng-hide="country.editStatus">{{country.name}}</span><input ng-show="country.editStatus" class="edit_input" type="text" ng-model="country.name"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="country.editStatus = true" ng-hide="country.editStatus">Edit</a>' +
@@ -1480,7 +1493,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '{{show.preCursor}}-{{show.preCursor + productCategories.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>POP Category<div class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'name\',\'desc\')"></div>	</div></th><th>Description<div class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'description\',\'desc\')"></div>	</div></th><th></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Category</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Description</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'description\',\'desc\')"></div>	</span></th><th></th>' +
             '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus">' +
             '</td><td><span ng-hide="productCategory.editStatus">{{productCategory.name}}</span>' +
             '<input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.name"></td><td><span ng-hide="productCategory.editStatus">' +
@@ -1745,7 +1758,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>State<div class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</div></th><th>Country<div class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</div></th><th></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
             '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus">' +
             '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
             '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
@@ -1910,7 +1923,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '{{show.preCursor}}-{{show.preCursor + cities.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>City<div class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'name\',\'desc\')"></div>	</div></th><th>State<div class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'stateid.name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'stateid.name\',\'desc\')"></div>	</div></th><th></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>City</span><span class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'name\',\'desc\')"></div>	</span></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'stateid.name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'stateid.name\',\'desc\')"></div>	</span></th><th></th>' +
             '</tr><tr ng-repeat="city in cities"><td><input type="checkbox" ng-model="city.deleteStatus">' +
             '</td><td><span ng-hide="city.editStatus">{{city.name}}</span>' +
             '<input type="text" ng-show="city.editStatus" ng-model="city.name"></td><td>' +
@@ -2045,6 +2058,106 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 
                     }
 
+                }
+            }
+        }
+    }
+}]);
+
+
+/*******************Profile***********************/
+cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
+    return{
+        restrict:"E",
+        template:' <div class="profile">' +
+            '<div class="">' +
+            '<label class="profile_edit">Name</label>' +
+            '<input type="text" placeholder="" name=""  size="" value="" title="" ng-model="loggedIn.userid.firstname">' +
+            '</div>' +
+            '<div class="">' +
+            '<div class=""><label class="profile_edit">Username</label>' +
+            '<label class="">{{loggedIn.userid.username}}</label>' +
+            '</div>' +
+            '<div class=""><label class="profile_edit">Role:</label>' +
+            '<label class="">{{loggedIn.roleid.name}}</label>' +
+            '</div>' +
+            '<fieldset><legend class="change_pass"><a ng-click="showPass=true">Change Password</a></legend>' +
+            '<div class="change-password-box" ng-show="showPass">' +
+            '<label class="profile_edit">' +
+            'Current password</label>' +
+            '<input type="password" autocomplete="off" name="OldPasswd" id="OldPasswd" ng-model="oldPassword">' +
+            '<label class="profile_edit">' +
+            'New password</label>' +
+            '<input type="password" name="Passwd" id="Passwd" ng-model="newPassword">' +
+            '<label  class="profile_edit">' +
+            'Confirm new password</label>' +
+            '<input type="password" name="PasswdAgain" id="PasswdAgain" ng-model="confirmPassword">' +
+            '<div class="add_delete pull-left">' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="savePassword()"> <a href="">Save</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button"><a href="">Close</a></button></div>' +
+            '</div>' +
+            '</div>'+
+            '</fieldset>' +
+            '<div class="add_delete pull-left">' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="saveName()"> <a href="">Save</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button"><a href="">Close</a></button></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>',
+        compile:function () {
+            return {
+                post:function ($scope) {
+                    $scope.saveName=function(){
+                        var userquery = {};
+                        var newoperationArray = {};
+                        if(!$scope.loggedIn.userid.firstname){
+                            alert("Please enter name");
+                            return;
+                        }
+                        userquery.table = "user_profiles__cstore";
+                        newoperationArray._id = $scope.loggedIn._id;
+                        newoperationArray.userid = {};
+                        newoperationArray.userid._id = $scope.loggedIn.userid._id;
+                        newoperationArray.userid.firstname = $scope.loggedIn.userid.firstname;
+                        userquery.operations = [newoperationArray];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(userquery, ASK, OSK,usk, function (data) {
+                            if(data.response.update && data.response.update.length > 0){
+                                alert("Saved successfully");
+                            }else{
+                                alert(data.response);
+                            }
+                        });
+                    }
+                    $scope.savePassword=function(){
+                        var userquery = {};
+                        var newoperationArray = {};
+                        if($scope.oldPassword != $scope.loggedIn.password){
+                            alert("Please enter correct password");
+                            return;
+                        }
+                        if(!$scope.newPassword || !$scope.confirmPassword || $scope.newPassword != $scope.confirmPassword){
+                            alert("Password does not match");
+                            return;
+                        }
+                        userquery.table = "users__baas";
+                        newoperationArray._id = $scope.loggedIn.userbassId;
+                        newoperationArray.password = $scope.newPassword;
+                        userquery.operations = [newoperationArray];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(userquery, ASK, OSK,usk, function (data) {
+                            if(data.response.update && data.response.update.length > 0){
+                                alert("Saved successfully");
+                                $scope.oldPassword = "";
+                                $scope.newPassword = "";
+                                $scope.confirmPassword = "";
+                            }else{
+                                alert(data.response);
+                            }
+                        });
+                    }
                 }
             }
         }

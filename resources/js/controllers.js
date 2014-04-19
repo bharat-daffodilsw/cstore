@@ -80,6 +80,10 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.currentUser = {"data":""};
+    //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
+    $scope.currentLoc ={"data":""};
+    $scope.currentLoc["data"]=$appService.getLocation();
+    console.log($scope.currentLoc.data.selectedLoc);
     $scope.file = {};
     $scope.oFile={};
     $scope.readonlyrow = {};
@@ -123,7 +127,37 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
+    /********************** Location**************************/
+    $scope.getLocation = function(val) {
+        return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
+            params: {
+                address: val,
+                sensor: true
+            }
+        }).then(function(res){
+                var addresses = [];
+                angular.forEach(res.data.results, function(item){
+                    addresses.push(item.formatted_address);
+                });
+                return addresses;
+            });
+    };
 
+    $scope.selectedLocation=function(){
+        //console.log($scope.asyncSelected);
+        $appService.delete_cookie("selectedLoc");
+        //$scope.selectedLoc=$scope.asyncSelected;
+        $scope.currentLoc.data.selectedLoc=$scope.asyncSelected;
+        var c_name = "selectedLoc";
+        if($scope.currentLoc.data.selectedLoc && $scope.currentLoc.data.selectedLoc!=null && $scope.currentLoc.data.selectedLoc!="null"){
+            document.cookie = c_name + "=" + escape($scope.currentLoc.data.selectedLoc);
+        }
+        else {
+            var defaultLocation ="United States";
+            document.cookie = c_name + "=" + escape(defaultLocation);
+        }
+        //$(".location_popup").hide();
+    }
     /**********************************************/
     $scope.getCountries = function () {
         var countries = {};
@@ -330,7 +364,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     }
 });
 
-cstore.controller('TypeaheadCtrl',function($scope, $http) {
+/*cstore.controller('TypeaheadCtrl',function($scope, $http) {
     // Any function returning a promise object can be used to load values asynchronously
     $scope.getLocation = function(val) {
         return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
@@ -346,7 +380,7 @@ cstore.controller('TypeaheadCtrl',function($scope, $http) {
                 return addresses;
             });
     };
-});
+}); */
 
 cstore.controller('homeCtrl', function ($scope, $appService, $location,$routeParams) {
     $scope.homeView = {};
@@ -1323,5 +1357,21 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
 });
 
 cstore.controller('profileCtrl', function ($scope, $appService, $location,$routeParams) {
-    console.log("profileCtrl");
+    var usk = $appService.getCookie("usk");
+    var query = {"table":"user_profiles__cstore"};
+    query.columns = ["userid", "roleid"];
+    query.filter = {"userid":"{_CurrentUserId}"};
+    var params = {"query":JSON.stringify(query), "ask":ASK, "osk":OSK, "usk":usk};
+    $appService.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
+        $scope.loggedIn = callBackData.response.data[0];
+        var userquery = {"table":"users__baas"};
+        userquery.columns = ["password","_id"];
+        userquery.filter = {"username":$scope.loggedIn.userid.username};
+        var params = {"query":JSON.stringify(userquery), "ask":ASK, "osk":OSK, "usk":usk};
+        $appService.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
+            $scope.loggedIn.userbassId = callBackData.response.data[0]._id;
+            $scope.loggedIn.password = callBackData.response.data[0].password;
+        });
+    });
+
 });
