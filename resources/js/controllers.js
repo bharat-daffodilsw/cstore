@@ -90,7 +90,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.row = {};
     $scope.colmetadata = {"expression":"postfile","type":"file"};
     var FILE_KEY = 'key';
-    $scope.data = {"cities":[], "states":[], "selectedCity":"", "selectedState":""};
+    $scope.data = {"countries":[],"cities":[], "states":[], "selectedCity":"", "selectedState":"","selectedVendorCategory":"","selectedCountry":""};
+    $scope.vendorCategories =[{"name":"Beverage"},{"name":"Food Service"},{"name":"Salty Snacks"},{"name":"Candy"},{"name":"Propane"},{"name":"Fuel"},{"name":"Energy"},{"name":"Others"}];
+    $scope.data.vendorCategory=$scope.vendorCategories[0];
     $scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
     $scope.posVersions =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
     //$scope.storedata.pos_version=$scope.posVersions[0];
@@ -166,10 +168,24 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
-            $scope.storedata.countries = countryData.response.data;
-            $scope.storedata.selectedCountry = $scope.storedata.countries[0];
-            $scope.storedata.manager.selectedCountry = $scope.storedata.countries[0];
-            $scope.getStatesNew($scope.storedata, false);
+            if($scope.storedata.countries && $scope.storedata.countries.length>0){
+                $scope.storedata.countries = countryData.response.data;
+                $scope.storedata.selectedCountry = $scope.storedata.countries[0];
+                $scope.storedata.manager.selectedCountry = $scope.storedata.countries[0];
+                $scope.getStatesNew($scope.storedata, false);
+            }
+            else {
+                $scope.data.countries = countryData.response.data;
+                for(var i =0; i < $scope.data.countries.length ;i++){
+                    if($scope.data.countries[i]._id == "531d3e9b8826fc304706a460"){
+                        $scope.data.selectedCountry = $scope.data.countries[i];
+                        break;
+                    }
+                }
+                console.log($scope.data.selectedCountry);
+                //$scope.getStatesNew($scope.data, false);
+            }
+
         }, function (jqxhr, error) {
         })
     }
@@ -192,7 +208,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
                     for (var i = 0; i < countryid.states.length; i++) {
                         if (countryid.states[i]._id == countryid.selectedState._id) {
                             countryid.selectedState = countryid.states[i];
-
                             break;
                         }
                     }
@@ -214,7 +229,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         }
     }
     $scope.getCitiesNew = function (stateid, cityid) {
-
         if (stateid.selectedState) {
             var query = {"table":"cities__cstore"};
             query.columns = ["name"];
@@ -289,7 +303,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         $scope.data["contact"] = "";
         $scope.data["postalCode"] = "";
         $scope.data["address"] = "";
+        $scope.data["address2"] = "";
         $scope.data["email"] = "";
+        $scope.data["vendorCategory"]=$scope.vendorCategories[0];
+        $scope.data.selectedCountry = $scope.data.countries[0];
         $scope.data.selectedState = $scope.data.states[0];
         $scope.data.selectedCity = $scope.data.cities[0];
 
@@ -691,7 +708,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         }
         $scope.loadingVenderData = true;
         var query = {"table":"vendors__cstore"};
-        query.columns = ["address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode"];
+        query.columns = ["address2","address", {"expression":"city", "columns":["_id", "name"]}, {"expression":"state", "columns":["_id", "name"]}, {"expression":"country", "columns":["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode","category"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
@@ -730,7 +747,8 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.getLess = function () {
         $scope.getAllVendors(0, 5);
     }
-    $scope.getStates();
+    $scope.getCountries();
+    //$scope.getStates();
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -751,10 +769,7 @@ cstore.controller('productList', function ($scope, $appService) {
     $scope.loadingProductData = false;
     $scope.venderSearch = [
         {"value":"name", "name":" POP Name"},
-        {"value":"image.name", "name":"Image"},
-        {"value":"product_category.name", "name":"POP Category"},
-        {"value":"soldcount", "name":"Sold Count"},
-        {"value":"cost.amount", "name":"Price"}
+        {"value":"product_category.name", "name":"POP Category"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.products = [];
@@ -772,7 +787,7 @@ cstore.controller('productList', function ($scope, $appService) {
 
         $scope.loadingProductData = true;
         var query = {"table":"products__cstore"};
-        query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount"];
+        query.columns = ["description", "name", "image", "short_description", {"expression":"product_category", "columns":["_id", "name"]}, "cost", "soldcount","quantity"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
@@ -812,7 +827,7 @@ cstore.controller('productList', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllProducts(0, 10);
     }
-    $scope.getVendors();
+    //$scope.getVendors();
 });
 
 cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {
@@ -822,11 +837,11 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
         $scope.productdata["cost"] = "";
         $scope.productdata["description"] = "";
         $scope.productdata["short_description"] = "";
-        $scope.productdata["soldcount"] = "";
+        $scope.productdata["quantity"] = "";
         $scope.productdata["image"] = "";
         $scope.readonlyrow.fileurl = "";
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
-        $scope.productdata.selectedVendor = $scope.productdata.vendors[0];
+        //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
 
     }
     var productId = $routeParams.q;
@@ -1182,6 +1197,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
     $scope.loadingStateData = false;
     $scope.venderSearch = [
         {"value":"name", "name":"State"},
+        {"value":"abbreviation", "name":"Abbreviation"},
         {"value":"countryid.name", "name":"Country"}
     ];
     $scope.searchby = $scope.venderSearch[0];
@@ -1199,7 +1215,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         }
         $scope.loadingStateData = true;
         var query = {"table":"states__cstore"};
-        query.columns = ["name","countryid"];
+        query.columns = ["name","countryid","abbreviation"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
@@ -1243,7 +1259,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
     $scope.getStateCountries();
     $scope.refreshStates=function(index,refreshStateId){
         var query = {"table":"states__cstore"};
-        query.columns = ["name","countryid"];
+        query.columns = ["name","countryid","abbreviation"];
         query.filter ={"_id":refreshStateId};
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
@@ -1374,4 +1390,33 @@ cstore.controller('profileCtrl', function ($scope, $appService, $location,$route
         });
     });
 
+});
+cstore.controller('resetpasswordCtrl', function ($scope, $appService, $location,$routeParams) {
+    $scope.getURLParam =  function(strParamName){
+        var strReturn = "";
+        var strHref = window.location.href;
+        if ( strHref.indexOf("?") > -1 ){
+            var strQueryString = strHref.substr(strHref.indexOf("?"));
+            var aQueryString = strQueryString.split("&");
+            for ( var iParam = 0; iParam < aQueryString.length; iParam++ ){
+                if (
+                    aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1 ){
+                    var aParam = aQueryString[iParam].split("=");
+                    strReturn = aParam[1];
+                    break;
+                }
+            }
+        }
+        return unescape(strReturn);
+    }
+    $scope.resetPassword = function (password, fpcode, callback) {
+        var params = {};
+        params.pwd = password;
+        params.fpcode = fpcode;
+        $appService.getDataFromJQuery(BAAS_SERVER + "/resetpassword", params, "GET", "JSON", function (callBackData) {
+            callback(callBackData);
+        }, function (jqxhr, error) {
+            alert("Something went wrong. Can you please try again");
+        });
+    };
 });

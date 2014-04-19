@@ -7,7 +7,7 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
             '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
 
-            '<ul><li class="active"><a href>Profile</a></li><li><a href>Change Password</a></li><li><a ng-click="logOut()">' +
+            '<ul><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
             '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'
 
@@ -325,10 +325,26 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         $scope.data["firstname"] = vendor.firstname ? vendor.firstname: "" ;
                         $scope.data["lastname"] = vendor.lastname ? vendor.lastname: "";
                         $scope.data["contact"] = vendor.contact ? vendor.contact: "";
-                        $scope.data["postalCode"] = vendor.postalCode ? vendor.postalCode: "";
+                        $scope.data["postalCode"] = vendor.postalcode ? vendor.postalcode: "";
                         $scope.data["address"] = vendor.address ? vendor.address: "";
                         $scope.data["email"] = vendor.email ? vendor.email: "";
-                        if(vendor.state){
+                        $scope.data["address2"] =vendor.address2 ? vendor.address2:"";
+                        $scope.data["vendorCategory"]=vendor.category ? vendor.category :$scope.vendorCategories[0];
+                        if(vendor.country){
+                            for (var i = 0; i < $scope.data.countries.length; i++) {
+                                if ($scope.data.countries[i]._id == vendor.country._id) {
+                                    $scope.data.selectedCountry = $scope.data.countries[i];
+                                    break;
+                                }
+                            }
+                        }
+                        if(vendor.state) {
+                            $scope.getStatesNew($scope.data, vendor.state._id);
+                        }
+                        if(vendor.city) {
+                            $scope.getCitiesNew($scope.data, vendor.city._id);
+                        }
+                        /*if(vendor.state){
                             for (var i = 0; i < $scope.data.states.length; i++) {
                                 if ($scope.data.states[i]._id == vendor.state._id) {
                                     $scope.data.selectedState = $scope.data.states[i];
@@ -338,7 +354,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         }
                         if(vendor.city){
                             $scope.getCities($scope.data.selectedState._id, vendor.city._id);
-                        }
+                        }*/
                         window.location.href = "#!edit-vendor?q=" + vendor._id;
                     }
                 }
@@ -392,22 +408,62 @@ cstore.directive('stateSelect', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('vendorCountrySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="brand"  ng-change="getStatesNew(data,null)" ng-model="data.selectedCountry" ng-options="country.name for country in data.countries"></select>',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function () {
+
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('vendorCategorySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict:'E',
+        template:'<select class="brand" ng-model="data.vendorCategory" ng-options="vendorCategory.name for vendorCategory in vendorCategories"></select>' +
+            '<input type="text" placeholder="" ng-show = "data.vendorCategory.name== \'Others\'" ng-model="category" class="other_input pull-left" ng-blur="addValue()">',
+        compile:function () {
+            return{
+                pre:function () {
+
+                }, post:function ($scope) {
+                    $scope.addValue = function () {
+                        $scope.vendorCategories[$scope.vendorCategories.length-2]={"name":$scope.category};
+                        $scope.data.vendorCategory= $scope.vendorCategories[$scope.vendorCategories.length-2];
+
+                    }
+                }
+            }
+        }
+    }
+}]);
+
 cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
         replace:'true',
         template:'<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
-            '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
-            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address"> </textarea></td></tr></table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">State</div>' +
-            '</td><td><div class="margin_top">City</div></td></tr><tr><td><state-select></state-select></td><td>' +
-            '<city-select></city-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td><td>' +
-            '<div class="margin_top">Contact No.</div></td></tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td><td>' +
-            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr><td><div class="margin_top">Email</div></td></tr><tr><td class="city"><input type="email" ng-model="data.email">' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
+            '</td></tr></table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
+            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address"> </textarea></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address 2</div>' +
+            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address2"> </textarea></td></tr></table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Country</div>' +
+            '</td><td><div class="margin_top">State</div></td></tr><tr><td><vendor-country-select></vendor-country-select></td><td>' +
+            '<state-select></state-select></td></tr><tr><td><div class="margin_top">City</div>' +
+            '</td><td><div class="margin_top">Category</div></td></tr><tr><td><city-select></city-select></td><td>' +
+            '<vendor-category-select></vendor-category-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td><td>' +
+            '<div class="margin_top">Contact No.</div></td></tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td><td>' +
+            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
             '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
         compile:function () {
@@ -450,6 +506,12 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["firstname"] = $scope.data.firstname;
                         $scope.newVendor["lastname"] = $scope.data.lastname;
                         $scope.newVendor["address"] = $scope.data.address;
+                        $scope.newVendor["address2"] = $scope.data.address2;
+                        console.log($scope.data.vendorCategory.name);
+                        $scope.newVendor["category"] = $scope.data.vendorCategory.name;
+                        if($scope.data.selectedCountry && $scope.data.selectedCountry!=null && $scope.data.selectedCountry!=undefined && $scope.data.selectedCountry!="undefined" && $scope.data.selectedCountry!="null"){
+                            $scope.newVendor["country"] = {"_id":$scope.data.selectedCountry._id, "name":$scope.data.selectedCountry.name}
+                        }
                         if($scope.data.selectedCity && $scope.data.selectedCity!=null && $scope.data.selectedCity!=undefined && $scope.data.selectedCity!="undefined" && $scope.data.selectedCity!="null"){
                             $scope.newVendor["city"] = {"_id":$scope.data.selectedCity._id, "name":$scope.data.selectedCity.name}
                         }
@@ -512,10 +574,10 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Name</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</span></th><th><span>POP Image' +
-            '</span></th><th>POP Category<span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</span></th><th><span>Price</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</span></th><th></th></tr><tr ng-repeat="product in products"><td>' +
-            '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.image[0].name}}</td><td>' +
-            '{{product.product_category.name}}</td><td>{{product.cost.amount | currency}}</td>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Name</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</span></th>' +
+            '<th>POP Category<span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</span></th><th><span>Price</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</span></th><th><span>Quantity</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'quantity\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'quantity\',\'desc\')"></div></span></th><th><span>Sold Count</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'soldcount\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'soldcount\',\'desc\')"></div></span></th><th></th></tr><tr ng-repeat="product in products"><td>' +
+            '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.product_category.name}}</td><td>' +
+            '{{product.cost.amount | currency}}</td><td>{{product.quantity}}</td><td>{{product.soldcount}}</td>' +
             '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProductData"><img src="images/loading.gif"></div>',
         compile:function () {
             return {
@@ -568,7 +630,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["cost"] = product.cost ? product.cost : "";
                         $scope.productdata["description"] = product.description ? product.description : "";
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
-                        $scope.productdata["soldcount"] = product.soldcount ? product.soldcount : "";
+                        $scope.productdata["quantity"] = product.quantity ? product.quantity : "";
                         //$scope.productdata["image"] = product.image;
                         $scope.showFile(product.image,false);
                         //console.log($scope.productdata.image);
@@ -609,16 +671,16 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
         restrict:'E',
         replace:'true',
         template:'<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Name</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.name">' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
+            '<div class="margin_top">Name</div></td><td><div class="margin_top">POP Categroy</div></td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.name">' +
+            '</td><td><product-category-select></product-category-select></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
             'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"> ' +
             '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Short Description</div></td><td><div class="margin_top">POP Categroy</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="productdata.short_description"></td><td><product-category-select></product-category-select>' +
-            '</td></tr><tr><td><div class="margin_top">Sold Count</div></td>' +
-            '</tr><tr><td><input type="text" placeholder="" ng-model="productdata.soldcount"></td>' +
+            'Short Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.short_description"> ' +
+            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr><td><div class="margin_top">Quantity</div></td>' +
+            '</tr><tr><td><input type="text" placeholder="" ng-model="productdata.quantity"></td><td class="product_image"><app-file-upload></app-file-upload></td>' +
             '</tr><tr><td><div class="margin_top">Price</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td class="product_image"><app-file-upload></app-file-upload></td><td style="position: absolute;">'+
+            '<input type="text" placeholder="" ng-model="productdata.cost.amount"></td><td style="position: absolute;">'+
             '</td></tr>' +
             '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
@@ -652,10 +714,10 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 alert("please enter cost");
                                 return false;
                             }
-                            if (document.getElementById('uploadfile').files.length === 0) {
-                                alert("please select image first");
-                                return false;
-                            }
+                            //if (document.getElementById('uploadfile').files.length === 0) {
+                            //    alert("please select image first");
+                             //   return false;
+                            //}
                             if (!$scope.productdata.selectedProductCategory) {
                                 alert("please select product category");
                                 //return false;
@@ -669,8 +731,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                             $scope.newProduct["name"] = $scope.productdata.name;
                             $scope.newProduct["description"] = $scope.productdata.description;
                             $scope.newProduct["short_description"] = $scope.productdata.short_description;
-                            $scope.newProduct["soldcount"] = $scope.productdata.soldcount;
-                            $scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
+                            $scope.newProduct["quantity"] = $scope.productdata.quantity;
+                            //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
                             $scope.newProduct["product_category"] = {"name":$scope.productdata.selectedProductCategory.name, "_id":$scope.productdata.selectedProductCategory._id};
                             $scope.newProduct["cost"] = {"amount":$scope.productdata.cost.amount, "type":{"currency":"usd"}};
                             if (document.getElementById('uploadfile').files.length === 0 ) {
@@ -1758,10 +1820,11 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Abbreviation</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'abbreviation\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'abbreviation\',\'desc\')"></div></span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
             '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus">' +
             '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
             '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
+            '<span ng-hide="state.editStatus">{{state.abbreviation}}</span><input type="text" ng-show="state.editStatus" ng-model="state.abbreviation"></td><td>' +
             '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
@@ -1846,6 +1909,10 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             }
                             if(!stateList[i].countryid){
                                 alert("Please select country");
+                                return false;
+                            }
+                            if(!stateList[i].abbreviation){
+                                alert("Please enter abbreviation");
                                 return false;
                             }
                         }
@@ -2158,6 +2225,56 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
                             }
                         });
                     }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('resetpassword', ['$appService', function ($appService, $scope) {
+    return{
+        template:'  <div class="profile">' +
+            '<div class="forget_content">Reset Your Password</div>' +
+            '<form ng-submit="userResetPassword()"><div class="">' +
+            '<label class="profile_edit">New Password</label>' +
+            '<input type="password" placeholder="" name=""  size="" value="" title="" ng-model="password">' +
+            '</div>' +
+            '<div class="">' +
+            '<label class="profile_edit">Confirm Password</label>' +
+            '<input type="password" placeholder="" name=""  size="" value="" title="" ng-model="confirmpassword">' +
+            '</div>' +
+            '<div class="add_delete pull-left">' +
+            '<input type="submit" value="Submit">' +
+            '</div></form>' +
+            '</div>',
+        restrict:"E",
+        compile:function () {
+            return {
+                post:function ($scope) {
+                    $scope.userResetPassword = function () {
+                        var fpcode = $scope.getURLParam('fpcode');
+                        var password = $scope.password;
+                        var confirmpassword = $scope.confirmpassword;
+                        if (!fpcode) {
+                            alert("Please try forgot password again");
+                            return ;
+                        }
+                        if (!password) {
+                            alert("Please enter password");
+                            return ;
+                        }
+                        if(password != confirmpassword){
+                            alert("Password does not match");
+                            return ;
+                        }
+                        $scope.resetPassword(password,fpcode, function (data) {
+                            if(data.response == "Reset Password Successfully.."){
+                                alert("Password reset successfully");
+                                window.location.href = "/#!/login";
+                                return;
+                            }
+                        });
+                    };
                 }
             }
         }
