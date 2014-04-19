@@ -77,18 +77,60 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                     $scope.search = function () {
                         var hash = window.location.hash;
                         if($scope.searchContent!="" && $scope.searchContent!="undefined"){
-                            //if(hash.indexOf("#!/")>0) {
+                            if(hash.indexOf("?q=") >0){
                                 if(hash.indexOf("search")>0){
                                     var searchIndex = hash.indexOf("search");
-                                    console.log(hash.indexOf("search"));
-                                    console.log(hash.substring(0,searchIndex-1));
+                                    //console.log(hash.indexOf("search"));
+                                    //console.log(hash.substring(0,searchIndex-1));
                                     var substr=hash.substring(0,searchIndex-1);
-                                    window.location.href = "/"+substr+"?search=" + $scope.searchContent;
+                                    console.log(substr);
+                                    window.location.href = substr+"&search=" + $scope.searchContent;
+                                    $scope.searchContent="";
                                 }
                                 else {
-                                    window.location.href = "/#!/?search=" + $scope.searchContent;
+                                    console.log(hash);
+                                    window.location.href=hash+"&search="+$scope.searchContent;
+                                    $scope.searchContent="";
+                                    //window.location.href = "/#!/?search=" + $scope.searchContent;
+                                    //window.location.href = hash+"?search="+$scope.searchContent;
                                 }
-                            //}
+                            }
+                            else if(hash.indexOf("?popid=") >0){
+
+                                window.location.href="#!/all-pops?search=" + $scope.searchContent;
+                                //$scope.searchContent="";
+                            }
+                            else if(hash.indexOf("#!/")>=0 || hash == "#!/") {
+                               //console.log(hash.indexOf("#!/"));
+                                if(hash.indexOf("search")>0){
+                                    var searchIndex = hash.indexOf("search");
+                                    //console.log(hash.indexOf("search"));
+                                    //console.log(hash.substring(0,searchIndex-1));
+                                    var substr=hash.substring(0,searchIndex-1);
+                                    window.location.href = "/"+substr+"?search=" + $scope.searchContent;
+                                    $scope.searchContent="";
+                                }
+                                else {
+                                    //window.location.href = "/#!/?search=" + $scope.searchContent;
+                                    window.location.href = hash+"?search="+$scope.searchContent;
+                                    $scope.searchContent="";
+                                }
+                            }
+                            else {
+                                console.log(hash);
+                            }
+                        }
+                        else {
+                            console.log(hash);
+                            if(hash.indexOf("search")>0){
+                                var searchIndex = hash.indexOf("search");
+                                var substr=hash.substring(0,searchIndex-1);
+                                window.location.href = substr;
+                                //$scope.searchContent="";
+                            }
+                            else {
+                                window.location.href=hash;
+                            }
                         }
                     }
                 },
@@ -209,7 +251,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
-            'Name <div class="sortWrap"><div class="sortUp" ng-click="setOrder(\'firstname\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'firstname\',\'desc\')"></div>	</div></th><th>Address<div class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'address\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'address\',\'desc\')"></div>	</div></th><th>City <div class="sortWrap"><div class="sortUp" ng-click="setOrder(\'city.name\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'city.name\',\'desc\')"></div>	</div></th><th>State <div class="sortWrap"><div class="sortUp" ng-click="setOrder(\'state.name\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'state.name\',\'desc\')"></div></div>	</th><th>Email <div class="sortWrap"><div class="sortUp" ng-click="setOrder(\'email\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'email\',\'desc\')"></div>	</div></th><th>Contact No. <div class="sortWrap"><div class="sortUp" ng-click="setOrder(\'contact\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'contact\',\'desc\')"></div></div>	</th><th></th>' +
+            '<span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'firstname\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'firstname\',\'desc\')"></div>	</span></th><th><span>Address</span><span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'address\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'address\',\'desc\')"></div>	</span></th><th><span>City</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'city.name\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'city.name\',\'desc\')"></div>	</span></th><th><span>State</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'state.name\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'state.name\',\'desc\')"></div></span>	</th><th><span>Email</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'email\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'email\',\'desc\')"></div>	</span></th><th><span>Contact No.</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'contact\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'contact\',\'desc\')"></div></span>	</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}} {{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',

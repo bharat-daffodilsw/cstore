@@ -419,6 +419,7 @@ a:hover {
     .details_product { width:44.9%;}
     .footer_3 { margin-top:10px; }
     .logo1 {margin-top:20px;}
+    .table_3 {width: auto!important;}
 }
 
 .admin_menu {
@@ -464,7 +465,7 @@ a:hover {
     margin-top:6px;
     width: 200px;
     right:0;
-    z-index: 1000;}
+    z-index: 100000000;}
 
 .setup ul li {
     padding:0;
@@ -1044,18 +1045,43 @@ margin-bottom: 9px!important;
     width:55%}
 
 .forget-password-box {
-    display:none;
     background-color: #FFF;
     padding: 10px;
-    position: absolute;
-    right: 0;
-    bottom: 133px;
     font-size: 24px;
     width: 520px;
 
     min-height: 275px;}
 
 
-div.sortUp {     position: absolute;      top: 11px;      left: 130px;      right: 0;  margin-left: auto;  margin-right: auto;      border-color: #000 transparent; 	border-style: solid; 	border-width: 0 5px 5px 5px; 	height: 0;  width: 0; cursor:pointer;}
-div.sortDown { 	position: absolute; 	top: 21px; 	left: 130px; 	right: 0; 	margin-left: auto; 	margin-right: auto; 	border-color: #000 transparent; 	border-style: solid; 	border-width: 5px 5px 0 5px; 	height: 0; 	width: 0; cursor:pointer;}
-div.sortWrap{position:relative;}
+.sortUp {
+    position: absolute;
+    top: 3px;
+    left: 10px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: #000 transparent;
+    border-style: solid;
+    border-width: 0 5px 5px 5px;
+    height: 0;
+    width: 0;
+    cursor:pointer;
+    z-index:1000;}
+
+.sortDown {
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: #000 transparent;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    height: 0;
+    width: 0;
+    cursor:pointer;
+    z-index:1000;}
+
+span.sortWrap {
+    position:relative!important;}

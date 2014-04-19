@@ -69,6 +69,9 @@ cstore.config(
             }).when('/cities', {
                 templateUrl:'../cities',
                 controller:'cityCtrl'
+            }).when('/profile',{
+                templateUrl:'../profile',
+                controller:'profileCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -420,7 +423,7 @@ cstore.controller('allCategory', function ($scope, $appService,$routeParams) {
 
         if (searchText && searchText != "") {
             query.childs = [
-                {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"}}, "relatedcolumn":"product_category", "parentcolumn":"_id","filter":{"name":{"$regex":"(" + searchText + ")", "$options":"-i"}}}
+                {"alias":"categoryWiseData", "query":{"table":"products__cstore", "columns":["name", "image", "short_description", "cost"], "maxrow":4, "orders":{"__createdon":"desc"},"filter":{"name":{"$regex":"(" + searchText + ")", "$options":"-i"}}}, "relatedcolumn":"product_category", "parentcolumn":"_id"}
             ];
 
         }
@@ -1317,4 +1320,8 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         }, function (jqxhr, error) {
         })
     }
+});
+
+cstore.controller('profileCtrl', function ($scope, $appService, $location,$routeParams) {
+    console.log("profileCtrl");
 });
