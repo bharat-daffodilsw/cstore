@@ -595,8 +595,7 @@ tr {
 
 .add_delete {
     margin-top:10px;
-    width:98%;}
-
+   }
 .table_1 {
     padding: 10px 20%;}
 
@@ -1136,3 +1135,10 @@ span.sortWrap {
 
 .other_input {
     margin-top:10px;}
+input[type="submit"] {
+    background-color: #e7c271;  font-size: 16px;  outline: 0px;  padding: 5px 25px;
+    width: 100%;
+}
+input[type="submit"]:hover {
+    text-decoration: underline;
+}

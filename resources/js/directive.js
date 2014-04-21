@@ -1,7 +1,7 @@
 cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:'<div class="header"><div ng-class="{visible:!displayData.options}" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
+       template:'<div><div class="header"><div ng-class="{visible:!displayData.options}" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
             '</div><div class="dropdown pull-left"><div class="logo1 pull-left"><a href="/"><img src="/images/main_logo.png"/></a>' +
 
             '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
@@ -9,8 +9,26 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
 
             '<ul><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
-            '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'
-
+            '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>'+			
+			'<div class="popup" style="display:none;">' +
+            '<div class="popup-manage">' +
+            '<h2 class="h2-popup">Attention</h2>' +
+            '<form method="" class="ng-pristine ng-valid">' +
+            '<p class="alert-p" id="popupMessage"></p>' +
+            '<p class="role-change"><input type="button" value="OK" class="alert-ok" ng-click="cancelAlertPopup()"></p>' +
+            '</form>' +
+            '</div>' +
+            '</div>' +
+            '</div>',
+		compile:function () {
+            return {
+                post:function ($scope) {
+					$scope.cancelAlertPopup = function(){
+						$('.popup').toggle("slide");
+					}
+				}
+			}
+		}
     }
 }]);
 
@@ -2171,7 +2189,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
     return{
         restrict:"E",
-        template:' <div class="profile">' +
+        template:' <div class="profile"><form ng-submit="saveName()">' +
             '<div class="">' +
             '<label class="profile_edit">Name</label>' +
             '<input type="text" placeholder="" name=""  size="" value="" title="" ng-model="loggedIn.userid.firstname">' +
@@ -2183,8 +2201,8 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
             '<div class=""><label class="profile_edit">Role:</label>' +
             '<label class="">{{loggedIn.roleid.name}}</label>' +
             '</div>' +
-            '<fieldset><legend class="change_pass"><a> <!--ng-click="showPass=true"--> Change Password</a></legend>' +
-            '<div class="change-password-box"> <!--ng-show="showPass"--->' +
+            '<div class="change_pass"><a ng-click="toggleChangePass()">Change Password</a></div>' +
+            '<div class="change-password-box" ng-show="showPass">' +
             '<label class="profile_edit">' +
             'Current password</label>' +
             '<input type="password" autocomplete="off" name="OldPasswd" id="OldPasswd" ng-model="oldPassword">' +
@@ -2194,75 +2212,82 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
             '<label  class="profile_edit">' +
             'Confirm new password</label>' +
             '<input type="password" name="PasswdAgain" id="PasswdAgain" ng-model="confirmPassword">' +
-            '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="savePassword()"> <a href="">Save</a></button></div>' +
-            '<div class="delete_btn pull-left"><!-----<button type="button"><a href="">Close</a></button>-----></div>' +
-            '</div>' +
             '</div>'+
-            '</fieldset>' +
             '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="saveName()"> <a href="">Save</a></button></div>' +
+            '<div class="add_btn pull-left"><input type="submit" value="Save"></div>' +
             '<div class="delete_btn pull-left"><button type="button" ng-click="setPath(\'vendors\')"><a href="">Close</a></button></div>' +
             '</div>' +
             '</div>' +
-            '</div>',
-        compile:function () {
+            '</form></div>',  
+		compile:function () {
             return {
-                pre:function($scope){
-                    $scope.setPath = function (path) {
-                        window.location.href = "#!/" + path;
-                    }
-                },
                 post:function ($scope) {
+					$scope.toggleChangePass = function(){
+						$scope.showPass = !$scope.showPass ;
+					}
                     $scope.saveName=function(){
-                        var userquery = {};
-                        var newoperationArray = {};
-                        if(!$scope.loggedIn.userid.firstname){
-                            alert("Please enter name");
-                            return;
-                        }
-                        userquery.table = "user_profiles__cstore";
+						var userquery = {};
+						var newoperationArray = {};
+						if(!$scope.loggedIn.userid.firstname){
+							$("#popupMessage").html("Please enter name");
+							$('.popup').toggle("slide");
+							return;
+						}		
+						if($scope.showPass){						
+							if(!$scope.oldPassword){
+								$("#popupMessage").html("Please enter current password");
+								$('.popup').toggle("slide");
+								return;
+							}					
+							if($scope.oldPassword != $scope.loggedIn.password){
+								$("#popupMessage").html("Please enter correct password");
+								$('.popup').toggle("slide");
+								return;
+							}
+							if(!$scope.newPassword || !$scope.confirmPassword || $scope.newPassword != $scope.confirmPassword){
+								$("#popupMessage").html("Password does not match");
+								$('.popup').toggle("slide");
+								return;
+							}
+						}
+						userquery.table = "user_profiles__cstore";
                         newoperationArray._id = $scope.loggedIn._id;
                         newoperationArray.userid = {};
                         newoperationArray.userid._id = $scope.loggedIn.userid._id;
                         newoperationArray.userid.firstname = $scope.loggedIn.userid.firstname;
                         userquery.operations = [newoperationArray];
-                        var currentSession = $appService.getSession();
+						var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
                         $appService.save(userquery, ASK, OSK,usk, function (data) {
-                            if(data.response.update && data.response.update.length > 0){
-                                alert("Saved successfully");
-                            }else{
-                                alert(data.response);
-                            }
-                        });
-                    }
-                    $scope.savePassword=function(){
-                        var userquery = {};
-                        var newoperationArray = {};
-                        if($scope.oldPassword != $scope.loggedIn.password){
-                            alert("Please enter correct password");
-                            return;
-                        }
-                        if(!$scope.newPassword || !$scope.confirmPassword || $scope.newPassword != $scope.confirmPassword){
-                            alert("Password does not match");
-                            return;
-                        }
-                        userquery.table = "users__baas";
-                        newoperationArray._id = $scope.loggedIn.userbassId;
-                        newoperationArray.password = $scope.newPassword;
-                        userquery.operations = [newoperationArray];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(userquery, ASK, OSK,usk, function (data) {
-                            if(data.response.update && data.response.update.length > 0){
-                                alert("Saved successfully");
-                                $scope.oldPassword = "";
-                                $scope.newPassword = "";
-                                $scope.confirmPassword = "";
-                            }else{
-                                alert(data.response);
-                            }
+							if(data.response.update && data.response.update.length > 0){
+								$scope.currentUser.data.firstname = $scope.loggedIn.userid.firstname;
+								var c_name = "firstname";
+								document.cookie = c_name + "=" + escape($scope.currentUser.data.firstname);
+								if($scope.showPass){
+									var query = {};
+									var passOperationArray = {};  
+									query.table = "users__baas";
+									passOperationArray._id = $scope.loggedIn.userbassId;
+									passOperationArray.password = $scope.newPassword;
+									query.operations = [passOperationArray];
+									var currentSession = $appService.getSession();
+									var usk = currentSession["usk"] ? currentSession["usk"] : null;
+									$appService.save(query, ASK, OSK,usk, function (data) {
+										if(data.response.update && data.response.update.length > 0){
+											$scope.oldPassword = "";
+											$scope.newPassword = "";
+											$scope.confirmPassword = "";
+											$scope.setPath('vendors');
+										}else{
+											alert(data.response);
+										}
+									});
+								}else{
+									$scope.setPath('vendors');
+								}
+							}else{
+								alert(data.response);
+							}
                         });
                     }
                 }
@@ -2291,31 +2316,37 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
         compile:function () {
             return {
                 post:function ($scope) {
-                    $scope.userResetPassword = function () {
+                      $scope.userResetPassword = function () {  				
                         var fpcode = $scope.getURLParam('fpcode');
                         var password = $scope.password;
                         var confirmpassword = $scope.confirmpassword;
                         if (!fpcode) {
-                            alert("Please try forgot password again");
-                            return ;
+							$("#popupMessage").html("Please try forgot password again");
+							$('.popup').toggle("slide");
+							return;
                         }
                         if (!password) {
-                            alert("Please enter password");
-                            return ;
+							$("#popupMessage").html("Please enter password");
+							$('.popup').toggle("slide");
+							return;
                         }
                         if(password != confirmpassword){
-                            alert("Password does not match");
-                            return ;
+							$("#popupMessage").html("Password does not match");
+							$('.popup').toggle("slide");
+							return;
                         }
                         $scope.resetPassword(password,fpcode, function (data) {
                             if(data.response == "Reset Password Successfully.."){
-                                alert("Password reset successfully");
                                 window.location.href = "/#!/login";
                                 return;
-                            }
+                            }else{
+								$("#popupMessage").html(data.response);
+								$('.popup').toggle("slide");
+								return;
+							}
                         });
                     };
-                }
+			    }
             }
         }
     }

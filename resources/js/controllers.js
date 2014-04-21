@@ -644,16 +644,19 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         var password = $("#password").val();
         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if (regEmail.test(username) == false) {
-            alert("Please Enter A Valid Email");
-            return false;
+			$("#popupMessage").html("Please enter a valid email id");
+			$('.popup').toggle("slide");
+			return;
         }
         if (username == "" || username == undefined) {
-            alert("Please enter vaild user name ");
-            return false;
+			$("#popupMessage").html("Please enter vaild user name");
+			$('.popup').toggle("slide");
+			return;
         }
         if (!password) {
-            alert("enter your password");
-            return false;
+			$("#popupMessage").html("Enter your password");
+			$('.popup').toggle("slide");
+			return;
         }
         var params = {};
         params.username = username;
@@ -662,12 +665,14 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         params.osk = OSK;
         $appService.getDataFromJQuery("/rest/login", params, "GET", "JSON", function (callBackData) {
             if (callBackData.code && callBackData.code == 8) {
-                alert(callBackData.response);
-                return false;
+				$("#popupMessage").html(callBackData.response);
+				$('.popup').toggle("slide");
+				return;
             }
             else if (callBackData.code && callBackData.code == 3) {
-                alert(callBackData.response);
-                return false;
+				$("#popupMessage").html(callBackData.response);
+				$('.popup').toggle("slide");
+				return;
             }
             else if (callBackData.code && callBackData.code == 200) {
                 var usk = callBackData.response ? callBackData.response.usk : null;
@@ -705,20 +710,23 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                             var c_name = "storeid";
                             document.cookie = c_name + "=" + escape(storeid);
                             var c_name ="companyLogoUrl";
-                            document.cookie =document.cookie = c_name + "=" + escape(companyLogoUrl);
+                            document.cookie = c_name + "=" + escape(companyLogoUrl);
                         }
                         window.location.href = "/";
 
                     }, function (err) {
-
-                        alert("error while making request");
+						$("#popupMessage").html("error while making request");
+						$('.popup').toggle("slide");
+						return;
                     });
 
                 }
 
             }
             else {
-                alert(callBackData.response);
+				$("#popupMessage").html(callBackData.response);
+				$('.popup').toggle("slide");
+				return;
             }
 
         }, function (jqxhr, error) {
@@ -726,18 +734,34 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         });
 
     }
-    $scope.userForgotPassword = function () {
-        var userName = $("#username").val();
-        if(!userName){
-            alert("Please enter username");
-            return;
-        }
+	 $scope.userForgotPassword = function () {
+       var userName = $("#username").val();
+		if(!userName){
+			$("#popupMessage").html("Please enter username");
+			$('.popup').toggle("slide");
+			return;
+		}
         $scope.forgotPassword(userName,  function (data) {
-            if(data == "User Not Found."){
-                alert("User does not exist");
+            if(data.response == "User Not Found."){
+				$("#popupMessage").html("User does not exist");
+				$('.popup').toggle("slide");
+				return;
             }else{
-                alert("We have sent you an email to reset password. Please check your email id.");
+				$("#popupMessage").html("We have sent you an email to reset password. Please check your email id.");
+				$('.popup').toggle("slide");
+				return;
             }
+        });
+    };
+    $scope.forgotPassword = function (username, callback) {
+        var params = {};
+        params.username = username;
+        params.ask=ASK;
+        params.osk=OSK;
+        $appService.getDataFromJQuery("/rest/forgotpassword", params, "GET", "JSON",  function (callBackData) {
+            callback(callBackData);
+        }, function (jqxhr, error) {
+			alert(error);
         });
     };
 
@@ -1478,7 +1502,9 @@ cstore.controller('resetpasswordCtrl', function ($scope, $appService, $location,
         $appService.getDataFromJQuery(BAAS_SERVER + "/resetpassword", params, "GET", "JSON", function (callBackData) {
             callback(callBackData);
         }, function (jqxhr, error) {
-            alert("Something went wrong. Can you please try again");
+            $("#popupMessage").html("Something went wrong. Can you please try again");
+			$('.popup').toggle("slide");
+			return;
         });
     };
 });
