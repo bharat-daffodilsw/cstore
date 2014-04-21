@@ -72,6 +72,9 @@ cstore.config(
             }).when('/profile',{
                 templateUrl:'../profile',
                 controller:'profileCtrl'
+            }).when('/resetpassword', {
+                templateUrl:'../resetpassword',
+                controller:'resetpasswordCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -730,7 +733,9 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
             }
 
         }, function (jqxhr, error) {
-            alert("error while making request");
+			$("#popupMessage").html("error while making request");
+			$('.popup').toggle("slide");
+			return;
         });
 
     }

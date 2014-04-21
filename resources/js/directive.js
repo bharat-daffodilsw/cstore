@@ -2261,6 +2261,9 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
                         $appService.save(userquery, ASK, OSK,usk, function (data) {
 							if(data.response.update && data.response.update.length > 0){
 								$scope.currentUser.data.firstname = $scope.loggedIn.userid.firstname;
+								if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
 								var c_name = "firstname";
 								document.cookie = c_name + "=" + escape($scope.currentUser.data.firstname);
 								if($scope.showPass){
