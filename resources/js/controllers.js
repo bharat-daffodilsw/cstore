@@ -90,9 +90,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.row = {};
     $scope.colmetadata = {"expression":"postfile","type":"file"};
     var FILE_KEY = 'key';
-    $scope.data = {"countries":[],"cities":[], "states":[], "selectedCity":"", "selectedState":"","selectedVendorCategory":"","selectedCountry":""};
-    $scope.vendorCategories =[{"name":"Beverage"},{"name":"Food Service"},{"name":"Salty Snacks"},{"name":"Candy"},{"name":"Propane"},{"name":"Fuel"},{"name":"Energy"},{"name":"Others"}];
-    $scope.data.vendorCategory=$scope.vendorCategories[0];
+    $scope.data = {"countries":[],"cities":[], "states":[], "selectedCity":"", "selectedState":"","selectedVendorCategory":"","selectedCountry":"","vendorCategories":[]};
+    $scope.data.vendorCategories =[{"name":"Beverage"},{"name":"Food Service"},{"name":"Salty Snacks"},{"name":"Candy"},{"name":"Propane"},{"name":"Fuel"},{"name":"Energy"},{"name":"Others"}];
+    $scope.data.selectedVendorCategory=$scope.data.vendorCategories[0];
     $scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
     $scope.posVersions =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
     //$scope.storedata.pos_version=$scope.posVersions[0];
@@ -182,13 +182,56 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
                         break;
                     }
                 }
-                console.log($scope.data.selectedCountry);
-                //$scope.getStatesNew($scope.data, false);
+                //console.log($scope.data.selectedCountry);
+                $scope.getStatesNew($scope.data, false);
             }
 
         }, function (jqxhr, error) {
         })
     }
+    /*********************************************************/
+    $scope.getCountriesNew = function (countryid) {
+        //if(countryid.selectedCountry){
+            var query = {"table":"countries__cstore"};
+            query.columns = ["name"];
+            $scope.data.selectedCountry = {"_id":countryid};
+            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            var serviceUrl = "/rest/data";
+            $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
+                $scope.data.countries = countryData.response.data;
+                //console.log($scope.storedata.states.length);
+
+                if ($scope.data.selectedCountry._id) {
+                    for (var i = 0; i < $scope.data.countries.length; i++) {
+                        if ($scope.data.countries[i]._id == $scope.data.selectedCountry._id) {
+                            $scope.data.selectedCountry = $scope.data.countries[i];
+                            break;
+                        }
+                    }
+                } else {
+
+                    for (var i = 0; i < $scope.data.countries.length; i++) {
+                        if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
+                            $scope.data.selectedCountry = $scope.data.countries[i];
+                            break;
+                        }
+                    }
+
+                }
+                if($scope.data.countries.length && !countryid){
+                    $scope.getStatesNew($scope.data,false);
+                }
+                else {
+                    states=[];
+                }
+
+            }, function (jqxhr, error) {
+            })
+        //}else{
+          //  countryid.states = [];
+        //}
+    }
+
     $scope.getStatesNew = function (countryid, stateid) {
         if(countryid.selectedCountry){
             var query = {"table":"states__cstore"};
@@ -305,11 +348,15 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         $scope.data["address"] = "";
         $scope.data["address2"] = "";
         $scope.data["email"] = "";
-        $scope.data["vendorCategory"]=$scope.vendorCategories[0];
-        $scope.data.selectedCountry = $scope.data.countries[0];
-        $scope.data.selectedState = $scope.data.states[0];
-        $scope.data.selectedCity = $scope.data.cities[0];
-
+        $scope.data["selectedVendorCategory"]=$scope.data.vendorCategories[0];
+        for (var i = 0; i < $scope.data.countries.length; i++) {
+            if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
+                $scope.data.selectedCountry = $scope.data.countries[i];
+                break;
+            }
+        }
+        $scope.getStatesNew($scope.data,false);
+        $scope.getCitiesNew($scope.data,false);
     }
     $scope.logOut = function () {
         $appService.deleteAllCookie();
@@ -679,6 +726,20 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         });
 
     }
+    $scope.userForgotPassword = function () {
+        var userName = $("#username").val();
+        if(!userName){
+            alert("Please enter username");
+            return;
+        }
+        $scope.forgotPassword(userName,  function (data) {
+            if(data == "User Not Found."){
+                alert("User does not exist");
+            }else{
+                alert("We have sent you an email to reset password. Please check your email id.");
+            }
+        });
+    };
 
 });
 
@@ -734,20 +795,21 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
             alert("exception in making request");
         })
     }
-    $scope.getAllVendors(1, 5);
+    $scope.getAllVendors(1, 10);
     $scope.setOrder = function (sortingCol, sortingType) {
         $scope.show.currentCursor = 0;
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllVendors(1, 5, null, null);
+        $scope.getAllVendors(1, 10, null, null);
     }
     $scope.getMore = function () {
-        $scope.getAllVendors(1, 5);
+        $scope.getAllVendors(1, 10);
     }
     $scope.getLess = function () {
-        $scope.getAllVendors(0, 5);
+        $scope.getAllVendors(0, 10);
     }
-    $scope.getCountries();
+    $scope.getCountriesNew(false);
+    //$scope.getCountries();
     //$scope.getStates();
 });
 

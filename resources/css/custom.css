@@ -619,7 +619,7 @@ tr {
     padding: 5px 20px;}
 
 .save_close {
-    margin:20px 0;
+    margin-top:10px;
     width:100%;}
 
 .save_close button{
@@ -639,7 +639,7 @@ tr {
 
 .line_count{
     margin-top:10px;
-    width: 100px;
+    width: 110px;
     margin-left: 5px;}
 
 .margin_top {
@@ -825,15 +825,18 @@ tr {
     margin-top:5px;}
 
 .name_input input {
-    width:89%!important;
+    width:97.5%!important;
     height:50px;}
 
 .search_select {
-    width: 82.5%;
+    width: 94.5%;
     padding: 7px;}
 
 .text_area textarea{
-    width: 97.5%;}
+    width: 97.5%!important;}
+
+.text_area input{
+    width: 97.5%!important;}
 
 .city input {
     width:97.7%!important;}
@@ -940,7 +943,6 @@ th {
 .product_image img {
     height: 120px;
     width: 170px;
-    position: absolute;
     margin-top: 10px;
 }
 .thumbnail {
@@ -958,10 +960,11 @@ th {
     padding: 5px 25px;
 }
 .cross_icon {
-    height: 3%!important;
-    width: 2%!important;
+    height: 5%!important;
+    width: 4%!important;
     right: 500px!important;
-}
+    margin-left: 178px!important;
+    margin-top: -255px!important; }
 
 /*This will work for firefox*/
 @-moz-document url-prefix() {
@@ -1014,7 +1017,7 @@ margin-bottom: 9px!important;
     width:650px;
     margin:auto;
     font-size:18px;
-    margin-top:10x;}
+    margin-top:10px;}
 
 .male {
     margin-right:10px;}
@@ -1030,8 +1033,7 @@ margin-bottom: 9px!important;
     width:22%;}
 
 .profile input {
-    width:55%;
-}
+    width:55%}
 
 .forget-password-box {
     background-color: #FFF;
@@ -1077,3 +1079,60 @@ span.sortWrap {
 .forget_content {
     text-align:center;
     margin-bottom:10px;}
+
+.popup-manage {
+    width: 250px;
+    background-color: #F1F1F3;
+    display: inline-block;
+    font-weight: 700;
+    text-align: center;
+    left: 50%;
+    padding: 15px;
+    position: fixed;
+    text-align: justify;
+    top: 40%;
+    z-index: 9999;
+    -webkit-transform: translate(-50%, -50%);}
+
+.h2-popup {
+    margin: -20px -15px 2px;
+    line-height: 40px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+    text-shadow: 0 1px grey;
+    background:#e7c271;
+    border-bottom: 1px solid #cfcfcf;
+    border-radius: 3px 3px 0 0;
+    padding: 5px;
+}
+
+.close {
+    background-color: #fff;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    color: #e7c271;
+    text-align: center;
+    text-decoration: none;
+    top: -15px;
+    width: 30px;
+    right: -8px;
+    -webkit-border-radius: 15px;}
+
+.role-change {
+    text-align: center;
+}
+
+.alert-ok {
+    width: 100px;
+    border: none;
+    background-color:#e7c271;
+    padding: 8px;
+    font-weight: bold;
+}
+
+.other_input {
+    margin-top:10px;}

@@ -264,7 +264,17 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
-            '<span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'firstname\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'firstname\',\'desc\')"></div>	</span></th><th><span>Address</span><span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'address\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'address\',\'desc\')"></div>	</span></th><th><span>City</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'city.name\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'city.name\',\'desc\')"></div>	</span></th><th><span>State</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'state.name\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'state.name\',\'desc\')"></div></span>	</th><th><span>Email</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'email\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'email\',\'desc\')"></div>	</span></th><th><span>Contact No.</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'contact\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'contact\',\'desc\')"></div></span>	</th><th></th>' +
+            '<span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'firstname\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'firstname\',\'desc\')"></div>	</span></th><th><span>Address</span>' +
+            '<span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'address\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'address\',\'desc\')"></div>	</span></th><th><span>City</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'city.name\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'city.name\',\'desc\')"></div>	</span></th><th><span>State</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'state.name\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'state.name\',\'desc\')"></div></span>	</th><th><span>Email</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'email\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'email\',\'desc\')"></div>	</span></th><th><span>Contact No.</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'contact\',\'asc\')"></div><div class="sortDown" ng-click="setOrder(\'contact\',\'desc\')"></div></span>	</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}} {{vendor.lastname}}</td><td>{{vendor.address}}' +
             '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',
@@ -277,7 +287,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllVendors(1, 5, $scope.searchby.value, $scope.searchContent);
+                        $scope.getAllVendors(1, 10, $scope.searchby.value, $scope.searchContent);
                     }
                     $scope.deleteUserArray = [];
                     $scope.deleteUsers = function () {
@@ -321,7 +331,6 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
 
                     }
                     $scope.setUserState = function (vendor) {
-
                         $scope.data["firstname"] = vendor.firstname ? vendor.firstname: "" ;
                         $scope.data["lastname"] = vendor.lastname ? vendor.lastname: "";
                         $scope.data["contact"] = vendor.contact ? vendor.contact: "";
@@ -329,14 +338,28 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         $scope.data["address"] = vendor.address ? vendor.address: "";
                         $scope.data["email"] = vendor.email ? vendor.email: "";
                         $scope.data["address2"] =vendor.address2 ? vendor.address2:"";
-                        $scope.data["vendorCategory"]=vendor.category ? vendor.category :$scope.vendorCategories[0];
+                        //$scope.data["vendorCategory"]=vendor.category ;//? vendor.category :$scope.vendorCategories[0];
+                        if(vendor.category) {
+                            for (var j = 0; j < $scope.data.vendorCategories.length; j++) {
+                                if ($scope.data.vendorCategories[j].name == vendor.category){
+                                    $scope.data.selectedVendorCategory = $scope.data.vendorCategories[j];
+                                    break;
+                                }
+                                else{
+                                    $scope.data.vendorCategories[$scope.data.vendorCategories.length-2]={"name":vendor.category};
+                                    $scope.data.selectedVendorCategory= $scope.data.vendorCategories[$scope.data.vendorCategories.length-2];
+                                    break;
+                                }
+                            }
+                        }
                         if(vendor.country){
-                            for (var i = 0; i < $scope.data.countries.length; i++) {
+                            $scope.getCountriesNew(vendor.country._id);
+                            /*for (var i = 0; i < $scope.data.countries.length; i++) {
                                 if ($scope.data.countries[i]._id == vendor.country._id) {
                                     $scope.data.selectedCountry = $scope.data.countries[i];
                                     break;
                                 }
-                            }
+                            } */
                         }
                         if(vendor.state) {
                             $scope.getStatesNew($scope.data, vendor.state._id);
@@ -427,17 +450,16 @@ cstore.directive('vendorCountrySelect', ['$appService', function ($appService, $
 cstore.directive('vendorCategorySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict:'E',
-        template:'<select class="brand" ng-model="data.vendorCategory" ng-options="vendorCategory.name for vendorCategory in vendorCategories"></select>' +
-            '<input type="text" placeholder="" ng-show = "data.vendorCategory.name== \'Others\'" ng-model="category" class="other_input pull-left" ng-blur="addValue()">',
+        template:'<select class="brand" ng-model="data.selectedVendorCategory" ng-options="vendorCategory.name for vendorCategory in data.vendorCategories"></select>' +
+            '<input type="text" placeholder="" ng-show = "data.selectedVendorCategory.name== \'Others\'" ng-model="otherCategory" class="other_input pull-left" ng-blur="addValue()">',
         compile:function () {
             return{
                 pre:function () {
 
                 }, post:function ($scope) {
                     $scope.addValue = function () {
-                        $scope.vendorCategories[$scope.vendorCategories.length-2]={"name":$scope.category};
-                        $scope.data.vendorCategory= $scope.vendorCategories[$scope.vendorCategories.length-2];
-
+                        $scope.data.vendorCategories[$scope.data.vendorCategories.length-2]={"name":$scope.otherCategory};
+                        $scope.data.selectedVendorCategory= $scope.data.vendorCategories[$scope.data.vendorCategories.length-2];
                     }
                 }
             }
@@ -457,15 +479,21 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
             '</td></tr><tr><td class="text_area"><textarea ng-model="data.address"> </textarea></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address 2</div>' +
             '</td></tr><tr><td class="text_area"><textarea ng-model="data.address2"> </textarea></td></tr></table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Country</div>' +
-            '</td><td><div class="margin_top">State</div></td></tr><tr><td><vendor-country-select></vendor-country-select></td><td>' +
-            '<state-select></state-select></td></tr><tr><td><div class="margin_top">City</div>' +
-            '</td><td><div class="margin_top">Category</div></td></tr><tr><td><city-select></city-select></td><td>' +
-            '<vendor-category-select></vendor-category-select></td></tr><tr><td><div class="margin_top">Postal Code</div></td><td>' +
-            '<div class="margin_top">Contact No.</div></td></tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td><td>' +
-            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
+            '<div class="l_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Country</div>' +
+            '</td></tr><tr><td><vendor-country-select></vendor-country-select></td></tr><tr><td><div class="margin_top">City</div>' +
+            '</td></tr><tr><td><city-select></city-select></td>' +
+            '</tr><tr><td><div class="margin_top">Postal Code</div></td>' +
+            '</tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
+            '</tr></table></div><div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+            '<td><div class="margin_top">State</div></td></tr><tr><td>' +
+            '<state-select></state-select></td></tr><tr>' +
+            '<td><div class="margin_top">Category</div></td></tr><tr><td>' +
+            '<vendor-category-select></vendor-category-select></td></tr><tr><td>' +
+            '<div class="margin_top">Contact No.</div></td></tr><tr><td>' +
+            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
             '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
+
         compile:function () {
             return {
                 pre:function ($scope) {
@@ -473,7 +501,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                     $scope.newVendor = {};
                     $scope.setPathforVender = function (path) {
                         $scope.clearContent();
+                        $scope.removeCategoryValue();
                         window.location.href = "#!/" + path;
+                    }
+                    $scope.removeCategoryValue = function(){
+                        $scope.data.vendorCategories.splice($scope.data.vendorCategories.length-2,1);
                     }
                 },
                 post:function ($scope) {
@@ -507,8 +539,8 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["lastname"] = $scope.data.lastname;
                         $scope.newVendor["address"] = $scope.data.address;
                         $scope.newVendor["address2"] = $scope.data.address2;
-                        console.log($scope.data.vendorCategory.name);
-                        $scope.newVendor["category"] = $scope.data.vendorCategory.name;
+
+                        $scope.newVendor["category"] = $scope.data.selectedVendorCategory.name;
                         if($scope.data.selectedCountry && $scope.data.selectedCountry!=null && $scope.data.selectedCountry!=undefined && $scope.data.selectedCountry!="undefined" && $scope.data.selectedCountry!="null"){
                             $scope.newVendor["country"] = {"_id":$scope.data.selectedCountry._id, "name":$scope.data.selectedCountry.name}
                         }
@@ -526,7 +558,10 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                $scope.clearContent();
+                                if (!$scope.data["userid"]) {
+                                    $scope.clearContent();
+                                }
+                                $scope.removeCategoryValue();
                                 alert("Saved");
                             } else {
                                 alert(callBackData.response);
@@ -1424,7 +1459,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteCountries()"><a href="">Delete</a>' +
             '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
-            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + countries.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
@@ -1551,7 +1586,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             'Save</a></button></div><div class="delete_btn pull-left"><button type="button"  ng-click="deleteProductCategories()"><a href="">Delete</a>' +
             '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
-            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + productCategories.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
@@ -1688,7 +1723,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
         template:'<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveTrainingCategories()"><a href="">' +
             'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingCategories()"><a href="">Delete</a>' +
             '</button></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
-            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + trainingCategories.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
@@ -1816,7 +1851,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStates()"><a href="">Delete</a>' +
             '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
-            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
@@ -1986,7 +2021,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteCities()"><a href="">Delete</a>' +
             '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
-            '<img src=images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + cities.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
@@ -2148,8 +2183,8 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
             '<div class=""><label class="profile_edit">Role:</label>' +
             '<label class="">{{loggedIn.roleid.name}}</label>' +
             '</div>' +
-            '<fieldset><legend class="change_pass"><a ng-click="showPass=true">Change Password</a></legend>' +
-            '<div class="change-password-box" ng-show="showPass">' +
+            '<fieldset><legend class="change_pass"><a> <!--ng-click="showPass=true"--> Change Password</a></legend>' +
+            '<div class="change-password-box"> <!--ng-show="showPass"--->' +
             '<label class="profile_edit">' +
             'Current password</label>' +
             '<input type="password" autocomplete="off" name="OldPasswd" id="OldPasswd" ng-model="oldPassword">' +
@@ -2161,18 +2196,23 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
             '<input type="password" name="PasswdAgain" id="PasswdAgain" ng-model="confirmPassword">' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="savePassword()"> <a href="">Save</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button"><a href="">Close</a></button></div>' +
+            '<div class="delete_btn pull-left"><!-----<button type="button"><a href="">Close</a></button>-----></div>' +
             '</div>' +
             '</div>'+
             '</fieldset>' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveName()"> <a href="">Save</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button"><a href="">Close</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="setPath(\'vendors\')"><a href="">Close</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>',
         compile:function () {
             return {
+                pre:function($scope){
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                },
                 post:function ($scope) {
                     $scope.saveName=function(){
                         var userquery = {};
