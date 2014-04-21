@@ -761,7 +761,9 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         $appService.getDataFromJQuery("/rest/forgotpassword", params, "GET", "JSON",  function (callBackData) {
             callback(callBackData);
         }, function (jqxhr, error) {
-			alert(error);
+			$("#popupMessage").html(error);
+			$('.popup').toggle("slide");
+			return;
         });
     };
 
