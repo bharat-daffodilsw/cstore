@@ -481,7 +481,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location,$routePar
             $scope.loadingPopularProductData = false;
             $scope.popularProducts = $appService.setUrls(productData.response.data,291,196);
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
 
@@ -550,7 +551,8 @@ cstore.controller('allCategory', function ($scope, $appService,$routeParams) {
             $scope.products = rawData;
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getProductList($routeParams.search);
@@ -591,7 +593,8 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService,$ro
             }
         }
         else {
-            alert("Not Valid");
+            $("#popupMessage").html("Not Valid");
+			$('.popup').toggle("slide");
             return false;
         }
         query.maxrow = 8;
@@ -823,7 +826,8 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllVendors(1, 10);
@@ -904,7 +908,8 @@ cstore.controller('productList', function ($scope, $appService) {
                 $scope.products[i]["deleteStatus"] = false;
             }
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllProducts(1, 10);
@@ -1000,7 +1005,8 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
                 $scope.storeManagers[i]["deleteStatus"] = false;
             }
         }, function (jqxhr, error) {
-            alert("error while making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         });
     }
     $scope.getAllStoreManagers(1, 10);
@@ -1106,7 +1112,8 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllCountries(1, 10);
@@ -1188,7 +1195,8 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllProductCategories(1, 10);
@@ -1255,7 +1263,8 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllTrainingCategories(1, 10);
@@ -1333,7 +1342,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllStates(1, 10);
@@ -1415,7 +1425,8 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html(error);
+			$('.popup').toggle("slide");
         })
     }
     $scope.getAllCities(1, 10);
