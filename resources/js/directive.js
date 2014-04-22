@@ -581,13 +581,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+						// changes made
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                if (!$scope.data["userid"]) {
-                                    $scope.clearContent();
-                                }
-                                $scope.removeCategoryValue();
                                 $("#popupMessage").html("Saved successfully");
 								$('.popup').toggle("slide");
+								$scope.setPathforVender('vendors');
                             } else {
                                 $("#popupMessage").html(callBackData.response);
 								$('.popup').toggle("slide");
@@ -837,9 +835,11 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.saveFunction = function (query) {
                         //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+						// changes made
                             if (callBackData.code = 200 && callBackData.status == "ok") {
                                $("#popupMessage").html("Saved successfully");
-							$('.popup').toggle("slide");
+								$('.popup').toggle("slide");
+								$scope.setPathforProduct("pops");
                             } else {
                                $("#popupMessage").html(callBackData.response);
 								$('.popup').toggle("slide");
