@@ -1191,9 +1191,9 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
         $scope.storedata.selectedCountry = "";
         $scope.storedata.selectedCity = "";
         $scope.storedata.selectedState = "";
-//        $scope.storedata.selectedPosType=$scope.storedata.posTypes[0];
-//        $scope.storedata.selectedShift=$scope.storedata.shifts[0];
- //       $scope.storedata.selectedRewardType =$scope.storedata.rewardTypes[0];
+        $scope.storedata.selectedPosType=$scope.storedata.posTypes[0];
+        $scope.storedata.selectedShift=$scope.storedata.shifts[0];
+        $scope.storedata.selectedRewardType =$scope.storedata.rewardTypes[0];
 
 
     }
