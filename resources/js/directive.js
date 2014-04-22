@@ -976,6 +976,8 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     console.log(JSON.stringify($scope.brands[i]));
                                     console.log(JSON.stringify(store.brands[j]));
                                     if (angular.equals($scope.brands[i].name, store.brands[j])) {
+										if(!$scope.storedata.brands)
+											$scope.storedata.brands = [];
                                         $scope.storedata.brands.push($scope.brands[i]);
                                     }
                                 }
