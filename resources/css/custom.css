@@ -357,7 +357,7 @@ a:hover {
     font-size:17px;
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    min-height:500px; }
+    min-height:450px; }
 
 .login_page .rbar h2 {
     margin-top:14px;
@@ -368,7 +368,7 @@ a:hover {
     width:40%;
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    min-height:500px;
+    min-height:450px;
     position:relative; }
 
 .user_login {
@@ -595,7 +595,8 @@ tr {
 
 .add_delete {
     margin-top:10px;
-   }
+    width:98%;}
+
 .table_1 {
     padding: 10px 20%;}
 
@@ -1016,7 +1017,7 @@ margin-bottom: 9px!important;
     width:650px;
     margin:auto;
     font-size:18px;
-    margin-top:10px;}
+    margin-top:25px;}
 
 .male {
     margin-right:10px;}
@@ -1080,21 +1081,27 @@ span.sortWrap {
     margin-bottom:10px;}
 
 .popup-manage {
-    width: 250px;
     background-color: #F1F1F3;
     display: inline-block;
     font-weight: 700;
-    text-align: center;
+    max-width: 400px;
     left: 50%;
-    padding: 15px;
+    word-wrap: break-word;
+    top: 50%;
     position: fixed;
     text-align: justify;
-    top: 40%;
     z-index: 9999;
-    -webkit-transform: translate(-50%, -50%);}
+    -webkit-transform: translate(-50%, -50%);
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;}
+
+.popup-manage form {
+    padding:10px;}
 
 .h2-popup {
-    margin: -20px -15px 2px;
+    margin: 0;
     line-height: 40px;
     margin-bottom: 15px;
     font-size: 18px;
@@ -1107,6 +1114,11 @@ span.sortWrap {
     border-radius: 3px 3px 0 0;
     padding: 5px;
 }
+
+.alert-p {
+    max-height: 400px;
+    overflow-y: auto;}
+
 
 .close {
     background-color: #fff;
@@ -1123,6 +1135,7 @@ span.sortWrap {
 
 .role-change {
     text-align: center;
+    margin-top: 10px;
 }
 
 .alert-ok {
@@ -1135,10 +1148,10 @@ span.sortWrap {
 
 .other_input {
     margin-top:10px;}
-input[type="submit"] {
-    background-color: #e7c271;  font-size: 16px;  outline: 0px;  padding: 5px 25px;
-    width: 100%;
-}
-input[type="submit"]:hover {
-    text-decoration: underline;
-}
+
+.multiple_select {
+    width: 95%;
+    height:98px!important; }
+
+p {
+    margin: 0!important; }
