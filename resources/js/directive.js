@@ -367,38 +367,20 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     break;
                                 }
                                 else {
-                                    $scope.data.vendorCategories[$scope.data.vendorCategories.length - 2] = {"name": vendor.category};
-                                    $scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length - 2];
+                                    $scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length-1];
+                                    $scope.data.otherCategory = vendor.category;
+                                    console.log(JSON.stringify(vendor.category));
+                                    if (!$scope.$$phase) {
+                                        $scope.$apply();
+                                    }
                                     break;
                                 }
+
                             }
                         }
-                        if (vendor.country) {
-                            $scope.getCountriesNew(vendor.country._id);
-                            /*for (var i = 0; i < $scope.data.countries.length; i++) {
-                             if ($scope.data.countries[i]._id == vendor.country._id) {
-                             $scope.data.selectedCountry = $scope.data.countries[i];
-                             break;
-                             }
-                             } */
+                        if (vendor.country) {						
+                            $scope.getEditCountries(vendor.country._id,vendor.state._id,vendor.city._id);
                         }
-                        if (vendor.state) {
-                            $scope.getStatesNew($scope.data, vendor.state._id);
-                        }
-                        if (vendor.city) {
-                            $scope.getCitiesNew($scope.data, vendor.city._id);
-                        }
-                        /*if(vendor.state){
-                         for (var i = 0; i < $scope.data.states.length; i++) {
-                         if ($scope.data.states[i]._id == vendor.state._id) {
-                         $scope.data.selectedState = $scope.data.states[i];
-                         break;
-                         }
-                         }
-                         }
-                         if(vendor.city){
-                         $scope.getCities($scope.data.selectedState._id, vendor.city._id);
-                         }*/
                         window.location.href = "#!edit-vendor?q=" + vendor._id;
                     }
                 }
@@ -453,9 +435,9 @@ cstore.directive('stateSelect', ['$appService', function ($appService, $scope) {
 }]);
 
 cstore.directive('vendorCountrySelect', ['$appService', function ($appService, $scope) {
-    return {
+    return {// changes made
         restrict: 'E',
-        template: '<select class="brand"  ng-change="getStatesNew(data,null)" ng-model="data.selectedCountry" ng-options="country.name for country in data.countries"></select>',
+        template: '<select class="brand"  ng-change="getEditStates(data,false,false)" ng-model="data.selectedCountry" ng-options="country.name for country in data.countries"></select>',
         compile: function () {
             return{
                 pre: function () {
@@ -469,24 +451,17 @@ cstore.directive('vendorCountrySelect', ['$appService', function ($appService, $
 }]);
 
 cstore.directive('vendorCategorySelect', ['$appService', function ($appService, $scope) {
-    return {
+    return { // changes made
         restrict: 'E',
         template: '<select class="brand" ng-model="data.selectedVendorCategory" ng-options="vendorCategory.name for vendorCategory in data.vendorCategories"></select>' +
-            '<input type="text" placeholder="" ng-show = "data.selectedVendorCategory.name== \'Others\'" ng-model="otherCategory" class="other_input pull-left" ng-blur="addValue()">',
+            '<input type="text" placeholder="" ng-show = "data.selectedVendorCategory.name== \'Others\'" ng-model="data.otherCategory" class="other_input pull-left" >',
         compile: function () {
             return{
-                pre: function () {
-
-                }, post: function ($scope) {
-                    $scope.addValue = function () {
-                        $scope.data.vendorCategories[$scope.data.vendorCategories.length - 2] = {"name": $scope.otherCategory};
-                        $scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length - 2];
-                    }
-                }
             }
         }
     }
 }]);
+
 
 cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
@@ -564,7 +539,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["address"] = $scope.data.address;
                         $scope.newVendor["address2"] = $scope.data.address2;
 
-                        $scope.newVendor["category"] = $scope.data.selectedVendorCategory.name;
+                        $scope.newVendor["category"] = ($scope.data.selectedVendorCategory.name == "Others") ? $scope.data.otherCategory :$scope.data.selectedVendorCategory.name ;
                         if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
                             $scope.newVendor["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
                         }
@@ -813,7 +788,10 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                         $scope.saveFunction(query);
                                     }
                                     else {
-                                        alert("some error while uploading image please try again ");
+                                        
+										$("#popupMessage").html("some error while uploading image please try again");
+										$('.popup').toggle("slide");
+                                
                                     }
                                 }, function (callbackerror) {
                                     $("#popupMessage").html(callbackerror);
@@ -1018,6 +996,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["storename"] = store.storename ? store.storename : "";
                         //$scope.storedata["username"] = store.username ? store.username : "";
                         $scope.showFile(store.company_logo, false);
+						$scope.storedata["manager"] = {};
                         if (store.manager) {
                             $scope.storedata["manager"]["contact"] = store.manager.contact ? store.manager.contact : "";
                             $scope.storedata["manager"]["email"] = store.manager.email ? store.manager.email : "";
@@ -1030,7 +1009,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             $scope.storedata["manager"]["name"] = "";
 
                         }
-                        if (store.pos_type) {
+                        if (store.pos_type && $scope.storedata.posTypes) {
                             for (var j = 0; j < $scope.storedata.posTypes.length; j++) {
                                 if ($scope.storedata.posTypes[j].name == store.pos_type) {
                                     $scope.storedata.selectedPosType = $scope.storedata.posTypes[j];
@@ -1043,7 +1022,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                         }
-                        if (store.reward_point) {
+                        if (store.reward_point && $scope.storedata.rewardTypes) {
                             for (var j = 0; j < $scope.storedata.rewardTypes.length; j++) {
                                 if ($scope.storedata.rewardTypes[j].name == store.reward_point) {
                                     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[j];
@@ -1056,7 +1035,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                         }
-                        if (store.shift) {
+                        if (store.shift && $scope.storedata.shifts) {
                             for (var j = 0; j < $scope.storedata.shifts.length; j++) {
                                 if ($scope.storedata.shifts[j].name == store.shift) {
                                     $scope.storedata.selectedShift = $scope.storedata.shifts[j];
@@ -1064,20 +1043,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                         }
-                        /*if(store.countryid){
-                         for (var i = 0; i < $scope.storedata.countries.length; i++) {
-                         if ($scope.storedata.countries[i]._id == store.countryid._id) {
-                         $scope.storedata.selectedCountry = $scope.storedata.countries[i];
-                         break;
-                         }
-                         }
-                         }
-                         if(store.stateid) {
-                         $scope.getStatesNew($scope.storedata, store.stateid._id);
-                         }
-                         if(store.cityid) {
-                         $scope.getCitiesNew($scope.storedata, store.cityid._id);
-                         } */
+                     $scope.getEditCountries(store.countryid._id,store.stateid._id,store.cityid._id);
                         window.location.href = "#!edit-site-info?q=" + store._id;
                     }
                 }
@@ -1412,13 +1378,11 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     }
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
-                                if (!$scope.storedata["storeid"]) {
-                                    $scope.clearStoreContent();
-                                }
-                                $scope.removeStoreValue();
-                                alert("Store Manager Saved");
-                                window.location.href = "#!/site-info";
+                            if (callBackData.code = 200 && callBackData.status == "ok") {                                
+                                
+                                $("#popupMessage").html("Site Info Saved");
+                                $('.popup').toggle("slide");
+                                $scope.setPathforStore("site-info");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -2361,21 +2325,25 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                     $scope.saveUser = function () {
                         $scope.newUser = {};
                         if ($scope.userdata.firstname == "" || $scope.userdata.firstname == undefined) {
-                            alert("please enter firstname");
+                            $("#popupMessage").html("Please enter your firstname");
+							$('.popup').toggle("slide");
                             return false;
                         }
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                         var email = $scope.userdata.username;
-                        if (regEmail.test(email) == false) {
-                            alert("please enter a valid email");
+                        if (regEmail.test(email) == false) {                            
+							$("#popupMessage").html("please enter a valid email");
+							$('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.userdata.selectedRole) {
-                            alert("please select role first ");
+                        if (!$scope.userdata.selectedRole) {                            
+							$("#popupMessage").html("please select role first");
+							$('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.userdata.password) {
-                            alert("please enter password ");
+                        if (!$scope.userdata.password) {                            
+							$("#popupMessage").html("please enter password");
+							$('.popup').toggle("slide");
                             return false;
                         }
 

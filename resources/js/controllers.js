@@ -188,23 +188,16 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
                         break;
                     }
                 }
-                if(stateid) {
-                    $scope.getEditStates($scope.data,stateid,cityid);
-                }
-                else {
-                    $scope.getEditStates($scope.data,false,false);
+            }
+            else {
+                for (var i = 0; i < $scope.data.countries.length; i++) {
+                    if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
+                        $scope.data.selectedCountry = $scope.data.countries[i];
+                        break;
+                    }
                 }
             }
-            //else {
-            //    for (var i = 0; i < $scope.data.countries.length; i++) {
-            //        if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
-            //            $scope.data.selectedCountry = $scope.data.countries[i];
-            //            break;
-            //        }
-            //    }
-            //    if()
-            //}
-
+            $scope.getEditStates($scope.data,stateid,cityid);
             //if($scope.data.countries.length && !countryid){
             //    $scope.getStatesNew($scope.data,false);
             //}
@@ -234,17 +227,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
                             break;
                         }
                     }
-                    if(cityid) {
-                        $scope.getEditCities(countryid,cityid);
-                    }
-                    else {
-                        $scope.getCities1(countryid,false);
-                    }
                 }
-                //else {
-                //    countryid.selectedState = countryid.states[0];
-
-                //}
+                else {
+                    countryid.selectedState = countryid.states[0];
+                }
+                $scope.getEditCities(countryid,cityid);
                 //if(countryid.states.length && !stateid){
                 //    $scope.getCitiesNew(countryid, false);
                 //}
@@ -287,6 +274,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
             stateid.cities =[];
         }
     }
+
     /*************************************************/
     $scope.getCountries = function () {
         var countries = {};
