@@ -329,22 +329,25 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                             $scope.vendors.splice(i, 1);
                                         }
                                     }
-
-                                    alert("Deleted");
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
                                     console.log(callBackData);
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("please select at least one vendor before delete");
+                            $("#popupMessage").html("please select at least one vendor before delete");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -531,18 +534,21 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                     $scope.saveVendor = function () {
                         $scope.newVendor = {};
                         if ($scope.data.firstname == "" || $scope.data.firstname == undefined) {
-                            alert("please enter firstname");
+                            $("#popupMessage").html("Please enter firstname");
+                            $('.popup').toggle("slide");
                             return false;
                         }
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                         var email = $scope.data.email;
                         if (regEmail.test(email) == false) {
-                            alert("please enter a valid email");
+                            $("#popupMessage").html("Please enter a valid email id");
+                            $('.popup').toggle("slide");
                             return false;
                         }
                         $scope.newVendor.email = email;
                         if (!$scope.data.selectedState) {
-                            alert("please select state first ");
+                            $("#popupMessage").html("Please select state first");
+                            $('.popup').toggle("slide");
                             return false;
                         }
 
@@ -576,19 +582,19 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                if (!$scope.data["userid"]) {
-                                    $scope.clearContent();
-                                }
-                                $scope.removeCategoryValue();
-                                alert("Saved");
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                                $scope.setPathforVender('vendors');
                             } else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            alert(err);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
                     }
                 }
@@ -664,17 +670,19 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                         $scope.products.splice(i, 1);
                                     }
                                 }
-
-                                alert("Deleted");
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
                             }
                             else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            alert(err);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
 
                     }
@@ -756,19 +764,21 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             if ($scope.productdata.name == "" || $scope.productdata.name == undefined) {
-                                alert("please enter product name");
+                                $("#popupMessage").html("Please enter product name");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             if ($scope.productdata.cost.amount == "" || $scope.productdata.cost.amount == undefined) {
-                                alert("please enter cost");
+                                $("#popupMessage").html("Please enter cost");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             //if (document.getElementById('uploadfile').files.length === 0) {
-                            //    alert("please select image first");
                             //   return false;
                             //}
                             if (!$scope.productdata.selectedProductCategory) {
-                                alert("please select product category");
+                                $("#popupMessage").html("Please select product category");
+                                $('.popup').toggle("slide");
                                 //return false;
                             }
                             var query = {};
@@ -806,21 +816,26 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                         alert("some error while uploading image please try again ");
                                     }
                                 }, function (callbackerror) {
-                                    alert(callbackerror);
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
                                 });
                             }
                         }
                         else {
-                            alert("please login first");
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
                         }
                     };
                     $scope.saveFunction = function (query) {
                         //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Saved");
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                                $scope.setPathforProduct("pops");
                             } else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -948,17 +963,19 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                         $scope.storeManagers.splice(i, 1);
                                     }
                                 }
-
-                                alert("Deleted");
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
                             }
                             else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            alert(err);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
 
                     }
@@ -1245,45 +1262,82 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore = {};
                             $scope.newStore["manager"] = {};
                             if ($scope.storedata.storename == "" || $scope.storedata.storename == undefined) {
-                                alert("please enter storename");
+                                $("#popupMessage").html("Please enter storename");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                             var email = $scope.storedata.email;
                             if (regEmail.test(email) == false) {
-                                alert("please enter a valid email");
+                                $("#popupMessage").html("Please enter a valid email id");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             $scope.newStore.email = email;
                             var managerEmail = $scope.storedata.manager.email;
                             if (regEmail.test(managerEmail) == false) {
-                                alert("please enter a valid manager email");
+                                $("#popupMessage").html("Please enter a valid manager email id");
+                                $('.popup').toggle("slide");
                                 return false;
+                            }
+                            if (!$scope.storedata["storeid"]) {
+                                var username = $scope.storedata.username;
+                                if (regEmail.test(username) == false) {
+                                    $("#popupMessage").html("Please enter a valid username");
+                                    $('.popup').toggle("slide");
+                                    return false;
+                                }
                             }
                             if (!$scope.storedata.selectedCountry) {
-                              alert("please select country first ");
-                             return false;
-                             }
+                                $("#popupMessage").html("Please select country first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
 
                             if (!$scope.storedata.selectedState) {
-                                alert("please select state first ");
+                                $("#popupMessage").html("Please select state first");
+                                $('.popup').toggle("slide");
                                 return false;
-                             }
+                            }
 
                             if (!$scope.storedata.selectedCity) {
-                               alert("please select city first ");
-                              return false;
-                            }
-                            if (!$scope.storedata.brands) {
-                                alert("please select brand first ");
+                                $("#popupMessage").html("Please select city first");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.selectedPosType) {
-                                alert("please select pos type first ");
+                            if (!$scope.storedata.manager.selectedCountry) {
+                                $("#popupMessage").html("Please select country first");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.selectedRewardType) {
-                                alert("please select reward type first");
+                            if (!$scope.storedata.brand) {
+                                $("#popupMessage").html("Please select brand first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.pos_version) {
+                                $("#popupMessage").html("Please select pos version first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.reward_point) {
+                                $("#popupMessage").html("Please select reward point first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.manager.selectedState) {
+                                $("#popupMessage").html("Please select state first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if ($scope.storedata.password == "" || $scope.storedata.password == undefined) {
+                                $("#popupMessage").html("Please enter password");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.manager.selectedCity) {
+                                $("#popupMessage").html("Please select city first");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             if ($scope.storedata["storeid"]) {
@@ -1300,14 +1354,14 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["brands"] = [selectedBrands];
                             $scope.newStore["contact"] = $scope.storedata.contact;
                             $scope.newStore["email"] = $scope.storedata.email;
-                            if($scope.storedata.selectedCountry && $scope.storedata.selectedCountry!=null && $scope.storedata.selectedCountry!=undefined && $scope.storedata.selectedCountry!="undefined" && $scope.storedata.selectedCountry!="null"){
-                                $scope.newStore["countryid"] = {"_id":$scope.storedata.selectedCountry._id, "name":$scope.storedata.selectedCountry.name};
+                            if ($scope.storedata.selectedCountry && $scope.storedata.selectedCountry != null && $scope.storedata.selectedCountry != undefined && $scope.storedata.selectedCountry != "undefined" && $scope.storedata.selectedCountry != "null") {
+                                $scope.newStore["countryid"] = {"_id": $scope.storedata.selectedCountry._id, "name": $scope.storedata.selectedCountry.name};
                             }
-                            if($scope.storedata.selectedState && $scope.storedata.selectedState!=null && $scope.storedata.selectedState!=undefined && $scope.storedata.selectedState!="undefined" && $scope.storedata.selectedState!="null"){
-                                $scope.newStore["stateid"] = {"_id":$scope.storedata.selectedState._id, "name":$scope.storedata.selectedState.name};
+                            if ($scope.storedata.selectedState && $scope.storedata.selectedState != null && $scope.storedata.selectedState != undefined && $scope.storedata.selectedState != "undefined" && $scope.storedata.selectedState != "null") {
+                                $scope.newStore["stateid"] = {"_id": $scope.storedata.selectedState._id, "name": $scope.storedata.selectedState.name};
                             }
-                            if($scope.storedata.selectedState && $scope.storedata.selectedState!=null && $scope.storedata.selectedState!=undefined && $scope.storedata.selectedState!="undefined" && $scope.storedata.selectedState!="null"){
-                                $scope.newStore["cityid"] = {"_id":$scope.storedata.selectedCity._id, "name":$scope.storedata.selectedCity.name};
+                            if ($scope.storedata.selectedState && $scope.storedata.selectedState != null && $scope.storedata.selectedState != undefined && $scope.storedata.selectedState != "undefined" && $scope.storedata.selectedState != "null") {
+                                $scope.newStore["cityid"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
                             }
                             $scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
                             $scope.newStore["pump_brand"] = $scope.storedata.pump_brand;
@@ -1341,15 +1395,18 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                         $scope.saveFunction(query);
                                     }
                                     else {
-                                        alert("some error while uploading image please try again ");
+                                        $("#popupMessage").html("Some error while uploading image please try again");
+                                        $('.popup').toggle("slide");
                                     }
                                 }, function (callbackerror) {
-                                    alert(callbackerror);
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
                                 });
                             }
                         }
                         else {
-                            alert("Please Login First");
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -1361,15 +1418,17 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 }
                                 $scope.removeStoreValue();
                                 alert("Store Manager Saved");
-                                window.location.href = "#!/site-info"
+                                window.location.href = "#!/site-info";
                             } else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            alert(err);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
                     }
                     $scope.saveUser = function (storeid) {
@@ -1386,16 +1445,19 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 if (!$scope.storedata["storeid"]) {
                                     $scope.clearStoreContent();
                                 }
-                                alert("Store Manager Saved");
-                                window.location.href = "#!/site-info"
+                                $("#popupMessage").html("Store manager saved");
+                                $('.popup').toggle("slide");
+                                window.location.href = "#!/store-managers"
                             } else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            alert(err);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
                     }
                 }
@@ -1466,20 +1528,24 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                         }
                                     }
 
-                                    alert("Deleted");
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
-                                    alert(callBackData.response);
+                                    a$("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("please select at least one country before delete");
+                            $("#popupMessage").html("Please select at least one country before delete");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -1500,7 +1566,8 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                         });
                         for (var i = 0; i < countryList.length; i++) {
                             if (!countryList[i].name) {
-                                alert("Please enter country name");
+                                $("#popupMessage").html("Please enter country name");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                         }
@@ -1510,23 +1577,27 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                             query.operations = countryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
                                 if (callBackData.code = 200 && callBackData.status == "ok") {
-                                    alert("Saved");
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         $scope.countries[i]["editStatus"] = false;
                                     }
 
                                 } else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("No Data Found For Saving");
+                            $("#popupMessage").html("No Data Found For Saving");
+                            $('.popup').toggle("slide");
                         }
                     }
                 }
@@ -1605,20 +1676,24 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                         }
                                     }
 
-                                    alert("Deleted");
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("please select at least one product category before delete");
+                            $("#popupMessage").html("Please select at least one product category before delete");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -1638,11 +1713,13 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                         });
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
-                                alert("Please enter product category name");
+                                $("#popupMessage").html("Please enter product category name");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             if (!productCategoryList[i].description) {
-                                alert("Please enter product category description");
+                                $("#popupMessage").html("Please enter product description");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                         }
@@ -1652,18 +1729,21 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                             query.operations = productCategoryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
                                 if (callBackData.code = 200 && callBackData.status == "ok") {
-                                    alert("Saved");
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         $scope.productCategories[i]["editStatus"] = false;
                                     }
                                 } else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                     }
@@ -1729,20 +1809,24 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                         }
                                     }
 
-                                    alert("Deleted");
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("please select at least one training category before delete");
+                            $("#popupMessage").html("Please select at least one training category before delete");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -1764,18 +1848,21 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                         $scope.addtrainingCategoryArray = [];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code = 200 && callBackData.status == "ok") {
-                                alert("Saved");
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
                                 for (var i = 0; i < $scope.trainingCategories.length; i++) {
                                     $scope.trainingCategories[i]["editStatus"] = false;
                                 }
                             } else {
-                                alert(callBackData.response);
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            alert(err);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
                     }
                 }
@@ -1862,20 +1949,24 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                         }
                                     }
 
-                                    alert("Deleted");
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("please select at least one state before delete");
+                            $("#popupMessage").html("Please select at least one state before delete");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -1895,15 +1986,18 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                         });
                         for (var i = 0; i < stateList.length; i++) {
                             if (!stateList[i].name) {
-                                alert("Please enter state name");
+                                $("#popupMessage").html("Please enter state name");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             if (!stateList[i].countryid) {
-                                alert("Please select country");
+                                $("#popupMessage").html("Please select country");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             if (!stateList[i].abbreviation) {
-                                alert("Please enter abbreviation");
+                                $("#popupMessage").html("Please enter abbreviation");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                         }
@@ -1916,18 +2010,21 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
                                 if (callBackData.code = 200 && callBackData.status == "ok") {
-                                    alert("Saved");
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.states.length; i++) {
                                         $scope.states[i]["editStatus"] = false;
                                     }
                                 } else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                     }
@@ -2031,20 +2128,24 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                         }
                                     }
 
-                                    alert("Deleted");
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("please select at least one city before delete");
+                            $("#popupMessage").html("Please select at least one city before delete");
+                            $('.popup').toggle("slide");
                         }
 
                     }
@@ -2064,11 +2165,13 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         });
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
-                                alert("Please enter city name");
+                                $("#popupMessage").html("Please enter city name");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                             if (!cityList[i].stateid) {
-                                alert("Please select state");
+                                $("#popupMessage").html("Please select state");
+                                $('.popup').toggle("slide");
                                 return false;
                             }
                         }
@@ -2081,22 +2184,26 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
                                 if (callBackData.code = 200 && callBackData.status == "ok") {
-                                    alert("Saved");
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         $scope.cities[i]["editStatus"] = false;
                                     }
                                 } else {
-                                    alert(callBackData.response);
+                                    $("#popupMessage").html(callBackData.response);
+                                    $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                alert(err);
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            alert("No Data found for saving")
+                            $("#popupMessage").html("No data found for saving");
+                            $('.popup').toggle("slide");
                         }
                     }
                     $scope.setCity = function (city) {
@@ -2273,11 +2380,11 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         }
 
                         $scope.newUser["userid"] = {"emailid": $scope.userdata.username, "firstname": $scope.userdata.firstname, "lastname": $scope.userdata.lastname, "password": $scope.userdata.password, "username": $scope.userdata.username};
-                        if($scope.userdata.selectedRole){
+                        if ($scope.userdata.selectedRole) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
                         }
                         $scope.newUser["username"] = $scope.userdata.username;
-                        if($scope.userdata.selectedStore){
+                        if ($scope.userdata.selectedStore) {
                             $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
                         }
                         var query = {};
@@ -2288,7 +2395,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html("User Saved");
                                 $('.popup').toggle("slide");
                                 $scope.clearUserContent();
-                                window.location.href = "#!/manage-users" ;
+                                window.location.href = "#!/manage-users";
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -2404,16 +2511,22 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
                                             $scope.oldPassword = "";
                                             $scope.newPassword = "";
                                             $scope.confirmPassword = "";
+                                            $("#popupMessage").html("Saved successfully");
+                                            $('.popup').toggle("slide");
                                             $scope.setPath('vendors');
                                         } else {
-                                            alert(data.response);
+                                            $("#popupMessage").html(data.response);
+                                            $('.popup').toggle("slide");
                                         }
                                     });
                                 } else {
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
                                     $scope.setPath('vendors');
                                 }
                             } else {
-                                alert(data.response);
+                                $("#popupMessage").html(data.response);
+                                $('.popup').toggle("slide");
                             }
                         });
                     }
@@ -2464,6 +2577,8 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
                         }
                         $scope.resetPassword(password, fpcode, function (data) {
                             if (data.response == "Reset Password Successfully..") {
+                                $("#popupMessage").html(data.response);
+                                $('.popup').toggle("slide");
                                 window.location.href = "/#!/login";
                                 return;
                             } else {
@@ -2478,3 +2593,4 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
         }
     }
 }]);
+
