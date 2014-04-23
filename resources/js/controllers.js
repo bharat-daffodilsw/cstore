@@ -1664,8 +1664,9 @@ cstore.controller('resetpasswordCtrl', function ($scope, $appService, $location,
 cstore.controller('userCtrl', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingUserData = false;
+	// changes made
     $scope.venderSearch = [
-        {"value":"username", "name":"UserName"},
+        {"value":"username", "name":"Email"},
         {"value":"userid.firstname", "name":"Firstname"},
         {"value":"storeid.storename", "name":"Store Name"},
         {"value":"roleid.name", "name":"Role"}
