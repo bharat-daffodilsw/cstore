@@ -1281,12 +1281,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $("#popupMessage").html("Please enter reward type");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }     
-							if(!$scope.oFile.length){
-								$("#popupMessage").html("Please upload file");
-                                $('.popup').toggle("slide");
-                                return false;
-							}
+                            } 
                             var query = {};
                             query.table = "storemanagers__cstore";
                             $scope.newStore.email = email;
