@@ -379,8 +379,8 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (vendor.country) {	
-							vendor.state._id = (vendor.state) ? vendor.state._id : false;
-							vendor.city._id = (vendor.city) ? vendor.city._id : false;
+							vendor.state = (vendor.state) ? {"_id":vendor.state._id} : {"_id":false};
+							vendor.city = (vendor.city) ? {"_id":vendor.city._id} : {"_id":false};
                             $scope.getEditCountries(vendor.country._id,vendor.state._id,vendor.city._id);
                         }
                         window.location.href = "#!edit-vendor?q=" + vendor._id;
