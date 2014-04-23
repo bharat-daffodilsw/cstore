@@ -341,7 +341,7 @@ a:hover {
     font-size:17px;
     border-top: 1px dotted #DDD;
     border-bottom: 1px dotted #DDD;
-    padding:10px 5px;}
+    padding:10px 10px;}
 
 .add_btn a {
     font-size:16px;
@@ -977,12 +977,6 @@ margin-top: 9px!important;
 margin-bottom: 9px!important;
 }
 
-.profile {
-    font-size: 18px;
-    margin: 51px auto auto;
-    width: 650px;
-}
-
 }
 
 
@@ -1009,7 +1003,8 @@ margin-bottom: 9px!important;
 
 
 .add_to_btn {
-    margin-top:10px;}
+    margin-top:10px;
+    padding-left:10px;}
 
 .user {
     max-height:25px;
@@ -1018,7 +1013,8 @@ margin-bottom: 9px!important;
 
 .quantity_border {
     border-top:1px dotted #DDD;
-    padding-top:5px;}
+    padding-top:5px;
+    padding-left: 10px;}
 
 .profile {
     width:650px;
@@ -1034,7 +1030,8 @@ margin-bottom: 9px!important;
     margin-bottom: 15px;}
 
 .profile_edit {
-    width:210px;}
+    width:210px;
+    margin-top:15px;}
 
 .set_male {
     width:22%;}
@@ -1087,22 +1084,24 @@ span.sortWrap {
 	text-align:center;
 	margin-bottom:10px;}
 	
-	.popup-manage {
-	background-color: #F1F1F3;
-	display: inline-block;
-	font-weight: 700;
-	max-width: 400px;
-	left: 50%;
-	word-wrap: break-word;
-	top: 50%;
-	position: fixed;
-	text-align: justify;
-	z-index: 9999;
-	-webkit-transform: translate(-50%, -50%);
-	border-bottom: 1px solid #CCC;
-	border-top: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	border-left: 1px solid #CCC;}
+.popup-manage {
+    background-color: #F1F1F3;
+    display: inline-block;
+    font-weight: 700;
+    max-width: 400px;
+    left: 50%;
+    word-wrap: break-word;
+    top: 50%;
+    position: fixed;
+    text-align: justify;
+    z-index: 9999;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;}
 
 .popup-manage form {
 	padding:10px;}

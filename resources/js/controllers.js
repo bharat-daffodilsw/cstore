@@ -116,8 +116,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
     if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
-        window.location.href = "#!/login";
-        return false;
+        var hash = window.location.hash;
+        console.log(hash);
+        console.log(hash.indexOf("resetpassword"));
+        if (hash.indexOf("resetpassword") == -1) {
+            window.location.href = "#!/login";
+            return false;
+        }
     }
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
@@ -784,7 +789,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 			return;
         }
         if (username == "" || username == undefined) {
-			$("#popupMessage").html("Please enter vaild user name");
+			$("#popupMessage").html("Please enter vaild email");
 			$('.popup').toggle("slide");
 			return;
         }
@@ -874,7 +879,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 	 $scope.userForgotPassword = function () {
        var userName = $("#username").val();
 		if(!userName){
-			$("#popupMessage").html("Please enter username");
+			$("#popupMessage").html("Please enter email");
 			$('.popup').toggle("slide");
 			return;
 		}
