@@ -1187,7 +1187,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button></div></div></td></tr></table>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',	,
+            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',	
         compile: function () {
             return {
                 pre: function ($scope) {

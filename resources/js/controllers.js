@@ -115,15 +115,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.userdata={"roles":[],"selectedRole":"","stores":[],"selectedStore":""};
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
-    /*if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
-        var hash = window.location.hash;
-        console.log(hash);
-        console.log(hash.indexOf("resetpassword"));
-        if (hash.indexOf("resetpassword") == -1) {
-            window.location.href = "#!/login";
-            return false;
-        }
-    } */
+	var hash = window.location.hash;
+    if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null" || hash.indexOf("resetpassword") == -1) {
+		window.location.href = "#!/login";
+		return false;
+	}
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
