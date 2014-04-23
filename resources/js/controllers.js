@@ -115,7 +115,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.userdata={"roles":[],"selectedRole":"","stores":[],"selectedStore":""};
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
-    if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
+    /*if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
         var hash = window.location.hash;
         console.log(hash);
         console.log(hash.indexOf("resetpassword"));
@@ -123,7 +123,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
             window.location.href = "#!/login";
             return false;
         }
-    }
+    } */
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
