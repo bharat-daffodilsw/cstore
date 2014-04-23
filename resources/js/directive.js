@@ -786,7 +786,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$('#uploadfile').files || $('#uploadfile').files.length === 0) {
+                            if (!$('#uploadfile').val()) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
