@@ -114,13 +114,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
     $scope.userdata={"roles":[],"selectedRole":"","stores":[],"selectedStore":""};
     $scope.currentUser["data"] = $appService.getSession();
-    $scope.displayData = {};
-	var hash = window.location.hash;
-    if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null" || hash.indexOf("resetpassword") == -1) {
-		window.location.href = "#!/login";
-		return false;
-	}
-    if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+    $scope.displayData = {};	
+    if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
         $scope.displayData["menu"] = false;
@@ -141,6 +136,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
     }
+	var hash = window.location.hash;
+    if (($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") && hash.indexOf("resetpassword") == -1) {
+		window.location.href = "#!/login";
+		return false;
+	}else if(hash.indexOf("resetpassword") >= 0){
+		delete $scope.displayData;
+		console.log($scope.displayData);
+	}
     /********************** Location**************************/
     /*$scope.getLocation = function(val) {
         return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
