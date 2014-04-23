@@ -509,7 +509,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddVenderData = false;
                     $scope.saveVendor = function () {
-					// changes made
+					
                         $scope.newVendor = {};
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 						var regNumberOnly = /^[+]?\d[0-9\-]*$/;
@@ -544,7 +544,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if ($scope.data.postalCode && !$scope.data.postalCode.match(regNumberOnly)) {
+                        if ($scope.data.postalCode && !regNumberOnly.test($scope.storedata.postalCode)) {
                             $("#popupMessage").html("Please enter correct postal code");
                             $('.popup').toggle("slide");
                             return false;
@@ -1068,7 +1068,11 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                         }
-                     $scope.getEditCountries(store.countryid._id,store.stateid._id,store.cityid._id);
+						if (store.countryid) {	
+							store.stateid = (store.stateid) ? {"_id":store.stateid._id} : {"_id":false};
+							store.cityid = (store.cityid) ? {"_id":store.cityid._id} : {"_id":false};
+                            $scope.getEditCountries(store.countryid._id,store.stateid._id,store.cityid._id);
+                        }
                         window.location.href = "#!edit-site-info?q=" + store._id;
                     }
                 }
@@ -1180,7 +1184,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
         restrict: 'E',
         replace: 'true',
         template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Store Name</div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Site Name</div>' +
             '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
             '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact">' +
             '</td></tr>' +
@@ -1223,54 +1227,69 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     $scope.loadingAddStoreData = false;
                     $scope.saveStore = function () {
                         if ($scope.CSession) {
+						// changes made
                             $scope.newStore = {};
                             $scope.newStore["manager"] = {};
-                            if ($scope.storedata.storename == "" || $scope.storedata.storename == undefined) {
-                                $("#popupMessage").html("Please enter storename");
+                            var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+							var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                            var email = $scope.storedata.email;
+                            var managerEmail = $scope.storedata.manager.email;
+                            if (!$scope.storedata.storename) {
+                                $("#popupMessage").html("Please enter site name");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                            var email = $scope.storedata.email;
-                            if (regEmail.test(email) == false) {
+                            if (!$scope.storedata.contact) {
+                                $("#popupMessage").html("Please enter site phone number");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType) {
+                                $("#popupMessage").html("Please enter post type");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }    
+                            if ($scope.storedata.postalcode && !regNumberOnly.test($scope.storedata.postalcode) ) {
+                                $("#popupMessage").html("Please select correct postal code");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }     
+                            if (!email || regEmail.test(email) == false) {
                                 $("#popupMessage").html("Please enter a valid email id");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            $scope.newStore.email = email;
-                            var managerEmail = $scope.storedata.manager.email;
-                            if (regEmail.test(managerEmail) == false) {
+                            if (!$scope.storedata.address) {
+                                $("#popupMessage").html("Please enter address");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+							if (!$scope.storedata.manager.name) {
+                                $("#popupMessage").html("Please enter manager name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }  
+                            if (!managerEmail || regEmail.test(managerEmail) == false) {
                                 $("#popupMessage").html("Please enter a valid manager email id");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }
-                            if (!$scope.storedata.selectedCountry) {
-                                $("#popupMessage").html("Please select country first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-
-                            if (!$scope.storedata.selectedState) {
-                                $("#popupMessage").html("Please select state first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-
-                            if (!$scope.storedata.selectedCity) {
-                                $("#popupMessage").html("Please select city first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.storedata.brands) {
-                                $("#popupMessage").html("Please select brand first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }                            
+                            }  
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
+                            if ($scope.storedata.selectedRewardType.name == "Others" && !$scope.storedata.otherRewardType) {
+                                $("#popupMessage").html("Please enter reward type");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }     
+							if(!$scope.oFile.length){
+								$("#popupMessage").html("Please upload file");
+                                $('.popup').toggle("slide");
+                                return false;
+							}
                             var query = {};
                             query.table = "storemanagers__cstore";
+                            $scope.newStore.email = email;
                             $scope.newStore["storename"] = $scope.storedata.storename;
                             $scope.newStore["address"] = $scope.storedata.address;
                             $scope.newStore["address2"] = $scope.storedata.address2;
@@ -1280,13 +1299,13 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["brands"] = [selectedBrands];
                             $scope.newStore["contact"] = $scope.storedata.contact;
                             $scope.newStore["email"] = $scope.storedata.email;
-                            if ($scope.storedata.selectedCountry && $scope.storedata.selectedCountry != null && $scope.storedata.selectedCountry != undefined && $scope.storedata.selectedCountry != "undefined" && $scope.storedata.selectedCountry != "null") {
+                            if ($scope.storedata.selectedCountry) {
                                 $scope.newStore["countryid"] = {"_id": $scope.storedata.selectedCountry._id, "name": $scope.storedata.selectedCountry.name};
                             }
-                            if ($scope.storedata.selectedState && $scope.storedata.selectedState != null && $scope.storedata.selectedState != undefined && $scope.storedata.selectedState != "undefined" && $scope.storedata.selectedState != "null") {
+                            if ($scope.storedata.selectedState) {
                                 $scope.newStore["stateid"] = {"_id": $scope.storedata.selectedState._id, "name": $scope.storedata.selectedState.name};
                             }
-                            if ($scope.storedata.selectedState && $scope.storedata.selectedState != null && $scope.storedata.selectedState != undefined && $scope.storedata.selectedState != "undefined" && $scope.storedata.selectedState != "null") {
+                            if ($scope.storedata.selectedCity ) {
                                 $scope.newStore["cityid"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
                             }
                             $scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
@@ -1372,8 +1391,12 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $("#popupMessage").html("Store manager saved");
                                 $('.popup').toggle("slide");
                                 window.location.href = "#!/store-managers"
-                            } else {
-                                $("#popupMessage").html(callBackData.response);
+                            } else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while saving user");
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {

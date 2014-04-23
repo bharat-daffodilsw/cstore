@@ -1086,7 +1086,7 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
 cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingStoreData = false;
-	// changes made
+	
     $scope.venderSearch = [
 		{"value":"storename", "name":"Store Name"},
 		{"value":"shift", "name":"Manager Shift"},
@@ -1664,7 +1664,6 @@ cstore.controller('resetpasswordCtrl', function ($scope, $appService, $location,
 cstore.controller('userCtrl', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingUserData = false;
-	// changes made
     $scope.venderSearch = [
         {"value":"username", "name":"Email"},
         {"value":"userid.firstname", "name":"Firstname"},
