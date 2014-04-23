@@ -761,23 +761,35 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.saveProduct = function () {
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
-                            if ($scope.productdata.name == "" || $scope.productdata.name == undefined) {
+                            if (!$scope.productdata.name) {
                                 $("#popupMessage").html("Please enter product name");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if ($scope.productdata.cost.amount == "" || $scope.productdata.cost.amount == undefined) {
-                                $("#popupMessage").html("Please enter cost");
+                            if (!$scope.productdata.description) {
+                                $("#popupMessage").html("Please enter detailed description");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            //if (document.getElementById('uploadfile').files.length === 0) {
-                            //   return false;
-                            //}
-                            if (!$scope.productdata.selectedProductCategory) {
-                                $("#popupMessage").html("Please select product category");
+                            if (!$scope.productdata.short_description) {
+                                $("#popupMessage").html("Please enter short description");
                                 $('.popup').toggle("slide");
-                                //return false;
+                                return false;
+                            }
+                            if (!$scope.productdata.quantity) {
+                                $("#popupMessage").html("Please enter quantity");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.productdata.cost.amount ) {
+                                $("#popupMessage").html("Please enter price");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if ($('#uploadfile').files.length === 0) {
+                                $("#popupMessage").html("Please upload file");
+                                $('.popup').toggle("slide");
+                                return false;
                             }
                             var query = {};
                             query.table = "products__cstore";
@@ -834,8 +846,12 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 $scope.setPathforProduct("pops");
-                            } else {
-                                $("#popupMessage").html(callBackData.response);
+                            } else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while saving user");
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
