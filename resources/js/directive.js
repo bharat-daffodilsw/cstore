@@ -556,12 +556,12 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 $scope.setPathforVender('vendors');
                             } else {
-                                $("#popupMessage").html(callBackData);
+                                $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
