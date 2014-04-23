@@ -507,33 +507,50 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddVenderData = false;
                     $scope.saveVendor = function () {
+					// changes made
                         $scope.newVendor = {};
-                        if ($scope.data.firstname == "" || $scope.data.firstname == undefined) {
+                        var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+						var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                        var email = $scope.data.email;
+                        if (!$scope.data.firstname) {
                             $("#popupMessage").html("Please enter firstname");
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                        var email = $scope.data.email;
-                        if (regEmail.test(email) == false) {
+                        if (!email || regEmail.test(email) == false) {
                             $("#popupMessage").html("Please enter a valid email id");
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        $scope.newVendor.email = email;
-                        if (!$scope.data.selectedState) {
-                            $("#popupMessage").html("Please select state first");
+                        if (!$scope.data.address) {
+                            $("#popupMessage").html("Please enter address");
                             $('.popup').toggle("slide");
                             return false;
                         }
-
-                        /*if (!$scope.data.selectedCity) {
-                         alert("please select city first ");
-                         return false;
-                         } */
+                        if (!$scope.data.selectedCountry) {
+                            $("#popupMessage").html("Please select country first");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if (!$scope.data.selectedVendorCategory) {
+                            $("#popupMessage").html("Please select category first");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if ($scope.data.selectedVendorCategory.name == "Others" && !$scope.data.otherCategory) {
+                            $("#popupMessage").html("Please enter category");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if ($scope.data.postalCode && !$scope.data.postalCode.match(regNumberOnly)) {
+                            $("#popupMessage").html("Please enter correct postal code");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
                         if ($scope.data["userid"]) {
                             $scope.newVendor["_id"] = $scope.data["userid"];
                         }
+                        $scope.newVendor.email = email;
                         $scope.newVendor["firstname"] = $scope.data.firstname;
                         $scope.newVendor["lastname"] = $scope.data.lastname;
                         $scope.newVendor["address"] = $scope.data.address;

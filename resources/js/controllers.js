@@ -1086,16 +1086,18 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
 cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingStoreData = false;
+	// changes made
     $scope.venderSearch = [
-        {"value":"storename", "name":"Store Name"},
-        {"value":"shift", "name":"Shift"},
-        {"value":"pos_type", "name":"POS Type"},
-        {"value":"pos_version", "name":"POS Version"},
-        {"value":"loyalty_status", "name":"Loyalty Status"},
-        {"value":"reward_point", "name":"Reward Points"},
-        {"value":"email", "name":"Email"},
-        {"value":"contact", "name":"Contact"}
-    ];
+		{"value":"storename", "name":"Store Name"},
+		{"value":"shift", "name":"Manager Shift"},
+		{"value":"pos_type", "name":"POS Type"},
+		{"value":"pos_version", "name":"POS Version"},
+		{"value":"loyalty_status", "name":"Loyalty Status"},
+		{"value":"reward_point", "name":"Reward Type"},
+		{"value":"email", "name":"Email"},
+		{"value":"contact", "name":"Contact"}
+	];
+
     $scope.searchby = $scope.venderSearch[0];
     $scope.storeManagers = [];
     $appService.auth();
