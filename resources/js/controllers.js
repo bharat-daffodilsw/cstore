@@ -117,12 +117,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.displayData = {};
     if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
         var hash = window.location.hash;
-        console.log(hash);
-        if (hash.indexOf("resetpassword") > 0) {
-            window.location.href="#!/resetpassword";
+        if (hash.indexOf("resetpassword") >= 0) {
+            return false;
         }
         else {
             window.location.href = "#!/login";
+            return false;
         }
     }
     if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {

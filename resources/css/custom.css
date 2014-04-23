@@ -337,12 +337,12 @@ a:hover {
     border-top: 1px dotted #DDD;}
 
 .final_price {
-    margin: 5px 0;
-    font-size: 17px;
+    margin:5px 0;
+    font-size:17px;
     border-top: 1px dotted #DDD;
     border-bottom: 1px dotted #DDD;
-    padding: 10px 10px;
-}
+    padding:10px 10px;}
+
 .add_btn a {
     font-size:16px;
     padding:10px;}
@@ -976,6 +976,7 @@ ul, ol {
 margin-top: 9px!important;
 margin-bottom: 9px!important;
 }
+
 }
 
 
@@ -1002,9 +1003,8 @@ margin-bottom: 9px!important;
 
 
 .add_to_btn {
-    margin-top: 10px;
-    padding-left: 10px;
-}
+    margin-top:10px;
+    padding-left:10px;}
 
 .user {
     max-height:25px;
@@ -1012,16 +1012,14 @@ margin-bottom: 9px!important;
     overflow:hidden;}
 
 .quantity_border {
-    border-top: 1px dotted #DDD;
-    padding-top: 5px;
-    padding-left: 10px;
-}
+    border-top:1px dotted #DDD;
+    padding-top:5px;
+    padding-left: 10px;}
 
 .profile {
     width:650px;
     margin:auto;
-    font-size:18px;
-    margin-top:25px;}
+    font-size:18px;}
 
 .male {
     margin-right:10px;}
@@ -1031,7 +1029,8 @@ margin-bottom: 9px!important;
     margin-bottom: 15px;}
 
 .profile_edit {
-    width:210px;}
+    width:210px;
+    margin-top:15px;}
 
 .set_male {
     width:22%;}
@@ -1096,6 +1095,8 @@ span.sortWrap {
     text-align: justify;
     z-index: 9999;
     -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
     border-bottom: 1px solid #CCC;
     border-top: 1px solid #CCC;
     border-right: 1px solid #CCC;
@@ -1157,5 +1158,12 @@ span.sortWrap {
     width: 95%;
     height:98px!important; }
 
-p {
-    margin: 0!important; }
+
+.add_btn input[type="submit"] {
+    width: 100%;
+    background-color: #e7c271;
+    font-size: 16px;
+    outline: 0px;
+    padding: 5px 25px;
+    width: auto;}
+	
