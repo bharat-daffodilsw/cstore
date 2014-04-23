@@ -117,10 +117,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.displayData = {};
     if ($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") {
         var hash = window.location.hash;
-        if (hash.indexOf("resetpassword") >= 0) {
-            return false;
-        }
-        else {
+        console.log(hash);
+        console.log(hash.indexOf("resetpassword"));
+        if (hash.indexOf("resetpassword") == -1) {
             window.location.href = "#!/login";
             return false;
         }
