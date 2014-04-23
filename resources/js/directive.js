@@ -1273,11 +1273,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.manager.selectedCountry) {
-                                $("#popupMessage").html("Please select country first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
                             if (!$scope.storedata.brand) {
                                 $("#popupMessage").html("Please select brand first");
                                 $('.popup').toggle("slide");
@@ -1293,18 +1288,9 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.manager.selectedState) {
-                                $("#popupMessage").html("Please select state first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
+
                             if ($scope.storedata.password == "" || $scope.storedata.password == undefined) {
                                 $("#popupMessage").html("Please enter password");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.storedata.manager.selectedCity) {
-                                $("#popupMessage").html("Please select city first");
                                 $('.popup').toggle("slide");
                                 return false;
                             }

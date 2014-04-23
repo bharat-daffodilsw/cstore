@@ -337,12 +337,12 @@ a:hover {
     border-top: 1px dotted #DDD;}
 
 .final_price {
-    margin:5px 0;
-    font-size:17px;
+    margin: 5px 0;
+    font-size: 17px;
     border-top: 1px dotted #DDD;
     border-bottom: 1px dotted #DDD;
-    padding:10px 5px;}
-
+    padding: 10px 10px;
+}
 .add_btn a {
     font-size:16px;
     padding:10px;}
@@ -1002,7 +1002,9 @@ margin-bottom: 9px!important;
 
 
 .add_to_btn {
-    margin-top:10px;}
+    margin-top: 10px;
+    padding-left: 10px;
+}
 
 .user {
     max-height:25px;
@@ -1010,8 +1012,10 @@ margin-bottom: 9px!important;
     overflow:hidden;}
 
 .quantity_border {
-    border-top:1px dotted #DDD;
-    padding-top:5px;}
+    border-top: 1px dotted #DDD;
+    padding-top: 5px;
+    padding-left: 10px;
+}
 
 .profile {
     width:650px;

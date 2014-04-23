@@ -1124,7 +1124,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $scope.loadingStoreData = true;
         var query = {"table":"storemanagers__cstore"};
 
-        query.columns = ["manager.email","manager.cityid","manager.stateid","manager.countryid","manager.postalcode","manager.contact","manager.name","address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point","username","company_logo","pump_brand","pump_model","address2"];
+        query.columns = ["manager.email","manager.contact","manager.name","address","cityid","countryid","manager","postalcode","stateid","storename","contact","email","brands","pos_type","shift","loyalty_status","pos_version","reward_point","company_logo","pump_brand","pump_model","address2"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
