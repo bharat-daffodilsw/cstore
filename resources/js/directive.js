@@ -560,8 +560,12 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 $scope.setPathforVender('vendors');
-                            } else {
-                                $("#popupMessage").html(callBackData.response);
+                            } else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while saving user");
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
@@ -807,7 +811,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.saveFunction = function (query) {
                         //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 $scope.setPathforProduct("pops");
@@ -1366,7 +1370,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     }
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {                                
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
                                 
                                 $("#popupMessage").html("Site Info Saved");
                                 $('.popup').toggle("slide");
@@ -1393,7 +1397,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                         userquery.table = "user_profiles__cstore";
                         userquery.operations = [$scope.newUser];
                         $appService.save(userquery, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
                                 if (!$scope.storedata["storeid"]) {
                                     $scope.clearStoreContent();
                                 }
@@ -1528,7 +1532,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                             query.table = "countries__cstore";
                             query.operations = countryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
-                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.countries.length; i++) {
@@ -1680,7 +1684,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                             query.table = "product_categories__cstore";
                             query.operations = productCategoryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
-                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
@@ -1799,7 +1803,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                         query.operations = angular.copy($scope.addtrainingCategoryArray);
                         $scope.addtrainingCategoryArray = [];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 for (var i = 0; i < $scope.trainingCategories.length; i++) {
@@ -1961,7 +1965,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.states.length; i++) {
@@ -2135,7 +2139,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                                if (callBackData.code = 200 && callBackData.status == "ok") {
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     for (var i = 0; i < $scope.cities.length; i++) {
@@ -2354,7 +2358,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         query.table = "user_profiles__cstore";
                         query.operations = [$scope.newUser];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (callBackData.code = 200 && callBackData.status == "ok") {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Saved");
                                 $('.popup').toggle("slide");
                                 $scope.clearUserContent();
