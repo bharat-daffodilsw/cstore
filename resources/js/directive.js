@@ -781,12 +781,12 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.productdata.cost.amount ) {
+                            if (!$scope.productdata.cost || !$scope.productdata.cost.amount ) {
                                 $("#popupMessage").html("Please enter price");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if ($('#uploadfile').files.length === 0) {
+                            if (!$('#uploadfile').files || $('#uploadfile').files.length === 0) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
