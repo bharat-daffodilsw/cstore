@@ -2206,7 +2206,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '</div><div ng-show="show.preCursor" ng-click="getLess()"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
             '<span>FirstName</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'userid.firstname\',\'asc\')"></div>' +
-            '<div class="sortDown" ng-click="setOrder(\'userid.firstname\',\'desc\')"></div>	</span></th><th><span>UserName</span>' +
+            '<div class="sortDown" ng-click="setOrder(\'userid.firstname\',\'desc\')"></div>	</span></th><th><span>Email</span>' +
             '<span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'username\',\'asc\')"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'username\',\'desc\')"></div>	</span></th><th><span>Role</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'roleid.name\',\'asc\')"></div>' +
@@ -2297,22 +2297,29 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
-            '<td><input type="text" placeholder="" ng-model="userdata.firstname"></td><td><input type="text" placeholder=""ng-model="userdata.lastname"></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr><td><div class="margin_top">User Name</div></td></tr><tr><td class="city"><input type="email" ng-model="userdata.username">' +
-            '</td></tr></table>' +
-            '<div class="l_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Password</div>' +
-            '</td></tr><tr><td><input type="password" ng-model="userdata.password"></td></tr>' +
-            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><div class="margin_top">Store Name</div></td>' +
-            '</tr><tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><store-select></store-select></td>' +
-            '</tr></table></div><div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
-            '<td><div class="margin_top">Role</div></td></tr><tr><td>' +
-            '<role-select></role-select></td></tr>' +
-            '' +
-            '</table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button ng-click="saveUser()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforUser(\'manage-users\')" type="button">Close</button>' +
-            '</div></div></td></tr></table></div></div>',
+        template: '<div class="table_1 pull-left"><div class="l_bar pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">First Name</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="userdata.firstname"></td></tr>' +
+            '<tr><td><div class="margin_top">Email</div></td></tr>' +
+            '<tr><td><input type="email" placeholder="" ng-model="userdata.username"></td></tr>' +
+            '<tr><td><div class="margin_top">Role</div></td></tr>' +
+            '<tr><td><role-select></role-select></td></tr>' +
+            '</tbody></table></div>' +
+            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">Last Name</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="userdata.lastname"></td></tr>' +
+            '<tr><td><div class="margin_top">Password</div></td></tr>' +
+            '<tr><td><input type="password" placeholder="" ng-model="userdata.password"></td></tr>' +
+            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><div class="margin_top">Store Name</div></td></tr>' +
+            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><store-select></store-select></td></tr>' +
+            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveUser()"><a href>Save</a></button>' +
+            '</div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforUser(\'manage-users\')"><a href="">Close</a></button>' +
+            '</div></div></td></tr>' +
+            '</tbody></table>',
 
         compile: function () {
             return {
