@@ -1168,6 +1168,13 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routeParams) {
     $appService.auth();
+    $scope.storedata.posTypes =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
+    $scope.storedata.selectedPosType=$scope.storedata.posTypes[0];
+    $scope.storedata.rewardTypes = [{"name":"Cents Per Gallon"},{"name":"Points/Clubs"},{"name":"Clubs Only"},{"name":"Mobile Only"},{"name":"Others"}];
+    $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
+    $scope.brands =[{"name":"Shell"},{"name":"CITGO"},{"name":"BP"},{"name":"Mobil"},{"name":"Exxon"},{"name":"Marathon"},{"name":"Conoco"},{"name":"Phillips 66"},{"name":"Valero"},{"name":"Chevron"},{"name":"Others"}];
+    $scope.storedata.shifts =[{"name":"Day"},{"name":"Night"}];
+    $scope.storedata.selectedShift =$scope.storedata.shifts[0];
     $scope.passwordStatus=true;
     $scope.clearStoreContent = function () {
         $scope.storedata.manager={};
