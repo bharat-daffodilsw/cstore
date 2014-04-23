@@ -103,7 +103,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.data.vendorCategories =[{"name":"Beverage"},{"name":"Food Service"},{"name":"Salty Snacks"},{"name":"Candy"},{"name":"Propane"},{"name":"Fuel"},{"name":"Energy"},{"name":"Others"}];
     $scope.data.selectedVendorCategory=$scope.data.vendorCategories[0];
     //$scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
-    $scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","posTypes":[],"selectedPosType":"","rewardTypes":[],"selectedRewardType":"","shifts":[],"selectedShift":"","manager":{},"brands":[]};
+	$scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","posTypes":[],"selectedPosType":"","rewardTypes":[],"selectedRewardType":"","shifts":[],"selectedShift":"","manager":{},"brands":[],"brandName":"","otherPosType":"","otherRewardType":""};
     $scope.storedata.posTypes =[{"name":"Gilbarco Passport"},{"name":"VeriFone Ruby Only"},{"name":"VeriFone Ruby Sapphire"},{"name":"VeriFone Sapphire w/Topaz"},{"name":"Wayne Nucleus"},{"name":"Radiant"},{"name":"Retalix"},{"name":"FisCal"},{"name":"Pinnacle Palm"},{"name":"Others"}];
     $scope.storedata.selectedPosType=$scope.storedata.posTypes[0];
     $scope.storedata.rewardTypes = [{"name":"Cents Per Gallon"},{"name":"Points/Clubs"},{"name":"Clubs Only"},{"name":"Mobile Only"},{"name":"Others"}];
@@ -173,7 +173,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     } */
     /******************   Revised Country States Cities****************************/
 
-    $scope.getEditCountries = function (countryid,stateid,cityid) {
+  $scope.getEditCountries = function (countryid,stateid,cityid) {
         var query = {"table":"countries__cstore"};
         query.columns = ["name"];
         $scope.data.selectedCountry = {"_id":countryid};
@@ -197,14 +197,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
                     }
                 }
             }
+            $scope.storedata.selectedCountry = $scope.data.selectedCountry;
+            $scope.storedata.countries = $scope.data.countries;
             $scope.getEditStates($scope.data,stateid,cityid);
-            //if($scope.data.countries.length && !countryid){
-            //    $scope.getStatesNew($scope.data,false);
-            //}
-            //else {
-            //    states=[];
-            //}
-
         }, function (jqxhr, error) {
         })
     }
@@ -217,13 +212,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
             var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
-                console.log(JSON.stringify(stateData));
-                countryid.states = stateData.response.data;
+                countryid.states = stateData.response.data;         
                 if (countryid.selectedState._id) {
                     for (var i = 0; i < countryid.states.length; i++) {
                         if (countryid.states[i]._id == countryid.selectedState._id) {
                             countryid.selectedState = countryid.states[i];
-                            console.log(countryid.selectedState);
                             break;
                         }
                     }
@@ -231,19 +224,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
                 else {
                     countryid.selectedState = countryid.states[0];
                 }
+				$scope.storedata.states = countryid.states;
+                $scope.storedata.selectedState = countryid.selectedState;
                 $scope.getEditCities(countryid,cityid);
-                //if(countryid.states.length && !stateid){
-                //    $scope.getCitiesNew(countryid, false);
-                //}
-                //else {
-                //    countryid.cities=[];
-                //}
-
             }, function (jqxhr, error) {
             })
-        }else{
-            //$scope.getStates1(null,stateid,cityid);
-            //countryid.states = [];
         }
     }
     $scope.getEditCities = function (stateid, cityid) {
@@ -255,19 +240,20 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
             var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cityData) {
-                console.log(JSON.stringify(cityData));
                 stateid.cities = cityData.response.data;
                 if ($scope.defaultCity) {
                     for (var i = 0; i < stateid.cities.length; i++) {
                         if (stateid.cities[i]._id == $scope.defaultCity) {
                             stateid.selectedCity = stateid.cities[i];
-                            console.log(stateid.selectedCity);
                             break;
                         }
                     }
                 } else {
                     stateid.selectedCity = stateid.cities[0];
                 }
+				
+				$scope.storedata.cities = stateid.cities;
+                $scope.storedata.selectedCity = stateid.selectedCity;
             }, function (jqxhr, error) {
             })
         }else{
@@ -464,6 +450,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
         $scope.data["address"] = "";
         $scope.data["address2"] = "";
         $scope.data["email"] = "";
+		$scope.data["otherCategory"] = "";
         $scope.data["selectedVendorCategory"]=$scope.data.vendorCategories[0];
         for (var i = 0; i < $scope.data.countries.length; i++) {
             if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
@@ -985,9 +972,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.getLess = function () {
         $scope.getAllVendors(0, 10);
     }
-    $scope.getCountriesNew(false);
-    //$scope.getCountries();
-    //$scope.getStates();
+    $scope.getEditCountries(null,null,null);
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -1163,7 +1148,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllStoreManagers(0, 10);
     }
-    $scope.getCountriesNew(false);
+    $scope.getEditCountries(null,null,null);
 });
 
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routeParams) {
@@ -1201,8 +1186,8 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
         $scope.storedata.selectedPosType=$scope.storedata.posTypes[0];
         $scope.storedata.selectedShift=$scope.storedata.shifts[0];
         $scope.storedata.selectedRewardType =$scope.storedata.rewardTypes[0];
-
-
+		$scope.storedata.otherPosType = "";
+		$scope.storedata.otherRewardType = "";
     }
     var storeId = $routeParams.q;
     if (storeId && storeId != undefined && storeId != "undefined") {

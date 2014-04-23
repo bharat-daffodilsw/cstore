@@ -435,7 +435,7 @@ cstore.directive('stateSelect', ['$appService', function ($appService, $scope) {
 }]);
 
 cstore.directive('vendorCountrySelect', ['$appService', function ($appService, $scope) {
-    return {// changes made
+    return {
         restrict: 'E',
         template: '<select class="brand"  ng-change="getEditStates(data,false,false)" ng-model="data.selectedCountry" ng-options="country.name for country in data.countries"></select>',
         compile: function () {
@@ -451,7 +451,7 @@ cstore.directive('vendorCountrySelect', ['$appService', function ($appService, $
 }]);
 
 cstore.directive('vendorCategorySelect', ['$appService', function ($appService, $scope) {
-    return { // changes made
+    return { 
         restrict: 'E',
         template: '<select class="brand" ng-model="data.selectedVendorCategory" ng-options="vendorCategory.name for vendorCategory in data.vendorCategories"></select>' +
             '<input type="text" placeholder="" ng-show = "data.selectedVendorCategory.name== \'Others\'" ng-model="data.otherCategory" class="other_input pull-left" >',
@@ -1022,8 +1022,8 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     break;
                                 }
                                 else {
-                                    $scope.storedata.posTypes[$scope.storedata.posTypes.length - 2] = {"name": store.pos_type};
-                                    $scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length - 2];
+                                    $scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length-1];
+                                    $scope.storedata.otherPosType = store.pos_type;
                                     break;
                                 }
                             }
@@ -1035,8 +1035,8 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     break;
                                 }
                                 else {
-                                    $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 2] = {"name": store.reward_point};
-                                    $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 2];
+                                    $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length-1];
+                                    $scope.storedata.otherRewardType = store.reward_point;
                                     break;
                                 }
                             }
@@ -1109,57 +1109,33 @@ cstore.directive('brand', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<select class="multiple_select" multiple ng-multiple="true" ng-model="storedata.brands" ng-options="brand.name for brand in brands"></select>' +
-            '<input type="text" placeholder="" ng-show = "storedata.brands.name == \'Others\'" ng-model="brandName" class="other_input pull-left" ng-blur="addBrand()">',
+            '<input type="text" placeholder="" ng-show = "storedata.brands.name == \'Others\'" ng-model="storedata.brandName" class="other_input pull-left" >',
         compile: function () {
             return{
-                pre: function ($scope) {
-                }, post: function ($scope) {
-                    //$scope.addBrand = function () {
-                    //    $scope.brands[$scope.brands.length-2]={"name":$scope.brandName};
-                    //    $scope.storedata.brand= $scope.posVersions[$scope.brands.length-2];
-
-                    //}
-                }
             }
         }
     }
 }]);
 
 cstore.directive('posType', ['$appService', function ($appService, $scope) {
-    return {
+    return { 
         restrict: 'E',
         template: '<select class="brand" ng-model="storedata.selectedPosType" ng-options="posType.name for posType in storedata.posTypes"></select>' +
-            '<input type="text" placeholder="" ng-show = "storedata.selectedPosType.name== \'Others\'" ng-model="otherPosType" class="other_input pull-left" ng-blur="addPosType()">',
+            '<input type="text" placeholder="" ng-show = "storedata.selectedPosType.name== \'Others\'" ng-model="storedata.otherPosType" class="other_input pull-left" >',
         compile: function () {
             return{
-                pre: function () {
-
-                }, post: function ($scope) {
-                    $scope.addPosType = function () {
-                        $scope.storedata.posTypes[$scope.storedata.posTypes.length - 2] = {"name": $scope.otherPosType};
-                        $scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length - 2];
-                    }
-                }
             }
         }
     }
 }]);
 
 cstore.directive('rewardType', ['$appService', function ($appService, $scope) {
-    return {
+    return { 
         restrict: 'E',
         template: '<select class="brand" ng-model="storedata.selectedRewardType" ng-options="rewardType.name for rewardType in storedata.rewardTypes"></select>' +
-            '<input type="text" placeholder="" ng-show = "storedata.selectedRewardType.name== \'Others\'" ng-model="otherRewardType" class="other_input pull-left" ng-blur="addRewardType()">',
+            '<input type="text" placeholder="" ng-show = "storedata.selectedRewardType.name== \'Others\'" ng-model="storedata.otherRewardType" class="other_input pull-left" >',
         compile: function () {
             return{
-                pre: function () {
-
-                }, post: function ($scope) {
-                    $scope.addRewardType = function () {
-                        $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 2] = {"name": $scope.otherRewardType};
-                        $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 2];
-                    }
-                }
             }
         }
     }
@@ -1191,12 +1167,14 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '</td></tr>' +
             '<tr><td><div class="margin_top">POS Type</div></td></tr><tr><td><pos-type></pos-type>' +
             '</td></tr><tr><td><div class="margin_top">POS Version</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.pos_version"></td>' +
-            '</tr><tr><td>' +
-            '<div class="margin_top">Brand</div></td></tr><tr><td><brand></brand></td></tr>' +
+            '</tr>' +           
             '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.email"></td>' +
             '</tr><tr><td><div class="margin_top">Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address"></td></tr><tr><td><div class="margin_top">Address 2</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address2"></td></tr>' +
-            '<tr><td><div class="margin_top">Country </div></td></tr><tr><td><store-country-select></store-country-select></td></tr><tr><td><div class="margin_top">City</div></td></tr><tr><td><store-city-select></store-city-select></td></tr>' +
-            '</table></div>' +
+            '<tr><td><div class="margin_top">Country </div></td></tr><tr><td><store-country-select></store-country-select></td></tr>' +
+			'<tr><td><div class="margin_top">State </div></td></tr><tr><td><store-state-select></store-state-select></td></tr>' +
+			'<tr><td><div class="margin_top">City</div></td></tr><tr><td><store-city-select></store-city-select></td></tr>' +
+            '<tr><td><div class="margin_top">Postal Code</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.postalcode"></td></tr>' +
+            '</table></div>' +			
             '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">Manager Name</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.name"></td></tr>' +
             '<tr><td><div class="margin_top">Manager Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td></tr><tr><td>' +
@@ -1204,24 +1182,19 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '</tr><tr><td><div class="margin_top">Manager Shift</div></td></tr><tr><td><shift></shift></td></tr><tr><td><div class="margin_top">Loyalty Status</div></td></tr><tr><td>' +
             '<input type="text" placeholder="" ng-model="storedata.loyalty_status"></td></tr><tr><td><div class="margin_top">Reward Type</div>' +
             '</td></tr><tr><td><reward-type></reward-type></td></tr><tr><td><div class="margin_top">Pump Brand</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_brand"></td></tr><tr><td><div class="margin_top">Pump Model </div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_model"></td></tr><tr><td><div class="margin_top">State </div></td></tr><tr><td><store-state-select></store-state-select></td></tr><tr><td><div class="margin_top">' +
-            'Postal Code</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.postalcode"></td></tr>' +
+            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_model"></td></tr>'+
+			'<tr><td><div class="margin_top">Brand</div></td></tr><tr><td><brand></brand></td></tr>' +
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button></div></div></td></tr></table>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
+            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',	,
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.loadingAddStoreData = true;
                     $scope.newStore = {};
-                    $scope.removeStoreValue = function () {
-                        $scope.storedata.rewardTypes.splice($scope.storedata.rewardTypes.length - 2, 1);
-                        $scope.storedata.posTypes.splice($scope.storedata.posTypes.length - 2, 1);
-                    }
                     $scope.setPathforStore = function (path) {
                         $scope.clearStoreContent();
-                        $scope.removeStoreValue();
                         window.location.href = "#!/" + path;
                     }
                 },
@@ -1252,14 +1225,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata["storeid"]) {
-                                var username = $scope.storedata.username;
-                                if (regEmail.test(username) == false) {
-                                    $("#popupMessage").html("Please enter a valid username");
-                                    $('.popup').toggle("slide");
-                                    return false;
-                                }
-                            }
                             if (!$scope.storedata.selectedCountry) {
                                 $("#popupMessage").html("Please select country first");
                                 $('.popup').toggle("slide");
@@ -1277,27 +1242,11 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.brand) {
+                            if (!$scope.storedata.brands) {
                                 $("#popupMessage").html("Please select brand first");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }
-                            if (!$scope.storedata.pos_version) {
-                                $("#popupMessage").html("Please select pos version first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.storedata.reward_point) {
-                                $("#popupMessage").html("Please select reward point first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-
-                            if ($scope.storedata.password == "" || $scope.storedata.password == undefined) {
-                                $("#popupMessage").html("Please enter password");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
+                            }                            
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
@@ -1324,10 +1273,10 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
                             $scope.newStore["pump_brand"] = $scope.storedata.pump_brand;
                             $scope.newStore["pump_model"] = $scope.storedata.pump_model;
-                            $scope.newStore["pos_type"] = $scope.storedata.selectedPosType.name;
+                             $scope.newStore["pos_type"] = ($scope.storedata.selectedPosType.name == "Others") ? $scope.storedata.otherPosType : $scope.storedata.selectedPosType.name;
                             $scope.newStore["pos_version"] = $scope.storedata.pos_version;
                             $scope.newStore["postalcode"] = $scope.storedata.postalcode;
-                            $scope.newStore["reward_point"] = $scope.storedata.selectedRewardType.name;
+                            $scope.newStore["reward_point"] = ($scope.storedata.selectedRewardType.name == "Others") ? $scope.storedata.otherRewardType : $scope.storedata.selectedRewardType.name;
                             $scope.newStore["shift"] = $scope.storedata.selectedShift.name;
                             $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                             $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
