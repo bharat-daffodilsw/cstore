@@ -98,7 +98,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
         template: '<div class="search_addcart pull-left"><div class="search pull-left"><form ng-submit="search()">' +
             '<input type="text" placeholder="Search by pop" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
             '<input type="submit" style="display:none"></form>' +
-            '<div class="search_sign pull-left"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
+            '<div class="search_sign pull-left" ng-click="search()"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
             ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
             '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></a></div><div class="add_cart pull-right"><div class="addcart_link pull-left"><a href>' +
             '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">( 0 )</div></div></div>',
@@ -561,7 +561,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 $scope.setPathforVender('vendors');
                             } else {
-                                $("#popupMessage").html(callBackData.response);
+                                $("#popupMessage").html(callBackData);
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
@@ -2409,7 +2409,7 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><input type="submit" value="Save"></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click="setPath(\'vendors\')"><a href="">Close</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button"><a href="/">Close</a></button></div>' +
             '</div>' +
             '</div>' +
             '</form></div>',
@@ -2485,7 +2485,7 @@ cstore.directive('profilePage', ['$appService', function ($appService, $scope) {
                                 } else {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
-                                    $scope.setPath('vendors');
+                                    window.location.href="/";
                                 }
                             } else {
                                 $("#popupMessage").html(data.response);
