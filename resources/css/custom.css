@@ -1101,7 +1101,9 @@ span.sortWrap {
     border-bottom: 1px solid #CCC;
     border-top: 1px solid #CCC;
     border-right: 1px solid #CCC;
-    border-left: 1px solid #CCC;}
+    border-left: 1px solid #CCC;
+    min-width: 200px;
+}
 
 .popup-manage form {
 	padding:10px;}

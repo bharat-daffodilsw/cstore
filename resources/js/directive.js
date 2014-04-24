@@ -2712,41 +2712,23 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-cstore.directive('startDate', ['$appService', function ($appService, $scope) {
+
+//changed
+cstore.directive('jqdatepicker', function () {
     return {
-        restrict: 'E',
-        template: '<div class="app-grid-datepicker-parent" style="width:200px;height:30px;padding: 5px;">' +
-            '<input type="text" ng-model="promotiondata.start_date" data-date-format="mm/dd/yyyy" app-datepicker class="app-grid-date-picker-input tbox" id="date">' +
-            '<input type="text" data-toggle="datepicker" class="app-grid-date-picker-calender-image" tabindex="-1"/></div>',
-
-        compile: function () {
-            return{
-                pre: function () {
-
-                }, post: function ($scope) {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function (scope, element, attrs, ngModelCtrl) {
+            element.datepicker({
+                dateFormat: 'mm/dd/yy',
+                onSelect: function (date) {
+                    scope.date = date;
+                    scope.$apply();
                 }
-            }
+            });
         }
-    }
-}]);
-
-cstore.directive('endDate', ['$appService', function ($appService, $scope) {
-    return {
-        restrict: 'E',
-        template: '<div class="app-grid-datepicker-parent" style="width:200px;height:30px;padding: 5px;">' +
-            '<input type="text" ng-model="promotiondata.end_date" data-date-format="mm/dd/yyyy" app-datepicker class="app-grid-date-picker-input tbox" id="date">' +
-            '<input type="text" data-toggle="datepicker" class="app-grid-date-picker-calender-image" tabindex="-1"/></div>',
-
-        compile: function () {
-            return{
-                pre: function () {
-
-                }, post: function ($scope) {
-                }
-            }
-        }
-    }
-}]);
+    };
+});
 
 cstore.directive('addPromotion', ['$appService', function ($appService, $scope) {
     return {
@@ -2761,9 +2743,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
             '<tr><td><div class="margin_top">Start Date</div></td></tr>' +
-            '<tr><td><start-date></start-date></td></tr>' +
+            '<tr><td><input type="text" ng-model="promotiondata.start_date" jqdatepicker /></td></tr>' +
             '<tr><td><div class="margin_top">End Date</div></td></tr>' +
-            '<tr><td><end-date></end-date></td></tr>' +
+            '<tr><td><input type="text" ng-model="promotiondata.end_date" jqdatepicker /></td></tr>' +
             '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
             '<tr><td><item-signage-select></item-signage-select></td></tr>' +
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
