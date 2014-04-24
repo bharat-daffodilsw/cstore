@@ -1666,21 +1666,18 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                         }
                     }
                     $scope.saveProductCategories = function () {
-                        var blankindexes = [];
-						var savedindexes = [];
-                        var productCategoryList = $scope.productCategories.filter(function (el) {
-							if(!el._id && el.name == "" && el.description == ""){							
-								blankindexes.push($scope.productCategories.indexOf(el));
+						var savedindexes = [];						
+						for (var j = $scope.productCategories.length-1; j >= 0; j--) {
+							if(!$scope.productCategories[j]._id && $scope.productCategories[j].name == "" && $scope.productCategories[j].description == ""){		
+								$scope.productCategories.splice(j, 1);
 							}
+						}
+                        var productCategoryList = $scope.productCategories.filter(function (el) {
 							if(!el._id && (el.name || el.description)){							
 								savedindexes.push($scope.productCategories.indexOf(el));
 							}
                             return el.editStatus == true;
                         });
-						for (var j = 0; j < blankindexes.length) {
- 							$scope.productCategories.splice(blankindexes[j], 1);
-							j = (j > 0) ? j-- : j++; 
-						}
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
                                 $("#popupMessage").html("Please enter product category name");
@@ -1713,6 +1710,9 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
+                        }else {
+                            $("#popupMessage").html("No data found for saving");
+                            $('.popup').toggle("slide");
                         }
                     }
                 }
@@ -2128,21 +2128,18 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.saveCities = function () {
-                        var blankindexes = [];
 						var savedindexes = [];
-                        var cityList = $scope.cities.filter(function (el) {
-							if(!el._id && el.name == "" && el.stateid == ""){							
-								blankindexes.push($scope.cities.indexOf(el));
+						for (var j = $scope.cities.length-1; j >= 0; j--) {
+							if(!$scope.cities[j]._id && $scope.cities[j].name == "" && $scope.cities[j].stateid == ""){		
+								$scope.cities.splice(j, 1);
 							}
+						}
+                        var cityList = $scope.cities.filter(function (el) {
 							if(!el._id && (el.name || el.stateid)){							
 								savedindexes.push($scope.cities.indexOf(el));
 							}
                             return el.editStatus == true && (el.name != "" || el.stateid != "");
                         });
-						for (var j = 0; j < blankindexes.length) {
-							$scope.cities.splice(blankindexes[j], 1);							
-							j = (j > 0) ? j-- : j++; 
-						}
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
                                 $("#popupMessage").html("Please enter city name");
