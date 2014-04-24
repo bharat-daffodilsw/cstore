@@ -2730,7 +2730,7 @@ cstore.directive('startDate', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-cstore.directive('startDate', ['$appService', function ($appService, $scope) {
+cstore.directive('endDate', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<div class="app-grid-datepicker-parent" style="width:200px;height:30px;padding: 5px;">' +
@@ -2763,7 +2763,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><div class="margin_top">Start Date</div></td></tr>' +
             '<tr><td><start-date></start-date></td></tr>' +
             '<tr><td><div class="margin_top">End Date</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.end_date"></td></tr>' +
+            '<tr><td><end-date></end-date></td></tr>' +
             '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
             '<tr><td><item-signage-select></item-signage-select></td></tr>' +
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +

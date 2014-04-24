@@ -7,7 +7,7 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY ="531d3e9b8826fc304706a460"; //united states
 
 // Declare app level module which depends on filters, and services
-var cstore = angular.module('cstore', ['ngRoute','ui.bootstrap' ,'$appstrap.services']);
+var cstore = angular.module('cstore', ['ngRoute','$appstrap.services']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('!');
