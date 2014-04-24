@@ -81,6 +81,15 @@ cstore.config(
             }).when('/add-new-user', {
                 templateUrl:'../add-new-user',
                 controller:'addUserCtrl'
+            }).when('/promotions',{
+                templateUrl:'../promotions',
+                controller:'promotionCtrl'
+            }).when('/add-promotion', {
+                templateUrl:'../add-promotion',
+                controller:'addPromotionCtrl'
+            }).when('/edit-promotion', {
+                templateUrl:'../add-promotion',
+                controller:'addPromotionCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -113,6 +122,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location,$http) {
     $scope.storedata.selectedShift =$scope.storedata.shifts[0];
     $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
     $scope.userdata={"roles":[],"selectedRole":"","stores":[],"selectedStore":""};
+    //changes Made 24/04
+    $scope.promotiondata={"offerTypes":[],"selectedOfferType":"","itemSignage":[],"selectedItemSignage":"","upc":[],"selectedUpc":""};
+    $scope.promotiondata.offerTypes=[{"name":"SVB"},{"name":"MVB"},{"name":"CPO"},{"name":"Single"},{"name":"Combo"}];
+    $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
+    $scope.promotiondata.itemSignage=[{"name":"Cooler"},{"name":"Aisle"}];
+    $scope.promotiondata.selectedItemSignage=$scope.promotiondata.itemSignage[0];
+    $scope.promotiondata.upc=[{"name":"UPC"},{"name":"PLU"},{"name":"DEPT"}];
+    $scope.promotiondata.selectedUpc=$scope.promotiondata.upc[0];
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};	
     if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == STOREMANAGER) {
@@ -1177,6 +1194,8 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService,$routePar
         $scope.storedata["manager"]["contact"] = "";
         $scope.storedata["manager"]["email"] = "";
         $scope.storedata["manager"]["name"] = "";
+        //changes Made
+        $scope.readonlyrow.fileurl = "";
         $scope.storedata["company_logo"] = "";
         $scope.readonlyrow.fileurl = "";
         $scope.storedata.selectedCountry = "";
@@ -1744,3 +1763,98 @@ cstore.controller('addUserCtrl', function ($scope, $appService, $routeParams) {
     }
 });
 
+/****************************Promotion***************************************************/
+cstore.controller('promotionCtrl', function ($scope, $appService) {
+    $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
+    $scope.loadingPromotionData = false;
+    $scope.venderSearch = [
+        {"value":"promo_title", "name":"Promo Title"},
+        {"value":"offer_title", "name":"Offer Title"},
+        {"value":"offer_type", "name":"Offer Type"},
+        {"value":"start_date", "name":"Start Date"},
+        {"value":"end_date", "name":"End Date"},
+        {"value":"item_signage", "name":"Item Signage"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.promotions = [];
+    $appService.auth();
+    $scope.getAllPromotions = function (direction, limit,column, searchText) {
+        if ($scope.loadingPromotionData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingPromotionData = true;
+        var query = {"table":"promotions__cstore"};
+        query.columns = [{"expression":"end_date","format":"MM/DD/YYYY"},"image","item_signage","offer_description","offer_title","offer_type","promo_description","promo_title","reward_value","sponsor",{"expression":"start_date","format":"MM/DD/YYYY"},"threshold","upc/plu/dept"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
+            $scope.loadingPromotionData = false;
+            $scope.show.currentCursor = promotionData.response.cursor;
+            $scope.promotions = promotionData.response.data;
+            for (var i = 0; i < $scope.promotions.length; i++) {
+                $scope.promotions[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllPromotions(1, 10);
+    $scope.setPromotionOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllPromotions(1, 10, null, null);
+    }
+    $scope.getMore = function () {
+        $scope.getAllPromotions(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllPromotions(0, 10);
+    }
+});
+
+cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.clearPromotionContent = function () {
+        $scope.promotiondata["promo_title"] = "";
+        $scope.promotiondata["end_date"] = "";
+        $scope.promotiondata["start_date"] = "";
+        $scope.promotiondata["offer_description"] = "";
+        $scope.promotiondata["offer_title"] = "";
+        $scope.promotiondata["promo_description"] = "";
+        $scope.promotiondata["reward_value"] = "";
+        $scope.promotiondata["sponsor"] = "";
+        $scope.promotiondata["threshold"] = "";
+        $scope.promotiondata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
+        $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
+        $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
+        $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+    }
+    var promotionId = $routeParams.q;
+    if (promotionId && promotionId != undefined && promotionId != "undefined") {
+        $scope.promotiondata["promotionid"] = promotionId;
+    }
+    else {
+        delete $scope.promotiondata["promotionid"];
+    }
+});

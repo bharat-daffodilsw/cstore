@@ -67,12 +67,12 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 
     }
 }]);
-
+//changes made
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/site-info" active-link="active">Site Info</a></li>' +
-            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
+            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
             '<a href active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li><li id="training-categories"><a href active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
@@ -2563,3 +2563,366 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
     }
 }]);
 
+/****************************Promotions************************/
+cstore.directive('promotionList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
+            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\')"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\')"></div>	</span></th>' +
+            '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\')"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title.name\',\'desc\')"></div>	</span></th><th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\')"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\')"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\')"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\')"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\')"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\')"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\')"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\')"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
+            '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>' +
+            '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
+            '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.deletePromotionArray = [];
+                    $scope.deletePromotion = function () {
+                        for (var i = 0; i < $scope.promotions.length; i++) {
+                            if ($scope.promotions[i].deleteStatus) {
+                                $scope.deletePromotionArray.push({"_id": $scope.promotions[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "promotions__cstore";
+                        query.operations = angular.copy($scope.deletePromotionArray);
+                        $scope.deletePromotionArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.promotions.length; i++) {
+                                    if ($scope.promotions[i].deleteStatus) {
+                                        $scope.promotions.splice(i, 1);
+                                    }
+                                }
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+
+                    }
+                    $scope.setPromotionState = function (promotion) {
+                        $scope.promotiondata["promo_title"] = promotion.promo_titile ? promotion.promo_title : "";
+                        $scope.promotiondata["end_date"] = promotion.end_date ? promotion.end_date : "";
+                        $scope.promotiondata["start_date"] = promotion.start_date ? promotion.start_date : "";
+                        $scope.promotiondata["offer_description"] = promotion.offer_description ? promotion.offer_description : "";
+                        $scope.promotiondata["offer_title"] = promotion.offer_title ? promotion.offer_title : "";
+                        $scope.promotiondata["promo_description"] = promotion.promo_description ? promotion.promo_description : "";
+                        $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
+                        $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
+                        $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
+                        $scope.showFile(promotion.image, false);
+                        if (promotion.offer_type && $scope.promotiondata.offerTypes) {
+                            for (var j = 0; j < $scope.promotiondata.offerTypes.length; j++) {
+                                if ($scope.promotiondata.offerTypes[j].name == promotion.offer_type) {
+                                    $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[j];
+                                    break;
+                                }
+                            }
+                        }
+                        if (promotion.item_signage && $scope.promotiondata.itemSignage) {
+                            for (var j = 0; j < $scope.promotiondata.itemSignage.length; j++) {
+                                if ($scope.promotiondata.itemSignage[j].name == promotion.item_signage) {
+                                    $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[j];
+                                    break;
+                                }
+                            }
+                        }
+                        if (promotion.upc/plu/dept && $scope.promotiondata.upc) {
+                            for (var j = 0; j < $scope.promotiondata.upc.length; j++) {
+                                if ($scope.promotiondata.upc[j].name == promotion.upc/plu/dept) {
+                                    $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[j];
+                                    break;
+                                }
+                            }
+                        }
+                        window.location.href = "#!edit-promotion?q=" + promotion._id;
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('itemSignageSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="promotiondata.selectedItemSignage" ng-options="itemSignage.name for itemSignage in promotiondata.itemSignage"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+                    console.log(JSON.stringify($scope.promotiondata.itemSignage));
+                }, post: function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+
+                }, post: function () {
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="promotiondata.selectedUpc" ng-options="upc.name for upc in promotiondata.upc"></select>',
+        compile: function () {
+            return{
+                pre: function () {
+
+                }, post: function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('startDate', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="app-grid-datepicker-parent" style="width:200px;height:30px;padding: 5px;">' +
+            '<input type="text" ng-model="promotiondata.start_date" data-date-format="mm/dd/yyyy" app-datepicker class="app-grid-date-picker-input tbox" id="date">' +
+            '<input type="text" data-toggle="datepicker" class="app-grid-date-picker-calender-image" tabindex="-1"/></div>',
+
+        compile: function () {
+            return{
+                pre: function () {
+
+                }, post: function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('startDate', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="app-grid-datepicker-parent" style="width:200px;height:30px;padding: 5px;">' +
+            '<input type="text" ng-model="promotiondata.end_date" data-date-format="mm/dd/yyyy" app-datepicker class="app-grid-date-picker-input tbox" id="date">' +
+            '<input type="text" data-toggle="datepicker" class="app-grid-date-picker-calender-image" tabindex="-1"/></div>',
+
+        compile: function () {
+            return{
+                pre: function () {
+
+                }, post: function ($scope) {
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('addPromotion', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        replace: 'true',
+        template:'<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">Promo Title</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_title"></td></tr>' +
+            '<tr><td><div class="margin_top">Promo Description</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_description"></td></tr>' +
+            '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
+            '<tr><td><div class="margin_top">Start Date</div></td></tr>' +
+            '<tr><td><start-date></start-date></td></tr>' +
+            '<tr><td><div class="margin_top">End Date</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.end_date"></td></tr>' +
+            '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
+            '<tr><td><item-signage-select></item-signage-select></td></tr>' +
+            '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
+            '</tbody></table></div>' +
+            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">Offer Title</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_title"></td></tr>' +
+            '<tr><td><div class="margin_top">Offer Description</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_description"></td></tr>' +
+            '<tr><td><div class="margin_top">Offer Type</div></td></tr>' +
+            '<tr><td><offer-type-select></offer-type-select></td></tr>' +
+            '<tr><td><div class="margin_top">UPC/PLU/DEPT</div></td></tr>' +
+            '<tr><td><upc-select></upc-select></td></tr>' +
+            '<tr><td><div class="margin_top">Threshold</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.threshold"></td></tr>' +
+            '<tr><td><div class="margin_top">Sponsor</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td></tr>' +
+            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
+            '</div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
+            '</div></div></td></tr>' +
+            '</tbody></table>' +
+            '<div class="loadingImage" ng-hide="!loadingAddPromotionData"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    //$scope.promotiondata["editImage"] = false;
+                    $scope.loadingAddPromotionData = true;
+                    $scope.newPromotion = {};
+                    $scope.setPathforPromotion = function (path) {
+                        $scope.clearPromotionContent();
+                        window.location.href = "#!/" + path;
+                    }
+
+                },
+                post: function ($scope) {
+                    $scope.loadingAddPromotionData = false;
+                    $scope.savePromotion = function () {
+                    //console.log($scope.promotiondata.promo_description);
+
+                        $scope.CSession = $appService.getSession();
+                        if ($scope.CSession) {
+                            if (!$scope.promotiondata.promo_title) {
+                                $("#popupMessage").html("Please enter promo title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.promo_description) {
+                                $("#popupMessage").html("Please enter promo description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.offer_title) {
+                                $("#popupMessage").html("Please enter offer title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.offer_description) {
+                                $("#popupMessage").html("Please enter offer description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            //if (!$scope.promotiondata.start_date) {
+                            //    $("#popupMessage").html("Please select start date");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                           // }
+                           // if (!$scope.promotiondata.end_date) {
+                           //     $("#popupMessage").html("Please select end_date");
+                           //     $('.popup').toggle("slide");
+                           //     return false;
+                           // }
+                            //if (!$('#uploadfile').val()) {
+                            //    $("#popupMessage").html("Please upload file");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
+                            var query = {};
+                            query.table = "promotions__cstore";
+
+                            if ($scope.promotiondata["promotionid"]) {
+                                $scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
+                            }
+                            $scope.newPromotion["end_date"] = $scope.promotiondata.end_date;
+                            $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
+                            $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
+                            $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
+                            $scope.newPromotion["offer_type"] = $scope.promotiondata.selectedOfferType.name;
+                            $scope.newPromotion["promo_description"] = $scope.promotiondata.promo_description;
+                            $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
+                            $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
+                            $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
+                            $scope.newPromotion["start_date"] = $scope.promotiondata.start_date;
+                            $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
+                            $scope.newPromotion["end_date"] = $scope.promotiondata.end_date;
+                            $scope.newPromotion["upc/plu/dept"] = $scope.promotiondata.selectedUpc.name;
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                delete $scope.newPromotion["image"];
+                                query.operations = [$scope.newPromotion];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                var current_file = {};
+                                current_file.name = $scope.oFile.name;
+                                current_file.type = $scope.oFile.type;
+                                current_file.contents = $scope.oFile.data;
+                                current_file.ask = ASK;
+                                current_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                    if (data.response) {
+                                        $scope.newPromotion["image"] = data.response;
+                                        query.operations = [$scope.newPromotion];
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
+
+                                        $("#popupMessage").html("some error while uploading image please try again");
+                                        $('.popup').toggle("slide");
+
+                                    }
+                                }, function (callbackerror) {
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
+                                });
+                            }
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    };
+                    $scope.saveFunction = function (query) {
+                        //console.log(query);
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                                $scope.setPathforPromotion("promotions");
+                            } else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while saving promotion");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            console.log(err.stack);
+
+                        });
+                    }
+                }
+            }
+        }
+    }
+}]);
