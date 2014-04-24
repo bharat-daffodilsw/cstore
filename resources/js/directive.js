@@ -1714,7 +1714,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
 							}
                             return el.editStatus == true;
                         });
-						for (var j = 0; j < blankindexes.length) {
+						for (var j = 0; j < blankindexes.length;j++) {
  							$scope.productCategories.splice(blankindexes[j], 1);
 							j = (j > 0) ? j-- : j++; 
 						}
@@ -2176,7 +2176,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 							}
                             return el.editStatus == true && (el.name != "" || el.stateid != "");
                         });
-						for (var j = 0; j < blankindexes.length) {
+						for (var j = 0; j < blankindexes.length;j++) {
 							$scope.cities.splice(blankindexes[j], 1);							
 							j = (j > 0) ? j-- : j++; 
 						}
