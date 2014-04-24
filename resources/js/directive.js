@@ -1677,9 +1677,9 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
 							}
                             return el.editStatus == true;
                         });
-						for (var j = 0; j < blankindexes.length; j++) {
-							$scope.productCategories.splice(blankindexes[j], 1);
-							j--;
+						for (var j = 0; j < blankindexes.length) {
+ 							$scope.productCategories.splice(blankindexes[j], 1);
+							j = (j > 0) ? j-- : j++; 
 						}
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
@@ -2139,9 +2139,9 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 							}
                             return el.editStatus == true && (el.name != "" || el.stateid != "");
                         });
-						for (var j = 0; j < blankindexes.length; j++) {
-							$scope.cities.splice(blankindexes[j], 1);
-							j--;
+						for (var j = 0; j < blankindexes.length) {
+							$scope.cities.splice(blankindexes[j], 1);							
+							j = (j > 0) ? j-- : j++; 
 						}
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
