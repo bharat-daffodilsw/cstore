@@ -1673,11 +1673,17 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.code == 58 && callBackData.status == "error"){
+									$("#popupMessage").html("This record is referred in products");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -1715,13 +1721,6 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
 							}
                             return el.editStatus == true;
                         });
-
-						for (var j = 0; j < blankindexes.length;j++) {
- 							$scope.productCategories.splice(blankindexes[j], 1);
-							j = (j > 0) ? j-- : j++; 
-						}
-
-
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
                                 $("#popupMessage").html("Please enter product category name");
@@ -1743,10 +1742,14 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         $scope.productCategories[i]["editStatus"] = false;
                                     }
-                                } else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while saving");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2142,11 +2145,17 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.code == 58 && callBackData.status == "error"){
+									$("#popupMessage").html("This record is referred in vendor");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2184,13 +2193,6 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 							}
                             return el.editStatus == true && (el.name != "" || el.stateid != "");
                         });
-
-						for (var j = 0; j < blankindexes.length;j++) {
-							$scope.cities.splice(blankindexes[j], 1);							
-							j = (j > 0) ? j-- : j++; 
-						}
-
-
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
                                 $("#popupMessage").html("Please enter city name");
@@ -2220,10 +2222,14 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         $scope.cities[i]["editStatus"] = false;
                                     }
-                                } else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
