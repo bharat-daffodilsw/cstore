@@ -32,13 +32,49 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+//cstore.directive('locationPopup', ['$appService', function ($appService, $scope) {
+//    return{
+//        restrict: "E",
+//        template: '<div class="location_popup pull-left"><div class="loction_img pull-left"><img src="images/location.png"></div><div class="popup">Help us to serve you better</div>' +
+//            '<div class="popup">Please provide your location details.</div><div class="pop_btn pull-left"><div class="popup_input pull-left">' +
+//            '<input type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
+//            '</div><div class="delete_btn pull-right"><button type="button" ng-click="selectedLocation()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
+//        compile: function () {
+//            return {
+//                pre: function ($scope) {
+//                    $scope.hidePopup = function () {
+//                        $(".location_popup").hide();
+//                    }
+//                    /*$scope.selectedLocation=function(){
+//                     //console.log($scope.asyncSelected);
+//                     $appService.delete_cookie("selectedLoc");
+//                     $scope.selectedLoc=$scope.asyncSelected;
+//                     var c_name = "selectedLoc";
+//                     if($scope.selectedLoc && $scope.selectedLoc!=null && $scope.selectedLoc!="null"){
+//                     document.cookie = c_name + "=" + escape($scope.selectedLoc);
+//                     }
+//                     else {
+//                     var defaultLocation ="United States";
+//                     document.cookie = c_name + "=" + escape(defaultLocation);
+//                     }
+//                     $(".location_popup").hide();
+//                     } */
+//                },
+//                post: function () {
+//                }
+//            }
+//        }
+//
+//    }
+//}]);
+/*bharat chanage */
 cstore.directive('locationPopup', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="location_popup pull-left"><div class="loction_img pull-left"><img src="images/location.png"></div><div class="popup">Help us to serve you better</div>' +
             '<div class="popup">Please provide your location details.</div><div class="pop_btn pull-left"><div class="popup_input pull-left">' +
-            '<input type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
-            '</div><div class="delete_btn pull-right"><button type="button" ng-click="selectedLocation()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
+            '<google-places location=location></google-places>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="doSearch()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -67,6 +103,7 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 
     }
 }]);
+/*change end here */
 //changes made
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
@@ -2926,3 +2963,24 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
         }
     }
 }]);
+/*bharat chnage */
+cstore.directive('googlePlaces', function(){
+    return {
+        restrict:'E',
+        replace:true,
+        // transclude:true,
+        scope: {location:'='},
+        template: '<input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/>',
+        link: function($scope, elm, attrs){
+            var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                var place = autocomplete.getPlace();
+                $scope.location=place["address_components"][0].long_name;
+//
+// $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+                $scope.$apply();
+            });
+        }
+    }
+});
+/*bharat change end here*/

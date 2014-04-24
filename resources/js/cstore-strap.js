@@ -175,8 +175,8 @@ appStrapServices.factory('$appService', [
             }
             return currentSession;
         }
-        $appService.getLocation = function(){
-            var currentLocation ={};
+        $appService.getLocation = function () {
+            var currentLocation = {};
             if (!$appService.getCookie("usk")) {
                 return null;
             }
