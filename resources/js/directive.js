@@ -1679,6 +1679,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                         });
 						for (var j = 0; j < blankindexes.length; j++) {
 							$scope.productCategories.splice(blankindexes[j], 1);
+							j--;
 						}
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
@@ -2140,6 +2141,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         });
 						for (var j = 0; j < blankindexes.length; j++) {
 							$scope.cities.splice(blankindexes[j], 1);
+							j--;
 						}
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
