@@ -944,10 +944,13 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                             if (storeid) {
                                 var c_name = "storeid";
                                 document.cookie = c_name + "=" + escape(storeid);
-                                var c_name = "companyLogoUrl";
-                                document.cookie = c_name + "=" + escape(companyLogoUrl);
-                            }
 
+                                if (companyLogoUrl) {
+                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+                                    var c_name = "companyLogoUrl";
+                                }
+
+                            }
                         }
                         var c_name = "usk";
                         document.cookie = c_name + "=" + escape(usk);
