@@ -1371,6 +1371,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
 
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newStore["company_logo"];
+								$scope.newStore["company_logo"] = null;
                                 query.operations = [$scope.newStore];
                                 $scope.saveFunction(query);
                             }
