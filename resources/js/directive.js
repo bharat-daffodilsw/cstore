@@ -1576,7 +1576,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Category</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Description</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'description\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus">' +
+            '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus" ng-show="productCategory._id">' +
             '</td><td><span ng-hide="productCategory.editStatus">{{productCategory.name}}</span>' +
             '<input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.name"></td><td><span ng-hide="productCategory.editStatus">' +
             '{{productCategory.description}}</span><input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.description"></td>' +
@@ -1629,8 +1629,8 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         if ($scope.productCategories[i].deleteStatus) {
-                                            console.log("delete items" + i);
                                             $scope.productCategories.splice(i, 1);
+											i--;
                                         }
                                     }
 
@@ -1666,17 +1666,23 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                         }
                     }
                     $scope.saveProductCategories = function () {
+                        var blankindexes = [];
+						var savedindexes = [];
                         var productCategoryList = $scope.productCategories.filter(function (el) {
-                            return el.editStatus == true && (el.name != "" || el.description != "");
+							if(!el._id && el.name == "" && el.description == ""){							
+								blankindexes.push($scope.productCategories.indexOf(el));
+							}
+							if(!el._id && (el.name || el.description)){							
+								savedindexes.push($scope.productCategories.indexOf(el));
+							}
+                            return el.editStatus == true;
                         });
+						for (var j = 0; j < blankindexes.length; j++) {
+							$scope.productCategories.splice(blankindexes[j], 1);
+						}
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
                                 $("#popupMessage").html("Please enter product category name");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!productCategoryList[i].description) {
-                                $("#popupMessage").html("Please enter product description");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1689,6 +1695,9 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
+									for (var j = 0; j < savedindexes.length; j++) {
+										$scope.productCategories[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+									}
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         $scope.productCategories[i]["editStatus"] = false;
                                     }
@@ -2037,7 +2046,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>City</span><span class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'name\',\'desc\')"></div>	</span></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'stateid.name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'stateid.name\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="city in cities"><td><input type="checkbox" ng-model="city.deleteStatus">' +
+            '</tr><tr ng-repeat="city in cities"><td><input type="checkbox" ng-model="city.deleteStatus" ng-show="city._id">' +
             '</td><td><span ng-hide="city.editStatus">{{city.name}}</span>' +
             '<input type="text" ng-show="city.editStatus" ng-model="city.name"></td><td>' +
             '<span ng-hide="city.editStatus">{{city.stateid.name}}</span><city-state-select ng-show="city.editStatus"></city-state-select></td><td style="cursor: pointer">' +
@@ -2081,8 +2090,8 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         if ($scope.cities[i].deleteStatus) {
-                                            //console.log("delete items" + i);
                                             $scope.cities.splice(i, 1);
+											i--;
                                         }
                                     }
 
@@ -2118,9 +2127,20 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.saveCities = function () {
+                        var blankindexes = [];
+						var savedindexes = [];
                         var cityList = $scope.cities.filter(function (el) {
+							if(!el._id && el.name == "" && el.stateid == ""){							
+								blankindexes.push($scope.cities.indexOf(el));
+							}
+							if(!el._id && (el.name || el.stateid)){							
+								savedindexes.push($scope.cities.indexOf(el));
+							}
                             return el.editStatus == true && (el.name != "" || el.stateid != "");
                         });
+						for (var j = 0; j < blankindexes.length; j++) {
+							$scope.cities.splice(blankindexes[j], 1);
+						}
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
                                 $("#popupMessage").html("Please enter city name");
@@ -2144,6 +2164,9 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
+									for (var j = 0; j < savedindexes.length; j++) {
+										$scope.cities[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+									}
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         $scope.cities[i]["editStatus"] = false;
                                     }
