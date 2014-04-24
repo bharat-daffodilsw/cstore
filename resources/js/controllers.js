@@ -1395,7 +1395,8 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
     $scope.productCategories = [];
     $appService.auth();
     $scope.getAllProductCategories = function (direction, limit, column, searchText) {
-        if ($scope.loadingCountryData) {
+        //changes made
+        if ($scope.loadingProductCategoryData) {
             return false;
         }
         if (direction == 1) {
@@ -1469,9 +1470,14 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
 cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
     $scope.show = {"pre":false, "next":true, "preCursor":0, "currentCursor":0};
     $scope.loadingTrainingCategoryData = false;
+    $scope.venderSearch = [
+        {"value":"name", "name":"Training Category"},
+        {"value":"description", "name":"Description"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
     $scope.trainingCategories = [];
     $appService.auth();
-    $scope.getAllTrainingCategories = function (direction, limit) {
+    $scope.getAllTrainingCategories = function (direction, limit, column, searchText) {
         if ($scope.loadingTrainingCategoryData) {
             return false;
         }
@@ -1483,7 +1489,18 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
         }
         $scope.loadingTrainingCategoryData = true;
         var query = {"table":"training_categories__cstore"};
-        query.columns = ["name", "description"];
+
+
+        query.columns = ["name","description"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
+        }
+        query.orders = {};
+        if($scope.sortingCol && $scope.sortingType){
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
@@ -1496,6 +1513,7 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
             for (var i = 0; i < $scope.trainingCategories.length; i++) {
                 $scope.trainingCategories[i]["deleteStatus"] = false;
                 $scope.trainingCategories[i]["editStatus"] = false;
+                $scope.trainingCategories[i]["oldstatus"] =true;
             }
 
         }, function (jqxhr, error) {
@@ -1504,11 +1522,33 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllTrainingCategories(1, 10);
+    $scope.setTrainingCatOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllTrainingCategories(1, 10, null, null);
+    }
     $scope.getMore = function () {
         $scope.getAllTrainingCategories(1, 10);
     }
     $scope.getLess = function () {
         $scope.getAllTrainingCategories(0, 10);
+    }
+    $scope.refreshTrainingCategories=function(index,refreshTrainingCategoryId){
+        var query = {"table":"training_categories__cstore"};
+        query.columns = ["name","description"];
+        query.filter ={"_id":refreshTrainingCategoryId};
+        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryData) {
+            trainingCategoryData.response.data[0].deleteStatus = false;
+            trainingCategoryData.response.data[0].oldstatus = true;
+            $scope.trainingCategories[index] = trainingCategoryData.response.data[0];
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+        })
     }
 });
 
