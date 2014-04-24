@@ -218,12 +218,21 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
 
     }
-    else {
+    else if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == ADMIN) {
         $scope.displayData["options"] = false;
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = true;
         $scope.displayData["loggedIn"] = true;
         $scope.displayData["role"] = {"admin":true, "storeManager":false};
+    }
+    else {
+        $scope.displayData["options"] = false;
+        $scope.displayData["cart"] = false;
+        $scope.displayData["menu"] = false;
+        $scope.displayData["loggedIn"] = false;
+        $scope.displayData["role"] = {"admin":false, "storeManager":false};
+        $scope.displayData["companyLogo"] = false;
+
     }
     var hash = window.location.hash;
     if (($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") && hash.indexOf("resetpassword") == -1) {
@@ -1491,13 +1500,13 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
         var query = {"table":"training_categories__cstore"};
 
 
-        query.columns = ["name","description"];
+        query.columns = ["name", "description"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex":"(" + searchText + ")", "$options":"-i"};
         }
         query.orders = {};
-        if($scope.sortingCol && $scope.sortingType){
+        if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
         }
 
@@ -1513,7 +1522,7 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
             for (var i = 0; i < $scope.trainingCategories.length; i++) {
                 $scope.trainingCategories[i]["deleteStatus"] = false;
                 $scope.trainingCategories[i]["editStatus"] = false;
-                $scope.trainingCategories[i]["oldstatus"] =true;
+                $scope.trainingCategories[i]["oldstatus"] = true;
             }
 
         }, function (jqxhr, error) {
@@ -1534,10 +1543,10 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllTrainingCategories(0, 10);
     }
-    $scope.refreshTrainingCategories=function(index,refreshTrainingCategoryId){
+    $scope.refreshTrainingCategories = function (index, refreshTrainingCategoryId) {
         var query = {"table":"training_categories__cstore"};
-        query.columns = ["name","description"];
-        query.filter ={"_id":refreshTrainingCategoryId};
+        query.columns = ["name", "description"];
+        query.filter = {"_id":refreshTrainingCategoryId};
         var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryData) {
