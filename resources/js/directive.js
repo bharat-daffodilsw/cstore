@@ -706,11 +706,17 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }
-                            else {
-                                $("#popupMessage").html(callBackData.response);
-                                $('.popup').toggle("slide");
-                            }
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+									$("#popupMessage").html("This record is referred in another table");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
@@ -1018,11 +1024,17 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }
-                            else {
-                                $("#popupMessage").html(callBackData.response);
-                                $('.popup').toggle("slide");
-                            }
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+									$("#popupMessage").html("This record is referred in another table");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
@@ -2368,13 +2380,17 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    console.log(callBackData);
-                                    //alert(callBackData.response);
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+									$("#popupMessage").html("This record is referred in promotions");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
