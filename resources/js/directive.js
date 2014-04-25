@@ -1524,7 +1524,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if(callBackData.response.substring(0,29) == "Opertion can not be processed" || JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
+                                }else if(callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
 									$("#popupMessage").html("This record is referred in products");
 									$('.popup').toggle("slide");								
 								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
@@ -1694,7 +1694,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if(callBackData.response.substring(0,29) == "Opertion can not be processed" || JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
+                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
 									$("#popupMessage").html("This record is referred in products");
 									$('.popup').toggle("slide");								
 								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
@@ -1987,7 +1987,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if(callBackData.response.substring(0,29) == "Opertion can not be processed" || JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
+                                }else if(callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
 									$("#popupMessage").html("This record is referred in products");
 									$('.popup').toggle("slide");								
 								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
@@ -2191,7 +2191,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if(callBackData.response.substring(0,29) == "Opertion can not be processed" || JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
+                                }else if(callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed"){
 									$("#popupMessage").html("This record is referred in vendor");
 									$('.popup').toggle("slide");								
 								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
