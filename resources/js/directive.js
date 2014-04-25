@@ -2003,7 +2003,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                     $scope.saveStates = function () {
 						var savedindexes = [];		
 						for (var j = $scope.states.length-1; j >= 0; j--) {
-							if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].state.abbreviation){		
+							if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].abbreviation){		
 								$scope.states.splice(j, 1);
 							}
 						}						
