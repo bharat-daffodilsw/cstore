@@ -363,6 +363,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                         if ($scope.vendors[i].deleteStatus) {
                                             console.log("delete items" + i);
                                             $scope.vendors.splice(i, 1);
+											i--;
                                         }
                                     }
                                     $("#popupMessage").html("Deleted");
@@ -702,6 +703,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                     if ($scope.products[i].deleteStatus) {
                                         console.log("delete items" + i);
                                         $scope.products.splice(i, 1);
+										i--;
                                     }
                                 }
                                 $("#popupMessage").html("Deleted");
@@ -1020,6 +1022,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     if ($scope.storeManagers[i].deleteStatus) {
                                         console.log("delete items" + i);
                                         $scope.storeManagers.splice(i, 1);
+										i--;
                                     }
                                 }
                                 $("#popupMessage").html("Deleted");
@@ -1854,6 +1857,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                         if ($scope.trainingCategories[i].deleteStatus) {
                                             console.log("delete items" + i);
                                             $scope.trainingCategories.splice(i, 1);
+											i--;
                                         }
                                     }
 
@@ -2375,6 +2379,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                     for (var i = 0; i < $scope.users.length; i++) {
                                         if ($scope.users[i].deleteStatus) {
                                             $scope.users.splice(i, 1);
+											i--;
                                         }
                                     }
 
@@ -2747,6 +2752,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 for (var i = 0; i < $scope.promotions.length; i++) {
                                     if ($scope.promotions[i].deleteStatus) {
                                         $scope.promotions.splice(i, 1);
+										i--;
                                     }
                                 }
                                 $("#popupMessage").html("Deleted");
