@@ -183,20 +183,26 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name":"Aisle"}
     ];
     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
-    $scope.promotiondata.upc = [
-        {"name":"UPC"},
-        {"name":"PLU"},
-        {"name":"DEPT"}
-
-    ];
-    $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+   if($scope.promotiondata.selectedOfferType.name == "SVB" || $scope.promotiondata.selectedOfferType.name == "MVB"){
+		$scope.promotiondata.upc = [
+			{"name":"UPC"},
+			{"name":"PLU"},
+			{"name":"DEPT"}
+		];
+	}else{
+		$scope.promotiondata.upc = [
+			{"name":"UPC"},
+			{"name":"PLU"}
+		];
+	}
+	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
 
 
     /*bharat change for location*/
     $scope.location = '';
-
+	
     $scope.doSearch = function () {
         if ($scope.location === '') {
             alert('Directive did not update the location property in parent controller.');
@@ -211,7 +217,21 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
     };
     /*change end*/
-
+	
+	$scope.getAllVendorsList = function () {
+        var query = {"table": "vendors__cstore"};
+        query.columns = ["firstname"];
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+            $scope.promotiondata.vendors = vendorData.response.data;
+			$scope.promotiondata.vendorsList = $scope.promotiondata.vendors[0];
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllVendorsList();
     if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == STOREMANAGER) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
@@ -1993,7 +2013,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "sponsor",
             {"expression": "start_date", "format": "MM/DD/YYYY"},
             "threshold",
-            "upc"
+            "upc",
+			"vendorid"
         ];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2020,7 +2041,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getAllPromotions(1, 10);
+    $scope.getAllPromotions(1, 10);	
     $scope.setPromotionOrder = function (sortingCol, sortingType) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
@@ -2052,6 +2073,7 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+       // $scope.promotiondata.vendorsList = $scope.vendors[0];
     }
     var promotionId = $routeParams.q;
     if (promotionId && promotionId != undefined && promotionId != "undefined") {

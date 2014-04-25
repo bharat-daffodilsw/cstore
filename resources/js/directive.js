@@ -2751,19 +2751,27 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     }
                     $scope.setPromotionState = function (promotion) {
                         $scope.promotiondata["promo_title"] = promotion.promo_title ? promotion.promo_title : "";
-                        $scope.end_date = promotion.end_date ? promotion.end_date : "";
-                        $scope.start_date = promotion.start_date ? promotion.start_date : "";
+                        $scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
+                        $scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
                         $scope.promotiondata["offer_description"] = promotion.offer_description ? promotion.offer_description : "";
                         $scope.promotiondata["offer_title"] = promotion.offer_title ? promotion.offer_title : "";
                         $scope.promotiondata["promo_description"] = promotion.promo_description ? promotion.promo_description : "";
                         $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
                         $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
-                        $scope.showFile(promotion.image, false);
+                        $scope.showFile(promotion.image, false);		
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
                             for (var j = 0; j < $scope.promotiondata.offerTypes.length; j++) {
                                 if ($scope.promotiondata.offerTypes[j].name == promotion.offer_type) {
                                     $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[j];
+                                    break;
+                                }
+                            }
+                        }	
+                        if (promotion.vendorid && $scope.promotiondata.vendors) {
+                            for (var j = 0; j < $scope.promotiondata.vendors.length; j++) {
+                                if ($scope.promotiondata.vendors[j]._id == promotion.vendorid._id) {
+                                    $scope.promotiondata.vendorsList = $scope.promotiondata.vendors[j];
                                     break;
                                 }
                             }
@@ -2776,7 +2784,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 }
                             }
                         }
-                        console.log(promotion.upc);
                         if (promotion.upc && $scope.promotiondata.upc) {
                             for (var j = 0; j < $scope.promotiondata.upc.length; j++) {
                                 if ($scope.promotiondata.upc[j].name == promotion.upc) {
@@ -2811,12 +2818,27 @@ cstore.directive('itemSignageSelect', ['$appService', function ($appService, $sc
 cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
+        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-change="setUpc(promotiondata.selectedOfferType)" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
         compile: function () {
             return{
                 pre: function ($scope) {
 
-                }, post: function () {
+                }, post: function ($scope) {
+					$scope.setUpc = function(offertype){
+						if(offertype.name == "SVB" || offertype.name == "MVB"){
+							$scope.promotiondata.upc = [
+								{"name":"UPC"},
+								{"name":"PLU"},
+								{"name":"DEPT"}
+							];
+						}else{
+							$scope.promotiondata.upc = [
+								{"name":"UPC"},
+								{"name":"PLU"}
+							];
+						}
+						$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+					}
                 }
             }
         }
@@ -2830,8 +2852,8 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
         compile: function () {
             return{
                 pre: function () {
-
                 }, post: function ($scope) {
+					
                 }
             }
         }
@@ -2869,9 +2891,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
             '<tr><td><div class="margin_top">Start Date</div></td></tr>' +
-            '<tr><td><input id="start_date" type="text" ng-model="start_date" jqdatepicker /></td></tr>' +
+            '<tr><td><input id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker /></td></tr>' +
             '<tr><td><div class="margin_top">End Date</div></td></tr>' +
-            '<tr><td><input id="end_date" type="text" ng-model="end_date" jqdatepicker1 /></td></tr>' +
+            '<tr><td><input id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker /></td></tr>' +
             '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
             '<tr><td><item-signage-select></item-signage-select></td></tr>' +
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
@@ -2889,6 +2911,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.threshold"></td></tr>' +
             '<tr><td><div class="margin_top">Sponsor</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td></tr>' +
+            '<tr><td><div class="margin_top">Vendor</div></td></tr>' +
+            '<tr><td><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
@@ -2918,92 +2942,90 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 
                         $scope.CSession = $appService.getSession();
                          if ($scope.CSession) {
-                         if (!$scope.promotiondata.promo_title) {
-                         $("#popupMessage").html("Please enter promo title");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         if (!$scope.promotiondata.promo_description) {
-                         $("#popupMessage").html("Please enter promo description");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         if (!$scope.promotiondata.offer_title) {
-                         $("#popupMessage").html("Please enter offer title");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         if (!$scope.promotiondata.offer_description) {
-                         $("#popupMessage").html("Please enter offer description");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         //if (!$scope.promotiondata.start_date) {
-                         //    $("#popupMessage").html("Please select start date");
-                         //    $('.popup').toggle("slide");
-                         //    return false;
-                         // }
-                         // if (!$scope.promotiondata.end_date) {
-                         //     $("#popupMessage").html("Please select end_date");
-                         //     $('.popup').toggle("slide");
-                         //     return false;
-                         // }
-                         //if (!$('#uploadfile').val()) {
-                         //    $("#popupMessage").html("Please upload file");
-                         //    $('.popup').toggle("slide");
-                         //    return false;
-                         //}
-                         var query = {};
-                         query.table = "promotions__cstore";
-
-                         if ($scope.promotiondata["promotionid"]) {
-                         $scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
-                         }
-                         $scope.newPromotion["end_date"] = $scope.end_date;
-                         $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
-                         $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
-                         $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
-                         $scope.newPromotion["offer_type"] = $scope.promotiondata.selectedOfferType.name;
-                         $scope.newPromotion["promo_description"] = $scope.promotiondata.promo_description;
-                         $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
-                         $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
-                         $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
-                         $scope.newPromotion["start_date"] = $scope.start_date;
-                         $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
-                         $scope.newPromotion["upc/plu/dept"] = $scope.promotiondata.selectedUpc.name;
-                         if (document.getElementById('uploadfile').files.length === 0) {
-                         delete $scope.newPromotion["image"];
-                         query.operations = [$scope.newPromotion];
-                         $scope.saveFunction(query);
-                         }
-                         else {
-                         var current_file = {};
-                         current_file.name = $scope.oFile.name;
-                         current_file.type = $scope.oFile.type;
-                         current_file.contents = $scope.oFile.data;
-                         current_file.ask = ASK;
-                         current_file.osk = OSK;
-                         $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                         if (data.response) {
-                         $scope.newPromotion["image"] = data.response;
-                         query.operations = [$scope.newPromotion];
-                         $scope.saveFunction(query);
-                         }
-                         else {
-
-                         $("#popupMessage").html("some error while uploading image please try again");
-                         $('.popup').toggle("slide");
-
-                         }
-                         }, function (callbackerror) {
-                         $("#popupMessage").html(callbackerror);
-                         $('.popup').toggle("slide");
-                         });
-                         }
+							 if (!$scope.promotiondata.promo_title) {
+								 $("#popupMessage").html("Please enter promo title");
+								 $('.popup').toggle("slide");
+								 return false;
+							 }
+							 if (!$scope.promotiondata.offer_title) {
+								 $("#popupMessage").html("Please enter offer title");
+								 $('.popup').toggle("slide");
+								 return false;
+							 }
+							 if (!$scope.promotiondata.start_date) {
+								 $("#popupMessage").html("Please select start date");
+								 $('.popup').toggle("slide");
+								 return false;
+							  }
+							  if (!$scope.promotiondata.end_date) {
+							      $("#popupMessage").html("Please select end date");
+							      $('.popup').toggle("slide");
+							      return false;
+							  }
+							  if (!$scope.promotiondata.threshold) {
+							      $("#popupMessage").html("Please select threshold");
+							      $('.popup').toggle("slide");
+							      return false;
+							  }
+							  if (!$scope.promotiondata.sponsor) {
+							      $("#popupMessage").html("Please select sponsor");
+							      $('.popup').toggle("slide");
+							      return false;
+							  }
+							 if (!$('#uploadfile').val()) {
+							     $("#popupMessage").html("Please upload file");
+							     $('.popup').toggle("slide");
+							     return false;
+							 }
+							 var query = {};
+							 query.table = "promotions__cstore";
+							 if ($scope.promotiondata["promotionid"]) {
+								$scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
+							 }
+							 $scope.newPromotion["end_date"] = $scope.promotiondata.end_date;
+							 $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
+							 $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
+							 $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
+							 $scope.newPromotion["offer_type"] = $scope.promotiondata.selectedOfferType.name;
+							 $scope.newPromotion["promo_description"] = $scope.promotiondata.promo_description;
+							 $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
+							 $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
+							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
+							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date;
+							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
+							 $scope.newPromotion["upc/plu/dept"] = $scope.promotiondata.selectedUpc.name;
+							 $scope.newPromotion["vendorid"] = {"_id":$scope.promotiondata.vendorsList._id};
+							 if (document.getElementById('uploadfile').files.length === 0) {
+								 delete $scope.newPromotion["image"];
+								 query.operations = [$scope.newPromotion];
+								 $scope.saveFunction(query);
+							 }
+							 else {
+								 var current_file = {};
+								 current_file.name = $scope.oFile.name;
+								 current_file.type = $scope.oFile.type;
+								 current_file.contents = $scope.oFile.data;
+								 current_file.ask = ASK;
+								 current_file.osk = OSK;
+								 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+									 if (data.response) {
+										 $scope.newPromotion["image"] = data.response;
+										 query.operations = [$scope.newPromotion];
+										 $scope.saveFunction(query);
+									 }
+									 else {
+										 $("#popupMessage").html("some error while uploading image please try again");
+										 $('.popup').toggle("slide");
+									 }
+								 }, function (callbackerror) {
+									 $("#popupMessage").html(callbackerror);
+									 $('.popup').toggle("slide");
+								 });
+							 }
                          }
                          else {
-                         $("#popupMessage").html("Please login first");
-                         $('.popup').toggle("slide");
+							 $("#popupMessage").html("Please login first");
+							 $('.popup').toggle("slide");
                          }
                     };
                     $scope.saveFunction = function (query) {
@@ -3040,31 +3062,13 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
         restrict: 'A',
         require: 'ngModel',
         link: function ($scope, element, attrs, ngModelCtrl) {
-            //var model = attrs.ngModel.split(".");
-            //console.log($scope[model[0]]);
-            //console.log($scope[model[1]]);
+            var model = attrs.ngModel.split(".");
             $(element).datepicker({
                 dateFormat: 'mm/dd/yy',
                 onSelect: function (date) {
-                    $scope.start_date = date;
-                    $scope.$apply();
-                }
-            });
-        }
-    };
-}]);
-cstore.directive('jqdatepicker1', [ '$appService', function ($appService, $scope) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function ($scope, element, attrs, ngModelCtrl) {
-            //var model = attrs.ngModel.split(".");
-            //console.log($scope[model[0]]);
-            //console.log($scope[model[1]]);
-            $(element).datepicker({
-                dateFormat: 'mm/dd/yy',
-                onSelect: function (date) {
-                    $scope.end_date = date;
+					if(!$scope[model[0]])
+						$scope[model[0]] = {};
+					$scope[model[0]][model[1]] = date;
                     $scope.$apply();
                 }
             });
