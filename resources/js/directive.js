@@ -1476,7 +1476,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setCountryOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCountryOrder(\'name\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="country in countries"><td><input type="checkbox" ng-model="country.deleteStatus">' +
+            '</tr><tr ng-repeat="country in countries"><td><input type="checkbox" ng-model="country.deleteStatus" ng-show="country._id">' +
             '</td><td><span ng-hide="country.editStatus">{{country.name}}</span><input ng-show="country.editStatus" class="edit_input" type="text" ng-model="country.name"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="country.editStatus = true" ng-hide="country.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,country._id)" ng-show="country.editStatus">Cancel</a></td></tr>' +
@@ -1517,18 +1517,24 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         if ($scope.countries[i].deleteStatus) {
-                                            //console.log("delete items" + i);
                                             $scope.countries.splice(i, 1);
+											i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    a$("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.code == 58 && callBackData.status == "error"){
+									$("#popupMessage").html("This record is referred in products");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -1555,8 +1561,17 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                     }
 
                     $scope.saveCountries = function () {
+						var savedindexes = [];
+						for (var j = $scope.countries.length-1; j >= 0; j--) {
+							if(!$scope.countries[j]._id && $scope.countries[j].name){		
+								$scope.countries.splice(j, 1);
+							}
+						}
                         var countryList = $scope.countries.filter(function (el) {
-                            return el.editStatus == true && el.name != "";
+							if(!el._id && el.name){							
+								savedindexes.push($scope.countries.indexOf(el));
+							}
+                            return el.editStatus == true ;
                         });
                         for (var i = 0; i < countryList.length; i++) {
                             if (!countryList[i].name) {
@@ -1573,14 +1588,21 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
+									for (var j = 0; j < savedindexes.length; j++) {
+										$scope.countries[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+									}
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         $scope.countries[i]["editStatus"] = false;
                                     }
 
-                                } else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while saving");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2019,13 +2041,13 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!stateList[i].countryid) {
-                                $("#popupMessage").html("Please select country");
+                            if (!stateList[i].abbreviation) {
+                                $("#popupMessage").html("Please enter abbreviation");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!stateList[i].abbreviation) {
-                                $("#popupMessage").html("Please enter abbreviation");
+                            if (!stateList[i].countryid) {
+                                $("#popupMessage").html("Please select country");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
