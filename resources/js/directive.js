@@ -312,7 +312,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
-            '</div><div class="delete_btn pull-left"><button ng-click="deleteUsers()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '</div><div class="delete_btn pull-left"><button ng-click="deleteVendors()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
@@ -344,7 +344,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         $scope.getAllVendors(1, 10, $scope.searchby.value, $scope.searchContent);
                     }
                     $scope.deleteUserArray = [];
-                    $scope.deleteUsers = function () {
+                    $scope.deleteVendors = function () {
                         for (var i = 0; i < $scope.vendors.length; i++) {
                             if ($scope.vendors[i].deleteStatus) {
                                 $scope.deleteUserArray.push({"_id": $scope.vendors[i]._id, "__type__": "delete"});
@@ -368,12 +368,17 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     }
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    console.log(callBackData);
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+									$("#popupMessage").html("This record is referred in promotions");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2386,7 +2391,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in promotions");
+									$("#popupMessage").html("This record is referred in another table");
 									$('.popup').toggle("slide");								
 								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
 									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
