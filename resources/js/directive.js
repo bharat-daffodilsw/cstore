@@ -104,7 +104,6 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
     }
 }]);
 /*change end here */
-//changes made
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -1279,8 +1278,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     var usk = $scope.CSession["usk"] ? $scope.CSession["usk"] : null;
                     $scope.loadingAddStoreData = false;
                     $scope.saveStore = function () {
-                        if ($scope.CSession) {
-						// changes made
+                        if ($scope.CSession) {						
                             $scope.newStore = {};
                             $scope.newStore["manager"] = {};
                             var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
@@ -1915,7 +1913,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Abbreviation</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'abbreviation\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'abbreviation\',\'desc\')"></div></span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus">' +
+            '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus" ng-show="state._id">' +
             '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
             '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
             '<span ng-hide="state.editStatus">{{state.abbreviation}}</span><input type="text" ng-show="state.editStatus" ng-model="state.abbreviation"></td><td>' +
@@ -1960,18 +1958,24 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.states.length; i++) {
                                         if ($scope.states[i].deleteStatus) {
-                                            //console.log("delete items" + i);
                                             $scope.states.splice(i, 1);
+											i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.code == 58 && callBackData.status == "error"){
+									$("#popupMessage").html("This record is referred in products");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -1997,8 +2001,17 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.saveStates = function () {
+						var savedindexes = [];		
+						for (var j = $scope.states.length-1; j >= 0; j--) {
+							if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].state.abbreviation){		
+								$scope.states.splice(j, 1);
+							}
+						}						
                         var stateList = $scope.states.filter(function (el) {
-                            return el.editStatus == true && (el.name != "" || el.countryid != "");
+							if(!el._id && (el.name || el.countryid || el.abbreviation)){							
+								savedindexes.push($scope.states.indexOf(el));
+							}
+                            return el.editStatus == true ;
                         });
                         for (var i = 0; i < stateList.length; i++) {
                             if (!stateList[i].name) {
@@ -2028,13 +2041,20 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
+									for (var j = 0; j < savedindexes.length; j++) {
+										$scope.states[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+									}
                                     for (var i = 0; i < $scope.states.length; i++) {
                                         $scope.states[i]["editStatus"] = false;
                                     }
-                                } else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while saving");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2042,6 +2062,9 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
+                        }else {
+                            $("#popupMessage").html("No data found for saving");
+                            $('.popup').toggle("slide");
                         }
                     }
                     $scope.setState = function (state) {
@@ -2192,7 +2215,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
 							if(!el._id && (el.name || el.stateid)){							
 								savedindexes.push($scope.cities.indexOf(el));
 							}
-                            return el.editStatus == true && (el.name != "" || el.stateid != "");
+                            return el.editStatus == true;
                         });
                         for (var i = 0; i < cityList.length; i++) {
                             if (!cityList[i].name) {
