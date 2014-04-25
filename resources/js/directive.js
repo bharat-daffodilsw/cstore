@@ -32,13 +32,49 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+//cstore.directive('locationPopup', ['$appService', function ($appService, $scope) {
+//    return{
+//        restrict: "E",
+//        template: '<div class="location_popup pull-left"><div class="loction_img pull-left"><img src="images/location.png"></div><div class="popup">Help us to serve you better</div>' +
+//            '<div class="popup">Please provide your location details.</div><div class="pop_btn pull-left"><div class="popup_input pull-left">' +
+//            '<input type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
+//            '</div><div class="delete_btn pull-right"><button type="button" ng-click="selectedLocation()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
+//        compile: function () {
+//            return {
+//                pre: function ($scope) {
+//                    $scope.hidePopup = function () {
+//                        $(".location_popup").hide();
+//                    }
+//                    /*$scope.selectedLocation=function(){
+//                     //console.log($scope.asyncSelected);
+//                     $appService.delete_cookie("selectedLoc");
+//                     $scope.selectedLoc=$scope.asyncSelected;
+//                     var c_name = "selectedLoc";
+//                     if($scope.selectedLoc && $scope.selectedLoc!=null && $scope.selectedLoc!="null"){
+//                     document.cookie = c_name + "=" + escape($scope.selectedLoc);
+//                     }
+//                     else {
+//                     var defaultLocation ="United States";
+//                     document.cookie = c_name + "=" + escape(defaultLocation);
+//                     }
+//                     $(".location_popup").hide();
+//                     } */
+//                },
+//                post: function () {
+//                }
+//            }
+//        }
+//
+//    }
+//}]);
+/*bharat chanage */
 cstore.directive('locationPopup', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="location_popup pull-left"><div class="loction_img pull-left"><img src="images/location.png"></div><div class="popup">Help us to serve you better</div>' +
             '<div class="popup">Please provide your location details.</div><div class="pop_btn pull-left"><div class="popup_input pull-left">' +
-            '<input type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
-            '</div><div class="delete_btn pull-right"><button type="button" ng-click="selectedLocation()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
+            '<google-places location=location></google-places>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="doSearch()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -67,6 +103,7 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 
     }
 }]);
+/*change end here */
 //changes made
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
@@ -1334,6 +1371,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
 
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newStore["company_logo"];
+								$scope.newStore["company_logo"] = null;
                                 query.operations = [$scope.newStore];
                                 $scope.saveFunction(query);
                             }
@@ -1576,7 +1614,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Category</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Description</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCatOrder(\'description\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus">' +
+            '</tr><tr ng-repeat="productCategory in productCategories"><td><input type="checkbox" ng-model="productCategory.deleteStatus" ng-show="productCategory._id">' +
             '</td><td><span ng-hide="productCategory.editStatus">{{productCategory.name}}</span>' +
             '<input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.name"></td><td><span ng-hide="productCategory.editStatus">' +
             '{{productCategory.description}}</span><input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.description"></td>' +
@@ -1629,18 +1667,24 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         if ($scope.productCategories[i].deleteStatus) {
-                                            console.log("delete items" + i);
                                             $scope.productCategories.splice(i, 1);
+											i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.code == 58 && callBackData.status == "error"){
+									$("#popupMessage").html("This record is referred in products");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -1666,17 +1710,21 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                         }
                     }
                     $scope.saveProductCategories = function () {
+						var savedindexes = [];						
+						for (var j = $scope.productCategories.length-1; j >= 0; j--) {
+							if(!$scope.productCategories[j]._id && $scope.productCategories[j].name == "" && $scope.productCategories[j].description == ""){		
+								$scope.productCategories.splice(j, 1);
+							}
+						}
                         var productCategoryList = $scope.productCategories.filter(function (el) {
-                            return el.editStatus == true && (el.name != "" || el.description != "");
+							if(!el._id && (el.name || el.description)){							
+								savedindexes.push($scope.productCategories.indexOf(el));
+							}
+                            return el.editStatus == true;
                         });
                         for (var i = 0; i < productCategoryList.length; i++) {
                             if (!productCategoryList[i].name) {
                                 $("#popupMessage").html("Please enter product category name");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!productCategoryList[i].description) {
-                                $("#popupMessage").html("Please enter product description");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1689,13 +1737,20 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
+									for (var j = 0; j < savedindexes.length; j++) {
+										$scope.productCategories[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+									}
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         $scope.productCategories[i]["editStatus"] = false;
                                     }
-                                } else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while saving");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -1703,6 +1758,9 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
+                        }else {
+                            $("#popupMessage").html("No data found for saving");
+                            $('.popup').toggle("slide");
                         }
                     }
                 }
@@ -2037,7 +2095,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>City</span><span class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'name\',\'desc\')"></div>	</span></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setCityOrder(\'stateid.name\',\'asc\')"></div><div class="sortDown" ng-click="setCityOrder(\'stateid.name\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="city in cities"><td><input type="checkbox" ng-model="city.deleteStatus">' +
+            '</tr><tr ng-repeat="city in cities"><td><input type="checkbox" ng-model="city.deleteStatus" ng-show="city._id">' +
             '</td><td><span ng-hide="city.editStatus">{{city.name}}</span>' +
             '<input type="text" ng-show="city.editStatus" ng-model="city.name"></td><td>' +
             '<span ng-hide="city.editStatus">{{city.stateid.name}}</span><city-state-select ng-show="city.editStatus"></city-state-select></td><td style="cursor: pointer">' +
@@ -2081,18 +2139,24 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         if ($scope.cities[i].deleteStatus) {
-                                            //console.log("delete items" + i);
                                             $scope.cities.splice(i, 1);
+											i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.code == 58 && callBackData.status == "error"){
+									$("#popupMessage").html("This record is referred in vendor");
+									$('.popup').toggle("slide");								
+								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2118,7 +2182,16 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.saveCities = function () {
+						var savedindexes = [];
+						for (var j = $scope.cities.length-1; j >= 0; j--) {
+							if(!$scope.cities[j]._id && $scope.cities[j].name == "" && $scope.cities[j].stateid == ""){		
+								$scope.cities.splice(j, 1);
+							}
+						}
                         var cityList = $scope.cities.filter(function (el) {
+							if(!el._id && (el.name || el.stateid)){							
+								savedindexes.push($scope.cities.indexOf(el));
+							}
                             return el.editStatus == true && (el.name != "" || el.stateid != "");
                         });
                         for (var i = 0; i < cityList.length; i++) {
@@ -2144,13 +2217,20 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
+									for (var j = 0; j < savedindexes.length; j++) {
+										$scope.cities[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+									}
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         $scope.cities[i]["editStatus"] = false;
                                     }
-                                } else {
-                                    $("#popupMessage").html(callBackData.response);
-                                    $('.popup').toggle("slide");
-                                }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("Some error occur while deleting");
+									$('.popup').toggle("slide");
+								}
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2909,6 +2989,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
         }
     }
 }]);
+
 cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope) {
     return {
         restrict: 'A',
@@ -2945,3 +3026,26 @@ cstore.directive('jqdatepicker1', [ '$appService', function ($appService, $scope
         }
     };
 }]);
+
+/*bharat chnage */
+cstore.directive('googlePlaces', function(){
+    return {
+        restrict:'E',
+        replace:true,
+        // transclude:true,
+        scope: {location:'='},
+        template: '<input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/>',
+        link: function($scope, elm, attrs){
+            var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                var place = autocomplete.getPlace();
+                $scope.location=place["address_components"][0].long_name;
+//
+// $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
+                $scope.$apply();
+            });
+        }
+    }
+});
+/*bharat change end here*/
+
