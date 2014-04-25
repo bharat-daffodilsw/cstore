@@ -1563,7 +1563,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                     $scope.saveCountries = function () {
 						var savedindexes = [];
 						for (var j = $scope.countries.length-1; j >= 0; j--) {
-							if(!$scope.countries[j]._id && $scope.countries[j].name){		
+							if(!$scope.countries[j]._id && !$scope.countries[j].name){		
 								$scope.countries.splice(j, 1);
 							}
 						}
