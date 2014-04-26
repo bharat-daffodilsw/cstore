@@ -2219,6 +2219,8 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
         $scope.trainingdata["description"] = "";
         $scope.trainingdata["video_url"] = "";
         $scope.trainingdata["file"] = "";
+        $scope.readonlydocrow.fileurl = "";
+        $scope.readonlydocrow.filename ="";
         //$scope.readonlyrow.fileurl = "";
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
 
