@@ -87,16 +87,22 @@ cstore.config(
             }).when('/promotions', {
                 templateUrl: '../promotions',
                 controller: 'promotionCtrl'
-
             }).when('/add-promotion', {
                 templateUrl: '../add-promotion',
                 controller: 'addPromotionCtrl'
             }).when('/edit-promotion', {
                 templateUrl: '../add-promotion',
                 controller: 'addPromotionCtrl'
-            }).when('/training-sessions',{
+            })//changes made by anuradha
+            .when('/training-sessions',{
                 templateUrl:'../training-sessions',
                 controller:'trainingSessionCtrl'
+            }).when('/add-training-session',{
+                templateUrl:'../add-training-session',
+                controller:'addTrainingSessionCtrl'
+            }).when('/edit-training-session',{
+                templateUrl:'../add-training-session',
+                controller:'addTrainingSessionCtrl'
             }).when('/surveys',{
                 templateUrl:'../surveys',
                 controller:'surveyCtrl'
@@ -677,7 +683,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
     }
     $scope.getRoles = function () {
-        var productCategories = {};
+       //change
         var query = {"table": "roles__cstore"};
         query.columns = ["name"];
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -691,7 +697,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     $scope.getStores = function () {
-        var productCategories = {};
+       //change
         var query = {"table": "storemanagers__cstore"};
         query.columns = ["storename"];
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -704,7 +710,19 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }, function (jqxhr, error) {
         })
     }
-
+    //changes made by Anuradha
+    $scope.getTrainingCategories = function () {
+        var query = {"table": "training_categories__cstore"};
+        query.columns = ["name"];
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryData) {
+            $scope.trainingdata.trainingCategories = trainingCategoryData.response.data;
+            $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
+        }, function (jqxhr, error) {
+        })
+    }
+   $scope.getTrainingCategories();
 });
 
 /*cstore.controller('TypeaheadCtrl',function($scope, $http) {
@@ -2161,6 +2179,25 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
     }
 });
 
+cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.clearTrainingSessionContent = function () {
+        $scope.trainingdata["title"] = "";
+        $scope.trainingdata["description"] = "";
+        $scope.trainingdata["video_url"] = "";
+        $scope.trainingdata["file"] = "";
+        //$scope.readonlyrow.fileurl = "";
+        $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
+
+    }
+    var trainingId = $routeParams.q;
+    if (trainingId && trainingId != undefined && trainingId != "undefined") {
+        $scope.trainingdata["trainingSessionId"] = trainingId;
+    }
+    else {
+        delete $scope.trainingdata["trainingSessionId"];
+    }
+})
 /************************************ Survey *****************************************************/
 cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};

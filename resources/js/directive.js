@@ -3200,7 +3200,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\')"></div>	</span></th>' +
             '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\')"></div>	</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\')"></div>	</span></th><th>Assign Store Manager</th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.videoUrl}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
+            '{{trainingSession.video_url}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
             '<td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -3275,6 +3275,148 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             }
                         }
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('trainingCategorySelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="search_select" ng-model="trainingdata.selectedTrainingCategory" ng-options="trainingCategory.name for trainingCategory in trainingdata.trainingCategories"></select>'
+    }
+}]);
+
+cstore.directive('addTrainingSession', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        replace: 'true',
+        template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">Title</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td></tr>' +
+            '<tr><td><div class="margin_top">Description</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.description"></td></tr>' +
+            '<tr><td><app-file-upload></app-file-upload></td></tr>' +
+            '</tbody></table></div>' +
+            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.video_url"></td></tr>' +
+            '<tr><td><div class="margin_top">Training Category</div></td></tr>' +
+            '<tr><td><training-category-select></training-category-select></td></tr>' +
+            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
+            '</div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforSession(\'training-sessions\')"><a href="">Close</a></button>' +
+            '</div></div></td></tr>' +
+            '</tbody></table>' +
+            '<div class="loadingImage" ng-hide="!loadingAddTrainingdata"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.loadingAddTrainingData = true;
+                    $scope.newSession = {};
+                    $scope.setPathforSession = function (path) {
+                        $scope.clearTrainingSessionContent();
+                        window.location.href = "#!/" + path;
+                    }
+                },
+                post: function ($scope) {
+                    $scope.loadingAddTrainingData = false;
+                    $scope.saveTrainingSession = function () {
+                        $scope.CSession = $appService.getSession();
+                        if ($scope.CSession) {
+                            if (!$scope.trainingdata.title) {
+                                $("#popupMessage").html("Please enter training session title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.trainingdata.description) {
+                                $("#popupMessage").html("Please enter description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.trainingdata.video_url) {
+                                $("#popupMessage").html("Please enter video url");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            //if (!$('#uploadfile').val()) {
+                            //    $("#popupMessage").html("Please upload file");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
+                            var query = {};
+                            query.table = "training_session__cstore";
+
+                            if ($scope.trainingdata["trainingSessionId"]) {
+                                $scope.newSession["_id"] = $scope.trainingdata["trainingSessionId"];
+                            }
+                            $scope.newSession["title"] = $scope.trainingdata.title;
+                            $scope.newSession["description"] = $scope.trainingdata.description;
+                            $scope.newSession["video_url"] = $scope.trainingdata.video_url;
+                            $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                delete $scope.newSession["file"];
+                                query.operations = [$scope.newSession];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                var current_file = {};
+                                current_file.name = $scope.oFile.name;
+                                current_file.type = $scope.oFile.type;
+                                current_file.contents = $scope.oFile.data;
+                                current_file.ask = ASK;
+                                current_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                    if (data.response) {
+                                        $scope.newSession["file"] = data.response;
+                                        query.operations = [$scope.newSession];
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
+
+                                        $("#popupMessage").html("some error while uploading file please try again");
+                                        $('.popup').toggle("slide");
+
+                                    }
+                                }, function (callbackerror) {
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
+                                });
+                            }
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    };
+                    $scope.saveFunction = function (query) {
+                        //console.log(query);
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                                $scope.setPathforSession("training-sessions");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while saving training session");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            console.log(err.stack);
+
+                        });
                     }
                 }
             }
