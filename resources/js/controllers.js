@@ -125,6 +125,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.row = {};
     $scope.colmetadata = {"expression":"postfile", "type":"file"};
     var FILE_KEY = 'key';
+    //changes made by anuradha
+    $scope.loadingstatus=false;
+    $scope.docfile = {};
+    $scope.docOFile = {};
+    $scope.readonlydocrow = {};
+    $scope.docrow = {};
+    $scope.colmetadocdata = {"expression":"postfile", "type":"file"};
+    /*********************/
     $scope.data = {"countries":[], "cities":[], "states":[], "selectedCity":"", "selectedState":"", "selectedVendorCategory":"", "selectedCountry":"", "vendorCategories":[]};
     $scope.data.vendorCategories = [
         {"name":"Beverage"},
@@ -723,6 +731,29 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
    $scope.getTrainingCategories();
+   $scope.showDocFile = function (file, updateScope) {
+        if (updateScope) {
+            if ((/\.(doc|docx|pdf|ppt|pptx)$/i).test(file[0].name)) {
+                $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+                $scope.readonlydocrow.fileType = "documentfile";
+                $scope.readonlydocrow.filenotexist = false;
+            }
+            else {
+                $scope.readonlydocrow.filenotexist = true;
+                $scope.popuptext = "Please Upload document File only";
+                $('#pop_forgt').toggle("slide");
+            }
+            $scope.docrow[$scope.colmetadocdata.expression] = file;
+        }
+        else if (file && file.length > 0) {
+            $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+            $scope.readonlydocrow.fileType = "documentfile";
+            $scope.readonlydocrow.filenotexist = false;
+        }
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
+    }
 });
 
 /*cstore.controller('TypeaheadCtrl',function($scope, $http) {

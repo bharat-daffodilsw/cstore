@@ -3299,7 +3299,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td></tr>' +
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="trainingdata.description"></td></tr>' +
-            '<tr><td><app-file-upload></app-file-upload></td></tr>' +
+            '<tr><td></td></tr>' +
             '</tbody></table></div>' +
             '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
@@ -3360,35 +3360,35 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.trainingdata.video_url;
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
-                            if (document.getElementById('uploadfile').files.length === 0) {
-                                delete $scope.newSession["file"];
+                            //if (document.getElementById('uploadfile').files.length === 0) {
+                            //    delete $scope.newSession["file"];
                                 query.operations = [$scope.newSession];
                                 $scope.saveFunction(query);
-                            }
-                            else {
-                                var current_file = {};
-                                current_file.name = $scope.oFile.name;
-                                current_file.type = $scope.oFile.type;
-                                current_file.contents = $scope.oFile.data;
-                                current_file.ask = ASK;
-                                current_file.osk = OSK;
-                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    if (data.response) {
-                                        $scope.newSession["file"] = data.response;
-                                        query.operations = [$scope.newSession];
-                                        $scope.saveFunction(query);
-                                    }
-                                    else {
+                            //}
+                            //else {
+                             //   var current_file = {};
+                              //  current_file.name = $scope.oFile.name;
+                              //  current_file.type = $scope.oFile.type;
+                              //  current_file.contents = $scope.oFile.data;
+                              //  current_file.ask = ASK;
+                               // current_file.osk = OSK;
+                               // $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                               //     if (data.response) {
+                               //         $scope.newSession["file"] = data.response;
+                               //         query.operations = [$scope.newSession];
+                               //         $scope.saveFunction(query);
+                               //     }
+                                //    else {
 
-                                        $("#popupMessage").html("some error while uploading file please try again");
-                                        $('.popup').toggle("slide");
+                                //        $("#popupMessage").html("some error while uploading file please try again");
+                                //        $('.popup').toggle("slide");
 
-                                    }
-                                }, function (callbackerror) {
-                                    $("#popupMessage").html(callbackerror);
-                                    $('.popup').toggle("slide");
-                                });
-                            }
+                                //    }
+                                //}, function (callbackerror) {
+                                //    $("#popupMessage").html(callbackerror);
+                                //    $('.popup').toggle("slide");
+                                //});
+                           // }
                         }
                         else {
                             $("#popupMessage").html("Please login first");
@@ -3418,6 +3418,71 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
 
                         });
                     }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('docFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+    return {
+        restrict: "E",
+        replace: true,
+//        scope:true,
+        template: "<div>" +
+            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
+            "<span><input ng-show='readonlydocrow.filenotexist' type='file' id='uploadfile'/></span>" +
+            "<div ng-hide='readonlydocrow.filenotexist'>" +
+            "<span>" +
+            "<div class='pic_preview'><img ng-src='{{readonlydocrow.fileurl}}'/></div>" +
+            "</span>" +
+            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
+            "</div>" +
+            "</div>",
+        compile: function () {
+            return {
+                post: function ($scope, iElement) {
+                    $scope.removeFile = function () {
+                        delete $scope.row[$scope.colmetadata.expression];
+                        $("#uploadfile").val("");
+                        $scope.readonlyrow.filenotexist = true;
+                    };
+                    if ($scope.row[$scope.colmetadata.expression]) {
+                        $scope.showFile($scope.row[$scope.colmetadata.expression], false);
+
+                    } else if (!$scope.readonlyrow.fileurl) {
+                        $scope.readonlyrow.filenotexist = true;
+                    }
+                    $scope.loadFile = function (evt) {
+                        $scope.file = {};
+                        $scope.file.name = $scope.oFile.name;
+                        $scope.file.result = evt.target.result;
+                        $scope.oFile['data'] = evt.target.result;
+                        $scope.showUploadedFile($scope.file);
+                    };
+                    $scope.showUploadedFile = function (file) {
+
+                        var file_ext = $scope.getFileExtension(file.name);
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
+                            $scope.showimage = true;
+                            $scope.imageData = file.result;
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+
+                        }
+                    }
+                    iElement.bind('change', function () {
+                        $scope.$apply(function () {
+                            $scope.oFReader = new FileReader();
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                return;
+                            }
+                            $scope.oFile = document.getElementById('uploadfile').files[0];
+                            $scope.oFReader.onload = $scope.loadFile;
+                            $scope.oFReader.readAsDataURL($scope.oFile);
+                        });
+                    });
                 }
             }
         }
