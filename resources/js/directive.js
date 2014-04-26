@@ -3261,7 +3261,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         $scope.trainingdata["title"] = trainingSession.title ? trainingSession.title : "";
                         $scope.trainingdata["video_url"] = trainingSession.video_url ? trainingSession.video_url : "";
                         $scope.trainingdata["description"] = trainingSession.description ? trainingSession.description : "";
-
+                        $scope.showDocFile(trainingSession.file,false);
                         //$scope.productdata["image"] = product.image;
                         //$scope.showFile(product.image, false);
                         //console.log($scope.productdata.image);
@@ -3345,11 +3345,11 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            //if (!$('#uploaddocfile').val()) {
-                            //    $("#popupMessage").html("Please upload file");
-                            //    $('.popup').toggle("slide");
-                            //    return false;
-                            //}
+                            if (!$('#uploaddocfile').val()) {
+                                $("#popupMessage").html("Please upload file");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             var query = {};
                             query.table = "training_session__cstore";
 
@@ -3436,7 +3436,7 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
             "<span>" +
             "<div class='pic_preview'>{{readonlydocrow.filename}}</div>" +
             "</span>" +
-            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
+            "<img src='images/icon_cross.gif'class='cross_icon_doc' value='Remove' ng-click='removeFile()'/>" +
             "</div>" +
             "</div>",
         compile: function () {

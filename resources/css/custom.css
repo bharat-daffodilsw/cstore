@@ -1155,4 +1155,22 @@ span.sortWrap {
 	outline: 0px;
 	padding: 5px 25px;
 	width: auto;}
+
+.cross_icon_doc {
+    height: 5%!important;
+    width: 4%!important;
+}
+
+.assign_popup {
+    display: none;
+    top: 207px;
+    z-index: 1000;
+    left: 500px;
+    background-color: #FFF;
+    position: absolute;
+    font-size: 17px;
+    width: 330px;
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+}
 	
