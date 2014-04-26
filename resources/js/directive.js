@@ -104,12 +104,14 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
     }
 }]);
 /*change end here */
+
+//Changes made by Anuradha
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/site-info" active-link="active">Site Info</a></li>' +
-            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions"><a active-link="active" href>Training Session</a></li><li>' +
-            '<a href active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li><li id="training-categories"><a href active-link="active">Training Category</a>' +
+            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li>' +
+            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li><li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
         compile: function () {
@@ -1809,33 +1811,48 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
     }
 }]);
 
+//changes made by anuradha
 cstore.directive('trainingCategoryList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveTrainingCategories()"><a href="">' +
-            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingCategories()"><a href="">Delete</a>' +
-            '</button></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button"  ng-click="deleteTrainingCategories()"><a href="">Delete</a>' +
+            '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
             '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + trainingCategories.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>Training Category</th><th>Description</th><th></th>' +
-            '</tr><tr ng-repeat="trainingCategory in trainingCategories"><td><input type="checkbox" ng-model="trainingCategory.deleteStatus">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Training Category</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingCatOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingCatOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Description</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingCatOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingCatOrder(\'description\',\'desc\')"></div>	</span></th><th></th>' +
+            '</tr><tr ng-repeat="trainingCategory in trainingCategories"><td><input type="checkbox" ng-model="trainingCategory.deleteStatus" ng-show="trainingCategory._id">' +
             '</td><td><span ng-hide="trainingCategory.editStatus">{{trainingCategory.name}}</span>' +
-            '<input type="text" ng-show="trainingCategory.editStatus" ng-model="trainingCategory.name"></td><td>' +
-            '<span ng-hide="trainingCategory.editStatus">{{trainingCategory.description}}</span>' +
-            '<input type="text" ng-show="trainingCategory.editStatus" ng-model="trainingCategory.description"></td>' +
+            '<input type="text" ng-show="trainingCategory.editStatus" ng-model="trainingCategory.name"></td><td><span ng-hide="trainingCategory.editStatus">' +
+            '{{trainingCategory.description}}</span><input type="text" ng-show="trainingCategory.editStatus" ng-model="trainingCategory.description"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="trainingCategory.editStatus = true" ng-hide="trainingCategory.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="trainingCategory.editStatus = false" ng-show="trainingCategory.editStatus">Cancel</a></td></tr>' +
+            '<a class="edit_btn" ng-click="remove($index,trainingCategory._id)" ng-show="trainingCategory.editStatus">Cancel</a></td></tr>' +
             '</table><div ng-click="addNewTrainingCategory()" class="add_new"><a href>' +
-            '+ Click Here To Add New Training Category</a></div></div>',
+            '+ Click Here To Add New Training Category</a></div></div><div class="loadingImage" ng-hide="!loadingTrainingCategoryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.addNewTrainingCategory = function () {
                         $scope.trainingCategories.push({ name: '', description: '' });
-                        for (var i = 0; i < $scope.trainingCategories.length; i++) {
-                            $scope.trainingCategories[$scope.trainingCategories.length - 1]["editStatus"] = true;
+                        //for (var i = 0; i < $scope.trainingCategories.length; i++) {
+                        $scope.trainingCategories[$scope.trainingCategories.length - 1]["editStatus"] = true;
+                        //}
+
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllTrainingCategories(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.remove = function (index) {
+                        if ($scope.trainingCategories.length - 1 == index) {
+                            $scope.trainingCategories.splice(index, 1);
+                        }
+                        else {
+                            $scope.trainingCategories[index]["editStatus"] = false;
                         }
                     }
                     $scope.setPath = function (path) {
@@ -1860,17 +1877,22 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.trainingCategories.length; i++) {
                                         if ($scope.trainingCategories[i].deleteStatus) {
-                                            console.log("delete items" + i);
                                             $scope.trainingCategories.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
+                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                    $("#popupMessage").html("This record is referred in training session");
+                                    $('.popup').toggle("slide");
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
                                 }
                                 else {
-                                    $("#popupMessage").html(callBackData.response);
+                                    $("#popupMessage").html("Some error occur while deleting");
                                     $('.popup').toggle("slide");
                                 }
                                 if (!$scope.$$phase) {
@@ -1889,38 +1911,68 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                     }
                 },
                 post: function ($scope) {
+                    $scope.remove = function (index, refreshTrainingCategoryId) {
+                        if (!$scope.trainingCategories[index]["oldstatus"]) {
+                            $scope.trainingCategories.splice(index, 1);
+                        }
+                        else {
+                            $scope.refreshTrainingCategories(index, refreshTrainingCategoryId);
+                        }
+                    }
                     $scope.saveTrainingCategories = function () {
-                        $scope.addtrainingCategoryArray = [];
-                        for (var i = 0; i < $scope.trainingCategories.length; i++) {
-                            if ($scope.trainingCategories[i]._id) {
-                                $scope.addtrainingCategoryArray.push({"name": $scope.trainingCategories[i].name, "description": $scope.trainingCategories[i].description, "_id": $scope.trainingCategories[i]._id})
-                            }
-                            else {
-                                $scope.addtrainingCategoryArray.push({"name": $scope.trainingCategories[i].name, "description": $scope.trainingCategories[i].description})
+                        var savedindexes = [];
+                        for (var j = $scope.trainingCategories.length-1; j >= 0; j--) {
+                            if(!$scope.trainingCategories[j]._id && $scope.trainingCategories[j].name == "" && $scope.trainingCategories[j].description == ""){
+                                $scope.trainingCategories.splice(j, 1);
                             }
                         }
-                        var query = {};
-                        query.table = "training_categories__cstore";
-                        query.operations = angular.copy($scope.addtrainingCategoryArray);
-                        $scope.addtrainingCategoryArray = [];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $("#popupMessage").html("Saved successfully");
-                                $('.popup').toggle("slide");
-                                for (var i = 0; i < $scope.trainingCategories.length; i++) {
-                                    $scope.trainingCategories[i]["editStatus"] = false;
-                                }
-                            } else {
-                                $("#popupMessage").html(callBackData.response);
-                                $('.popup').toggle("slide");
+                        var trainingCategoryList = $scope.trainingCategories.filter(function (el) {
+                            if(!el._id && (el.name || el.description)){
+                                savedindexes.push($scope.trainingCategories.indexOf(el));
                             }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
-                            $('.popup').toggle("slide");
+                            return el.editStatus == true;
                         });
+                        console.log(savedindexes);
+                        for (var i = 0; i < trainingCategoryList.length; i++) {
+                            if (!trainingCategoryList[i].name) {
+                                $("#popupMessage").html("Please enter training category name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                        }
+                        if (trainingCategoryList && trainingCategoryList.length > 0) {
+                            var query = {};
+                            query.table = "training_categories__cstore";
+                            query.operations = trainingCategoryList;
+                            $appService.save(query, ASK, OSK, null, function (callBackData) {
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
+                                    for (var j = 0; j < savedindexes.length; j++) {
+                                        $scope.trainingCategories[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                    }
+                                    for (var i = 0; i < $scope.trainingCategories.length; i++) {
+                                        $scope.trainingCategories[i]["editStatus"] = false;
+                                    }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while saving");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                            });
+                        }else {
+                            $("#popupMessage").html("No data found for saving");
+                            $('.popup').toggle("slide");
+                        }
                     }
                 }
             }
@@ -2715,6 +2767,7 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
 }]);
 
 /****************************Promotions************************/
+//changes made by anuradha
 cstore.directive('promotionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -2756,15 +2809,22 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.promotions.length; i++) {
                                     if ($scope.promotions[i].deleteStatus) {
+                                        console.log("delete items" + i);
                                         $scope.promotions.splice(i, 1);
-										i--;
+                                        i--;
                                     }
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
                             }
                             else {
-                                $("#popupMessage").html(callBackData.response);
+                                $("#popupMessage").html("Some error occur while deleting");
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
@@ -2989,13 +3049,14 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
+                             //cahnges made by anuradha
 							  if (!$scope.promotiondata.threshold) {
-							      $("#popupMessage").html("Please select threshold");
+							      $("#popupMessage").html("Please enter threshold");
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
 							  if (!$scope.promotiondata.sponsor) {
-							      $("#popupMessage").html("Please select sponsor");
+							      $("#popupMessage").html("Please enter sponsor");
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
@@ -3020,7 +3081,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
 							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date;
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
-							 $scope.newPromotion["upc/plu/dept"] = $scope.promotiondata.selectedUpc.name;
+							 //changes made by anuradha
+                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
 							 $scope.newPromotion["vendorid"] = {"_id":$scope.promotiondata.vendorsList._id};
 							 if (document.getElementById('uploadfile').files.length === 0) {
 								 delete $scope.newPromotion["image"];
@@ -3125,3 +3187,177 @@ cstore.directive('googlePlaces', function(){
 });
 /*bharat change end here*/
 
+/******************************************* Training Session****************************************************/
+
+cstore.directive('trainingSessionList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-training-session\')"><a href>Add</a></button>' +
+            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingSession()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + trainingSessions.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\')"></div>	</span></th>' +
+            '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\')"></div>	</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\')"></div>	</span></th><th>Assign Store Manager</th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
+            '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
+            '{{trainingSession.videoUrl}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
+            '<td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllTrainingSessions(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.deleteTrainingSessionArray = [];
+                    $scope.deleteTrainingSession = function () {
+                        for (var i = 0; i < $scope.trainingSessions.length; i++) {
+                            if ($scope.trainingSessions[i].deleteStatus) {
+                                $scope.deleteTrainingSessionArray.push({"_id": $scope.trainingSessions[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "training_session__cstore";
+                        query.operations = angular.copy($scope.deleteTrainingSessionArray);
+                        $scope.deleteTrainingSessionArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.trainingSessions.length; i++) {
+                                    if ($scope.trainingSessions[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.trainingSessions.splice(i, 1);
+                                        i--;
+                                    }
+                                }
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+
+                    }
+                    $scope.setTrainingSessionState = function (trainingSession) {
+                        $scope.trainingdata["title"] = trainingSession.title ? trainingSession.title : "";
+                        $scope.trainingdata["video_url"] = trainingSession.video_url ? trainingSession.video_url : "";
+                        $scope.trainingdata["description"] = trainingSession.description ? trainingSession.description : "";
+
+                        //$scope.productdata["image"] = product.image;
+                        //$scope.showFile(product.image, false);
+                        //console.log($scope.productdata.image);
+
+                        if (trainingSession.training_category_id._id) {
+                            for (var j = 0; j < $scope.trainingdata.trainingCategories.length; j++) {
+                                if ($scope.trainingdata.trainingCategories[j]._id == trainingSession.training_category_id._id) {
+                                    $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[j];
+                                    break;
+                                }
+                            }
+                        }
+                        window.location.href = "#!edit-training-session?q=" + trainingSession._id;
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+/*************************************** Survey **************************************************/
+
+cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click=><a href>Add</a></button>' +
+            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteSurvey()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + surveys.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\')"></div>	</span></th>' +
+            '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\')"></div>	</span></th><th>Assign Store Manager</th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
+            '<td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllSurveys(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.deleteSurveyArray = [];
+                    $scope.deleteSurvey = function () {
+                        for (var i = 0; i < $scope.surveys.length; i++) {
+                            if ($scope.surveys[i].deleteStatus) {
+                                $scope.deleteSurveyArray.push({"_id": $scope.surveys[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "surveys__cstore";
+                        query.operations = angular.copy($scope.deleteSurveyArray);
+                        $scope.deleteSurveyArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.surveys.length; i++) {
+                                    if ($scope.surveys[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.surveys.splice(i, 1);
+                                        i--;
+                                    }
+                                }
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+
+                    }
+                    /*$scope.setSurveyState = function (survey) {
+                        $scope.surveydata["title"] = survey.title ? survey.title : "";
+                        $scope.surveydata["description"] = survey.description ? survey.description : "";
+                        window.location.href = "#!edit-survey?q=" + survey._id;
+                    } */
+                }
+            }
+        }
+    }
+}]);

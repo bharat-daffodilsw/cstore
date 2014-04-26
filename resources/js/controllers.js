@@ -94,6 +94,12 @@ cstore.config(
             }).when('/edit-promotion', {
                 templateUrl: '../add-promotion',
                 controller: 'addPromotionCtrl'
+            }).when('/training-sessions',{
+                templateUrl:'../training-sessions',
+                controller:'trainingSessionCtrl'
+            }).when('/surveys',{
+                templateUrl:'../surveys',
+                controller:'surveyCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -196,6 +202,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 		];
 	}
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+    //changes made by anuradha
+    $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":""};
+    $scope.surveydata={};
+    /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
 
@@ -2081,5 +2091,137 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
     }
     else {
         delete $scope.promotiondata["promotionid"];
+    }
+});
+
+// changes made by Anuradha
+/*******************************************Training Session*************************************************/
+cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingTrainingSessionData = false;
+    $scope.venderSearch = [
+        {"value": "title", "name": "Title"},
+        {"value": "training_category_id.name", "name": "Training Category"},
+        {"value": "video_url", "name": "Video Url"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.trainingSessions = [];
+    $appService.auth();
+    $scope.getAllTrainingSessions = function (direction, limit, column, searchText) {
+        if ($scope.loadingTrainingSessionData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingTrainingSessionData = true;
+        var query = {"table": "training_session__cstore"};
+        query.columns = ["title","description","file","training_category_id","video_url"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingSessionData) {
+            $scope.loadingTrainingSessionData = false;
+            $scope.show.currentCursor = trainingSessionData.response.cursor;
+            $scope.trainingSessions = trainingSessionData.response.data;
+            for (var i = 0; i < $scope.trainingSessions.length; i++) {
+                $scope.trainingSessions[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllTrainingSessions(1, 10);
+    $scope.setTrainingSessionOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllTrainingSessions(1, 10, null, null);
+    }
+    $scope.getMore = function () {
+        $scope.getAllTrainingSessions(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllTrainingSessions(0, 10);
+    }
+});
+
+/************************************ Survey *****************************************************/
+cstore.controller('surveyCtrl', function ($scope, $appService) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingSurveyData = false;
+    $scope.venderSearch = [
+        {"value": "title", "name": "Title"},
+        {"value": "description", "name": "Description"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.surveys = [];
+    $appService.auth();
+    $scope.getAllSurveys = function (direction, limit, column, searchText) {
+        if ($scope.loadingSurveyData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingSurveyData = true;
+        var query = {"table": "surveys__cstore"};
+        query.columns = ["title","description","survey_question","survey_question.question","survey_question.options"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyData) {
+            $scope.loadingSurveyData = false;
+            $scope.show.currentCursor = surveyData.response.cursor;
+            $scope.surveys = surveyData.response.data;
+            for (var i = 0; i < $scope.surveys.length; i++) {
+                $scope.surveys[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllSurveys(1, 10);
+    $scope.setSurveyOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllSurveys(1, 10, null, null);
+    }
+    $scope.getMore = function () {
+        $scope.getAllSurveys(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllSurveys(0, 10);
     }
 });
