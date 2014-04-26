@@ -737,6 +737,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
                 $scope.readonlydocrow.fileType = "documentfile";
                 $scope.readonlydocrow.filenotexist = false;
+                $scope.readonlydocrow.filename=file[0].name;
             }
             else {
                 $scope.readonlydocrow.filenotexist = true;
@@ -749,6 +750,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
             $scope.readonlydocrow.fileType = "documentfile";
             $scope.readonlydocrow.filenotexist = false;
+            $scope.readonlydocrow.filename=file[0].name;
         }
         if (!$scope.$$phase) {
             $scope.$apply();

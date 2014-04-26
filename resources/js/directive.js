@@ -3299,7 +3299,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td></tr>' +
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="trainingdata.description"></td></tr>' +
-            '<tr><td></td></tr>' +
+            '<tr><td><doc-file-upload></doc-file-upload></td></tr>' +
             '</tbody></table></div>' +
             '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
@@ -3345,7 +3345,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            //if (!$('#uploadfile').val()) {
+                            //if (!$('#uploaddocfile').val()) {
                             //    $("#popupMessage").html("Please upload file");
                             //    $('.popup').toggle("slide");
                             //    return false;
@@ -3360,35 +3360,35 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.trainingdata.video_url;
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
-                            //if (document.getElementById('uploadfile').files.length === 0) {
-                            //    delete $scope.newSession["file"];
+                            if (document.getElementById('uploaddocfile').files.length === 0) {
+                                delete $scope.newSession["file"];
                                 query.operations = [$scope.newSession];
                                 $scope.saveFunction(query);
-                            //}
-                            //else {
-                             //   var current_file = {};
-                              //  current_file.name = $scope.oFile.name;
-                              //  current_file.type = $scope.oFile.type;
-                              //  current_file.contents = $scope.oFile.data;
-                              //  current_file.ask = ASK;
-                               // current_file.osk = OSK;
-                               // $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                               //     if (data.response) {
-                               //         $scope.newSession["file"] = data.response;
-                               //         query.operations = [$scope.newSession];
-                               //         $scope.saveFunction(query);
-                               //     }
-                                //    else {
+                            }
+                            else {
+                                var current_file = {};
+                                current_file.name = $scope.docOFile.name;
+                                current_file.type = $scope.docOFile.type;
+                                current_file.contents = $scope.docOFile.data;
+                                current_file.ask = ASK;
+                                current_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                    if (data.response) {
+                                        $scope.newSession["file"] = data.response;
+                                        query.operations = [$scope.newSession];
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
 
-                                //        $("#popupMessage").html("some error while uploading file please try again");
-                                //        $('.popup').toggle("slide");
+                                        $("#popupMessage").html("some error while uploading file please try again");
+                                        $('.popup').toggle("slide");
 
-                                //    }
-                                //}, function (callbackerror) {
-                                //    $("#popupMessage").html(callbackerror);
-                                //    $('.popup').toggle("slide");
-                                //});
-                           // }
+                                    }
+                                }, function (callbackerror) {
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
+                                });
+                            }
                         }
                         else {
                             $("#popupMessage").html("Please login first");
@@ -3431,10 +3431,10 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
 //        scope:true,
         template: "<div>" +
             '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
-            "<span><input ng-show='readonlydocrow.filenotexist' type='file' id='uploadfile'/></span>" +
+            "<span><input ng-show='readonlydocrow.filenotexist' type='file' id='uploaddocfile'/></span>" +
             "<div ng-hide='readonlydocrow.filenotexist'>" +
             "<span>" +
-            "<div class='pic_preview'><img ng-src='{{readonlydocrow.fileurl}}'/></div>" +
+            "<div class='pic_preview'>{{readonlydocrow.filename}}</div>" +
             "</span>" +
             "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
             "</div>" +
@@ -3443,29 +3443,29 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
             return {
                 post: function ($scope, iElement) {
                     $scope.removeFile = function () {
-                        delete $scope.row[$scope.colmetadata.expression];
-                        $("#uploadfile").val("");
-                        $scope.readonlyrow.filenotexist = true;
+                        delete $scope.row[$scope.colmetadocdata .expression];
+                        $("#uploaddocfile").val("");
+                        $scope.readonlydocrow.filenotexist = true;
                     };
-                    if ($scope.row[$scope.colmetadata.expression]) {
-                        $scope.showFile($scope.row[$scope.colmetadata.expression], false);
+                    if ($scope.docrow[$scope.colmetadocdata.expression]) {
+                        $scope.showFile($scope.docrow[$scope.colmetadocdata.expression], false);
 
-                    } else if (!$scope.readonlyrow.fileurl) {
-                        $scope.readonlyrow.filenotexist = true;
+                    } else if (!$scope.readonlydocrow.fileurl) {
+                        $scope.readonlydocrow.filenotexist = true;
                     }
                     $scope.loadFile = function (evt) {
-                        $scope.file = {};
-                        $scope.file.name = $scope.oFile.name;
-                        $scope.file.result = evt.target.result;
-                        $scope.oFile['data'] = evt.target.result;
+                        $scope.docfile  = {};
+                        $scope.docfile.name = $scope.docOFile.name;
+                        $scope.docfile .result = evt.target.result;
+                        $scope.docOFile['data'] = evt.target.result;
                         $scope.showUploadedFile($scope.file);
                     };
                     $scope.showUploadedFile = function (file) {
 
                         var file_ext = $scope.getFileExtension(file.name);
-                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
-                            $scope.showimage = true;
-                            $scope.imageData = file.result;
+                        if ((/\.(doc|docx|pdf|ppt|pptx)$/gi).test(file.name)) {
+
+                            $scope.documentData = file.result;
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
@@ -3475,12 +3475,12 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
                     iElement.bind('change', function () {
                         $scope.$apply(function () {
                             $scope.oFReader = new FileReader();
-                            if (document.getElementById('uploadfile').files.length === 0) {
+                            if (document.getElementById('uploaddocfile').files.length === 0) {
                                 return;
                             }
-                            $scope.oFile = document.getElementById('uploadfile').files[0];
+                            $scope.docOFile = document.getElementById('uploaddocfile').files[0];
                             $scope.oFReader.onload = $scope.loadFile;
-                            $scope.oFReader.readAsDataURL($scope.oFile);
+                            $scope.oFReader.readAsDataURL($scope.docOFile);
                         });
                     });
                 }
