@@ -45,16 +45,17 @@
 
 ul.tagit {
     cursor: text;
-    overflow: auto;
-    font-size: 14px;
-    width: 97%;
-    padding: 3px;
-    margin-top: 2px;
-    margin-right: 6px;
-    margin-bottom: 16px;
-    border: 1px solid #E5E5E5;
-    background: #fff;
-    color: #333;
+	overflow-x: auto;
+	font-size: 14px;
+	width: 98%;
+	padding: 3px;
+	margin-top: 2px;
+	margin-right: 6px;
+	margin-bottom: 16px;
+	border: 1px solid rgb(169, 169, 169);
+	background: #fff;
+	color: #333;
+	height: 100px;
 }
 
 ul.tagit li {
@@ -142,4 +143,8 @@ ul.tagit input[type="text"] {
 
 .tagit-hiddenSelect {
     display:none;
+}
+.description{
+	width: 98%;
+	height: 100px;
 }

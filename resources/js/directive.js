@@ -927,6 +927,73 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+appStrapDirectives.directive('appMultiImgFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+    return {
+        restrict:"E",
+        replace:true,
+        scope:false ,
+        template:"<div class='app-float-left'>" +
+            "<input style='width: 80px;display: none;' class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
+            "<div tabindex='-1' class='app-float-left' style='display: none;'>No file Choosen</div>" +
+            '<div class="albm_btn" onclick="$(\'#uploadMultiImgfile\').click()" ng-hide="imgFileLimitExceed"><input ng-hide="otherprofile ||notSigned" type="Button" value="{{transbutton.add_pic}}" class="buttn"></div><span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
+            "</div>",
+        compile:function () {
+            return {
+                pre:function ($scope) {
+                    $scope.uploadedimages = [];
+                    $scope.albumArr.uploadedimg = [];
+                },
+                post:function ($scope, iElement) {
+                    $scope.removeImgFile = function (index) {
+                        $scope.uploadedimages.splice(index, 1);
+                        $scope.albumArr.uploadedimg.splice(index, 1);
+						if($scope.uploadedimages.length == 0){
+							$scope.imgFilenotexist = true;
+						}
+                        $scope.imgFileLimitExceed = false;
+                    };
+
+                    if ($scope.uploadedimages.length > 0) {
+                        for (var k = 0; k < $scope.uploadedimages.length; k++) {
+                            $scope.showImgFile($scope.uploadedimages[k].file);
+                        }
+                    } else {
+                        $scope.imgFilenotexist = true;
+                    }
+
+                    $scope.loadImgFile = function (evt) {
+                        var current_file = {};
+                        $scope.uploadingimage = true;
+                        current_file.name = $scope.oFile.name;
+                        current_file.type = $scope.oFile.type;
+                        current_file.contents = evt.target.result;
+                        current_file.ask = ASK;
+                        current_file.osk = OSK;
+                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", "Uploading...", function (data) {
+                            if (data != null && data != undefined) {
+                                $scope.showImgFile(data);
+                            }
+                        });
+                    };
+
+                    iElement.bind('change', function () {
+                        $scope.$apply(function () {
+                            $scope.oFReader = new FileReader();
+                            if (document.getElementById('uploadMultiImgfile').files.length === 0) {
+                                return;
+                            }
+                            $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
+                            $scope.oFReader.onload = $scope.loadImgFile;
+                            $scope.oFReader.readAsDataURL($scope.oFile);
+                        });
+                    });
+                }
+            }
+        }
+    }
+}]);
+
+
 cstore.directive('appFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
         restrict: "E",
@@ -3210,7 +3277,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\')"></div>	</span></th>' +
             '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\')"></div>	</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\')"></div>	</span></th><th>Assign Store Manager</th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.video_url}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
+            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
             '<td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -3303,19 +3370,17 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
+        template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Title</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td></tr>' +
+            '<tr><td><div class="margin_top">Title</div></td><td><div class="margin_top">Training Category</div></td></tr>' +
+            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td><td><training-category-select></training-category-select></td></tr>' +
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.description"></td></tr>' +
-            '<tr><td><doc-file-upload></doc-file-upload></td></tr>' +
+            '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="trainingdata.description" class="description"></textarea></td></tr>' +
             '</tbody></table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.video_url"></td></tr>' +
-            '<tr><td><div class="margin_top">Training Category</div></td></tr>' +
-            '<tr><td><training-category-select></training-category-select></td></tr>' +
+            '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
+            '<tr><td><doc-file-upload></doc-file-upload></td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
@@ -3336,9 +3401,28 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                     }
                 },
                 post: function ($scope) {
+					$('#demo2').tagit();				
+					if($scope.trainingdata.video_url && $scope.trainingdata.video_url.length > 0){
+						$("#demo2").tagit("fill",$scope.trainingdata.video_url);
+					}
+					$scope.showTags = function(tags) {
+						var arr = []
+						for (var i in tags)
+							arr.push(tags[i].value);
+						return arr;
+					}					
                     $scope.loadingAddTrainingData = false;
                     $scope.saveTrainingSession = function () {
                         $scope.CSession = $appService.getSession();
+						var regexp = /(ftp|http|https|www)(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+						var video_url = $scope.showTags($('#demo2').tagit("tags"));
+						var invalid_url = false;
+						for(i = 0; i < video_url.length; i++){
+							if(!regexp.test(video_url[i])){
+								invalid_url = true;
+								break;
+							}
+						}
                         if ($scope.CSession) {
                             if (!$scope.trainingdata.title) {
                                 $("#popupMessage").html("Please enter training session title");
@@ -3350,25 +3434,24 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.trainingdata.video_url) {
-                                $("#popupMessage").html("Please enter video url");
+                            if (video_url && (video_url.length == 0 || invalid_url)) {
+                                $("#popupMessage").html("Please enter valid video url");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$('#uploaddocfile').val()) {
+                            /*if (!$('#uploaddocfile').val()) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }
+                            }*/
                             var query = {};
                             query.table = "training_session__cstore";
-
                             if ($scope.trainingdata["trainingSessionId"]) {
                                 $scope.newSession["_id"] = $scope.trainingdata["trainingSessionId"];
-                            }
+							}
                             $scope.newSession["title"] = $scope.trainingdata.title;
                             $scope.newSession["description"] = $scope.trainingdata.description;
-                            $scope.newSession["video_url"] = $scope.trainingdata.video_url;
+                            $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
                             if (document.getElementById('uploaddocfile').files.length === 0) {
                                 delete $scope.newSession["file"];

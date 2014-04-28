@@ -690,7 +690,33 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.$apply();
         }
     }
-    $scope.getRoles = function () {
+      $scope.showDownloadableFile = function (file, updateScope) {
+        if(file){
+            $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
+            $scope.readonlyrow.fileType = 'download';
+            $scope.readonlyrow.filename = file[0].name;
+            $scope.readonlyrow.filenotexist = false;
+        }
+        if(updateScope){
+        $scope.row[$scope.colmetadata.expression] = file;
+        }
+    }
+	$scope.showImgFile = function (file) {
+		var index = $scope.uploadedimages.length;
+		$scope.uploadedimages[index] = {};
+		$scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
+		$scope.uploadedimages[index].filename = file[0][FILE_NAME];
+		$scope.uploadedimages[index].image = file;
+		$scope.uploadedimages[index].default = true;
+		$scope.albumArr.uploadedimg[index] = file[0];
+		$scope.imgFilenotexist = false;
+		$scope.uploadingimage = false;
+		//  $scope.row[$scope.colmetadata.expression] = file;
+		if (index == 10)
+			$scope.imgFileLimitExceed = true;
+	};
+	
+	$scope.getRoles = function () {
        //change
         var query = {"table": "roles__cstore"};
         query.columns = ["name"];
@@ -2188,9 +2214,10 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingSessionData) {
             $scope.loadingTrainingSessionData = false;
             $scope.show.currentCursor = trainingSessionData.response.cursor;
-            $scope.trainingSessions = trainingSessionData.response.data;
+            $scope.trainingSessions = trainingSessionData.response.data;		
             for (var i = 0; i < $scope.trainingSessions.length; i++) {
                 $scope.trainingSessions[i]["deleteStatus"] = false;
+				$scope.trainingSessions[i].string_video_url = ($scope.trainingSessions[i].video_url) ? $scope.trainingSessions[i].video_url.toString() : "";	
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
