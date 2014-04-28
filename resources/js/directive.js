@@ -283,7 +283,22 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
             '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>'
     }
 }]);
+//changes by anu 2804
+cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template:'<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
+            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
 
+            '<a href="#!/promotion?promotionid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
+
+            '</a></div><div class="name"><a href="#!/promotion?promotionid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="product_details">' +
+            '{{product.short_description}}</div>' +
+
+            '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
+    }
+}]);
+/***************/
 cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
@@ -3350,7 +3365,8 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.trainingdata.video_url) {
+                            var video_url = $scope.trainingdata.video_url;
+                            if (!video_url) {
                                 $("#popupMessage").html("Please enter video url");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -3580,6 +3596,26 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                         $scope.surveydata["description"] = survey.description ? survey.description : "";
                         window.location.href = "#!edit-survey?q=" + survey._id;
                     } */
+                }
+            }
+        }
+    }
+}]);
+
+/******************************* All Promotions **************************************/
+cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions</div>' +
+            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promotion?promotionid={{promotion._id}}">' +
+            '<img src="{{promotion.imageUrl}}"/></a>' +
+            '</div><div class="name"><a href="#!/promotion?promotionid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
+            '' +
+            '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.getInitialData(0);
                 }
             }
         }
