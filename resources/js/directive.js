@@ -3443,7 +3443,7 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
             return {
                 post: function ($scope, iElement) {
                     $scope.removeFile = function () {
-                        delete $scope.row[$scope.colmetadocdata .expression];
+                        delete $scope.row[$scope.colmetadocdata.expression];
                         $("#uploaddocfile").val("");
                         $scope.readonlydocrow.filenotexist = true;
                     };
@@ -3458,7 +3458,7 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
                         $scope.docfile.name = $scope.docOFile.name;
                         $scope.docfile .result = evt.target.result;
                         $scope.docOFile['data'] = evt.target.result;
-                        $scope.showUploadedFile($scope.file);
+                        $scope.showUploadedFile($scope.docfile);
                     };
                     $scope.showUploadedFile = function (file) {
 
