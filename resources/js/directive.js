@@ -3621,3 +3621,23 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
         }
     }
 }]);
+
+/************************** Carousel Promo *******************************************/
+cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions"><img ng-src="{{carouselPromotion.imageUrl}}" /></li></ul>',
+        compile: function () {
+            return {
+                pre: function () {
+                },
+                post:function(){
+                    $('.bxslider').bxSlider({
+                        auto: true,
+                        autoControls: true
+                    });
+                }
+            }
+        }
+    }
+}]);

@@ -7,7 +7,8 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
 
 // Declare app level module which depends on filters, and services
-var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services']);
+//changed by anuradha 2804
+var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services','ui.bootstrap']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('!');
@@ -781,6 +782,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 //changed by anuradha
 cstore.controller('homeCtrl', function ($scope, $appService, $location, $routeParams) {
     $scope.homeView = {};
+    $scope.myInterval = 5000;
     $scope.loadingPopularProductData = false;
     $scope.getPopularProducts = function (maxRow, searchText) {
         $scope.loadingPopularProductData = true;
@@ -837,6 +839,36 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $('.popup').toggle("slide");
         })
     }
+    $scope.getCarouselPromotions = function (maxRow) {
+        $scope.loadingCrouselPromotionData = true;
+        var currentTime = new Date();
+        currentTime.setMinutes(currentTime.getMinutes());
+        var query = {"table": "promotions__cstore"};
+        query.columns = ["promo_title","image"];
+        query.filter = {};
+        query.filter["start_date"] = {"$lte":currentTime};
+        query.filter["end_date"] = {"$gte":currentTime};
+        query.filter["top_promo"]=true;
+        query.orders = {"__createdon": "desc"};
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 5;
+        }
+        console.log(JSON.stringify(query));
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
+            $scope.loadingCarouselPromotionData= false;
+            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 291, 196);
+            //$scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data);
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getCarouselPromotions(4);
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
