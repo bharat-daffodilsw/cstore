@@ -742,7 +742,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["quantity"] = product.quantity ? product.quantity : "";
                         //$scope.productdata["image"] = product.image;
-                        $scope.showFile(product.image, false);
+                        //$scope.showFile(product.image, false);
+                        //changed 28/04
+                        $scope.showFile(product.image, true);
                         //console.log($scope.productdata.image);
 
                         if (product.product_category._id) {
@@ -943,7 +945,9 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                         $scope.readonlyrow.filenotexist = true;
                     };
                     if ($scope.row[$scope.colmetadata.expression]) {
-                        $scope.showFile($scope.row[$scope.colmetadata.expression], false);
+                        //$scope.showFile($scope.row[$scope.colmetadata.expression], false);
+                        //changed 2804
+                        $scope.showFile($scope.row[$scope.colmetadata.expression], true);
 
                     } else if (!$scope.readonlyrow.fileurl) {
                         $scope.readonlyrow.filenotexist = true;
@@ -3456,6 +3460,7 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
                     $scope.loadFile = function (evt) {
                         $scope.docfile  = {};
                         $scope.docfile.name = $scope.docOFile.name;
+                        console.log(JSON.stringify(evt));
                         $scope.docfile .result = evt.target.result;
                         $scope.docOFile['data'] = evt.target.result;
                         $scope.showUploadedFile($scope.docfile);
