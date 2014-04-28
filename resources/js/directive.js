@@ -863,28 +863,34 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $scope.saveFunction(query);
                             }
                             else {
-                                var current_file = {};
-                                current_file.name = $scope.oFile.name;
-                                current_file.type = $scope.oFile.type;
-                                current_file.contents = $scope.oFile.data;
-                                current_file.ask = ASK;
-                                current_file.osk = OSK;
-                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    if (data.response) {
-                                        $scope.newProduct["image"] = data.response;
-                                        query.operations = [$scope.newProduct];
-                                        $scope.saveFunction(query);
-                                    }
-                                    else {
+                                if((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)){
+                                    var current_file = {};
+                                    current_file.name = $scope.oFile.name;
+                                    current_file.type = $scope.oFile.type;
+                                    current_file.contents = $scope.oFile.data;
+                                    current_file.ask = ASK;
+                                    current_file.osk = OSK;
+                                    $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                        if (data.response) {
+                                            $scope.newProduct["image"] = data.response;
+                                            query.operations = [$scope.newProduct];
+                                            $scope.saveFunction(query);
+                                        }
+                                        else {
 
-                                        $("#popupMessage").html("some error while uploading image please try again");
+                                            $("#popupMessage").html("some error while uploading image please try again");
+                                            $('.popup').toggle("slide");
+
+                                        }
+                                    }, function (callbackerror) {
+                                        $("#popupMessage").html(callbackerror);
                                         $('.popup').toggle("slide");
-
-                                    }
-                                }, function (callbackerror) {
-                                    $("#popupMessage").html(callbackerror);
+                                    });
+                                }
+                                else {
+                                    $("#popupMessage").html("Please Upload Image File only");
                                     $('.popup').toggle("slide");
-                                });
+                                }
                             }
                         }
                         else {
@@ -3370,29 +3376,35 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $scope.saveFunction(query);
                             }
                             else {
-                                var current_file = {};
-                                current_file.name = $scope.docOFile.name;
-                                current_file.type = $scope.docOFile.type;
-                                current_file.contents = $scope.docOFile.data;
-                                current_file.ask = ASK;
-                                current_file.osk = OSK;
-                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    if (data.response) {
-                                        $scope.newSession["file"] = data.response;
-                                        query.operations = [$scope.newSession];
-                                        $scope.saveFunction(query);
-                                    }
-                                    else {
+                                if((/\.(doc|docx|pdf|ppt|pptx)$/i).test($scope.docOFile.name)){
+                                    var current_file = {};
+                                    current_file.name = $scope.docOFile.name;
+                                    current_file.type = $scope.docOFile.type;
+                                    current_file.contents = $scope.docOFile.data;
+                                    current_file.ask = ASK;
+                                    current_file.osk = OSK;
+                                    $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                        if (data.response) {
+                                            $scope.newSession["file"] = data.response;
+                                            query.operations = [$scope.newSession];
+                                            $scope.saveFunction(query);
+                                        }
+                                        else {
 
-                                        $("#popupMessage").html("some error while uploading file please try again");
+                                            $("#popupMessage").html("some error while uploading file please try again");
+                                            $('.popup').toggle("slide");
+
+                                        }
+                                    }, function (callbackerror) {
+                                        $("#popupMessage").html(callbackerror);
                                         $('.popup').toggle("slide");
-
-                                    }
-                                }, function (callbackerror) {
-                                    $("#popupMessage").html(callbackerror);
+                                    });
+                                }
+                                else {
+                                    $("#popupMessage").html("Please Upload document File only");
                                     $('.popup').toggle("slide");
-                                });
-                            }
+                                }
+                        }
                         }
                         else {
                             $("#popupMessage").html("Please login first");
