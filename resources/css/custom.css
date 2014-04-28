@@ -1173,4 +1173,13 @@ span.sortWrap {
     padding: 10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
 }
+.promotions {
+width: 24%;
+margin: .5%;
+box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+padding: 10px;
+min-height: 295px;
+max-height: 295px;
+overflow: hidden;
+    }
 	

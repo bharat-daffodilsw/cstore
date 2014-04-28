@@ -7,6 +7,7 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
 
 // Declare app level module which depends on filters, and services
+//changed by anuradha 2804
 var cstore = angular.module('cstore', ['ngRoute', '$appstrap.services']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
@@ -106,6 +107,12 @@ cstore.config(
             }).when('/surveys',{
                 templateUrl:'../surveys',
                 controller:'surveyCtrl'
+            }).when('/all-promos',{
+                templateUrl:'../all-promos',
+                controller:'allPromotionsCtrl'
+            }).when('/promo', {
+                templateUrl: '../promodetail',
+                controller: 'promoDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -801,21 +808,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
  });
  };
  }); */
-
+//changed by anuradha
 cstore.controller('homeCtrl', function ($scope, $appService, $location, $routeParams) {
     $scope.homeView = {};
+    $scope.myInterval = 5000;
     $scope.loadingPopularProductData = false;
     $scope.getPopularProducts = function (maxRow, searchText) {
         $scope.loadingPopularProductData = true;
-        /*$scope.venderSearch = [
-         {"value":"name", "name":"Name"},
-         {"value":"short_description", "name":"Short Description"},
-         {"value":"cost.amount", "name":"Cost"},
-         {"value":"image.name", "name":"Image"},
-         {"value":"soldcount", "name":"Sold Count"}
-         ];
-         $scope.searchby = $scope.venderSearch[0]; */
-
         var query = {"table": "products__cstore"};
 
         query.columns = ["name", "image", "short_description", "cost", "soldcount"];
@@ -840,12 +839,70 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $('.popup').toggle("slide");
         })
     }
-
+    $scope.getRecentPromotions = function (maxRow) {
+        $scope.loadingRecentPromotionData = true;
+        var currentTime = new Date();
+        currentTime.setMinutes(currentTime.getMinutes());
+        console.log(currentTime);
+        var query = {"table": "promotions__cstore"};
+        query.columns = ["promo_title","image","start_date","end_date"];
+        query.filter = {};
+        query.filter["start_date"] = {"$lte":currentTime};
+        query.filter["end_date"] = {"$gte":currentTime};
+        query.orders = {"__createdon": "desc"};
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 8;
+        }
+        console.log(JSON.stringify(query));
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
+            $scope.loadingRecentPromotionData= false;
+            console.log(promotionData.response.data[0].end_date);
+            $scope.recentPromotions = $appService.setUrls(promotionData.response.data, 291, 196);
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getCarouselPromotions = function (maxRow) {
+        $scope.loadingCrouselPromotionData = true;
+        var currentTime = new Date();
+        currentTime.setMinutes(currentTime.getMinutes());
+        var query = {"table": "promotions__cstore"};
+        query.columns = ["promo_title","image"];
+        query.filter = {};
+        query.filter["start_date"] = {"$lte":currentTime};
+        query.filter["end_date"] = {"$gte":currentTime};
+        query.filter["top_promo"]=true;
+        query.orders = {"__createdon": "desc"};
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 5;
+        }
+        console.log(JSON.stringify(query));
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
+            $scope.loadingCarouselPromotionData= false;
+            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 291, 196);
+            //$scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data);
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getCarouselPromotions(4);
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
             $scope.getPopularProducts(8, $routeParams.search);
-
+            $scope.getRecentPromotions(8);
             $scope.homeView = {"storeManager": true, "admin": false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
@@ -2323,4 +2380,103 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllSurveys(0, 10);
     }
+});
+
+//changes made by Anuradha
+
+cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routeParams) {
+    var currentTime = new Date();
+    currentTime.setMinutes(currentTime.getMinutes());
+    $scope.promotionData = {"loadingData": false, "available": false};
+
+    $scope.promotions = [];
+    $scope.getAllPromos = function (cursor) {
+        if ($scope.promotionData.loadingData) {
+            return false;
+        }
+        $scope.promotionData.loadingData = true;
+        var query = {"table": "promotions__cstore"};
+        query.columns = ["end_date","start_date","image","promo_title"];
+        query.filter = {};
+        query.filter["start_date"] = {"$lte":currentTime};
+        query.filter["end_date"] = {"$gte":currentTime};
+        query.maxrow = 8;
+        query.cursor = cursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
+            var rawData = $appService.setUrls(promoData.response.data, 291, 196);
+            console.log(JSON.stringify(rawData));
+            if ($scope.promotions.length) {
+                for (var i = 0; i < rawData.length; i++) {
+                    $scope.promotions.push(rawData[i]);
+                }
+            }
+            if (!$scope.promotions.length) {
+                $scope.promotions = rawData;
+
+            }
+            $scope.promotionData.loadingData = false;
+            $scope.cursor = promoData.response.cursor;
+            if ($scope.promotions.length) {
+                /*wee need string for ng-switch*/
+                $scope.promotionData.available = "true";
+            }
+            else {
+                $scope.promotionData.available = "false";
+            }
+
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getAllPromos($scope.cursor);
+                        }
+                    }
+                }
+            });
+
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getInitialData = function (cursor) {
+        $scope.getAllPromos(cursor);
+    }
+});
+
+cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams) {
+    $scope.getPromoDetail = function () {
+        $scope.loadingPromotionDetailData = true;
+
+        var query = {"table": "promotions__cstore"};
+        query.columns = [
+            {"expression": "end_date", "format": "MM/DD/YYYY"},
+            "image",
+            "item_signage",
+            "offer_description",
+            "offer_title",
+            "offer_type",
+            "promo_description",
+            "promo_title",
+            "reward_value",
+            "sponsor",
+            {"expression": "start_date", "format": "MM/DD/YYYY"},
+            "threshold",
+            "upc",
+            "vendorid"
+        ];
+        query.filter = {"_id": $routeParams.promoid};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionDetailData) {
+            $scope.loadingPromotionDetailData = false;
+            $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getPromoDetail();
 });

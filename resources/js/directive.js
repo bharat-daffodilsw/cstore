@@ -283,7 +283,22 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
             '<div class="add_to_cart"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>'
     }
 }]);
+//changes by anu 2804
+cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template:'<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
+            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
 
+            '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
+
+            '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="product_details">' +
+            '{{product.short_description}}</div>' +
+
+            '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
+    }
+}]);
+/***************/
 cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
@@ -3666,5 +3681,58 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                 }
             }
         }
+    }
+}]);
+
+/******************************* All Promotions **************************************/
+cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions</div>' +
+            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
+            '<img src="{{promotion.imageUrl}}"/></a>' +
+            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
+            '' +
+            '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.getInitialData(0);
+                }
+            }
+        }
+    }
+}]);
+
+/************************** Carousel Promo *******************************************/
+cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div class="carsouel" style="height:200px;width:300px;"><ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions"><img ng-src="{{carouselPromotion.imageUrl}}" height/></li></ul></div>',
+        compile: function () {
+            return {
+                pre: function () {
+                },
+                post:function(){
+                    $('.bxslider').bxSlider({
+                        auto: true,
+                        autoControls: true
+                    });
+                }
+            }
+        }
+    }
+}]);
+
+/********** Promo Detail**********/
+cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
+            '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
+            '<div class="details_product pull-left"><div class="short_details"></div><div class="Qty"><div class="quantity_border">Offer Title : {{promotion[0].offer_title}}' +
+            '</div><div class="final_price">Offer Type : {{promotion[0].offer_type}}</div>' +
+            '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].description}}</div></div>' +
+            '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>'
     }
 }]);
