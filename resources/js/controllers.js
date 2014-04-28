@@ -110,6 +110,9 @@ cstore.config(
             }).when('/all-promos',{
                 templateUrl:'../all-promos',
                 controller:'allPromotionsCtrl'
+            }).when('/promo', {
+                templateUrl: '../promodetail',
+                controller: 'promoDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -2415,4 +2418,38 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
     $scope.getInitialData = function (cursor) {
         $scope.getAllPromos(cursor);
     }
+});
+
+cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams) {
+    $scope.getPromoDetail = function () {
+        $scope.loadingPromotionDetailData = true;
+
+        var query = {"table": "promotions__cstore"};
+        query.columns = [
+            {"expression": "end_date", "format": "MM/DD/YYYY"},
+            "image",
+            "item_signage",
+            "offer_description",
+            "offer_title",
+            "offer_type",
+            "promo_description",
+            "promo_title",
+            "reward_value",
+            "sponsor",
+            {"expression": "start_date", "format": "MM/DD/YYYY"},
+            "threshold",
+            "upc",
+            "vendorid"
+        ];
+        query.filter = {"_id": $routeParams.promoid};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionDetailData) {
+            $scope.loadingPromotionDetailData = false;
+            $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
+        }, function (jqxhr, error) {
+        })
+    }
+    $scope.getPromoDetail();
 });
