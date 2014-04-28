@@ -742,9 +742,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["quantity"] = product.quantity ? product.quantity : "";
                         //$scope.productdata["image"] = product.image;
-                        //$scope.showFile(product.image, false);
+                        $scope.showFile(product.image, false);
                         //changed 28/04
-                        $scope.showFile(product.image, true);
+                        //$scope.showFile(product.image, true);
                         //console.log($scope.productdata.image);
 
                         if (product.product_category._id) {
@@ -951,9 +951,9 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                         $scope.readonlyrow.filenotexist = true;
                     };
                     if ($scope.row[$scope.colmetadata.expression]) {
-                        //$scope.showFile($scope.row[$scope.colmetadata.expression], false);
+                        $scope.showFile($scope.row[$scope.colmetadata.expression], false);
                         //changed 2804
-                        $scope.showFile($scope.row[$scope.colmetadata.expression], true);
+                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
 
                     } else if (!$scope.readonlyrow.fileurl) {
                         $scope.readonlyrow.filenotexist = true;
@@ -3459,12 +3459,12 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
             return {
                 post: function ($scope, iElement) {
                     $scope.removeFile = function () {
-                        delete $scope.row[$scope.colmetadocdata.expression];
+                        delete $scope.docrow[$scope.colmetadocdata.expression];
                         $("#uploaddocfile").val("");
                         $scope.readonlydocrow.filenotexist = true;
                     };
                     if ($scope.docrow[$scope.colmetadocdata.expression]) {
-                        $scope.showFile($scope.docrow[$scope.colmetadocdata.expression], false);
+                        $scope.showDocFile($scope.docrow[$scope.colmetadocdata.expression], false);
 
                     } else if (!$scope.readonlydocrow.fileurl) {
                         $scope.readonlydocrow.filenotexist = true;
