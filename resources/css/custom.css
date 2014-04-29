@@ -1198,3 +1198,10 @@ overflow: hidden;
     height: 225px;
     overflow: hidden;
 }
+.uploadList{
+	padding: 0;
+	list-style-type: none;
+}
+.uploadList .uploadLink{
+	float:left;
+}
