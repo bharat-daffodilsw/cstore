@@ -3388,6 +3388,9 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                             }
                         }
+						if($scope.trainingdata.file && $scope.trainingdata.file.length > 0){
+							$scope.uploadedimages = $scope.trainingdata.file;
+						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
                 }
