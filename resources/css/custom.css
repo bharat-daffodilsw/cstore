@@ -1179,6 +1179,7 @@ overflow: hidden;
     overflow: hidden;
 }
 
+
 .assign_popup {
     display:none;
     top:220px;
@@ -1190,3 +1191,12 @@ overflow: hidden;
     width:330px;
     padding:10px;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
+
+.uploadList{
+	padding: 0;
+	list-style-type: none;
+}
+.uploadList .uploadLink{
+	float:left;
+}
+

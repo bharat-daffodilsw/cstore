@@ -955,6 +955,7 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
             return {
                 pre:function ($scope) {
                     $scope.uploadedimages = [];
+                    $scope.albumArr = {};
                     $scope.albumArr.uploadedimg = [];
                 },
                 post:function ($scope, iElement) {
@@ -965,18 +966,20 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
 							$scope.imgFilenotexist = true;
 						}
                         $scope.imgFileLimitExceed = false;
+						$("#uploadMultiImgfile").val("");
                     };
 
                     $scope.showImgFile = function (file) {
                         var index = $scope.uploadedimages.length;
                         $scope.uploadedimages[index] = {};
-                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
-                        $scope.uploadedimages[index].filename = file[0][FILE_NAME];
+                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
+                        $scope.uploadedimages[index].filename = file[0]["name"];
                         $scope.uploadedimages[index].image = file;
                         $scope.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
+						$("#uploadMultiImgfile").val("");
                         //  $scope.row[$scope.colmetadata.expression] = file;
                         if (index == 10)
                             $scope.imgFileLimitExceed = true;
@@ -991,19 +994,23 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                     }
 
                     $scope.loadImgFile = function (evt) {
-                        var current_file = {};
-                        $scope.uploadingimage = true;
-                        current_file.name = $scope.oFile.name;
-                        current_file.type = $scope.oFile.type;
-                        current_file.contents = evt.target.result;
-                        current_file.ask = ASK;
-                        current_file.osk = OSK;
-						$scope.showImgFile(data);
-                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                            if (data != null && data != undefined) {
-                                $scope.showImgFile(data);
-                            }
-                        });
+						if( (/\.(doc|docx|xls|pdf|ppt)$/i).test($scope.oFile.name)){
+							var current_file = {};
+							$scope.uploadingimage = true;
+							current_file.name = $scope.oFile.name;
+							current_file.type = $scope.oFile.type;
+							current_file.contents = evt.target.result;
+							current_file.ask = ASK;
+							current_file.osk = OSK;
+							$appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+								if (data.response && data.response.length > 0) {
+									$scope.showImgFile(data.response);
+								}
+							});
+						}else{
+							$("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
+                            $('.popup').toggle("slide");
+						}
                     };
 
                     iElement.bind('change', function () {
@@ -3411,6 +3418,13 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
             '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
             '<tr><td><app-multi-img-file-upload></app-multi-img-file-upload></td></tr>' +
+            '<tr><td>' +
+			'<ul class="uploadList">' +
+            '<li ng-repeat="uploadedimage in uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
+            '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
+            '</li>' +
+            '</ul>' +
+			'</td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
