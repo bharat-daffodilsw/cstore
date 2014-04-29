@@ -3388,9 +3388,9 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             }
                         }
 						if(trainingSession.file && trainingSession.file.length > 0){
-							for (var j = 0; j < trainingSession.file.length; j++) {
-								$scope.trainingdata.uploadedimages[i].filename = trainingSession.file[i].name;
-								$scope.trainingdata.uploadedimages[i].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[i].key + "&ask="+ASK+"&osk="+OSK;
+							for (var k = 0; k < trainingSession.file.length; k++) {
+								$scope.trainingdata.uploadedimages[k].filename = trainingSession.file[k].name;
+								$scope.trainingdata.uploadedimages[k].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[k].key + "&ask="+ASK+"&osk="+OSK;
 							}
 						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
