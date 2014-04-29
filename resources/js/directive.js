@@ -994,7 +994,7 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                     }
 
                     $scope.loadImgFile = function (evt) {
-						if( (/\.(doc|docx|xls|pdf|ppt)$/i).test(file[0].name)){
+						if( (/\.(doc|docx|xls|pdf|ppt)$/i).test($scope.oFile.name)){
 							var current_file = {};
 							$scope.uploadingimage = true;
 							current_file.name = $scope.oFile.name;
