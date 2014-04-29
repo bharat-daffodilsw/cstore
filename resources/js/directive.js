@@ -966,6 +966,7 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
 							$scope.imgFilenotexist = true;
 						}
                         $scope.imgFileLimitExceed = false;
+						$("#uploadMultiImgfile").val("");
                     };
 
                     $scope.showImgFile = function (file) {
@@ -978,6 +979,7 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                         $scope.albumArr.uploadedimg[index] = file[0];
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
+						$("#uploadMultiImgfile").val("");
                         //  $scope.row[$scope.colmetadata.expression] = file;
                         if (index == 10)
                             $scope.imgFileLimitExceed = true;
