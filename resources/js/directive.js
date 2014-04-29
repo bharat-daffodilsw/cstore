@@ -968,9 +968,9 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 						$("#uploadMultiImgfile").val("");
                     };
 
-                    $scope.showImgFile = function (file) {
-                        var index = $scope.trainingdata.uploadedimages.length;
-                        $scope.trainingdata.uploadedimages[index] = {};
+                    $scope.showImgFile = function (file,index) {
+						if(!$scope.trainingdata.uploadedimages[index])
+							$scope.trainingdata.uploadedimages[index] = {};
                         $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
                         $scope.trainingdata.uploadedimages[index].filename = file[0]["name"];
                         $scope.trainingdata.uploadedimages[index].image = file;
@@ -986,7 +986,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 
                     if ($scope.trainingdata.uploadedimages.length > 0) {
                         for (var k = 0; k < $scope.trainingdata.uploadedimages.length; k++) {
-                            $scope.showImgFile($scope.trainingdata.uploadedimages[k].file);
+                            $scope.showImgFile($scope.trainingdata.uploadedimages[k].file,k);
                         }
                     } else {
                         $scope.imgFilenotexist = true;
@@ -1003,7 +1003,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 							current_file.osk = OSK;
 							$appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
 								if (data.response && data.response.length > 0) {
-									$scope.showImgFile(data.response);
+									$scope.showImgFile(data.response,$scope.trainingdata.uploadedimages.length);
 								}
 							});
 						}else{
@@ -3388,7 +3388,10 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             }
                         }
 						if(trainingSession.file && trainingSession.file.length > 0){
-							$scope.trainingdata.uploadedimages = trainingSession.file;
+							for (var k = 0; k < trainingSession.file.length; k++) {
+								$scope.trainingdata.uploadedimages[k] = {"filename":trainingSession.file[k].name};
+								$scope.trainingdata.uploadedimages[k].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[k].key + "&ask="+ASK+"&osk="+OSK;
+							}
 						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
@@ -3504,7 +3507,10 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $scope.saveFunction(query);
                             }
                             else {
-                                $scope.newSession["file"] = $scope.trainingdata.uploadedimages;
+								$scope.newSession["file"] = [];
+								for(j = 0; j < $scope.trainingdata.uploadedimages.length; j++){
+									$scope.newSession["file"][j] = $scope.trainingdata.uploadedimages[j].image[0];
+								}
 								query.operations = [$scope.newSession];
 								$scope.saveFunction(query);
 							}
