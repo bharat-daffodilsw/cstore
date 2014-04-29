@@ -3504,7 +3504,9 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $scope.saveFunction(query);
                             }
                             else {
-                                $scope.newSession["file"] = $scope.trainingdata.uploadedimages;
+								for(j = 0; j < $scope.trainingdata.uploadedimages.length; j++){
+									$scope.newSession["file"][j] = $scope.trainingdata.uploadedimages[j].image;
+								}
 								query.operations = [$scope.newSession];
 								$scope.saveFunction(query);
 							}
