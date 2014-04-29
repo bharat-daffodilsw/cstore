@@ -971,7 +971,7 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                     $scope.showImgFile = function (file) {
                         var index = $scope.uploadedimages.length;
                         $scope.uploadedimages[index] = {};
-                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
+                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
                         $scope.uploadedimages[index].filename = file[0]["name"];
                         $scope.uploadedimages[index].image = file;
                         $scope.uploadedimages[index].default = true;
@@ -3413,8 +3413,8 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><app-multi-img-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
 			 '<ul>' +
-            '<li ng-repeat="uploadedimage in uploadedimages"><div class="album_pic"><img src="{{uploadedimage.fileurl}}"></div>' +
-            '<img src="images/icon_cross.gif" style="right: 0;z-index: 200;outline: medium none; position:  absolute; top:-2px; " class="app-float-left clickable" value="Remove" ng-click="removeImgFile($index)">' +
+            '<li ng-repeat="uploadedimage in uploadedimages"><div class="album_pic"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
+            '<img src="images/icon_cross.gif" class="cross_icon" value="Remove" ng-click="removeImgFile($index)">' +
             '</li>' +
             '</ul>' +
 			'</td></tr>' +
