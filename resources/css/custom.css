@@ -862,16 +862,7 @@ th {
 .item_remove a {
     text-decoration:underline;}
 
-.assign_popup {
-    display:none;
-    top:400px;
-    left:500px;
-    background-color:#FFF;
-    position:absolute;
-    font-size:17px;
-    width:30%;
-    padding:10px;
-    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
+
 
 .location_popup {
     display:none;
@@ -1165,18 +1156,7 @@ span.sortWrap {
     width: 4%!important;
 }
 
-.assign_popup {
-    display: none;
-    top: 207px;
-    z-index: 1000;
-    left: 500px;
-    background-color: #FFF;
-    position: absolute;
-    font-size: 17px;
-    width: 330px;
-    padding: 10px;
-    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-}
+
 .promotions {
 width: 24%;
 margin: .5%;
@@ -1198,3 +1178,15 @@ overflow: hidden;
     height: 225px;
     overflow: hidden;
 }
+
+.assign_popup {
+    display:none;
+    top:220px;
+    z-index:1000;
+    left:500px;
+    background-color:#FFF;
+    position:absolute;
+    font-size:17px;
+    width:330px;
+    padding:10px;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}

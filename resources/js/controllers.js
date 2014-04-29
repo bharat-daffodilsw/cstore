@@ -223,13 +223,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 		];
 	}
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
-    //changes made by anuradha
-    $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":""};
+    //changes made by anuradha 2904
+    $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":"","stores":[],"assignedStore":""};
+    //$scope.trainingdata.assignedStore=
     $scope.surveydata={};
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
-
 
     /*bharat change for location*/
     $scope.location = '';
@@ -745,9 +745,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.userdata.stores = storeData.response.data;
-            console.log($scope.userdata.stores);
+            $scope.trainingdata.stores=storeData.response.data;
+            //console.log($scope.userdata.stores);
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
-            console.log($scope.userdata.selectedStore);
+            $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
+            console.log($scope.trainingdata.assignedStore);
         }, function (jqxhr, error) {
         })
     }
@@ -2380,6 +2382,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllSurveys(0, 10);
     }
+    $scope.getStores();
 });
 
 //changes made by Anuradha
@@ -2481,3 +2484,5 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
     }
     $scope.getPromoDetail();
 });
+
+

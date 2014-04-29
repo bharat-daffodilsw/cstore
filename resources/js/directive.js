@@ -3619,25 +3619,32 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
     }
 }]);
 
-/*************************************** Survey **************************************************/
-
+/*************************************** Survey ************************************************/
+//changes made by anu on 2904
 cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click=><a href>Add</a></button>' +
+        template: '<div><assign-store-popup></assign-store-popup><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click=><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteSurvey()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + surveys.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\')"></div>	</span></th>' +
-            '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\')"></div>	</span></th><th>Assign Store Manager</th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
-            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div>',
+            '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\')"></div>	</span></th><th>Assign Store </th><th></th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ng-click="showAssignPopup(survey)"><a class="edit_btn" href>Assign</a></td>' +
+            '<td><a class="edit_btn" ng-click="" href>Assigned Store</a><td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
+                    }
+                    //changes made 2904
+                    $scope.showAssignPopup=function(survey){
+                        $(".assign_popup").show();
+                        console.log(survey.title);
+                        $scope.surveyTitle=survey.title;
+                        $scope.surveyId=survey._id;
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -3745,9 +3752,63 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left"><div class="short_details"></div><div class="Qty"><div class="quantity_border">Offer Title : {{promotion[0].offer_title}}' +
-            '</div><div class="final_price">Offer Type : {{promotion[0].offer_type}}</div>' +
-            '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].description}}</div></div>' +
+            '<div class="details_product pull-left">{{promotion[0].description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>'
+    }
+}]);
+
+/*********************************** Assign Survey To Store Manager********************************************/
+cstore.directive('assignStorePopup', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="assign_popup pull-left"><div class="popup">Assign {{surveyTitle}} To Store Manager</div>' +
+            '<div class="pop_btn pull-left"><div class="popup_input pull-left"><table>' +
+            '<tr><td>Store Name</td></tr><tr><td>' +
+            '<select class="brand" ng-model="trainingdata.assignedStore" ng-options="store.storename for store in trainingdata.stores"></select></td></tr></table>' +
+            '</div><div class="add_btn"><button type="button" ng-click="assignStoreSurvey()"><a href>Save</a></button>' +
+            '<button type="button" ng-click="hideAssignPopup()"><a href>Cancel</a></button></div></div></div>',
+        compile:function(){
+            return{
+                pre:function($scope){
+                    $scope.hideAssignPopup=function(){
+                        $(".assign_popup").hide();
+                    }
+                    $scope.newStoreSurvey={};
+                },
+                post:function($scope){
+//                        console.log($scope.surveyTitle);
+//                        console.log($scope.trainingdata.assignedStore);
+//                        console.log($scope.surveyId);
+//
+                    $scope.assignStoreSurvey = function () {
+                        var query = {};
+                        query.table = "storemanager_survey__cstore";
+                        $scope.newStoreSurvey["store_manager_id"] = {"storename":$scope.trainingdata.assignedStore.storename,"_id":$scope.trainingdata.assignedStore._id};
+                        $scope.newStoreSurvey["survey_id"] = {"title":$scope.surveyTitle,"_id":$scope.surveyId};
+                        query.operations = [$scope.newStoreSurvey];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Assigned successfully");
+                                $('.popup').toggle("slide");
+                                $scope.hideAssignPopup();
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while assigning survey");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                }
+            }
+        }
     }
 }]);
