@@ -939,12 +939,12 @@ cstore.controller('allCategory', function ($scope, $appService, $routeParams) {
 
         if (searchText && searchText != "") {
             query.childs = [
-                {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "maxrow": 4, "orders": {"__createdon": "desc"}, "filter": {"name": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
+                {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"name": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
                 ]
         }
         else {
             query.childs = [
-                {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "maxrow": 4, "orders": {"__createdon": "desc"}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
+                {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "max_rows": 4, "orders": {"__createdon": "desc"}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
             ];
         }
         //console.log(query.childs.query);
@@ -1016,7 +1016,7 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
             $('.popup').toggle("slide");
             return false;
         }
-        query.maxrow = 8;
+        query.max_rows = 8;
         query.cursor = cursor;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
@@ -2400,13 +2400,15 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         query.filter = {};
         query.filter["start_date"] = {"$lte":currentTime};
         query.filter["end_date"] = {"$gte":currentTime};
-        query.maxrow = 8;
+        query.max_rows = 4;
         query.cursor = cursor;
+        //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
+            console.log(JSON.stringify(promoData));
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
-            console.log(JSON.stringify(rawData));
+            //var rawData = promoData.response.data;
             if ($scope.promotions.length) {
                 for (var i = 0; i < rawData.length; i++) {
                     $scope.promotions.push(rawData[i]);
@@ -2419,7 +2421,6 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             $scope.promotionData.loadingData = false;
             $scope.cursor = promoData.response.cursor;
             if ($scope.promotions.length) {
-                /*wee need string for ng-switch*/
                 $scope.promotionData.available = "true";
             }
             else {

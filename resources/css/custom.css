@@ -252,7 +252,11 @@ a:hover {
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding:.5%;
     margin-bottom:10px;
-    padding:10px;}
+    padding:10px;
+    /*****changed****/
+    /***width:70%  **/
+}
+/*****added*******/
 
 .footer {
     border:1px solid #000;
@@ -1182,4 +1186,15 @@ min-height: 295px;
 max-height: 295px;
 overflow: hidden;
     }
-	
+
+.c-row {
+    margin-left: 0px;
+    height: 225px;
+    padding: 0px;
+    /* overflow:hidden; */
+}
+
+.c-slide {
+    height: 225px;
+    overflow: hidden;
+}

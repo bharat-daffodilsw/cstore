@@ -3724,16 +3724,16 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
 cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="carsouel" style="height:200px;width:300px;"><ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions"><img ng-src="{{carouselPromotion.imageUrl}}" height/></li></ul></div>',
+        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions"><img ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/></li></ul>',
         compile: function () {
             return {
                 pre: function () {
                 },
                 post:function(){
-                    $('.bxslider').bxSlider({
+                    /*$('.bxslider').bxSlider({
                         auto: true,
                         autoControls: true
-                    });
+                    });*/
                 }
             }
         }
