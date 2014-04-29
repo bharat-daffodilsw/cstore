@@ -942,15 +942,14 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-appStrapDirectives.directive('appMultiImgFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
         restrict:"E",
         replace:true,
         scope:false ,
         template:"<div class='app-float-left'>" +
-            "<input style='width: 80px;display: none;' class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
-            "<div tabindex='-1' class='app-float-left' style='display: none;'>No file Choosen</div>" +
-            '<div class="albm_btn" onclick="$(\'#uploadMultiImgfile\').click()" ng-hide="imgFileLimitExceed"><input ng-hide="otherprofile ||notSigned" type="Button" value="{{transbutton.add_pic}}" class="buttn"></div><span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
+            "<input class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
+            '<span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
             "</div>",
         compile:function () {
             return {
@@ -966,6 +965,21 @@ appStrapDirectives.directive('appMultiImgFileUpload', ['$appService', '$compile'
 							$scope.imgFilenotexist = true;
 						}
                         $scope.imgFileLimitExceed = false;
+                    };
+
+                    $scope.showImgFile = function (file) {
+                        var index = $scope.uploadedimages.length;
+                        $scope.uploadedimages[index] = {};
+                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
+                        $scope.uploadedimages[index].filename = file[0][FILE_NAME];
+                        $scope.uploadedimages[index].image = file;
+                        $scope.uploadedimages[index].default = true;
+                        $scope.albumArr.uploadedimg[index] = file[0];
+                        $scope.imgFilenotexist = false;
+                        $scope.uploadingimage = false;
+                        //  $scope.row[$scope.colmetadata.expression] = file;
+                        if (index == 10)
+                            $scope.imgFileLimitExceed = true;
                     };
 
                     if ($scope.uploadedimages.length > 0) {
@@ -984,7 +998,8 @@ appStrapDirectives.directive('appMultiImgFileUpload', ['$appService', '$compile'
                         current_file.contents = evt.target.result;
                         current_file.ask = ASK;
                         current_file.osk = OSK;
-                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", "Uploading...", function (data) {
+						$scope.showImgFile(data);
+                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                             if (data != null && data != undefined) {
                                 $scope.showImgFile(data);
                             }
@@ -3395,7 +3410,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
             '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
-            '<tr><td><doc-file-upload></doc-file-upload></td></tr>' +
+            '<tr><td><app-multi-img-file-upload></app-multi-img-file-upload></td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
