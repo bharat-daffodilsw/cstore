@@ -969,7 +969,8 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     };
 
                     $scope.showImgFile = function (file,index) {
-                        $scope.trainingdata.uploadedimages[index] = {};
+						if(!$scope.trainingdata.uploadedimages[index])
+							$scope.trainingdata.uploadedimages[index] = {};
                         $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
                         $scope.trainingdata.uploadedimages[index].filename = file[0]["name"];
                         $scope.trainingdata.uploadedimages[index].image = file;
