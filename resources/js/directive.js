@@ -955,6 +955,7 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
             return {
                 pre:function ($scope) {
                     $scope.uploadedimages = [];
+                    $scope.albumArr = {};
                     $scope.albumArr.uploadedimg = [];
                 },
                 post:function ($scope, iElement) {
