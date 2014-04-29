@@ -3720,21 +3720,32 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
 cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions"><img ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/></li></ul>',
+        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/></li></ul>',
         compile: function () {
             return {
                 pre: function () {
                 },
                 post:function(){
-                    /*$('.bxslider').bxSlider({
-                        auto: true,
-                        autoControls: true
-                    });*/
+
                 }
             }
         }
     }
 }]);
+
+//changes made
+cstore.directive('onFinishRender', function ($timeout) {
+    return{
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    scope.$emit(attr.onFinishRender);
+                });
+            }
+        }
+    }
+});
 
 /********** Promo Detail**********/
 cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {

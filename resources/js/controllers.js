@@ -900,6 +900,13 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         })
     }
     $scope.getCarouselPromotions(4);
+    $scope.$on('test', function(ngRepeatFinishedEvent) {
+        $('.bxslider').bxSlider({
+            auto: true,
+            autoControls: true,
+            autoHover:true
+        });
+    });
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
