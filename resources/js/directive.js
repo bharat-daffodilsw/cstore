@@ -3624,7 +3624,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\')"></div>	</span></th>' +
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\')"></div>	</span></th><th>Assign Store </th><th></th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
             '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ng-click="showAssignPopup(survey)"><a class="edit_btn" href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="" href>Assigned Store</a><td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
+            '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a><td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3687,6 +3687,11 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                         });
 
                     }
+                    $scope.setAssignedSurveyState = function (survey) {
+                     //$scope.survey["title"] = survey.title ? survey.title : "";
+                       console.log(JSON.stringify(survey));
+                     window.location.href = "#!/assigned-survey-store?q=" + survey._id;
+                     }
                     /*$scope.setSurveyState = function (survey) {
                         $scope.surveydata["title"] = survey.title ? survey.title : "";
                         $scope.surveydata["description"] = survey.description ? survey.description : "";

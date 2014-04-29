@@ -113,6 +113,9 @@ cstore.config(
             }).when('/promo', {
                 templateUrl: '../promodetail',
                 controller: 'promoDetailCtrl'
+            }).when('/assigned-survey-store',{
+                templateUrl:'../assigned-survey-store',
+                controller:'assignedSurveyCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -2394,6 +2397,71 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
 });
 
 //changes made by Anuradha
+cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routeParams) {
+    var assignedSurveyId = $routeParams.q;
+    console.log(assignedSurveyId);
+    /*$scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingAssignedSurveyData = false;
+    $scope.venderSearch = [
+        {"value": "store_manager_id.storename", "name": "Store"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.assignedSurveys = [];
+    $appService.auth();
+    $scope.getAssignedSurveys = function (direction, limit, column, searchText) {
+        if ($scope.loadingAssignedSurveyData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingAssignedSurveyData = true;
+        var query = {"table": "storemanager_survey__cstore"};
+        query.columns = ["store_manager_id"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyData) {
+            $scope.loadingSurveyData = false;
+            $scope.show.currentCursor = surveyData.response.cursor;
+            $scope.surveys = surveyData.response.data;
+            for (var i = 0; i < $scope.surveys.length; i++) {
+                $scope.surveys[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllSurveys(1, 10);
+    $scope.setSurveyOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllSurveys(1, 10, null, null);
+    }
+    $scope.getMore = function () {
+        $scope.getAllSurveys(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAllSurveys(0, 10);
+    } */
+
+});
 
 cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routeParams) {
     var currentTime = new Date();
