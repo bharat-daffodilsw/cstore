@@ -3411,6 +3411,13 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
             '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
             '<tr><td><app-multi-img-file-upload></app-multi-img-file-upload></td></tr>' +
+            '<tr><td>' +
+			 '<ul>' +
+            '<li ng-repeat="uploadedimage in uploadedimages"><div class="album_pic"><img src="{{uploadedimage.fileurl}}"></div>' +
+            '<img src="images/icon_cross.gif" style="right: 0;z-index: 200;outline: medium none; position:  absolute; top:-2px; " class="app-float-left clickable" value="Remove" ng-click="removeImgFile($index)">' +
+            '</li>' +
+            '</ul>' +
+			'</td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
