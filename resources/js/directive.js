@@ -971,8 +971,8 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                     $scope.showImgFile = function (file) {
                         var index = $scope.uploadedimages.length;
                         $scope.uploadedimages[index] = {};
-                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
-                        $scope.uploadedimages[index].filename = file[0][FILE_NAME];
+                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
+                        $scope.uploadedimages[index].filename = file[0]["name"];
                         $scope.uploadedimages[index].image = file;
                         $scope.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
@@ -999,7 +999,6 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                         current_file.contents = evt.target.result;
                         current_file.ask = ASK;
                         current_file.osk = OSK;
-						$scope.showImgFile(data);
                         $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                             if (data != null && data != undefined) {
                                 $scope.showImgFile(data);
