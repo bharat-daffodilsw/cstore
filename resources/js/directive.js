@@ -3388,7 +3388,10 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             }
                         }
 						if(trainingSession.file && trainingSession.file.length > 0){
-							$scope.trainingdata.uploadedimages = trainingSession.file;
+							for (var j = 0; j < trainingSession.file.length; j++) {
+								$scope.trainingdata.uploadedimages[i].filename = trainingSession.file[i].name;
+								$scope.trainingdata.uploadedimages[i].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[i].key + "&ask="+ASK+"&osk="+OSK;
+							}
 						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
@@ -3421,7 +3424,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
-			'<ul class="uploadList">' +
+			'{{trainingdata.uploadedimages}}<ul class="uploadList">' +
             '<li ng-repeat="uploadedimage in trainingdata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
             '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
             '</li>' +
