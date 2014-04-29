@@ -1000,8 +1000,8 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                         current_file.ask = ASK;
                         current_file.osk = OSK;
                         $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                            if (data != null && data != undefined) {
-                                $scope.showImgFile(data);
+                            if (data.response && data.response.length > 0) {
+                                $scope.showImgFile(data.response);
                             }
                         });
                     };
