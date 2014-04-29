@@ -994,18 +994,23 @@ cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function (
                     }
 
                     $scope.loadImgFile = function (evt) {
-                        var current_file = {};
-                        $scope.uploadingimage = true;
-                        current_file.name = $scope.oFile.name;
-                        current_file.type = $scope.oFile.type;
-                        current_file.contents = evt.target.result;
-                        current_file.ask = ASK;
-                        current_file.osk = OSK;
-                        $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                            if (data.response && data.response.length > 0) {
-                                $scope.showImgFile(data.response);
-                            }
-                        });
+						if( (/\.(doc|docx|xls|pdf|ppt)$/i).test(file[0].name)){
+							var current_file = {};
+							$scope.uploadingimage = true;
+							current_file.name = $scope.oFile.name;
+							current_file.type = $scope.oFile.type;
+							current_file.contents = evt.target.result;
+							current_file.ask = ASK;
+							current_file.osk = OSK;
+							$appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+								if (data.response && data.response.length > 0) {
+									$scope.showImgFile(data.response);
+								}
+							});
+						}else{
+							$("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
+                            $('.popup').toggle("slide");
+						}
                     };
 
                     iElement.bind('change', function () {
