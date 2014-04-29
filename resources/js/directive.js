@@ -942,7 +942,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-cstore.directive('appMultiImgFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
         restrict:"E",
         replace:true,
@@ -3388,6 +3388,9 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                             }
                         }
+						if($scope.trainingdata.file && $scope.trainingdata.file.length > 0){
+							$scope.uploadedimages = $scope.trainingdata.file;
+						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
                 }
@@ -3417,7 +3420,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
             '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
-            '<tr><td><app-multi-img-file-upload></app-multi-img-file-upload></td></tr>' +
+            '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
 			'<ul class="uploadList">' +
             '<li ng-repeat="uploadedimage in uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
@@ -3497,41 +3500,15 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
-                            if (document.getElementById('uploaddocfile').files.length === 0) {
-                                delete $scope.newSession["file"];
+                            if ($scope.uploadedimages && $scope.uploadedimages.length == 0) {
                                 query.operations = [$scope.newSession];
                                 $scope.saveFunction(query);
                             }
                             else {
-                                if((/\.(doc|docx|pdf|ppt|pptx)$/i).test($scope.docOFile.name)){
-                                    var current_file = {};
-                                    current_file.name = $scope.docOFile.name;
-                                    current_file.type = $scope.docOFile.type;
-                                    current_file.contents = $scope.docOFile.data;
-                                    current_file.ask = ASK;
-                                    current_file.osk = OSK;
-                                    $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                        if (data.response) {
-                                            $scope.newSession["file"] = data.response;
-                                            query.operations = [$scope.newSession];
-                                            $scope.saveFunction(query);
-                                        }
-                                        else {
-
-                                            $("#popupMessage").html("some error while uploading file please try again");
-                                            $('.popup').toggle("slide");
-
-                                        }
-                                    }, function (callbackerror) {
-                                        $("#popupMessage").html(callbackerror);
-                                        $('.popup').toggle("slide");
-                                    });
-                                }
-                                else {
-                                    $("#popupMessage").html("Please Upload document File only");
-                                    $('.popup').toggle("slide");
-                                }
-                        }
+                                $scope.newSession["file"] = $scope.uploadedimages;
+								query.operations = [$scope.newSession];
+								$scope.saveFunction(query);
+							}
                         }
                         else {
                             $("#popupMessage").html("Please login first");
