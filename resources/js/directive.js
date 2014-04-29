@@ -954,15 +954,14 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
         compile:function () {
             return {
                 pre:function ($scope) {
-                    $scope.uploadedimages = [];
                     $scope.albumArr = {};
                     $scope.albumArr.uploadedimg = [];
                 },
                 post:function ($scope, iElement) {
                     $scope.removeImgFile = function (index) {
-                        $scope.uploadedimages.splice(index, 1);
+                        $scope.trainingdata.uploadedimages.splice(index, 1);
                         $scope.albumArr.uploadedimg.splice(index, 1);
-						if($scope.uploadedimages.length == 0){
+						if($scope.trainingdata.uploadedimages.length == 0){
 							$scope.imgFilenotexist = true;
 						}
                         $scope.imgFileLimitExceed = false;
@@ -970,12 +969,12 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     };
 
                     $scope.showImgFile = function (file) {
-                        var index = $scope.uploadedimages.length;
-                        $scope.uploadedimages[index] = {};
-                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
-                        $scope.uploadedimages[index].filename = file[0]["name"];
-                        $scope.uploadedimages[index].image = file;
-                        $scope.uploadedimages[index].default = true;
+                        var index = $scope.trainingdata.uploadedimages.length;
+                        $scope.trainingdata.uploadedimages[index] = {};
+                        $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
+                        $scope.trainingdata.uploadedimages[index].filename = file[0]["name"];
+                        $scope.trainingdata.uploadedimages[index].image = file;
+                        $scope.trainingdata.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
@@ -985,9 +984,9 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                             $scope.imgFileLimitExceed = true;
                     };
 
-                    if ($scope.uploadedimages.length > 0) {
-                        for (var k = 0; k < $scope.uploadedimages.length; k++) {
-                            $scope.showImgFile($scope.uploadedimages[k].file);
+                    if ($scope.trainingdata.uploadedimages.length > 0) {
+                        for (var k = 0; k < $scope.trainingdata.uploadedimages.length; k++) {
+                            $scope.showImgFile($scope.trainingdata.uploadedimages[k].file);
                         }
                     } else {
                         $scope.imgFilenotexist = true;
@@ -3388,8 +3387,8 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                             }
                         }
-						if($scope.trainingdata.file && $scope.trainingdata.file.length > 0){
-							$scope.uploadedimages = $scope.trainingdata.file;
+						if(trainingSession.file && trainingSession.file.length > 0){
+							$scope.trainingdata.uploadedimages = trainingSession.file;
 						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
@@ -3423,7 +3422,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
 			'<ul class="uploadList">' +
-            '<li ng-repeat="uploadedimage in uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
+            '<li ng-repeat="uploadedimage in trainingdata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
             '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
             '</li>' +
             '</ul>' +
@@ -3500,12 +3499,12 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
-                            if ($scope.uploadedimages && $scope.uploadedimages.length == 0) {
+                            if ($scope.trainingdata.uploadedimages && $scope.trainingdata.uploadedimages.length == 0) {
                                 query.operations = [$scope.newSession];
                                 $scope.saveFunction(query);
                             }
                             else {
-                                $scope.newSession["file"] = $scope.uploadedimages;
+                                $scope.newSession["file"] = $scope.trainingdata.uploadedimages;
 								query.operations = [$scope.newSession];
 								$scope.saveFunction(query);
 							}

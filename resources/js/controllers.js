@@ -227,7 +227,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 	}
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     //changes made by anuradha 2904
-    $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":"","stores":[],"assignedStore":""};
+    $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":"","stores":[],"assignedStore":"","uploadedimages":[]};
     //$scope.trainingdata.assignedStore=
     $scope.surveydata={};
     /***end***/
@@ -2315,6 +2315,7 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
         $scope.trainingdata["description"] = "";
         $scope.trainingdata["video_url"] = "";
         $scope.trainingdata["file"] = "";
+        $scope.trainingdata["uploadedimages"] = [];
         $scope.readonlydocrow.fileurl = "";
         $scope.readonlydocrow.filename ="";
         //$scope.readonlyrow.fileurl = "";
