@@ -847,16 +847,19 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $('.popup').toggle("slide");
         })
     }
-    $scope.getRecentPromotions = function (maxRow) {
+    $scope.getRecentPromotions = function (maxRow,searchText) {
         $scope.loadingRecentPromotionData = true;
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
-        console.log(currentTime);
+        //console.log(currentTime);
         var query = {"table": "promotions__cstore"};
         query.columns = ["promo_title","image","start_date","end_date"];
         query.filter = {};
         query.filter["start_date"] = {"$lte":currentTime};
         query.filter["end_date"] = {"$gte":currentTime};
+        if (searchText && searchText != "") {
+            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
         query.orders = {"__createdon": "desc"};
         if (maxRow) {
             query.max_rows = maxRow;
@@ -864,12 +867,12 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         else {
             query.max_rows = 8;
         }
-        console.log(JSON.stringify(query));
+        //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
             $scope.loadingRecentPromotionData= false;
-            console.log(promotionData.response.data[0].end_date);
+            //console.log(promotionData.response.data[0].end_date);
             $scope.recentPromotions = $appService.setUrls(promotionData.response.data, 291, 196);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -893,12 +896,12 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         else {
             query.max_rows = 5;
         }
-        console.log(JSON.stringify(query));
+        //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
             $scope.loadingCarouselPromotionData= false;
-            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 291, 196);
+            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 270, 225);
             //$scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -919,7 +922,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
             $scope.getPopularProducts(8, $routeParams.search);
-            $scope.getRecentPromotions(8);
+            $scope.getRecentPromotions(8,$routeParams.search);
             $scope.homeView = {"storeManager": true, "admin": false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
@@ -1066,7 +1069,7 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getProductDetail($scope.cursor, $routeParams.q);
+                            $scope.getProductDetail($scope.cursor, $routeParams.q,$routeParams.search);
                         }
                     }
                 }
@@ -2477,7 +2480,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
     $scope.promotionData = {"loadingData": false, "available": false};
 
     $scope.promotions = [];
-    $scope.getAllPromos = function (cursor) {
+    $scope.getAllPromos = function (cursor,searchText) {
         if ($scope.promotionData.loadingData) {
             return false;
         }
@@ -2487,13 +2490,16 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         query.filter = {};
         query.filter["start_date"] = {"$lte":currentTime};
         query.filter["end_date"] = {"$gte":currentTime};
+        if (searchText && searchText != "") {
+            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
         query.max_rows = 4;
         query.cursor = cursor;
         //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
-            console.log(JSON.stringify(promoData));
+          //  console.log(JSON.stringify(promoData));
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
             //var rawData = promoData.response.data;
             if ($scope.promotions.length) {
@@ -2521,7 +2527,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getAllPromos($scope.cursor);
+                            $scope.getAllPromos($scope.cursor,$routeParams.search);
                         }
                     }
                 }
@@ -2531,7 +2537,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         })
     }
     $scope.getInitialData = function (cursor) {
-        $scope.getAllPromos(cursor);
+        $scope.getAllPromos(cursor,$routeParams.search);
     }
 });
 

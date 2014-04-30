@@ -168,6 +168,11 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
 
                                 window.location.href = "#!/all-pops?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
+                            }//changes made by anuradha 3004
+                            else if (hash.indexOf("?promoid=") > 0) {
+
+                                window.location.href = "#!/all-promos?search=" + $scope.searchContent;
+                                //$scope.searchContent="";
                             }
                             else if (hash.indexOf("#!/") >= 0 || hash == "#!/") {
                                 //console.log(hash.indexOf("#!/"));
