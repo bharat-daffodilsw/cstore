@@ -908,7 +908,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             auto: true,
             autoControls: true,
             autoHover:true,
-            captions: true
+            captions: true,
+            pager :false
         });
     });
     if ($scope.currentUser["data"]) {
