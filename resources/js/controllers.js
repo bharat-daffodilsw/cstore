@@ -116,6 +116,9 @@ cstore.config(
             }).when('/assigned-survey-store',{
                 templateUrl:'../assigned-survey-store',
                 controller:'assignedSurveyCtrl'
+            }).when('/assigned-session-store',{
+                templateUrl:'/assigned-session-store',
+                controller:'assignedSessionCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -752,7 +755,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             //console.log($scope.userdata.stores);
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
             $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
-            console.log($scope.trainingdata.assignedStore);
+            //console.log($scope.trainingdata.assignedStore);
         }, function (jqxhr, error) {
         })
     }
@@ -2308,6 +2311,8 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllTrainingSessions(0, 10);
     }
+    //changes made by anuradha 0n 30-04
+    $scope.getStores();
 });
 
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
@@ -2564,4 +2569,70 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
     $scope.getPromoDetail();
 });
 
+/*****************assigned session**************************/
+cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routeParams) {
+    var assignedSessionId = $routeParams.q;
+    //console.log(assignedSessionId);
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingAssignedSessionData = false;
+    $scope.venderSearch = [
+        {"value": "store_manager_id.storename", "name": "Store"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.assignedSessions = [];
+    $appService.auth();
+    $scope.getAssignedSessions = function (direction, limit, column, searchText) {
+        if ($scope.loadingAssignedSessionData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
 
+        $scope.loadingAssignedSessionData = true;
+        var query = {"table": "storemanager_trainingsession__cstore"};
+        query.columns = ["store_manager_id","training_session_id"];
+        query.filter = {};
+        query.filter = {"training_session_id._id": assignedSessionId};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (assignedSessionData) {
+            $scope.loadingAssignedSessionData = false;
+            $scope.show.currentCursor = assignedSessionData.response.cursor;
+            $scope.assignedSessions = assignedSessionData.response.data;
+            for (var i = 0; i < $scope.assignedSessions.length; i++) {
+                $scope.assignedSessions[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAssignedSessions(1, 10);
+    $scope.setAssignedSessionOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAssignedSessions(1, 10, null, null);
+    }
+    $scope.getMore = function () {
+        $scope.getAssignedSessions(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAssignedSessions(0, 10);
+    }
+
+});

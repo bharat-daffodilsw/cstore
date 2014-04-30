@@ -3302,25 +3302,36 @@ cstore.directive('googlePlaces', function(){
 /*bharat change end here*/
 
 /******************************************* Training Session****************************************************/
-
+//changes made by anuradha on 30-04
 cstore.directive('trainingSessionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-training-session\')"><a href>Add</a></button>' +
-            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingSession()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+        template: '<div><assign-store-session-popup></assign-store-session-popup><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-training-session\')"><a href>Add</a></button>' +
+            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingSession()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + trainingSessions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\')"></div>	</span></th>' +
-            '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\')"></div>	</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\')"></div>	</span></th><th>Assign Store Manager</th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'title\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\')"></div>	</span></th>' +
+            '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\')"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\')"></div>	' +
+            '</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\')"></div>' +
+            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\')"></div>	</span></th><th>Assign Store</th><th></th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click= href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div>',
+            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="showAssignPopup(trainingSession)" href>Assign</a></td>' +
+            '<td><a class="edit_btn" ng-click="setAssignedSessionState(trainingSession)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
+                    }
+                    //changes
+                    $scope.showAssignPopup=function(session){
+                        $(".assign_popup").show();
+                        //console.log(session.title);
+                        $scope.sessionTitle=session.title;
+                        $scope.sessionId=session._id;
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -3396,6 +3407,14 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
 						}
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
+                    //changes made on 3004  by anu
+                    $scope.setAssignedSessionState = function (session) {
+                        //$scope.survey["title"] = survey.title ? survey.title : "";
+                        //console.log(JSON.stringify(session));
+                        $scope.session_title=session.title;
+                        window.location.href = "#!/assigned-session-store?q=" + session._id;
+                    }
+                    /*****end*******/
                 }
             }
         }
@@ -3745,7 +3764,7 @@ cstore.directive('carouselPromos', ['$appService', function ($appService, $scope
     }
 }]);
 
-//changes made
+
 cstore.directive('onFinishRender', function ($timeout) {
     return{
         restrict: 'A',
@@ -3785,6 +3804,7 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
                 pre:function($scope){
                     $scope.hideAssignPopup=function(){
                         $(".assign_popup").hide();
+                        $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
                     }
                     $scope.newStoreSurvey={};
                 },
@@ -3825,11 +3845,11 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
         }
     }
 }]);
-
+ //changes made by anuradha on 30-04
 cstore.directive('assignedSurveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div><assign-store-popup></assign-store-popup><div class="add_delete pull-left">' +
+        template: '<div><div class="add_delete pull-left">' +
             '<div class="delete_btn pull-left"><button type="button" ng-click="deleteAssignedSurvey()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + assignedSurveys.length}} from start</div>' +
@@ -3868,6 +3888,137 @@ cstore.directive('assignedSurveyList', ['$appService', function ($appService, $s
                                     if ($scope.assignedSurveys[i].deleteStatus) {
                                         console.log("delete items" + i);
                                         $scope.assignedSurveys.splice(i, 1);
+                                        i--;
+                                    }
+                                }
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+/***********************************Assign Session To Store Manager************************************************/
+cstore.directive('assignStoreSessionPopup', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="assign_popup pull-left"><div class="popup">Assign {{sessionTitle}} To Store Manager</div>' +
+            '<div class="pop_btn pull-left"><div class="popup_input pull-left"><table>' +
+            '<tr><td>Store Name</td></tr><tr><td>' +
+            '<select class="brand" ng-model="trainingdata.assignedStore" ng-options="store.storename for store in trainingdata.stores"></select></td></tr></table>' +
+            '</div><div class="add_btn"><button type="button" ng-click="assignStoreSession()"><a href>Save</a></button>' +
+            '<button type="button" ng-click="hideAssignPopup()"><a href>Cancel</a></button></div></div></div>',
+        compile:function(){
+            return{
+                pre:function($scope){
+                    $scope.hideAssignPopup=function(){
+                        $(".assign_popup").hide();
+                        $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
+                    }
+                    $scope.newStoreSession={};
+                },
+                post:function($scope){
+
+
+                    $scope.assignStoreSession = function () {
+//                        console.log($scope.sessionTitle);
+//                        console.log($scope.trainingdata.assignedStore);
+//                        console.log($scope.sessionId);
+                        var query = {};
+                        query.table = "storemanager_trainingsession__cstore";
+                        $scope.newStoreSession["store_manager_id"] = {"storename":$scope.trainingdata.assignedStore.storename,"_id":$scope.trainingdata.assignedStore._id};
+                        $scope.newStoreSession["training_session_id"] = {"title":$scope.sessionTitle,"_id":$scope.sessionId};
+                        query.operations = [$scope.newStoreSession];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Assigned successfully");
+                                $('.popup').toggle("slide");
+                                $scope.hideAssignPopup();
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while assigning sesion");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('assignedSessionList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left">' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="deleteAssignedSession()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + assignedSessions.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><caption>{{session_title}}</caption><tr><th></th><th><span>Store</span><span class="sortWrap"><div class="sortUp" ng-click="setAssignedSessionOrder(\'store_manager_id.storename\',\'asc\')"></div><div class="sortDown" ng-click="setAssignedSessionOrder(\'store_manager_id.storename\',\'desc\')"></div>	</span></th>' +
+            '</tr><tr ng-repeat="assignedSession in assignedSessions"><td>' +
+            '<input type="checkbox" ng-model="assignedSession.deleteStatus"></td><td>{{assignedSession.store_manager_id.storename}}</td>' +
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingAssignedSessionData"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAssignedSessions(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.deleteAssignedSessionArray = [];
+                    $scope.deleteAssignedSession = function () {
+                        for (var i = 0; i < $scope.assignedSessions.length; i++) {
+                            if ($scope.assignedSessions[i].deleteStatus) {
+                                $scope.deleteAssignedSessionArray.push({"_id": $scope.assignedSessions[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "storemanager_trainingsession";
+                        query.operations = angular.copy($scope.deleteAssignedSessionArray);
+                        $scope.deleteAssignedSessionArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.assignedSessions.length; i++) {
+                                    if ($scope.assignedSessions[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.assignedSessions.splice(i, 1);
                                         i--;
                                     }
                                 }
