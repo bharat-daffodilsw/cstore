@@ -3629,7 +3629,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\')"></div>	</span></th>' +
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\')"></div>	</span></th><th>Assign Store </th><th></th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
             '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ng-click="showAssignPopup(survey)"><a class="edit_btn" href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a><td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
+            '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3732,7 +3732,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
 cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/></li></ul>',
+        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img title="{{carouselPromotion.promo_title}}" ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/><span>{{carouselPromotion.promo_title}}</span></li></ul>',
         compile: function () {
             return {
                 pre: function () {
@@ -3819,6 +3819,79 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
                             $("#popupMessage").html(err);
                             $('.popup').toggle("slide");
                         });
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('assignedSurveyList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><assign-store-popup></assign-store-popup><div class="add_delete pull-left">' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="deleteAssignedSurvey()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + assignedSurveys.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Store</span><span class="sortWrap"><div class="sortUp" ng-click="setAssignedSurveyOrder(\'store_manager_id.storename\',\'asc\')"></div><div class="sortDown" ng-click="setAssignedSurveyOrder(\'store_manager_id.storename\',\'desc\')"></div>	</span></th>' +
+            '</tr><tr ng-repeat="assignedSurvey in assignedSurveys"><td>' +
+            '<input type="checkbox" ng-model="assignedSurvey.deleteStatus"></td><td>{{assignedSurvey.store_manager_id.storename}}</td>' +
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingAssignedSurveyData"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAssignedSurveys(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.deleteAssignedSurveyArray = [];
+                    $scope.deleteAssignedSurvey = function () {
+                        for (var i = 0; i < $scope.assignedSurveys.length; i++) {
+                            if ($scope.assignedSurveys[i].deleteStatus) {
+                                $scope.deleteAssignedSurveyArray.push({"_id": $scope.assignedSurveys[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "storemanager_survey__cstore";
+                        query.operations = angular.copy($scope.deleteAssignedSurveyArray);
+                        $scope.deleteAssignedSurveyArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.assignedSurveys.length; i++) {
+                                    if ($scope.assignedSurveys[i].deleteStatus) {
+                                        console.log("delete items" + i);
+                                        $scope.assignedSurveys.splice(i, 1);
+                                        i--;
+                                    }
+                                }
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+
                     }
                 }
             }

@@ -907,7 +907,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         $('.bxslider').bxSlider({
             auto: true,
             autoControls: true,
-            autoHover:true
+            autoHover:true,
+            captions: true
         });
     });
     if ($scope.currentUser["data"]) {
@@ -2400,7 +2401,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
 cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routeParams) {
     var assignedSurveyId = $routeParams.q;
     console.log(assignedSurveyId);
-    /*$scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingAssignedSurveyData = false;
     $scope.venderSearch = [
         {"value": "store_manager_id.storename", "name": "Store"}
@@ -2421,9 +2422,10 @@ cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routePara
 
         $scope.loadingAssignedSurveyData = true;
         var query = {"table": "storemanager_survey__cstore"};
-        query.columns = ["store_manager_id"];
+        query.columns = ["store_manager_id","survey_id"];
+        query.filter = {};
+        query.filter = {"survey_id._id": assignedSurveyId};
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -2435,31 +2437,31 @@ cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routePara
         query.$count = 1;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
-        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyData) {
-            $scope.loadingSurveyData = false;
-            $scope.show.currentCursor = surveyData.response.cursor;
-            $scope.surveys = surveyData.response.data;
-            for (var i = 0; i < $scope.surveys.length; i++) {
-                $scope.surveys[i]["deleteStatus"] = false;
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (assignedSurveyData) {
+            $scope.loadingAssignedSurveyData = false;
+            $scope.show.currentCursor = assignedSurveyData.response.cursor;
+            $scope.assignedSurveys = assignedSurveyData.response.data;
+            for (var i = 0; i < $scope.assignedSurveys.length; i++) {
+                $scope.assignedSurveys[i]["deleteStatus"] = false;
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
-    $scope.getAllSurveys(1, 10);
-    $scope.setSurveyOrder = function (sortingCol, sortingType) {
+    $scope.getAssignedSurveys(1, 10);
+    $scope.setAssignedSurveyOrder = function (sortingCol, sortingType) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllSurveys(1, 10, null, null);
+        $scope.getAssignedSurveys(1, 10, null, null);
     }
     $scope.getMore = function () {
-        $scope.getAllSurveys(1, 10);
+        $scope.getAssignedSurveys(1, 10);
     }
     $scope.getLess = function () {
-        $scope.getAllSurveys(0, 10);
-    } */
+        $scope.getAssignedSurveys(0, 10);
+    }
 
 });
 
