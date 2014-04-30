@@ -956,13 +956,13 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                 pre:function ($scope) {
                     $scope.albumArr = {};
                     $scope.albumArr.uploadedimg = [];
-					$scope.uploadedimages = [];
                 },
                 post:function ($scope, iElement) {
+				var inputElement = iElement.find('input')[0];
                     $scope.removeImgFile = function (index) {
-                        $scope.uploadedimages.splice(index, 1);
+                        $scope.trainingdata.uploadedimages.splice(index, 1);
                         $scope.albumArr.uploadedimg.splice(index, 1);
-						if($scope.uploadedimages.length == 0){
+						if($scope.trainingdata.uploadedimages.length == 0){
 							$scope.imgFilenotexist = true;
 						}
                         $scope.imgFileLimitExceed = false;
@@ -970,12 +970,13 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     };
 
                     $scope.showImgFile = function (file,index) {
-						if(!$scope.trainingdata.uploadedimages[index])
+						if(!$scope.trainingdata.uploadedimages[index]) {
 							$scope.trainingdata.uploadedimages[index] = {};
-                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
-                        $scope.uploadedimages[index].filename = file[0]["name"];
-                        $scope.uploadedimages[index].image = file;
-                        $scope.uploadedimages[index].default = true;
+						}
+                        $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
+                        $scope.trainingdata.uploadedimages[index].filename = file[0]["name"];
+                        $scope.trainingdata.uploadedimages[index].image = file;
+                        $scope.trainingdata.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
@@ -1004,7 +1005,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 							current_file.osk = OSK;
 							$appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
 								if (data.response && data.response.length > 0) {
-									$scope.showImgFile(data.response,$scope.uploadedimages.length);
+									$scope.showImgFile(data.response,$scope.trainingdata.uploadedimages.length);
 								}
 							});
 						}else{
@@ -1013,7 +1014,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 						}
                     };
 
-                    iElement.bind('change', function () {
+                    inputElement.bind('change', function () {
                         $scope.$apply(function () {
                             $scope.oFReader = new FileReader();
                             if (document.getElementById('uploadMultiImgfile').files.length === 0) {
