@@ -3731,7 +3731,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
 cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/><span>{{carouselPromotion.promo_title}}</span></li></ul>',
+        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img title="{{carouselPromotion.promo_title}}" ng-src="{{carouselPromotion.imageUrl}}" height="180px" width="270px;"/><span>{{carouselPromotion.promo_title}}</span></li></ul>',
         compile: function () {
             return {
                 pre: function () {

@@ -907,7 +907,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         $('.bxslider').bxSlider({
             auto: true,
             autoControls: true,
-            autoHover:true
+            autoHover:true,
+            captions: true
         });
     });
     if ($scope.currentUser["data"]) {
