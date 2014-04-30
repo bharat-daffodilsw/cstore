@@ -134,7 +134,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="search_addcart pull-left"><div class="search pull-left"><form ng-submit="search()">' +
-            '<input type="text" placeholder="Search by pop" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
+            '<input type="text" placeholder="Search" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
             '<input type="submit" style="display:none"></form>' +
             '<div class="search_sign pull-left" ng-click="search()"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
             ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
