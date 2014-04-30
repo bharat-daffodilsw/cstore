@@ -119,6 +119,9 @@ cstore.config(
             }).when('/assigned-session-store',{
                 templateUrl:'/assigned-session-store',
                 controller:'assignedSessionCtrl'
+            }).when('/training-session',{
+                templateUrl:'../sessiondetail',
+                controller:'sessionDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -816,7 +819,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
  });
  };
  }); */
-//changed by anuradha
+
 cstore.controller('homeCtrl', function ($scope, $appService, $location, $routeParams) {
     $scope.homeView = {};
     $scope.myInterval = 5000;
@@ -918,11 +921,41 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             pager :false
         });
     });
+    //changes made by anuradha on 30-04
+    $scope.getAssignedTrainingSessions = function (maxRow, searchText) {
+        $scope.loadingAssignedTrainingSessionData = true;
+        //console.log($scope.currentUser.data.storeid);
+        var query = {"table": "storemanager_trainingsession__cstore"};
+
+        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description"];
+        query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        if (searchText && searchText != "") {
+            query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 4;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (sessionData) {
+            $scope.loadingAssignedTrainingSessionData = false;
+            $scope.assignedTrainingSessions = sessionData.response.data;
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    //changes end
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
             $scope.getPopularProducts(8, $routeParams.search);
             $scope.getRecentPromotions(8,$routeParams.search);
+            $scope.getAssignedTrainingSessions(4,$routeParams.search);
             $scope.homeView = {"storeManager": true, "admin": false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
@@ -1158,8 +1191,10 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                                 document.cookie = c_name + "=" + escape(storeid);
 
                                 if (companyLogoUrl) {
-                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+                                    //changes made 3004
                                     var c_name = "companyLogoUrl";
+                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+
                                 }
 
                             }
@@ -2641,4 +2676,56 @@ cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routePar
         $scope.getAssignedSessions(0, 10);
     }
 
+});
+
+/************************ Training Session Detail for Store Manager ****************************************/
+cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.getSessionDetail = function () {
+        //console.log($routeParams.sessionid);
+        $scope.loadingSessionDetailData = true;
+        $scope.videoUrls=[];
+        $scope.files=[];
+        var query = {"table": "storemanager_trainingsession__cstore"};
+        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.file","training_session_id.video_url","training_session_id.training_category_id"];
+        query.filter={};
+
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"training_session_id._id": $routeParams.sessionid};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (sessionDetailData) {
+            //console.log(JSON.stringify(sessionDetailData.response.data));
+            $scope.loadingSessionDetailData = false;
+            $scope.session = sessionDetailData.response.data;
+            if(sessionDetailData.response.data[0].training_session_id.video_url){
+                $scope.videoUrls=sessionDetailData.response.data[0].training_session_id.video_url;
+            }
+            if(sessionDetailData.response.data[0].training_session_id.file){
+                $scope.files=sessionDetailData.response.data[0].training_session_id.file;
+            }
+            console.log($scope.files);
+            if($scope.files || $scope.files!="undefined" || $scope.files!=""){
+                for(var i=0; i<$scope.files.length; i++){
+                    if((/\.(doc|docx)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/DOC.png";
+                    }
+                    else if((/\.(pdf)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/pdf.png";
+                    }
+                    else if((/\.(ppt|pptx)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/ppt.png";
+                    }
+
+                }
+            }
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getSessionDetail();
 });

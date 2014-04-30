@@ -294,16 +294,23 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
         restrict: "E",
         template:'<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
-
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
-
-            '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="product_details">' +
-            '{{product.short_description}}</div>' +
-
+            '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
     }
 }]);
 /***************/
+//changes by anuradha 3004
+cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template:'<div><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>'+
+            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">'+
+            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession.training_session_id._id}}">{{assignedTrainingSession.training_session_id.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.training_session_id.description}}</div>'+
+            '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
+    }
+}]);
+/************/
 cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
@@ -4050,6 +4057,44 @@ cstore.directive('assignedSessionList', ['$appService', function ($appService, $
                         });
 
                     }
+                }
+            }
+        }
+    }
+}]);
+
+/************************************ Training Session Detail for StoreManager Section**************************/
+cstore.directive('sessionDetail', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="m_bar pull-left">' +
+            '<div class="category pull-left">' +
+            '<div class="pop_products">{{session[0].training_session_id.title}}</div>' +
+            '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
+            '<div class="pdf_img">' +
+            '<a href><img src="images/Photo-Video-Start-icon.png"></a>' +
+            '</div>' +
+            '<div class="pdf_name">' +
+            '<a href>{{videoUrl}}</a>' +
+            '</div></div>'+
+            '<div class="training pull-left" ng-repeat="file in files">' +
+            '<div class="pdf_img">' +
+            '<a href><img ng-src="{{file.imageSrc}}"></a>' +
+            '</div>' +
+            '<div class="pdf_name">' +
+            '<a href>{{file.name}}</a>' +
+            '</div></div>'+
+            '</div></div>',
+        compile:function(){
+            return{
+                pre:function($scope){
+
+                },
+                post:function($scope){
+                    //console.log($scope.files.length);
+                    //for(var i=0; i<$scope.files.length; i++){
+                    //    console.log($scope.files[i].name);
+                    //}
                 }
             }
         }
