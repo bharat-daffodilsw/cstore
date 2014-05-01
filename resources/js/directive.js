@@ -4072,24 +4072,25 @@ cstore.directive('assignedSessionList', ['$appService', function ($appService, $
 cstore.directive('sessionDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="m_bar pull-left">' +
+        template: '<div><div class="m_bar pull-left">' +
             '<div class="category pull-left">' +
             '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-training-sessions">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_session_id.training_category_id._id}}">{{session[0].training_session_id.training_category_id.name}}</a> > {{session[0].training_session_id.title}}</div>' +
             '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
             '<div class="pdf_img">' +
-            '<a href={{videoUrl}} target="_blank"><img src="images/Photo-Video-Start-icon.png"></a>' +
+            '<a href={{videoUrl}} target="_blank"><img title="{{videoUrl}}" src="images/Photo-Video-Start-icon.png"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
-            '<a href="{{videoUrl}}" target="_blank" target="_blank">{{videoUrl}}</a>' +
+            '<a href="{{videoUrl}}" target="_blank" target="_blank" title="{{videoUrl}}">{{videoUrl}}</a>' +
             '</div></div>'+
             '<div class="training pull-left" ng-repeat="file in files">' +
             '<div class="pdf_img">' +
-            '<a href={{url}} target="_blank" ng-click="download(file)"><img ng-src="{{file.imageSrc}}"></a>' +
+            '<a href={{url}} target="_blank" ng-click="download(file)"><img ng-src="{{file.imageSrc}}" title="{{file.name}}"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
-            '<a href={{url}} target="_blank" ng-click="download(file)">{{file.name}}</a>' +
+            '<a href={{url}} target="_blank" ng-click="download(file)" title="{{file.name}}">{{file.name}}</a>' +
             '</div></div>'+
-            '</div></div>',
+            '</div></div>' +
+            '<div class="loadingImage" ng-hide="!loadingSessionDetailData"><img src="images/loading.gif"></div></div>',
         compile:function(){
             return{
                 pre:function($scope){
