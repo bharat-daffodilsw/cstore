@@ -2761,16 +2761,16 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
             if($scope.files || $scope.files!="undefined" || $scope.files!=""){
                 for(var i=0; i<$scope.files.length; i++){
                     if((/\.(doc|docx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/DOC.png";
+                        $scope.files[i].imageSrc="images/doc1.png";
                     }
                     else if((/\.(pdf)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/pdf.png";
+                        $scope.files[i].imageSrc="images/pdf1.png";
                     }
                     else if((/\.(ppt|pptx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/ppt.png";
+                        $scope.files[i].imageSrc="images/ppt1.png";
                     }
                     else if((/\.(xls|csv|xlsx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/excel_icon.png";
+                        $scope.files[i].imageSrc="images/excel_icon1.png";
                     }
 
                 }
