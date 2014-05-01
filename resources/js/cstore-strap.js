@@ -204,6 +204,7 @@ appStrapServices.factory('$appService', [
         $appService.unauth = function () {
             if ($appService.getSession() != null || $appService.getSession() != "null") {
                 window.location.href = "/";
+                return false;
             }
         }
         $appService.getCountries = function () {

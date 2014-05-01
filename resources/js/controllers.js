@@ -2721,7 +2721,7 @@ cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routePar
 /************************ Training Session Detail for Store Manager ****************************************/
 cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.getSessionDetail = function () {
+    $scope.getSessionDetail = function (searchText) {
         //console.log($routeParams.sessionid);
         $scope.loadingSessionDetailData = true;
         $scope.videoUrls=[];
@@ -2746,6 +2746,13 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
             if(sessionDetailData.response.data[0].training_session_id.file){
                 $scope.files=sessionDetailData.response.data[0].training_session_id.file;
             }
+            if($scope.videoUrls || $scope.videoUrls !="undefined" || $scope.videoUrls!=""){
+                for(var i=0;i<$scope.videoUrls.length;i++){
+                    if($scope.videoUrls[i].indexOf("http")==-1){
+                        $scope.videoUrls[i]="http://"+$scope.videoUrls[i];
+                    }
+                }
+            }
             console.log($scope.files);
             if($scope.files || $scope.files!="undefined" || $scope.files!=""){
                 for(var i=0; i<$scope.files.length; i++){
@@ -2756,6 +2763,9 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
                         $scope.files[i].imageSrc="images/pdf.png";
                     }
                     else if((/\.(ppt|pptx)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/ppt.png";
+                    }
+                    else if((/\.(xls|xlsx)$/gi).test($scope.files[i].name)){
                         $scope.files[i].imageSrc="images/ppt.png";
                     }
 
@@ -2774,7 +2784,7 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
 
 /*******************************All Training Sessions*********************************/
 cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $routeParams) {
-
+    $appService.auth();
     $scope.getTrainingList = function (searchText) {
         $scope.loadingAllTrainingData = true;
 
@@ -2818,7 +2828,7 @@ cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $rou
 
 /***************************** Training Category Detail**************************************/
 cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
-
+    $appService.auth();
     $scope.categoryData = {"loadingData": false, "available": false};
 
     $scope.sessions = [];

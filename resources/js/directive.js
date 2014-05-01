@@ -174,6 +174,11 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 window.location.href = "#!/all-promos?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
+                            else if (hash.indexOf("?sessionid=") > 0) {
+
+                                window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
+                                //$scope.searchContent="";
+                            }
                             else if (hash.indexOf("#!/") >= 0 || hash == "#!/") {
                                 //console.log(hash.indexOf("#!/"));
                                 if (hash.indexOf("search") > 0) {
@@ -4072,17 +4077,17 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
             '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-training-sessions">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_session_id.training_category_id._id}}">{{session[0].training_session_id.training_category_id.name}}</a> > {{session[0].training_session_id.title}}</div>' +
             '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
             '<div class="pdf_img">' +
-            '<a href><img src="images/Photo-Video-Start-icon.png"></a>' +
+            '<a href={{videoUrl}} target="_blank"><img src="images/Photo-Video-Start-icon.png"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
-            '<a href>{{videoUrl}}</a>' +
+            '<a href="{{videoUrl}}" target="_blank">{{videoUrl}}</a>' +
             '</div></div>'+
             '<div class="training pull-left" ng-repeat="file in files">' +
             '<div class="pdf_img">' +
             '<a href><img ng-src="{{file.imageSrc}}"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
-            '<a href>{{file.name}}</a>' +
+            '<a href={{url}} ng-click="download(file)">{{file.name}}</a>' +
             '</div></div>'+
             '</div></div>',
         compile:function(){
@@ -4091,10 +4096,9 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
 
                 },
                 post:function($scope){
-                    //console.log($scope.files.length);
-                    //for(var i=0; i<$scope.files.length; i++){
-                    //    console.log($scope.files[i].name);
-                    //}
+                    $scope.download=function(file){
+                        $scope.url= BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
+                    }
                 }
             }
         }
