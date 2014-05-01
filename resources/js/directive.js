@@ -4080,20 +4080,19 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
             '<a href={{videoUrl}} target="_blank"><img src="images/Photo-Video-Start-icon.png"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
-            '<a href="{{videoUrl}}" target="_blank">{{videoUrl}}</a>' +
+            '<a href="{{videoUrl}}" target="_blank" target="_blank">{{videoUrl}}</a>' +
             '</div></div>'+
             '<div class="training pull-left" ng-repeat="file in files">' +
             '<div class="pdf_img">' +
-            '<a href><img ng-src="{{file.imageSrc}}"></a>' +
+            '<a href={{url}} target="_blank" ng-click="download(file)"><img ng-src="{{file.imageSrc}}"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
-            '<a href={{url}} ng-click="download(file)">{{file.name}}</a>' +
+            '<a href={{url}} target="_blank" ng-click="download(file)">{{file.name}}</a>' +
             '</div></div>'+
             '</div></div>',
         compile:function(){
             return{
                 pre:function($scope){
-
                 },
                 post:function($scope){
                     $scope.download=function(file){

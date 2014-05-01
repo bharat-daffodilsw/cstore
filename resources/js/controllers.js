@@ -2766,7 +2766,7 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
                         $scope.files[i].imageSrc="images/ppt.png";
                     }
                     else if((/\.(xls|xlsx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/ppt.png";
+                        $scope.files[i].imageSrc="images/excel_icon.png";
                     }
 
                 }
