@@ -202,7 +202,8 @@ appStrapServices.factory('$appService', [
             }
         }
         $appService.unauth = function () {
-            if ($appService.getSession() != null || $appService.getSession() != "null") {
+            //console.log(JSON.stringify($appService.getCookie("usk")));
+            if ($appService.getCookie("usk")) {
                 window.location.href = "/";
                 return false;
             }

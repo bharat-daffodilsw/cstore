@@ -1142,7 +1142,7 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
 
 cstore.controller('loginCtrl', function ($scope, $appService, $location) {
     //changed on 0105
-    //$appService.unauth();
+    $appService.unauth();
     $scope.login = function () {
         var username = $("#username").val();
         var password = $("#password").val();
