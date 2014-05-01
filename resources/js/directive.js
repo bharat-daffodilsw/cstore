@@ -4069,7 +4069,7 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
         restrict: "E",
         template: '<div class="m_bar pull-left">' +
             '<div class="category pull-left">' +
-            '<div class="pop_products">{{session[0].training_session_id.title}}</div>' +
+            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-training-sessions">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_session_id.training_category_id._id}}">{{session[0].training_session_id.training_category_id.name}}</a> > {{session[0].training_session_id.title}}</div>' +
             '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
             '<div class="pdf_img">' +
             '<a href><img src="images/Photo-Video-Start-icon.png"></a>' +
@@ -4095,6 +4095,36 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
                     //for(var i=0; i<$scope.files.length; i++){
                     //    console.log($scope.files[i].name);
                     //}
+                }
+            }
+        }
+    }
+}]);
+
+/************************** All Assigned Training***************************************/
+cstore.directive('allTrainingSessions', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div class="m_bar pull-left"><div class="category pull-left" ng-repeat="sessionCategory in sessionCategories" ng-show="sessionCategory.trainingCategoryWiseData.length">' +
+            '<div class="pop_products">{{sessionCategory.name}} <a href="#!/session-category?q={{sessionCategory._id}}">( View all )</a></div>' +
+            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="childSession in sessionCategory.trainingCategoryWiseData">' +
+            '<div class="name"><a href="#!/training-session?sessionid={{childSession.training_session_id._id}}">{{childSession.training_session_id.title}}</a></div>' +
+            '<div class="short_product_details">{{childSession.training_session_id.description}}</div></div>' +
+            '</div></div><div class="loadingImage" ng-hide="!loadingAllTrainingData"><img src="images/loading.gif"></div>'
+    }
+}]);
+
+cstore.directive('trainingCategoryDetail', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{sessions[0].training_session_id.training_category_id.name}}</div>' +
+            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="session in sessions">' +
+            '<div class="name"><a href="#!/training-session?sessionid={{session.training_session_id._id}}">{{session.training_session_id.title}}</a></div>' +
+            '<div class="short_product_details">{{session.training_session_id.description}}</div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.getInitialData(0);
                 }
             }
         }

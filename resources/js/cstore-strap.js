@@ -201,6 +201,11 @@ appStrapServices.factory('$appService', [
                 window.location.href = "#!/login";
             }
         }
+        $appService.unauth = function () {
+            if ($appService.getSession() != null || $appService.getSession() != "null") {
+                window.location.href = "/";
+            }
+        }
         $appService.getCountries = function () {
             var countries = {};
             var query = {"table":"countries__cstore"};

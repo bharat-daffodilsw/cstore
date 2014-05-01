@@ -122,6 +122,12 @@ cstore.config(
             }).when('/training-session',{
                 templateUrl:'../sessiondetail',
                 controller:'sessionDetailCtrl'
+            }).when('/all-training-sessions',{
+                templateUrl:'../all-training-sessions',
+                controller:'allTrainingSessionsCtrl'
+            }).when('/session-category',{
+                templateUrl:'../session-category',
+                controller:'trainingCategoryDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -374,6 +380,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.storedata.countries = $scope.data.countries;
             $scope.getEditStates($scope.data, stateid, cityid);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getEditStates = function (countryid, stateid, cityid) {
@@ -403,6 +411,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.storedata.selectedState = countryid.selectedState;
                 $scope.getEditCities(countryid, cityid);
             }, function (jqxhr, error) {
+                $("#popupMessage").html(error);
+                $('.popup').toggle("slide");
             })
         }
     }
@@ -659,6 +669,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.productdata.vendors = vendorData.response.data;
             $scope.productdata.selectedVendor = $scope.productdata.vendors[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 
@@ -672,6 +684,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.productdata.productCategories = productCategoryData.response.data;
             $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getProductCategories();
@@ -744,6 +758,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.userdata.selectedRole = $scope.userdata.roles[1];
             console.log($scope.userdata.selectedRole);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getStores = function () {
@@ -760,6 +776,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
             //console.log($scope.trainingdata.assignedStore);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     //changes made by Anuradha
@@ -772,6 +790,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.trainingdata.trainingCategories = trainingCategoryData.response.data;
             $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
    $scope.getTrainingCategories();
@@ -1038,6 +1058,8 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
             $scope.loadingProductDetailData = false;
             $scope.product = $appService.setUrls(productDetailData.response.data, 550, 350);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getProductDetail();
@@ -1109,6 +1131,8 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
             });
 
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getInitialData = function (cursor) {
@@ -1117,6 +1141,8 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
 });
 
 cstore.controller('loginCtrl', function ($scope, $appService, $location) {
+    //changed on 0105
+    $appService.unauth();
     $scope.login = function () {
         var username = $("#username").val();
         var password = $("#password").val();
@@ -1268,7 +1294,6 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
             return;
         });
     };
-
 });
 
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
@@ -1648,6 +1673,8 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -1734,6 +1761,8 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -1821,6 +1850,8 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -1841,6 +1872,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 
@@ -1927,6 +1960,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -2137,7 +2172,8 @@ cstore.controller('userCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html("exception in making request");
+            $('.popup').toggle("slide");
         })
     }
     $scope.getAllUsers(1, 10);
@@ -2569,6 +2605,8 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             });
 
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getInitialData = function (cursor) {
@@ -2605,6 +2643,8 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             $scope.loadingPromotionDetailData = false;
             $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getPromoDetail();
@@ -2689,8 +2729,10 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
         var query = {"table": "storemanager_trainingsession__cstore"};
         query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.file","training_session_id.video_url","training_session_id.training_category_id"];
         query.filter={};
-
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"training_session_id._id": $routeParams.sessionid};
+        //if (searchText && searchText != "") {
+        //    query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        //}
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
 
         var serviceUrl = "/rest/data";
@@ -2728,4 +2770,123 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
         })
     }
     $scope.getSessionDetail();
+});
+
+/*******************************All Training Sessions*********************************/
+cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $routeParams) {
+
+    $scope.getTrainingList = function (searchText) {
+        $scope.loadingAllTrainingData = true;
+
+        var query = {"table": "training_categories__cstore"};
+
+        query.columns = ["name"];
+
+
+        if (searchText && searchText != "") {
+            query.childs = [
+                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id","training_session_id.title","training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"},"filter":{"store_manager_id._id":$scope.currentUser.data.storeid,"training_session_id.title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+            ]
+        }
+        else {
+            query.childs = [
+                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id","training_session_id.title","training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"},"filter":{"store_manager_id._id":$scope.currentUser.data.storeid}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+            ];
+        }
+        //console.log(JSON.stringify(query));
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingData) {
+            $scope.loadingAllTrainingData = false;
+            var rawData = trainingData.response.data;
+            for (var i = 0; i < rawData.length; i++) {
+                if (rawData[i] && rawData[i]["trainingCategoryWiseData"] && rawData[i]["trainingCategoryWiseData"].length) {
+
+                    rawData[i]["trainingCategoryWiseData"] = rawData[i]["trainingCategoryWiseData"];
+                }
+                //console.log("TEST::::" + JSON.stringify(rawData[i]["trainingCategoryWiseData"]));
+            }
+            $scope.sessionCategories = rawData;
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getTrainingList($routeParams.search);
+});
+
+/***************************** Training Category Detail**************************************/
+cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
+
+    $scope.categoryData = {"loadingData": false, "available": false};
+
+    $scope.sessions = [];
+    $scope.getTrainingCategoryDetail = function (cursor, filter, searchText) {
+        if ($scope.categoryData.loadingData) {
+            return false;
+        }
+        $scope.categoryData.loadingData = true;
+        var query = {"table": "storemanager_trainingsession__cstore"};
+        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.training_category_id"];
+        query.filter = {};
+        query.filter["store_manager_id._id"]=$scope.currentUser.data.storeid;
+        if (filter && filter != undefined && filter != "undefined") {
+            query.filter["training_session_id.training_category_id._id"] = filter;
+            if (searchText && searchText != "") {
+                query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            }
+        }
+        else {
+            $("#popupMessage").html("Not Valid");
+            $('.popup').toggle("slide");
+            return false;
+        }
+        query.max_rows = 4;
+        query.cursor = cursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryDetailData) {
+            var rawData = trainingCategoryDetailData.response.data;
+
+            if ($scope.sessions.length) {
+                for (var i = 0; i < rawData.length; i++) {
+                    $scope.sessions.push(rawData[i]);
+                }
+            }
+            if (!$scope.sessions.length) {
+                $scope.sessions = rawData;
+
+            }
+            $scope.categoryData.loadingData = false;
+            $scope.cursor = trainingCategoryDetailData.response.cursor;
+            if ($scope.sessions.length) {
+                /*wee need string for ng-switch*/
+                $scope.categoryData.available = "true";
+            }
+            else {
+                $scope.categoryData.available = "false";
+            }
+
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getTrainingCategoryDetail($scope.cursor, $routeParams.q,$routeParams.search);
+                        }
+                    }
+                }
+            });
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getInitialData = function (cursor) {
+        $scope.getTrainingCategoryDetail(cursor, $routeParams.q, $routeParams.search);
+    }
 });
