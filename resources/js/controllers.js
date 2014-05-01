@@ -2235,6 +2235,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
 
         $scope.loadingPromotionData = true;
         var query = {"table": "promotions__cstore"};
+        //changes made by anuradha 0105 evening
         query.columns = [
             {"expression": "end_date", "format": "MM/DD/YYYY"},
             "image",
@@ -2249,7 +2250,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             {"expression": "start_date", "format": "MM/DD/YYYY"},
             "threshold",
             "upc",
-			"vendorid"
+			"vendorid",
+            "top_promo"
         ];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2308,6 +2310,8 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+        //changes made by anuradha 0105 evening
+        $scope.promotiondata["top_promo"]=false;
        // $scope.promotiondata.vendorsList = $scope.vendors[0];
     }
     var promotionId = $routeParams.q;

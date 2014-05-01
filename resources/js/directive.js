@@ -565,13 +565,15 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<vendor-category-select></vendor-category-select></td></tr><tr><td>' +
             '<div class="margin_top">Contact No.</div></td></tr><tr><td>' +
             '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
+            '<div class="add_btn pull-left"><button ng-click="saveVendor()" ng-disabled="disabled" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
             '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
 
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.loadingAddVenderData = true;
+                    //evening changes
+                    $scope.disabled=false;
                     $scope.newVendor = {};
                     $scope.setPathforVender = function (path) {
                         $scope.clearContent();
@@ -585,7 +587,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddVenderData = false;
                     $scope.saveVendor = function () {
-
+                        $scope.disabled=true;
                         $scope.newVendor = {};
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
@@ -620,7 +622,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if ($scope.data.postalCode && !regNumberOnly.test($scope.storedata.postalCode)) {
+                        if ($scope.data.postalCode && regNumberOnly.test($scope.data.postalCode) == false) {
                             $("#popupMessage").html("Please enter correct postal code");
                             $('.popup').toggle("slide");
                             return false;
@@ -654,6 +656,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
+                                $scope.disabled=false;
                                 $scope.setPathforVender('vendors');
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2978,6 +2981,9 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
                         $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
+                        //changes made by anuradha 0105 evening
+                        console.log(promotion.top_promo);
+                        $scope.promotiondata["top_promo"] =promotion.top_promo ? promotion.top_promo : "";
                         $scope.showFile(promotion.image, false);		
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
                             for (var j = 0; j < $scope.promotiondata.offerTypes.length; j++) {
@@ -3026,7 +3032,7 @@ cstore.directive('itemSignageSelect', ['$appService', function ($appService, $sc
         compile: function () {
             return{
                 pre: function ($scope) {
-                    console.log(JSON.stringify($scope.promotiondata.itemSignage));
+                    //console.log(JSON.stringify($scope.promotiondata.itemSignage));
                 }, post: function ($scope) {
                 }
             }
@@ -3132,6 +3138,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td></tr>' +
             '<tr><td><div class="margin_top">Vendor</div></td></tr>' +
             '<tr><td><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td></tr>' +
+            '<tr><td><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"></div></td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
@@ -3156,7 +3163,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
                     $scope.savePromotion = function () {
-                        //console.log($scope.promotiondata.start_date);
+                        //console.log($scope.promotiondata.top_promo);
                         //console.log($scope.promotiondata.end_date);
 
                         $scope.CSession = $appService.getSession();
@@ -3213,7 +3220,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
 							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date;
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
-							 //changes made by anuradha
+                             //changes made by anuradha 0105 evening
+                             $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                              $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
 							 $scope.newPromotion["vendorid"] = {"_id":$scope.promotiondata.vendorsList._id};
 							 if (document.getElementById('uploadfile').files.length === 0) {
