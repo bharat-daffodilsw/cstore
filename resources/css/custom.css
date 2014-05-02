@@ -627,7 +627,7 @@ tr {
     padding: 5px 20px;}
 
 .save_close {
-    margin-top:10px;
+    margin:10px 10px 10px 0;
     width:100%;}
 
 .save_close button{
@@ -1244,15 +1244,20 @@ span.sortWrap {
 	
 		
 .typelist {
-	margin-top:10px;
-	margin-left:10px;
-	padding:5px;}
+	margin:10px;}
 	
 .textarea {
 	width:95%;}
 	
 .questionWrap {
-	margin-top:10px;}
+	margin-top: 10px;
+	border-bottom: 1px solid #CCC;
+	border-top: 1px solid #CCC;
+	border-right: 1px solid #CCC;
+	border-left: 1px solid #CCC;
+	width: 98%;
+	padding:5px 10px 0 20px;
+	margin-bottom: 10px;}
 	
 .full {
 	width:100%;}
@@ -1270,16 +1275,15 @@ input {
 	max-width:15px;}
 	
 textarea {
-	width: 100%;
-	padding:5px;}
+	width: 100%;}
 	
 .th_option {
-	width:89%;
+	width:91%;
 	text-align:left;
 	padding:10px 0;}
 	
 .th_action {
-	width:11%;
+	width:9%;
 	text-align:left;
 	padding:10px 0;}
 	
@@ -1287,7 +1291,7 @@ textarea {
 	position: absolute;
 	width: 20px;
 	height: 20px;
-	margin-left: -50px;;}
+	margin-left: -45px;;}
 	
 .sub-head-border {
 	font-size:24px;
@@ -1297,12 +1301,16 @@ textarea {
 	color:#000;}
 	
 span.btn {
-	font-size: 18px;
+	font-size: 16px;
 	color: #000000;
-	background-color: #e7c271;
+	font-weight:bold;
 	border-radius: 0;
-	padding: 1px;}
+	padding: 1px;
+	margin-left:10px;}
 	
 span.btn:hover {
 	text-decoration:underline;
     white-space:nowrap;}
+	
+.ques_index {
+	color:#999;}

@@ -3677,7 +3677,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
-                pre: function ($scope) {
+                pre: function ($scope) {					
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
@@ -3746,24 +3746,27 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                         $scope.surveydata["surveyId"] = survey._id ? survey._id : "";
                         $scope.surveydata["title"] = survey.title ? survey.title : "";
                         $scope.surveydata["description"] = survey.description ? survey.description : "";
-						for(i = 0; i < survey.survey_question.length; i++){
-							$scope.questions[i] = {"question":survey.survey_question[i].question};		
-							for (var j = 0; j < $scope.listType.length; j++) {
-								if ($scope.listType[j].value == survey.survey_question[i].survey_type) {
-									$scope.questions[i].type = $scope.listType[j];
-									break;
+						if(survey.survey_question && survey.survey_question.length > 0){
+							$scope.questions.length = survey.survey_question.length;
+							for(i = 0; i < survey.survey_question.length; i++){
+								$scope.questions[i] = {"question":survey.survey_question[i].question};		
+								for (var j = 0; j < $scope.listType.length; j++) {
+									if ($scope.listType[j].value == survey.survey_question[i].survey_type) {
+										$scope.questions[i].type = $scope.listType[j];
+										break;
+									}
 								}
-							}
-							$scope.questions[i]["optionArr"] = [];
-							if(survey.survey_question[i].survey_type != "subjective"){
-								for(k = 0; k < survey.survey_question[i].options.length; k++){
-									$scope.questions[i]["optionArr"][k] = {"options":survey.survey_question[i].options[k]};
+								$scope.questions[i]["optionArr"] = [];
+								if(survey.survey_question[i].survey_type != "subjective" && (survey.survey_question[i].options && survey.survey_question[i].options.length > 0 )){
+									for(k = 0; k < survey.survey_question[i].options.length; k++){
+										$scope.questions[i]["optionArr"][k] = {"options":survey.survey_question[i].options[k]};
+									}
+									$scope.questions[i].addOption = true;
+								}else{
+									$scope.questions[i].addOption = false;
 								}
-								$scope.questions[i].addOption = true;
-							}else{
-								$scope.questions[i].addOption = false;
-							}
-						}						
+							}	
+						}
                         window.location.href = "#!/edit-survey?q=" + survey._id;
                     } 
                 }
@@ -3783,11 +3786,11 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
             '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
             '</tbody></table></div>' +
-			"<div class='questionWrap' ng-repeat='ques in questions'>" +
-			"<div><div>" +
 			'<h2 class="sub-head-border">' +
 			'<span class="small-txt">Choose the type and add as many questions as you need.</span>  ' +
 			'</h2>  ' +
+			"<div class='questionWrap' ng-repeat='ques in questions'>" +
+			"<div><div>" +
 			"<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +			
             '<tr><td class="pull-left"><div class="margin_top">Question Type</div></td>' +
             '<td class="pull-left" colspan="2"><select class="typelist" ng-model="ques.type" ng-change="showOption(ques)" ng-options="list.name for list in listType"></select></td></tr>' +
@@ -3795,8 +3798,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 			"<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
 			"<tr>" +
 			"<td class='full'>" +
-			"<span>Question </span>" +
-			"<strong id='quesNum_{{$index}}'>{{$index+1}}. </strong>" +
+			"<span class='ques_index'>Question {{$index+1}}.</span> " +
 			"</td>" +
 			"<td align='right' valign='middle'>&nbsp;<a ng-click='questions.splice($index,1)'>" +
 			"<img src='/images/icon_delete.gif' alt='delete this question' class='question_answer'>" +
@@ -3834,7 +3836,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 			'<div class="questionToolBox">' +
 			'<div style="width: 800px;" class="add-questions-box" id="qButtons"> ' +
 			'<span style="position: relative;" ng-click="questions.push({optionArr:[],type:listType[0],addOption:true})" class="btn">  ' +
-			'<strong id="checkbox" class="plusSign">&nbsp;</strong>&nbsp;Add Question&nbsp;</span> ' +
+			'<strong id="checkbox" class="plusSign">&nbsp;</strong>&nbsp;+ Add Question&nbsp;</span> ' +
 			'</div>   ' +
 			'</div> ' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
