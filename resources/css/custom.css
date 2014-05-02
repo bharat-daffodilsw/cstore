@@ -44,9 +44,9 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
-	position:absolute;
+    position:absolute;
     padding: 5px;}
-	
+
 .add_cart{
     width:85px;
     color:#FFF;
@@ -231,7 +231,7 @@ a:hover {
     text-decoration:underline;}
 
 .pop_products {
-	width:100%;
+    width:100%;
     font-size:15px;
     text-transform:uppercase;
     font-weight:bold;
@@ -256,7 +256,7 @@ a:hover {
     margin-bottom: 10px;
     padding: 10px;
     height: 247px;
-	overflow:hidden;
+    overflow:hidden;
 }
 /*****added*******/
 
@@ -346,7 +346,7 @@ a:hover {
 
 .Qty {
     font-size:17px;
-	margin-top:10px;}
+    margin-top:10px;}
 
 .final_price {
     margin:5px 0;
@@ -989,7 +989,7 @@ th {
     min-height: 370px;
     margin-top: .5%;
     box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);
-	padding:10px;}
+    padding:10px;}
 
 .visible {
     visibility:hidden;}
@@ -997,7 +997,7 @@ th {
 
 .add_to_btn {
     margin-top:10px;
-	padding-left:10px;}
+    padding-left:10px;}
 
 .user {
     max-height:25px;
@@ -1007,7 +1007,7 @@ th {
 .quantity_border {
     border-top:1px dotted #DDD;
     padding-top:5px;
-	padding-left: 10px;}
+    padding-left: 10px;}
 
 .profile {
     width:650px;
@@ -1205,15 +1205,15 @@ span.sortWrap {
 }
 
 .short_product_details {
-	margin-top: 10px;
-	font-size: 13px;
-	max-height: 200px;
-	min-height: 200px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	display: -webkit-box;
-	-webkit-line-clamp: 11;
-	-webkit-box-orient: vertical;}
+    margin-top: 10px;
+    font-size: 13px;
+    max-height: 200px;
+    min-height: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 11;
+    -webkit-box-orient: vertical;}
 .training {
     width:12%;
     margin:.25%;
@@ -1234,83 +1234,83 @@ span.sortWrap {
 .pdf_name {
     font-size:13px;
     font-weight:bold;
-	text-align:center;
+    text-align:center;
     text-transform:uppercase;
     min-height:16px;
     max-height:16px;
     overflow:hidden;
     text-overflow: ellipsis;
     white-space:nowrap;}
-	
-		
+
+
 .typelist {
-	margin:10px;}
-	
+    margin:10px;}
+
 .textarea {
-	width:95%;}
-	
+    width:95%;}
+
 .questionWrap {
-	margin-top: 10px;
-	border-bottom: 1px solid #CCC;
-	border-top: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	border-left: 1px solid #CCC;
-	width: 98%;
-	padding:5px 10px 0 20px;
-	margin-bottom: 10px;}
-	
+    margin-top: 10px;
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;
+    width: 98%;
+    padding:5px 10px 0 20px;
+    margin-bottom: 10px;}
+
 .full {
-	width:100%;}
+    width:100%;}
 
 input {
-	width:95%;}
-	
+    width:95%;}
+
 .description_1 {
-	width: 98%!important;}
-	
-.no { 
-	min-height:15px;
-	max-height:15px;
-	min-width:15px;
-	max-width:15px;}
-	
+    width: 98%!important;}
+
+.no {
+    min-height:15px;
+    max-height:15px;
+    min-width:15px;
+    max-width:15px;}
+
 textarea {
-	width: 100%;}
-	
+    width: 100%;}
+
 .th_option {
-	width:91%;
-	text-align:left;
-	padding:10px 0;}
-	
+    width:91%;
+    text-align:left;
+    padding:10px 0;}
+
 .th_action {
-	width:9%;
-	text-align:left;
-	padding:10px 0;}
-	
+    width:9%;
+    text-align:left;
+    padding:10px 0;}
+
 .question_answer {
-	position: absolute;
-	width: 20px;
-	height: 20px;
-	margin-left: -45px;;}
-	
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin-left: -45px;;}
+
 .sub-head-border {
-	font-size:24px;
-	color:#e7c271}
-	
+    font-size:24px;
+    color:#e7c271}
+
 .small-txt {
-	color:#000;}
-	
+    color:#000;}
+
 span.btn {
-	font-size: 16px;
-	color: #000000;
-	font-weight:bold;
-	border-radius: 0;
-	padding: 1px;
-	margin-left:10px;}
-	
+    font-size: 16px;
+    color: #000000;
+    font-weight:bold;
+    border-radius: 0;
+    padding: 1px;
+    margin-left:10px;}
+
 span.btn:hover {
-	text-decoration:underline;
+    text-decoration:underline;
     white-space:nowrap;}
-	
+
 .ques_index {
-	color:#999;}
+    color:#999;}

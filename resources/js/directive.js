@@ -565,7 +565,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<vendor-category-select></vendor-category-select></td></tr><tr><td>' +
             '<div class="margin_top">Contact No.</div></td></tr><tr><td>' +
             '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button ng-click="saveVendor()" ng-disabled="disabled" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
+            '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
             '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
 
         compile: function () {
@@ -597,6 +597,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
+                        if (!$scope.data.lastname) {
+                            $("#popupMessage").html("Please enter lastname");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
                         if (!email || regEmail.test(email) == false) {
                             $("#popupMessage").html("Please enter a valid email id");
                             $('.popup').toggle("slide");
@@ -612,6 +617,16 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
+                        if (!$scope.data.selectedState) {
+                            $("#popupMessage").html("Please select state first");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if (!$scope.data.selectedCity) {
+                            $("#popupMessage").html("Please select city first");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
                         if (!$scope.data.selectedVendorCategory) {
                             $("#popupMessage").html("Please select category first");
                             $('.popup').toggle("slide");
@@ -622,8 +637,14 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if ($scope.data.postalCode && !regNumberOnly.test($scope.data.postalCode)) {
+
+                        if (!$scope.data.postalCode || !regNumberOnly.test($scope.data.postalCode)) {
                             $("#popupMessage").html("Please enter correct postal code");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if (!$scope.data.contact || !regNumberOnly.test($scope.data.contact)) {
+                            $("#popupMessage").html("Please enter correct contact");
                             $('.popup').toggle("slide");
                             return false;
                         }
@@ -1191,12 +1212,12 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                     $scope.setStoreState = function (store) {
                         //$scope.storedata.pos_version.name = store.pos_version;
                         //console.log("pos version name :::: "+ $scope.storedata.pos_version.name);
-                        console.log(store.brands);
+                        //console.log(store.brands);
                         $scope.storedata["address"] = store.address ? store.address : "";
                         $scope.storedata["address2"] = store.address2 ? store.address2 : "";
                         $scope.storedata["pump_brand"] = store.pump_brand ? store.pump_brand : "";
                         $scope.storedata["pump_model"] = store.pump_model ? store.pump_model : "";
-                        if (store.brands && store.brands.length > 0) {
+                        /*if (store.brands && store.brands.length > 0) {
 //                            for(var i=0; i < store.brands.length;i++){
 //                                $scope.storedata.brands[i] = {};
 //                                $scope.storedata.brands[i] = store.brands[i];
@@ -1216,10 +1237,9 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         else {
                             $scope.storedata["brands"] = [];
-                        }
-                        console.log(JSON.stringify($scope.storedata.brands));
+                        }   */
                         $scope.storedata["contact"] = store.contact ? store.contact : "";
-                        $scope.storedata["loyalty_status"] = store.loyalty_status ? store.loyalty_status : "";
+                        //$scope.storedata["loyalty_status"] = store.loyalty_status ? store.loyalty_status : "";
                         //$scope.storedata["pos_type"] = store.pos_type ? store.pos_type : "" ;
                         $scope.storedata["email"] = store.email ? store.email : "";
                         $scope.storedata["pos_version"] = store.pos_version ? store.pos_version : "";
@@ -1228,6 +1248,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         //$scope.storedata["shift"] = store.shift ? store.shift : "" ;
                         $scope.storedata["storename"] = store.storename ? store.storename : "";
                         //$scope.storedata["username"] = store.username ? store.username : "";
+                        $scope.storedata["siteid"] = store.siteid ? store.siteid : "";
                         $scope.showFile(store.company_logo, false);
                         $scope.storedata["manager"] = {};
                         if (store.manager) {
@@ -1268,11 +1289,39 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                         }
+                        if (store.brands && $scope.storedata.brands) {
+                            for (var j = 0; j < $scope.storedata.brands.length; j++) {
+                                if ($scope.storedata.brands[j].name == store.brands) {
+                                    $scope.storedata.selectedBrand = $scope.storedata.brands[j];
+                                    break;
+                                }
+                                else {
+                                    $scope.storedata.selectedBrand = $scope.storedata.brands[$scope.storedata.brands.length - 1];
+                                    $scope.storedata.otherBrand = store.brands;
+                                    break;
+                                }
+                            }
+                        }
                         if (store.shift && $scope.storedata.shifts) {
                             for (var j = 0; j < $scope.storedata.shifts.length; j++) {
                                 if ($scope.storedata.shifts[j].name == store.shift) {
                                     $scope.storedata.selectedShift = $scope.storedata.shifts[j];
                                     break;
+                                }
+                                else {
+                                    $scope.storedata.selectedShift = "";
+                                }
+                            }
+                        }
+                        if (store.loyalty_status && $scope.storedata.loyalty_status) {
+                            for (var j = 0; j < $scope.storedata.loyalty_status.length; j++) {
+                                if ($scope.storedata.loyalty_status[j].name == store.loyalty_status) {
+                                    $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[j];
+                                    console.log($scope.storedata.selectedLoyaltyStatus);
+                                    break;
+                                }
+                                else {
+                                    $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
                                 }
                             }
                         }
@@ -1335,12 +1384,12 @@ cstore.directive('storeCountrySelect', ['$appService', function ($appService, $s
         }
     }
 }]);
-
+//changes made 02/05
 cstore.directive('brand', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="multiple_select" multiple ng-multiple="true" ng-model="storedata.brands" ng-options="brand.name for brand in brands"></select>' +
-            '<input type="text" placeholder="" ng-show = "storedata.brands.name == \'Others\'" ng-model="storedata.brandName" class="other_input pull-left" >',
+        template: '<select class="brand" ng-model="storedata.selectedBrand" ng-options="brand.name for brand in storedata.brands"></select>' +
+            '<input type="text" placeholder="" ng-show = "storedata.selectedBrand.name == \'Others\'" ng-model="storedata.otherBrand" class="other_input pull-left" >',
         compile: function () {
             return{
             }
@@ -1386,13 +1435,29 @@ cstore.directive('shift', ['$appService', function ($appService, $scope) {
         }
     }
 }]);
+//changes made 02/05
+cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="storedata.selectedLoyaltyStatus" ng-options="loyalty_status.name for loyalty_status in storedata.loyalty_status"></select>',
+        compile: function () {
+            return{
+                pre: function () {
+
+                }, post: function ($scope) {
+                }
+            }
+        }
+    }
+}]);
 
 cstore.directive('addStoreManager', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
         template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Site Name</div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Site Id</div>' +
+            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.siteid"></td></tr><tr><td><div class="margin_top">Site Name</div>' +
             '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
             '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact">' +
             '</td></tr>' +
@@ -1411,7 +1476,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<tr><td><div class="margin_top">Manager Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td></tr><tr><td>' +
             '<div class="margin_top">Manager Email Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
             '</tr><tr><td><div class="margin_top">Manager Shift</div></td></tr><tr><td><shift></shift></td></tr><tr><td><div class="margin_top">Loyalty Status</div></td></tr><tr><td>' +
-            '<input type="text" placeholder="" ng-model="storedata.loyalty_status"></td></tr><tr><td><div class="margin_top">Reward Type</div>' +
+            '<loyalty-status></loyalty-status></td></tr><tr><td><div class="margin_top">Reward Type</div>' +
             '</td></tr><tr><td><reward-type></reward-type></td></tr><tr><td><div class="margin_top">Pump Brand</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_brand"></td></tr><tr><td><div class="margin_top">Pump Model </div>' +
             '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_model"></td></tr>' +
             '<tr><td><div class="margin_top">Brand</div></td></tr><tr><td><brand></brand></td></tr>' +
@@ -1441,23 +1506,23 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                             var email = $scope.storedata.email;
                             var managerEmail = $scope.storedata.manager.email;
+                            if (!$scope.storedata.siteid) {
+                                $("#popupMessage").html("Please enter site id");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.storedata.storename) {
                                 $("#popupMessage").html("Please enter site name");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.contact) {
-                                $("#popupMessage").html("Please enter site phone number");
+                            if (!$scope.storedata.contact || !regNumberOnly.test($scope.storedata.contact)) {
+                                $("#popupMessage").html("Please enter valid site phone number");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType) {
-                                $("#popupMessage").html("Please enter post type");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if ($scope.storedata.postalcode && !regNumberOnly.test($scope.storedata.postalcode)) {
-                                $("#popupMessage").html("Please select correct postal code");
+                            if (!$scope.storedata.selectedPosType || ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType)) {
+                                $("#popupMessage").html("Please choose pos type");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1471,8 +1536,38 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            if (!$scope.storedata.selectedCountry) {
+                                $("#popupMessage").html("Please select country");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedState) {
+                                $("#popupMessage").html("Please select state");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedCity) {
+                                $("#popupMessage").html("Please select city");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.postalcode || !regNumberOnly.test($scope.storedata.postalcode)) {
+                                $("#popupMessage").html("Please enter correct postal code");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.storedata.manager.name) {
                                 $("#popupMessage").html("Please enter manager name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.manager.contact || !regNumberOnly.test($scope.storedata.manager.contact)) {
+                                $("#popupMessage").html("Please enter valid manager contact");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedLoyaltyStatus) {
+                                $("#popupMessage").html("Please select loyalty status");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1484,8 +1579,18 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
-                            if ($scope.storedata.selectedRewardType.name == "Others" && !$scope.storedata.otherRewardType) {
-                                $("#popupMessage").html("Please enter reward type");
+                            if (!$scope.storedata.selectedRewardType || ($scope.storedata.selectedRewardType.name == "Others" && !$scope.storedata.otherRewardType)) {
+                                $("#popupMessage").html("Please choose reward type");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedBrand || ($scope.storedata.selectedBrand.name == "Others" && !$scope.storedata.otherBrand)) {
+                                $("#popupMessage").html("Please choose brand");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$('#uploadfile').val()) {
+                                $("#popupMessage").html("Please upload company logo");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1495,10 +1600,13 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["storename"] = $scope.storedata.storename;
                             $scope.newStore["address"] = $scope.storedata.address;
                             $scope.newStore["address2"] = $scope.storedata.address2;
-                            for (var i = 0; i < $scope.storedata.brands.length; i++) {
-                                var selectedBrands = $scope.storedata.brands[i].name
-                            }
-                            $scope.newStore["brands"] = [selectedBrands];
+                            //changes made 02/05
+                            //for (var i = 0; i < $scope.storedata.brands.length; i++) {
+                            //    var selectedBrands = $scope.storedata.brands[i].name
+                            //}
+                            //$scope.newStore["brands"] = [selectedBrands];
+                            $scope.newStore["brands"] = ($scope.storedata.selectedBrand.name == "Others") ? $scope.storedata.otherBrand : $scope.storedata.selectedBrand.name;
+                            $scope.newStore["siteid"] = $scope.storedata.siteid;
                             $scope.newStore["contact"] = $scope.storedata.contact;
                             $scope.newStore["email"] = $scope.storedata.email;
                             if ($scope.storedata.selectedCountry) {
@@ -1510,7 +1618,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             if ($scope.storedata.selectedCity) {
                                 $scope.newStore["cityid"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
                             }
-                            $scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
+                            //$scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
+                            $scope.newStore["loyalty_status"]=$scope.storedata.selectedLoyaltyStatus.name;
                             $scope.newStore["pump_brand"] = $scope.storedata.pump_brand;
                             $scope.newStore["pump_model"] = $scope.storedata.pump_model;
                             $scope.newStore["pos_type"] = ($scope.storedata.selectedPosType.name == "Others") ? $scope.storedata.otherPosType : $scope.storedata.selectedPosType.name;
