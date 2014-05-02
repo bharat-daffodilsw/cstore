@@ -3996,7 +3996,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 							newSession["survey_question"] = [];
 							for(i = 0; i < $scope.questions.length; i++){
 								if(!$scope.questions[i].question){
-									$("#popupMessage").html("Please enter question.");
+									$("#popupMessage").html("Please enter question "+Number(i+1)+".");
 									$('.popup').toggle("slide");
 									return;
 								}
@@ -4005,13 +4005,13 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 								if($scope.questions[i].type.value != "subjective"){
 									newSession["survey_question"][i]["options"] = [];
 									if($scope.questions[i].optionArr.length < 2){
-										$("#popupMessage").html("Please add at least two options.");
+										$("#popupMessage").html("Please add at least two options of question "+ Number(i+1) +".");
 										$('.popup').toggle("slide");
 										return;
 									}
 									for(j = 0; j < $scope.questions[i].optionArr.length; j++){
 										if(!$scope.questions[i].optionArr[j].options || ($scope.questions[i].optionArr[j].options && $scope.questions[i].optionArr[j].options.length == 0)){
-											$("#popupMessage").html("Please enter option.");
+											$("#popupMessage").html("Please enter option "+Number(j+1)+" of question "+Number(i+1)+".");
 											$('.popup').toggle("slide");
 											return;
 										}
