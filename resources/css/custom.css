@@ -431,7 +431,7 @@ a:hover {
     .details_product { width:44.9%;}
     .footer_3 { margin-top:10px; }
     .logo1 {margin-top:20px;}
-	.table_3 {width: auto!important;}
+    .table_3 {width: auto!important;}
 }
 
 .admin_menu {
@@ -661,7 +661,7 @@ tr {
     width:50%;}
 
 .pop_delivered {
-    background: url(images/calender.jpg)no-repeat right;
+    background: url("images/calender.jpg") no-repeat right;
     background-size: 25px;
     cursor:pointer;}
 
@@ -958,11 +958,11 @@ th {
     height: 5%!important;
     width: 4%!important;
     right: 500px!important;
-	margin-left: 178px!important;
-	margin-top: -255px!important; }
+    margin-left: 178px!important;
+    margin-top: -255px!important; }
 
 /*This will work for firefox*/
-	@-moz-document url-prefix() {
+@-moz-document url-prefix() {
 		.country {
 		color:#A20B0B;
 		margin-left: 5px;}
@@ -1023,7 +1023,7 @@ th {
 
 .profile_edit {
     width:210px;
-	margin-top:15px;}
+    margin-top:15px;}
 
 .set_male {
     width:22%;}
@@ -1040,120 +1040,120 @@ th {
 
 
 .sortUp {
-	position: absolute;
-	top: 3px;
-	left: 10px;
-	right: 0;
-	margin-left: auto;
-	margin-right: auto;
-	border-color: #000 transparent;
-	border-style: solid;
-	border-width: 0 5px 5px 5px;
-	height: 0;
-	width: 0;
-	cursor:pointer;}
+    position: absolute;
+    top: 3px;
+    left: 10px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: #000 transparent;
+    border-style: solid;
+    border-width: 0 5px 5px 5px;
+    height: 0;
+    width: 0;
+    cursor:pointer;}
 
 .sortDown {
-	position: absolute;
-	top: 13px;
-	left: 10px;
-	right: 0;
-	margin-left: auto;
-	margin-right: auto;
-	border-color: #000 transparent;
-	border-style: solid;
-	border-width: 5px 5px 0 5px;
-	height: 0;
-	width: 0;
-	cursor:pointer;}
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    border-color: #000 transparent;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    height: 0;
+    width: 0;
+    cursor:pointer;}
 
 span.sortWrap {
-	position:relative;
-	margin: 10px;}
+    position:relative;
+    margin: 10px;}
 
 .forget_content {
-	text-align:center;
-	margin-bottom:10px;}
+    text-align:center;
+    margin-bottom:10px;}
 
 .popup-manage {
-	background-color: #F1F1F3;
-	display: inline-block;
-	font-weight: 700;
-	min-width:250px;
-	max-width: 400px;
-	left: 50%;
-	word-wrap: break-word;
-	top: 50%;
-	position: fixed;
-	text-align: justify;
-	z-index: 9999;
-	-webkit-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-	border-bottom: 1px solid #CCC;
-	border-top: 1px solid #CCC;
-	border-right: 1px solid #CCC;
-	border-left: 1px solid #CCC;}
+    background-color: #F1F1F3;
+    display: inline-block;
+    font-weight: 700;
+    min-width:250px;
+    max-width: 400px;
+    left: 50%;
+    word-wrap: break-word;
+    top: 50%;
+    position: fixed;
+    text-align: justify;
+    z-index: 9999;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;}
 
 .popup-manage form {
-	padding:10px;}
+    padding:10px;}
 
 .h2-popup {
-	margin: 0;
-	line-height: 40px;
-	font-size: 18px;
-	font-weight: bold;
-	color: #000;
-	text-align: center;
-	text-shadow: 0 1px grey;
-	background:#e7c271;
-	border-bottom: 1px solid #cfcfcf;
-	border-radius: 3px 3px 0 0;}
+    margin: 0;
+    line-height: 40px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    text-align: center;
+    text-shadow: 0 1px grey;
+    background:#e7c271;
+    border-bottom: 1px solid #cfcfcf;
+    border-radius: 3px 3px 0 0;}
 
 .alert-p {
-	max-height: 400px;
-	overflow-y: auto;
-	text-align:center;
-	font-size:16px;}
+    max-height: 400px;
+    overflow-y: auto;
+    text-align:center;
+    font-size:16px;}
 
 
 .close {
-	background-color: #fff;
-	height: 30px;
-	line-height: 30px;
-	position: absolute;
-	color: #e7c271;
-	text-align: center;
-	text-decoration: none;
-	top: -15px;
-	width: 30px;
-	right: -8px;
-	-webkit-border-radius: 15px;}
+    background-color: #fff;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    color: #e7c271;
+    text-align: center;
+    text-decoration: none;
+    top: -15px;
+    width: 30px;
+    right: -8px;
+    -webkit-border-radius: 15px;}
 
 .role-change {
-	text-align: center;
-	margin-top: 10px;}
+    text-align: center;
+    margin-top: 10px;}
 
 .alert-ok {
-	width: 100px;
-	border: none;
-	background-color:#e7c271;
-	padding: 8px;
-	font-weight: bold;}
+    width: 100px;
+    border: none;
+    background-color:#e7c271;
+    padding: 8px;
+    font-weight: bold;}
 
 .other_input {
-	margin-top:10px;}
+    margin-top:10px;}
 
 .multiple_select {
-	width: 95%;
-	height:98px!important; }
+    width: 95%;
+    height:98px!important; }
 
 .add_delete input[type="submit"] {
-	background-color: #e7c271;
-	font-size: 16px;
-	outline: 0px;
-	padding: 5px 25px;
-	width: auto;}
+    background-color: #e7c271;
+    font-size: 16px;
+    outline: 0px;
+    padding: 5px 25px;
+    width: auto;}
 
 .cross_icon_doc {
     height: 5%!important;
@@ -1162,14 +1162,14 @@ span.sortWrap {
 
 
 .promotions {
-width: 24%;
-margin: .5%;
-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-padding: 10px;
-min-height: 248px;
-max-height: 248px;
-overflow: hidden;
-    }
+    width: 24%;
+    margin: .5%;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    padding: 10px;
+    min-height: 248px;
+    max-height: 248px;
+    overflow: hidden;
+}
 
 .c-row {
     margin-left: 0px;
@@ -1197,11 +1197,11 @@ overflow: hidden;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
 
 .uploadList{
-	padding: 0;
-	list-style-type: none;
+    padding: 0;
+    list-style-type: none;
 }
 .uploadList .uploadLink{
-	float:left;
+    float:left;
 }
 
 .short_product_details {
@@ -1214,7 +1214,6 @@ overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 11;
 	-webkit-box-orient: vertical;}
-		
 .training {
     width:12%;
     margin:.25%;
@@ -1223,7 +1222,6 @@ overflow: hidden;
     min-height:180px;
     max-height:180px;
     overflow:hidden;}
-	
 .pdf_img {
     min-height:145px;
     max-height:145px;
@@ -1306,4 +1304,5 @@ span.btn {
 	padding: 1px;}
 	
 span.btn:hover {
-	text-decoration:underline;}
+	text-decoration:underline;
+    white-space:nowrap;}

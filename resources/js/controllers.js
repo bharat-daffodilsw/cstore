@@ -122,6 +122,18 @@ cstore.config(
             }).when('/edit-survey',{
                 templateUrl:'../add-survey',
                 controller:'addSurveyCtrl'
+            }).when('/assigned-session-store',{
+                templateUrl:'/assigned-session-store',
+                controller:'assignedSessionCtrl'
+            }).when('/training-session',{
+                templateUrl:'../sessiondetail',
+                controller:'sessionDetailCtrl'
+            }).when('/all-training-sessions',{
+                templateUrl:'../all-training-sessions',
+                controller:'allTrainingSessionsCtrl'
+            }).when('/session-category',{
+                templateUrl:'../session-category',
+                controller:'trainingCategoryDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -376,6 +388,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.storedata.countries = $scope.data.countries;
             $scope.getEditStates($scope.data, stateid, cityid);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getEditStates = function (countryid, stateid, cityid) {
@@ -405,6 +419,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.storedata.selectedState = countryid.selectedState;
                 $scope.getEditCities(countryid, cityid);
             }, function (jqxhr, error) {
+                $("#popupMessage").html(error);
+                $('.popup').toggle("slide");
             })
         }
     }
@@ -661,6 +677,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.productdata.vendors = vendorData.response.data;
             $scope.productdata.selectedVendor = $scope.productdata.vendors[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 
@@ -674,6 +692,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.productdata.productCategories = productCategoryData.response.data;
             $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getProductCategories();
@@ -746,6 +766,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.userdata.selectedRole = $scope.userdata.roles[1];
             console.log($scope.userdata.selectedRole);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getStores = function () {
@@ -761,6 +783,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
             $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     //changes made by Anuradha
@@ -773,6 +797,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.trainingdata.trainingCategories = trainingCategoryData.response.data;
             $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
    $scope.getTrainingCategories();
@@ -820,7 +846,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
  });
  };
  }); */
-//changed by anuradha
+
 cstore.controller('homeCtrl', function ($scope, $appService, $location, $routeParams) {
     $scope.homeView = {};
     $scope.myInterval = 5000;
@@ -851,16 +877,19 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $('.popup').toggle("slide");
         })
     }
-    $scope.getRecentPromotions = function (maxRow) {
+    $scope.getRecentPromotions = function (maxRow,searchText) {
         $scope.loadingRecentPromotionData = true;
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
-        console.log(currentTime);
+        //console.log(currentTime);
         var query = {"table": "promotions__cstore"};
         query.columns = ["promo_title","image","start_date","end_date"];
         query.filter = {};
         query.filter["start_date"] = {"$lte":currentTime};
         query.filter["end_date"] = {"$gte":currentTime};
+        if (searchText && searchText != "") {
+            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
         query.orders = {"__createdon": "desc"};
         if (maxRow) {
             query.max_rows = maxRow;
@@ -868,12 +897,12 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         else {
             query.max_rows = 8;
         }
-        console.log(JSON.stringify(query));
+        //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
             $scope.loadingRecentPromotionData= false;
-            console.log(promotionData.response.data[0].end_date);
+            //console.log(promotionData.response.data[0].end_date);
             $scope.recentPromotions = $appService.setUrls(promotionData.response.data, 291, 196);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -897,12 +926,12 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         else {
             query.max_rows = 5;
         }
-        console.log(JSON.stringify(query));
+        //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
             $scope.loadingCarouselPromotionData= false;
-            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 291, 196);
+            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 270, 225);
             //$scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -919,11 +948,41 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             pager :false
         });
     });
+    //changes made by anuradha on 30-04
+    $scope.getAssignedTrainingSessions = function (maxRow, searchText) {
+        $scope.loadingAssignedTrainingSessionData = true;
+        //console.log($scope.currentUser.data.storeid);
+        var query = {"table": "storemanager_trainingsession__cstore"};
+
+        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description"];
+        query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        if (searchText && searchText != "") {
+            query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 4;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (sessionData) {
+            $scope.loadingAssignedTrainingSessionData = false;
+            $scope.assignedTrainingSessions = sessionData.response.data;
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    //changes end
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
             $scope.getPopularProducts(8, $routeParams.search);
-            $scope.getRecentPromotions(8);
+            $scope.getRecentPromotions(8,$routeParams.search);
+            $scope.getAssignedTrainingSessions(4,$routeParams.search);
             $scope.homeView = {"storeManager": true, "admin": false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
@@ -1006,6 +1065,8 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
             $scope.loadingProductDetailData = false;
             $scope.product = $appService.setUrls(productDetailData.response.data, 550, 350);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getProductDetail();
@@ -1070,13 +1131,15 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getProductDetail($scope.cursor, $routeParams.q);
+                            $scope.getProductDetail($scope.cursor, $routeParams.q,$routeParams.search);
                         }
                     }
                 }
             });
 
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getInitialData = function (cursor) {
@@ -1085,6 +1148,8 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
 });
 
 cstore.controller('loginCtrl', function ($scope, $appService, $location) {
+    //changed on 0105
+    $appService.unauth();
     $scope.login = function () {
         var username = $("#username").val();
         var password = $("#password").val();
@@ -1159,8 +1224,10 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                                 document.cookie = c_name + "=" + escape(storeid);
 
                                 if (companyLogoUrl) {
-                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+                                    //changes made 3004
                                     var c_name = "companyLogoUrl";
+                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+
                                 }
 
                             }
@@ -1234,7 +1301,6 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
             return;
         });
     };
-
 });
 
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
@@ -1614,6 +1680,8 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -1700,6 +1768,8 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -1787,6 +1857,8 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -1807,6 +1879,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 
@@ -1893,6 +1967,8 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
                 $scope.$apply();
             }
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
 });
@@ -2103,7 +2179,8 @@ cstore.controller('userCtrl', function ($scope, $appService) {
             }
 
         }, function (jqxhr, error) {
-            alert("exception in making request");
+            $("#popupMessage").html("exception in making request");
+            $('.popup').toggle("slide");
         })
     }
     $scope.getAllUsers(1, 10);
@@ -2165,6 +2242,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
 
         $scope.loadingPromotionData = true;
         var query = {"table": "promotions__cstore"};
+        //changes made by anuradha 0105 evening
         query.columns = [
             {"expression": "end_date", "format": "MM/DD/YYYY"},
             "image",
@@ -2179,7 +2257,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             {"expression": "start_date", "format": "MM/DD/YYYY"},
             "threshold",
             "upc",
-			"vendorid"
+			"vendorid",
+            "top_promo"
         ];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2238,6 +2317,8 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+        //changes made by anuradha 0105 evening
+        $scope.promotiondata["top_promo"]=false;
        // $scope.promotiondata.vendorsList = $scope.vendors[0];
     }
     var promotionId = $routeParams.q;
@@ -2315,6 +2396,8 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
     $scope.getLess = function () {
         $scope.getAllTrainingSessions(0, 10);
     }
+    //changes made by anuradha 0n 30-04
+    $scope.getStores();
 });
 
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
@@ -2489,7 +2572,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
     $scope.promotionData = {"loadingData": false, "available": false};
 
     $scope.promotions = [];
-    $scope.getAllPromos = function (cursor) {
+    $scope.getAllPromos = function (cursor,searchText) {
         if ($scope.promotionData.loadingData) {
             return false;
         }
@@ -2499,13 +2582,16 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         query.filter = {};
         query.filter["start_date"] = {"$lte":currentTime};
         query.filter["end_date"] = {"$gte":currentTime};
+        if (searchText && searchText != "") {
+            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
         query.max_rows = 4;
         query.cursor = cursor;
         //console.log(JSON.stringify(query));
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
-            console.log(JSON.stringify(promoData));
+          //  console.log(JSON.stringify(promoData));
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
             //var rawData = promoData.response.data;
             if ($scope.promotions.length) {
@@ -2533,17 +2619,19 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getAllPromos($scope.cursor);
+                            $scope.getAllPromos($scope.cursor,$routeParams.search);
                         }
                     }
                 }
             });
 
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getInitialData = function (cursor) {
-        $scope.getAllPromos(cursor);
+        $scope.getAllPromos(cursor,$routeParams.search);
     }
 });
 
@@ -2576,9 +2664,260 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             $scope.loadingPromotionDetailData = false;
             $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
         }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
         })
     }
     $scope.getPromoDetail();
 });
 
+/*****************assigned session**************************/
+cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routeParams) {
+    var assignedSessionId = $routeParams.q;
+    //console.log(assignedSessionId);
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingAssignedSessionData = false;
+    $scope.venderSearch = [
+        {"value": "store_manager_id.storename", "name": "Store"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.assignedSessions = [];
+    $appService.auth();
+    $scope.getAssignedSessions = function (direction, limit, column, searchText) {
+        if ($scope.loadingAssignedSessionData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
 
+        $scope.loadingAssignedSessionData = true;
+        var query = {"table": "storemanager_trainingsession__cstore"};
+        query.columns = ["store_manager_id","training_session_id"];
+        query.filter = {};
+        query.filter = {"training_session_id._id": assignedSessionId};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (assignedSessionData) {
+            $scope.loadingAssignedSessionData = false;
+            $scope.show.currentCursor = assignedSessionData.response.cursor;
+            $scope.assignedSessions = assignedSessionData.response.data;
+            for (var i = 0; i < $scope.assignedSessions.length; i++) {
+                $scope.assignedSessions[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAssignedSessions(1, 10);
+    $scope.setAssignedSessionOrder = function (sortingCol, sortingType) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAssignedSessions(1, 10, null, null);
+    }
+    $scope.getMore = function () {
+        $scope.getAssignedSessions(1, 10);
+    }
+    $scope.getLess = function () {
+        $scope.getAssignedSessions(0, 10);
+    }
+
+});
+
+/************************ Training Session Detail for Store Manager ****************************************/
+cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.getSessionDetail = function (searchText) {
+        //console.log($routeParams.sessionid);
+        $scope.loadingSessionDetailData = true;
+        $scope.videoUrls=[];
+        $scope.files=[];
+        var query = {"table": "storemanager_trainingsession__cstore"};
+        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.file","training_session_id.video_url","training_session_id.training_category_id"];
+        query.filter={};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"training_session_id._id": $routeParams.sessionid};
+        //if (searchText && searchText != "") {
+        //    query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        //}
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (sessionDetailData) {
+            //console.log(JSON.stringify(sessionDetailData.response.data));
+            $scope.loadingSessionDetailData = false;
+            $scope.session = sessionDetailData.response.data;
+            if(sessionDetailData.response.data[0].training_session_id.video_url){
+                $scope.videoUrls=sessionDetailData.response.data[0].training_session_id.video_url;
+            }
+            if(sessionDetailData.response.data[0].training_session_id.file){
+                $scope.files=sessionDetailData.response.data[0].training_session_id.file;
+            }
+            if($scope.videoUrls || $scope.videoUrls !="undefined" || $scope.videoUrls!=""){
+                for(var i=0;i<$scope.videoUrls.length;i++){
+                    if($scope.videoUrls[i].indexOf("http")==-1){
+                        $scope.videoUrls[i]="http://"+$scope.videoUrls[i];
+                    }
+                }
+            }
+            console.log($scope.files);
+            if($scope.files || $scope.files!="undefined" || $scope.files!=""){
+                for(var i=0; i<$scope.files.length; i++){
+                    if((/\.(doc|docx)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/doc1.png";
+                    }
+                    else if((/\.(pdf)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/pdf1.png";
+                    }
+                    else if((/\.(ppt|pptx)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/ppt1.png";
+                    }
+                    else if((/\.(xls|csv|xlsx)$/gi).test($scope.files[i].name)){
+                        $scope.files[i].imageSrc="images/excel_icon1.png";
+                    }
+
+                }
+            }
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getSessionDetail();
+});
+
+/*******************************All Training Sessions*********************************/
+cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.getTrainingList = function (searchText) {
+        $scope.loadingAllTrainingData = true;
+
+        var query = {"table": "training_categories__cstore"};
+
+        query.columns = ["name"];
+
+
+        if (searchText && searchText != "") {
+            query.childs = [
+                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id","training_session_id.title","training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"},"filter":{"store_manager_id._id":$scope.currentUser.data.storeid,"training_session_id.title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+            ]
+        }
+        else {
+            query.childs = [
+                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id","training_session_id.title","training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"},"filter":{"store_manager_id._id":$scope.currentUser.data.storeid}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+            ];
+        }
+        //console.log(JSON.stringify(query));
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingData) {
+            $scope.loadingAllTrainingData = false;
+            var rawData = trainingData.response.data;
+            for (var i = 0; i < rawData.length; i++) {
+                if (rawData[i] && rawData[i]["trainingCategoryWiseData"] && rawData[i]["trainingCategoryWiseData"].length) {
+
+                    rawData[i]["trainingCategoryWiseData"] = rawData[i]["trainingCategoryWiseData"];
+                }
+                //console.log("TEST::::" + JSON.stringify(rawData[i]["trainingCategoryWiseData"]));
+            }
+            $scope.sessionCategories = rawData;
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getTrainingList($routeParams.search);
+});
+
+/***************************** Training Category Detail**************************************/
+cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.categoryData = {"loadingData": false, "available": false};
+
+    $scope.sessions = [];
+    $scope.getTrainingCategoryDetail = function (cursor, filter, searchText) {
+        if ($scope.categoryData.loadingData) {
+            return false;
+        }
+        $scope.categoryData.loadingData = true;
+        var query = {"table": "storemanager_trainingsession__cstore"};
+        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.training_category_id"];
+        query.filter = {};
+        query.filter["store_manager_id._id"]=$scope.currentUser.data.storeid;
+        if (filter && filter != undefined && filter != "undefined") {
+            query.filter["training_session_id.training_category_id._id"] = filter;
+            if (searchText && searchText != "") {
+                query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            }
+        }
+        else {
+            $("#popupMessage").html("Not Valid");
+            $('.popup').toggle("slide");
+            return false;
+        }
+        query.max_rows = 4;
+        query.cursor = cursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryDetailData) {
+            var rawData = trainingCategoryDetailData.response.data;
+
+            if ($scope.sessions.length) {
+                for (var i = 0; i < rawData.length; i++) {
+                    $scope.sessions.push(rawData[i]);
+                }
+            }
+            if (!$scope.sessions.length) {
+                $scope.sessions = rawData;
+
+            }
+            $scope.categoryData.loadingData = false;
+            $scope.cursor = trainingCategoryDetailData.response.cursor;
+            if ($scope.sessions.length) {
+                /*wee need string for ng-switch*/
+                $scope.categoryData.available = "true";
+            }
+            else {
+                $scope.categoryData.available = "false";
+            }
+
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getTrainingCategoryDetail($scope.cursor, $routeParams.q,$routeParams.search);
+                        }
+                    }
+                }
+            });
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getInitialData = function (cursor) {
+        $scope.getTrainingCategoryDetail(cursor, $routeParams.q, $routeParams.search);
+    }
+});
