@@ -29,7 +29,7 @@ a:hover {
 
 .logo {
     min-width:15%;
-    max-width:100%;
+    max-width:15%;
     min-height:100%;
     max-height:100%;
     text-align:center;
@@ -44,7 +44,9 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
+	position:absolute;
     padding: 5px;}
+	
 .add_cart{
     width:85px;
     color:#FFF;
@@ -204,7 +206,6 @@ a:hover {
     max-height:353px;
     overflow:hidden;}
 
-
 .product_details {
     font-size:12px;
     margin:5px 0;
@@ -230,6 +231,7 @@ a:hover {
     text-decoration:underline;}
 
 .pop_products {
+	width:100%;
     font-size:15px;
     text-transform:uppercase;
     font-weight:bold;
@@ -254,6 +256,7 @@ a:hover {
     margin-bottom: 10px;
     padding: 10px;
     height: 247px;
+	overflow:hidden;
 }
 /*****added*******/
 
@@ -332,7 +335,7 @@ a:hover {
     max-height:370px;}
 
 .short_details {
-    padding:10px;
+    padding:10px 10px 0 5px;
     font-size:17px;
     overflow: hidden;
     max-height:200px;
@@ -342,14 +345,15 @@ a:hover {
     -webkit-box-orient: vertical; }
 
 .Qty {
-    font-size:17px;}
+    font-size:17px;
+	margin-top:10px;}
 
 .final_price {
     margin:5px 0;
     font-size:17px;
     border-top: 1px dotted #DDD;
     border-bottom: 1px dotted #DDD;
-    padding:10px 10px 10px 5px;}
+    padding:10px;}
 
 .add_btn a {
     font-size:16px;
@@ -755,7 +759,7 @@ tr {
 
 .saved_l_bar {
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    width:44%;
+    width:43%;
     padding:0px;
     margin:10px;}
 
@@ -984,7 +988,8 @@ th {
     max-height:370px;
     min-height: 370px;
     margin-top: .5%;
-    box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);}
+    box-shadow:0 1px 3px rgba(34, 25, 25, 0.4);
+	padding:10px;}
 
 .visible {
     visibility:hidden;}
@@ -992,7 +997,7 @@ th {
 
 .add_to_btn {
     margin-top:10px;
-	padding-left:5px;}
+	padding-left:10px;}
 
 .user {
     max-height:25px;
@@ -1002,7 +1007,7 @@ th {
 .quantity_border {
     border-top:1px dotted #DDD;
     padding-top:5px;
-	padding-left: 5px;}
+	padding-left: 10px;}
 
 .profile {
     width:650px;
@@ -1199,3 +1204,106 @@ overflow: hidden;
 	float:left;
 }
 
+.short_product_details {
+	margin-top: 10px;
+	font-size: 13px;
+	max-height: 200px;
+	min-height: 200px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 11;
+	-webkit-box-orient: vertical;}
+		
+.training {
+    width:12%;
+    margin:.25%;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    padding:10px;
+    min-height:180px;
+    max-height:180px;
+    overflow:hidden;}
+	
+.pdf_img {
+    min-height:145px;
+    max-height:145px;
+    overflow:hidden;
+    position:relative;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
+
+
+.pdf_name {
+    font-size:13px;
+    font-weight:bold;
+	text-align:center;
+    text-transform:uppercase;
+    min-height:16px;
+    max-height:16px;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;}
+	
+		
+.typelist {
+	margin-top:10px;
+	margin-left:10px;
+	padding:5px;}
+	
+.textarea {
+	width:95%;}
+	
+.questionWrap {
+	margin-top:10px;}
+	
+.full {
+	width:100%;}
+
+input {
+	width:95%;}
+	
+.description_1 {
+	width: 98%!important;}
+	
+.no { 
+	min-height:15px;
+	max-height:15px;
+	min-width:15px;
+	max-width:15px;}
+	
+textarea {
+	width: 100%;
+	padding:5px;}
+	
+.th_option {
+	width:89%;
+	text-align:left;
+	padding:10px 0;}
+	
+.th_action {
+	width:11%;
+	text-align:left;
+	padding:10px 0;}
+	
+.question_answer {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	margin-left: -50px;;}
+	
+.sub-head-border {
+	font-size:24px;
+	color:#e7c271}
+	
+.small-txt {
+	color:#000;}
+	
+span.btn {
+	font-size: 18px;
+	color: #000000;
+	background-color: #e7c271;
+	border-radius: 0;
+	padding: 1px;}
+	
+span.btn:hover {
+	text-decoration:underline;}

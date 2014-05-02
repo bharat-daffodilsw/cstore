@@ -3523,7 +3523,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                         }
                     };
                     $scope.saveFunction = function (query) {
-                        //console.log(query);
+                        
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
@@ -3622,7 +3622,7 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
 cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div><assign-store-popup></assign-store-popup><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click=><a href>Add</a></button>' +
+        template: '<div><assign-store-popup></assign-store-popup><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"  ng-click="setPath(\'add-survey\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteSurvey()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore()" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + surveys.length}} from start</div>' +
@@ -3630,7 +3630,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\')"></div>	</span></th>' +
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\')"></div>	</span></th><th>Assign Store </th><th></th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
             '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ng-click="showAssignPopup(survey)"><a class="edit_btn" href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
+            '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3698,16 +3698,194 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                        console.log(JSON.stringify(survey));
                      window.location.href = "#!/assigned-survey-store?q=" + survey._id;
                      }
-                    /*$scope.setSurveyState = function (survey) {
+                    $scope.setSurveyState = function (survey) {
+                        $scope.surveydata["surveyId"] = survey._id ? survey._id : "";
                         $scope.surveydata["title"] = survey.title ? survey.title : "";
                         $scope.surveydata["description"] = survey.description ? survey.description : "";
-                        window.location.href = "#!edit-survey?q=" + survey._id;
-                    } */
+						for(i = 0; i < survey.survey_question.length; i++){
+							$scope.questions[i] = {"question":survey.survey_question[i].question};		
+							for (var j = 0; j < $scope.listType.length; j++) {
+								if ($scope.listType[j].value == survey.survey_question[i].survey_type) {
+									$scope.questions[i].type = $scope.listType[j];
+									break;
+								}
+							}
+							$scope.questions[i]["optionArr"] = [];
+							if(survey.survey_question[i].survey_type != "subjective"){
+								for(k = 0; k < survey.survey_question[i].options.length; k++){
+									$scope.questions[i]["optionArr"][k] = {"options":survey.survey_question[i].options[k]};
+								}
+								$scope.questions[i].addOption = true;
+							}else{
+								$scope.questions[i].addOption = false;
+							}
+						}						
+                        window.location.href = "#!/edit-survey?q=" + survey._id;
+                    } 
                 }
             }
         }
     }
 }]);
+
+cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        replace: 'true',
+        template: '<div><div class="table_1 pull-left"><div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="margin_top">Title</div></td></tr>' +
+            '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title" class="description_1"></td></tr>' +
+            '<tr><td><div class="margin_top">Description</div></td></tr>' +
+            '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
+            '</tbody></table></div>' +
+			"<div class='questionWrap' ng-repeat='ques in questions'>" +
+			"<div><div>" +
+			'<h2 class="sub-head-border">' +
+			'<span class="small-txt">Choose the type and add as many questions as you need.</span>  ' +
+			'</h2>  ' +
+			"<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +			
+            '<tr><td class="pull-left"><div class="margin_top">Question Type</div></td>' +
+            '<td class="pull-left" colspan="2"><select class="typelist" ng-model="ques.type" ng-change="showOption(ques)" ng-options="list.name for list in listType"></select></td></tr>' +
+			"</table>" +
+			"<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+			"<tr>" +
+			"<td class='full'>" +
+			"<span>Question </span>" +
+			"<strong id='quesNum_{{$index}}'>{{$index+1}}. </strong>" +
+			"</td>" +
+			"<td align='right' valign='middle'>&nbsp;<a ng-click='questions.splice($index,1)'>" +
+			"<img src='/images/icon_delete.gif' alt='delete this question' class='question_answer'>" +
+			"</a></td> " +
+			"</tr></table>" +
+			"</div> " +
+			"<div id='question_desc'><div id='bg'>" +
+			"<textarea cols=76 class='description_1' rows=3 ng-model='ques.question' id='question{{$index}}' ></textarea>" +
+			"</div>" +
+			"</div>" +
+			"<table class='full' border=0 ng-show='ques.addOption'>" +
+			"<tr><td colspan='2'>" +
+			"<div id='mc_answers{{$index}}' name='mc_answers{{$index}}'>" +
+			"<table class='full'><tbody><tr><th>" +
+			"<th class='th_option' ng-hide='ques.optionArr.length == 0'>Option</th>" +
+			"<th class='th_action' ng-hide='ques.optionArr.length == 0'>Action</th>" +
+			"</tr></tbody></table>" +
+			"<div id='opt{{$index}}_1' name='opt{{$index}}_1' ng-repeat='opt in ques.optionArr'>" +
+			"<table class='full'><tr>" +
+			"<td><textarea rows='1' maxlength=\"120\"  ng-model='opt.options' id='answer{{$index}}'></textarea></td>" +
+			"<td align=center>" +
+			"<a title='delete this answer' ng-click='ques.optionArr.splice($index,1)' >" +
+			"<img src='/images/comment_delete.gif' alt='delete this answer' class='no' width='8'>" +
+			"</a>" +
+			"</td>" +
+			"</tr>" +
+			"</table>" +
+			"</div>" +
+			"</div></td></tr></table>" +
+			"<br/><div id='add_options{{$index}}' ng-show='ques.addOption'>" +
+			"<a title='Add alternate correct answers.' ng-click='ques.optionArr.push({options:[]})'>" +
+			"<strong>+ Add New Option</strong>" +
+			"</a></b><br/><br/></div>" +
+			"</div></div>" +
+			'<div class="questionToolBox">' +
+			'<div style="width: 800px;" class="add-questions-box" id="qButtons"> ' +
+			'<span style="position: relative;" ng-click="questions.push({optionArr:[],type:listType[0],addOption:true})" class="btn">  ' +
+			'<strong id="checkbox" class="plusSign">&nbsp;</strong>&nbsp;Add Question&nbsp;</span> ' +
+			'</div>   ' +
+			'</div> ' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveSurvey()"><a href>Save</a></button>' +
+            '</div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="clearSurveyContent()"><a href="">Close</a></button>' +
+            '</div></div></td></tr>' +
+            '</tbody></table>' +
+            '<div class="loadingImage" ng-hide="!loadingAddTrainingdata"><img src="/images/loading.gif"></div>' +
+            '</div>'+
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {				
+					if(window.location.hash == "#!/add-survey")
+						$scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];	
+                },
+                post: function ($scope) {
+					$scope.CSession = $appService.getSession();	
+					$scope.showOption = function(ques){
+						if(ques.type.value != "subjective"){
+							ques.addOption = true;
+						}else{
+							ques.addOption = false;
+						}
+					}					
+					$scope.saveSurvey = function () {
+						if ($scope.CSession) {
+                            if (!$scope.surveydata.title) {
+                                $("#popupMessage").html("Please enter survey title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.surveydata.description) {
+                                $("#popupMessage").html("Please enter description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+							var query = {};
+							var newSession = {};
+							query.table = "surveys__cstore";
+							if ($scope.surveydata["surveyId"]) {
+								newSession["_id"] = $scope.surveydata["surveyId"];
+							}
+							newSession["title"] = $scope.surveydata.title;
+							newSession["description"] = $scope.surveydata.description;
+							newSession["survey_question"] = [];
+							for(i = 0; i < $scope.questions.length; i++){
+								newSession["survey_question"][i] = {"question":$scope.questions[i].question};
+								newSession["survey_question"][i]["survey_type"] = $scope.questions[i].type.value;
+								if($scope.questions[i].type.value != "subjective"){
+									newSession["survey_question"][i]["options"] = [];
+									if($scope.questions[i].optionArr.length < 2){
+										$("#popupMessage").html("Please add at least two options.");
+										$('.popup').toggle("slide");
+										return;
+									}
+									for(j = 0; j < $scope.questions[i].optionArr.length; j++){
+										newSession["survey_question"][i]["options"][j] = $scope.questions[i].optionArr[j].options;
+									}
+								}
+							}
+							newSession["survey_question"] = {data:newSession["survey_question"], "override":"true"};
+							query.operations = [newSession];
+							$appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+								if (callBackData.code == 200 && callBackData.status == "ok") {
+									$("#popupMessage").html("Saved successfully");
+									$('.popup').toggle("slide");
+									$scope.setPath('surveys');
+								} else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+									$('.popup').toggle("slide");
+								}
+								else {
+									$("#popupMessage").html("some error while saving survey");
+									$('.popup').toggle("slide");
+								}
+								$scope.clearSurveyContent();
+							}, function (err) {
+								console.log(err.stack);
+
+							});
+						}else{
+							$("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+						}
+                    }
+				
+				}
+            }
+        }
+    }
+}]);
+
 
 /******************************* All Promotions **************************************/
 cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
