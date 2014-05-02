@@ -3899,7 +3899,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 										return;
 									}
 									for(j = 0; j < $scope.questions[i].optionArr.length; j++){
-										if(!$scope.questions[i].optionArr[j].options){
+										if(!$scope.questions[i].optionArr[j].options || ($scope.questions[i].optionArr[j].options && $scope.questions[i].optionArr[j].options.length == 0)){
 											$("#popupMessage").html("Please enter option.");
 											$('.popup').toggle("slide");
 											return;
