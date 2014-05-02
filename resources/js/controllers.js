@@ -1578,7 +1578,7 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routePa
         //console.log(JSON.stringify($scope.storedata.manager));
         $scope.storedata["address"] = "";
         $scope.storedata["contact"] = "";
-        $scope.storedata["loyalty_status"] = "";
+        //$scope.storedata["loyalty_status"] = "";
         $scope.storedata["pump_model"] = "";
         $scope.storedata["pump_brand"] = ""
         $scope.storedata["email"] = "";
