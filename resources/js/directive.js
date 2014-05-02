@@ -105,13 +105,14 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 }]);
 /*change end here */
 
-//Changes made by Anuradha
+//Changes made 02/05
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/site-info" active-link="active">Site Info</a></li>' +
             '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li>' +
-            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li><li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
+            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li>' +
+            '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li><li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
         compile: function () {
@@ -3225,9 +3226,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
             '<tr><td><div class="margin_top">Start Date</div></td></tr>' +
-            '<tr><td><input id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker /></td></tr>' +
+            '<tr><td><input id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
+            '<input type="text" ng-model="promotiondata.start_time" jqtimepicker /></td></tr>' +
             '<tr><td><div class="margin_top">End Date</div></td></tr>' +
-            '<tr><td><input id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker /></td></tr>' +
+            '<tr><td><input id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
+            '<input type="text" ng-model="promotiondata.end_time" jqtimepicker /></td></tr>' +
             '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
             '<tr><td><item-signage-select></item-signage-select></td></tr>' +
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
@@ -3271,10 +3274,10 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
+                    console.log("start date time::" + $scope.promotiondata.start_date+$scope.promotiondata.start_time);
+                    console.log("end date time::::" + $scope.promotiondata.end_date+$scope.promotiondata.end_time);
                     $scope.savePromotion = function () {
-                        //console.log($scope.promotiondata.top_promo);
-                        //console.log($scope.promotiondata.end_date);
-
+                        var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
                          if ($scope.CSession) {
 							 if (!$scope.promotiondata.promo_title) {
@@ -3298,8 +3301,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      return false;
 							  }
                              //cahnges made by anuradha
-							  if (!$scope.promotiondata.threshold) {
-							      $("#popupMessage").html("Please enter threshold");
+							  if (!$scope.promotiondata.threshold || !regNumberOnly.test($scope.promotiondata.threshold)) {
+							      $("#popupMessage").html("Please enter valid numeric threshold value");
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
@@ -3308,11 +3311,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-							 if (!$('#uploadfile').val()) {
+							/* if (!$('#uploadfile').val()) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
 							     return false;
-							 }
+							 }*/
 							 var query = {};
 							 query.table = "promotions__cstore";
 							 if ($scope.promotiondata["promotionid"]) {
@@ -3407,6 +3410,24 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
 					if(!$scope[model[0]])
 						$scope[model[0]] = {};
 					$scope[model[0]][model[1]] = date;
+                    $scope.$apply();
+                }
+            });
+        }
+    };
+}]);
+//changes made 02/05
+cstore.directive('jqtimepicker', [ '$appService', function ($appService, $scope) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function ($scope, element, attrs, ngModelCtrl) {
+            var model = attrs.ngModel.split(".");
+            $(element).timepicker({
+                onSelect: function (time) {
+                    if(!$scope[model[0]])
+                        $scope[model[0]] = {};
+                    $scope[model[0]][model[1]] = time;
                     $scope.$apply();
                 }
             });
@@ -4436,6 +4457,195 @@ cstore.directive('trainingCategoryDetail', ['$appService', function ($appService
             return {
                 pre: function ($scope) {
                     $scope.getInitialData(0);
+                }
+            }
+        }
+    }
+}]);
+/********************************Product Codes************************************************/
+cstore.directive('productCodeList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveStates()"><a href="">' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStates()"><a href="">Delete</a>' +
+            '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
+            '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
+            '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
+            '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
+            '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Abbreviation</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'abbreviation\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'abbreviation\',\'desc\')"></div></span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
+            '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus" ng-show="state._id">' +
+            '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
+            '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
+            '<span ng-hide="state.editStatus">{{state.abbreviation}}</span><input type="text" ng-show="state.editStatus" ng-model="state.abbreviation"></td><td>' +
+            '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
+            '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
+            '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
+            '</table><div ng-click="addNewState()" class="add_new"><a href>' +
+            '+ Click Here To Add New State</a></div></div><div class="loadingImage" ng-hide="!loadingStateData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.addNewState = function () {
+                        $scope.states.push({ name: '', countryid: '' });
+                        //for (var i = 0; i < $scope.countries.length; i++) {
+                        $scope.states[$scope.states.length - 1]["editStatus"] = true;
+                        //}
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllStates(1, 10, $scope.searchby.value, $scope.searchContent);
+                    }
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.deleteStateArray = [];
+                    var currentSession = $appService.getSession();
+                    var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                    $scope.deleteStates = function () {
+                        for (var i = 0; i < $scope.states.length; i++) {
+                            if ($scope.states[i].deleteStatus) {
+                                $scope.deleteStateArray.push({"_id": $scope.states[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "states__cstore";
+                        query.operations = angular.copy($scope.deleteStateArray);
+                        $scope.deleteStateArray = [];
+                        if (query.operations.length) {
+
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.states.length; i++) {
+                                        if ($scope.states[i].deleteStatus) {
+                                            $scope.states.splice(i, 1);
+                                            i--;
+                                        }
+                                    }
+
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
+                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                    $("#popupMessage").html("This record is referred in products");
+                                    $('.popup').toggle("slide");
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please select at least one state before delete");
+                            $('.popup').toggle("slide");
+                        }
+
+                    }
+                },
+                post: function ($scope) {
+                    $scope.remove = function (index, refreshStateId) {
+                        if (!$scope.states[index]["oldstatus"]) {
+                            $scope.states.splice(index, 1);
+                        }
+                        else {
+                            $scope.refreshStates(index, refreshStateId);
+                        }
+                    }
+                    $scope.saveStates = function () {
+                        var savedindexes = [];
+                        for (var j = $scope.states.length-1; j >= 0; j--) {
+                            if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].abbreviation){
+                                $scope.states.splice(j, 1);
+                            }
+                        }
+                        var stateList = $scope.states.filter(function (el) {
+                            if(!el._id && (el.name || el.countryid || el.abbreviation)){
+                                savedindexes.push($scope.states.indexOf(el));
+                            }
+                            return el.editStatus == true ;
+                        });
+                        for (var i = 0; i < stateList.length; i++) {
+                            if (!stateList[i].name) {
+                                $("#popupMessage").html("Please enter state name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!stateList[i].abbreviation) {
+                                $("#popupMessage").html("Please enter abbreviation");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!stateList[i].countryid) {
+                                $("#popupMessage").html("Please select country");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                        }
+                        if (stateList && stateList.length > 0) {
+                            var query = {};
+                            query.table = "states__cstore";
+                            query.operations = stateList;
+                            $scope.addStateArray = [];
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
+                                    for (var j = 0; j < savedindexes.length; j++) {
+                                        $scope.states[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                    }
+                                    for (var i = 0; i < $scope.states.length; i++) {
+                                        $scope.states[i]["editStatus"] = false;
+                                    }
+                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while saving");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                            });
+                        }else {
+                            $("#popupMessage").html("No data found for saving");
+                            $('.popup').toggle("slide");
+                        }
+                    }
+                    $scope.setState = function (state) {
+                        //$scope.states[state].editStatus = true;
+                        //for (var i = 0; i < $scope.data.states.length; i++) {
+                        //  if ($scope.data.states[i]._id == vendor.state._id) {
+                        //    $scope.data.selectedState = $scope.data.states[i];
+                        //  break;
+                        // }
+                        // }
+                        for (var i = 0; i < $scope.countryList.length; i++) {
+                            if ($scope.countryList[i]._id == state.countryid._id) {
+                                state.countryid = $scope.countryList[i];
+                                break;
+                            }
+                        }
+
+                    }
+
                 }
             }
         }
