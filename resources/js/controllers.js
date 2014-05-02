@@ -116,6 +116,12 @@ cstore.config(
             }).when('/assigned-survey-store',{
                 templateUrl:'../assigned-survey-store',
                 controller:'assignedSurveyCtrl'
+            }).when('/add-survey',{
+                templateUrl:'../add-survey',
+                controller:'addSurveyCtrl'
+            }).when('/edit-survey',{
+                templateUrl:'../add-survey',
+                controller:'addSurveyCtrl'
             }).when('/assigned-session-store',{
                 templateUrl:'/assigned-session-store',
                 controller:'assignedSessionCtrl'
@@ -247,6 +253,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":"","stores":[],"assignedStore":"","uploadedimages":[]};
     //$scope.trainingdata.assignedStore=
     $scope.surveydata={};
+	$scope.listType = [{"name":"Multiple Selected", "value":"checkbox"},{"name":"Single Selected", "value":"radio"},{"name":"Subjective Type", "value":"subjective"}]
+	$scope.questions = [{"optionArr":[],"type":$scope.listType[0],"addOption":true}];
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
@@ -788,7 +796,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             //console.log($scope.userdata.stores);
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
             $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
-            //console.log($scope.trainingdata.assignedStore);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -2444,7 +2451,6 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.surveys = [];
-    $appService.auth();
     $scope.getAllSurveys = function (direction, limit, column, searchText) {
         if ($scope.loadingSurveyData) {
             return false;
@@ -2498,6 +2504,17 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
         $scope.getAllSurveys(0, 10);
     }
     $scope.getStores();
+});
+cstore.controller('addSurveyCtrl', function ($scope, $appService) {
+    $scope.clearSurveyContent = function () {
+        $scope.surveydata["title"] = "";
+        $scope.surveydata["description"] = "";
+		$scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];	
+		if (!$scope.$$phase) {
+			$scope.$apply();
+		}
+		$scope.setPath('surveys');
+    }
 });
 
 //changes made by Anuradha
@@ -2924,6 +2941,7 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
     }
 });
 
+
 /*************************Assigned Survey***********************************/
 cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $routeParams) {
     $scope.assignedSurveyData = {"loadingData": false, "available": false};
@@ -2985,3 +3003,4 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
         $scope.getAllAssignedSurveys(cursor,$routeParams.search);
     }
 });
+

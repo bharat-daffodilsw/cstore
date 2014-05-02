@@ -1894,7 +1894,7 @@ table th[class*="col-"] {
     }
 }
 
-/*fieldset {
+fieldset {
     padding: 0;
     margin: 0;
     border: 0;
@@ -1910,12 +1910,11 @@ legend {
     color: #333333;
     border: 0;
     border-bottom: 1px solid #e5e5e5;
-} */
+}
 
 label {
     display: inline-block;
     margin-bottom: 5px;
-    font-weight: bold;
 }
 
 input[type="search"] {
@@ -1928,6 +1927,7 @@ input[type="radio"],
 input[type="checkbox"] {
     margin: 4px 0 0;
     margin-top: 1px \9;
+    width:10%;
     /* IE8-9 */
 
     line-height: normal;
@@ -2321,7 +2321,7 @@ textarea.input-lg {
 
 .btn:hover,
 .btn:focus {
-    color: #333333;
+    color: #000;
     text-decoration: none;
 }
 

@@ -29,7 +29,7 @@ a:hover {
 
 .logo {
     min-width:15%;
-    max-width:100%;
+    max-width:15%;
     min-height:100%;
     max-height:100%;
     text-align:center;
@@ -44,7 +44,9 @@ a:hover {
     right: 0;
     top: 0;
     bottom: 0;
+    position:absolute;
     padding: 5px;}
+
 .add_cart{
     width:85px;
     color:#FFF;
@@ -254,6 +256,7 @@ a:hover {
     margin-bottom: 10px;
     padding: 10px;
     height: 247px;
+    overflow:hidden;
 }
 /*****added*******/
 
@@ -624,7 +627,7 @@ tr {
     padding: 5px 20px;}
 
 .save_close {
-    margin-top:10px;
+    margin:10px 10px 10px 0;
     width:100%;}
 
 .save_close button{
@@ -658,7 +661,7 @@ tr {
     width:50%;}
 
 .pop_delivered {
-    background: url(images/calender.jpg)no-repeat right;
+    background: url("images/calender.jpg") no-repeat right;
     background-size: 25px;
     cursor:pointer;}
 
@@ -756,7 +759,7 @@ tr {
 
 .saved_l_bar {
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    width:44%;
+    width:43%;
     padding:0px;
     margin:10px;}
 
@@ -1211,7 +1214,6 @@ span.sortWrap {
     display: -webkit-box;
     -webkit-line-clamp: 11;
     -webkit-box-orient: vertical;}
-
 .training {
     width:12%;
     margin:.25%;
@@ -1220,7 +1222,6 @@ span.sortWrap {
     min-height:180px;
     max-height:180px;
     overflow:hidden;}
-
 .pdf_img {
     min-height:145px;
     max-height:145px;
@@ -1240,3 +1241,76 @@ span.sortWrap {
     overflow:hidden;
     text-overflow: ellipsis;
     white-space:nowrap;}
+
+
+.typelist {
+    margin:10px;}
+
+.textarea {
+    width:95%;}
+
+.questionWrap {
+    margin-top: 10px;
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;
+    width: 98%;
+    padding:5px 10px 0 20px;
+    margin-bottom: 10px;}
+
+.full {
+    width:100%;}
+
+input {
+    width:95%;}
+
+.description_1 {
+    width: 98%!important;}
+
+.no {
+    min-height:15px;
+    max-height:15px;
+    min-width:15px;
+    max-width:15px;}
+
+textarea {
+    width: 100%;}
+
+.th_option {
+    width:91%;
+    text-align:left;
+    padding:10px 0;}
+
+.th_action {
+    width:9%;
+    text-align:left;
+    padding:10px 0;}
+
+.question_answer {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin-left: -45px;;}
+
+.sub-head-border {
+    font-size:24px;
+    color:#e7c271}
+
+.small-txt {
+    color:#000;}
+
+span.btn {
+    font-size: 16px;
+    color: #000000;
+    font-weight:bold;
+    border-radius: 0;
+    padding: 1px;
+    margin-left:10px;}
+
+span.btn:hover {
+    text-decoration:underline;
+    white-space:nowrap;}
+
+.ques_index {
+    color:#999;}
