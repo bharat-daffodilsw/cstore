@@ -225,7 +225,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
     $scope.userdata = {"roles":[], "selectedRole":"", "stores":[], "selectedStore":""};
     //changes Made 02/05
-    $scope.promotiondata = {"offerTypes":[], "selectedOfferType":"", "itemSignage":[], "selectedItemSignage":"", "upc":[], "selectedUpc":""};
+    $scope.promotiondata = {"offerTypes":[], "selectedOfferType":"", "itemSignage":[], "selectedItemSignage":"", "upc":[], "selectedUpc":"","hours":[],"minutes":[],"selectedStartHour":"","selectedStartMinute":"","selectedEndHour":"","selectedEndMinute":""};
     $scope.promotiondata.offerTypes = [
         {"name":"NPROD"}
     ];
@@ -241,6 +241,16 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 			{"name":"Group"}
 		];
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+    for (var i=0;i<24;i++){
+        $scope.promotiondata.hours.push(i);
+    }
+    $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
+    $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
+    for(var j=0;j<59;j++){
+        $scope.promotiondata.minutes.push(j);
+    }
+    $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
+    $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
     $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":"","stores":[],"assignedStore":"","uploadedimages":[]};
     $scope.surveydata={};
     $scope.codedata={"codeTypes":[],"selectedCodeType":""};
@@ -2256,7 +2266,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         var query = {"table": "promotions__cstore"};
         //changes made by anuradha 0105 evening
         query.columns = [
-            {"expression": "end_date", "format": "MM/DD/YYYY"},
+            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
             "image",
             "item_signage",
             "offer_description",
@@ -2266,7 +2276,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "promo_title",
             "reward_value",
             "sponsor",
-            {"expression": "start_date", "format": "MM/DD/YYYY"},
+            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
             "threshold",
             "upc",
 			"vendorid",
@@ -2283,7 +2293,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
             $scope.loadingPromotionData = false;
@@ -2317,6 +2328,12 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
     $scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["end_date"] = "";
+        //$scope.promotiondata["end_time"]="";
+        //$scope.promotiondata["start_time"]="";
+        $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
+        $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
         $scope.promotiondata["start_date"] = "";
         $scope.promotiondata["offer_description"] = "";
         $scope.promotiondata["offer_title"] = "";

@@ -3081,6 +3081,23 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
 
                     }
                     $scope.setPromotionState = function (promotion) {
+                        var endArray = promotion["end_date"].split(" ");
+                        //console.log("enddate :: " + endArray);
+                        //console.log(endArray[1]);
+                        var endMinArray =endArray[1].split(":");
+                        //console.log(endMinArray);
+                        $scope.promotiondata.end_date=endArray[0];
+                        $scope.promotiondata.selectedEndHour=endMinArray[0];
+                        $scope.promotiondata.selectedEndMinute=endMinArray[1];
+                        var startArray = promotion["start_date"].split(" ");
+                        //console.log("startdate :: " + startArray);
+                        //console.log(startArray[1]);
+                        var startMinArray =endArray[1].split(":");
+                        //console.log(startMinArray);
+                        $scope.promotiondata.start_date=startArray[0];
+                        $scope.promotiondata.selectedStartHour=startMinArray[0];
+                        $scope.promotiondata.selectedStartMinute=startMinArray[1];
+                        //console.log("startdate ::" + promotion.start_date);
                         $scope.promotiondata["promo_title"] = promotion.promo_title ? promotion.promo_title : "";
                         $scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
                         $scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
@@ -3224,12 +3241,14 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_description"></td></tr>' +
             '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
-            '<tr><td><div class="margin_top">Start Date</div></td></tr>' +
-            '<tr><td><input id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
-            '<input type="text" ng-model="promotiondata.start_time" jqtimepicker /></td></tr>' +
-            '<tr><td><div class="margin_top">End Date</div></td></tr>' +
-            '<tr><td><input id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
-            '<input type="text" ng-model="promotiondata.end_time" jqtimepicker /></td></tr>' +
+            '<tr><td><div class="margin_top">Start Date  HH:MM</div></td></tr>' +
+            '<tr><td><input class="date_time" id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
+            '<select class="hour_min" ng-model="promotiondata.selectedStartHour" ng-options="hour for hour in promotiondata.hours"></select>' +
+            '<select class="hour_min" ng-model="promotiondata.selectedStartMinute" ng-options="minute for minute in promotiondata.minutes"></select></td></tr>' +
+            '<tr><td><div class="margin_top">End Date HH:MM</div></td></tr>' +
+            '<tr><td><input class="date_time" id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
+            '<select class="hour_min" ng-model="promotiondata.selectedEndHour" ng-options="hour for hour in promotiondata.hours"></select>' +
+            '<select class="hour_min" ng-model="promotiondata.selectedEndMinute" ng-options="minute for minute in promotiondata.minutes"></select></td></tr>' +
             '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
             '<tr><td><item-signage-select></item-signage-select></td></tr>' +
             '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
@@ -3273,8 +3292,10 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
+                    $scope.testPromotionFunction = function () {
                     console.log("start date time::" + $scope.promotiondata.start_date+$scope.promotiondata.start_time);
                     console.log("end date time::::" + $scope.promotiondata.end_date+$scope.promotiondata.end_time);
+                    }
                     $scope.savePromotion = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
@@ -3320,7 +3341,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 if ($scope.promotiondata["promotionid"]) {
 								$scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
 							 }
-							 $scope.newPromotion["end_date"] = $scope.promotiondata.end_date;
+							 $scope.newPromotion["end_date"] = $scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute;
 							 $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
 							 $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
 							 $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
@@ -3329,7 +3350,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
 							 $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
 							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
-							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date;
+							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute;
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
                              //changes made by anuradha 0105 evening
                              $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
