@@ -978,7 +978,6 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     $scope.albumArr.uploadedimg = [];
                 },
                 post:function ($scope, iElement) {
-				var inputElement = iElement.find('input')[0];
                     $scope.removeImgFile = function (index) {
                         $scope.trainingdata.uploadedimages.splice(index, 1);
                         $scope.albumArr.uploadedimg.splice(index, 1);
@@ -1034,7 +1033,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 						}
                     };
 
-                    inputElement.bind('change', function () {
+                    iElement.bind('change', function () {
                         $scope.$apply(function () {
                             $scope.oFReader = new FileReader();
                             if (document.getElementById('uploadMultiImgfile').files.length === 0) {
