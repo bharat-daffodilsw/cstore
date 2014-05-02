@@ -1443,8 +1443,8 @@ cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope)
         template: '<select class="brand" ng-model="storedata.selectedLoyaltyStatus" ng-options="loyalty_status.name for loyalty_status in storedata.loyalty_status"></select>',
         compile: function () {
             return{
-                pre: function () {
-
+                pre: function ($scope) {
+                 console.log(JSON.stringify($scope.storedata.loyalty_status));
                 }, post: function ($scope) {
                 }
             }
@@ -1475,13 +1475,13 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
             '<div class="margin_top">Manager Name</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.name"></td></tr>' +
             '<tr><td><div class="margin_top">Manager Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td></tr><tr><td>' +
-            '<div class="margin_top">Manager Email Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
+            '<div class="margin_top">Manager Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
             '</tr><tr><td><div class="margin_top">Manager Shift</div></td></tr><tr><td><shift></shift></td></tr><tr><td><div class="margin_top">Loyalty Status</div></td></tr><tr><td>' +
             '<loyalty-status></loyalty-status></td></tr><tr><td><div class="margin_top">Reward Type</div>' +
             '</td></tr><tr><td><reward-type></reward-type></td></tr><tr><td><div class="margin_top">Pump Brand</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_brand"></td></tr><tr><td><div class="margin_top">Pump Model </div>' +
             '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_model"></td></tr>' +
             '<tr><td><div class="margin_top">Brand</div></td></tr><tr><td><brand></brand></td></tr>' +
-            '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
+            '<tr><td><div class="margin_top">Company Logo</div></td></tr><tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button></div></div></td></tr></table>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
