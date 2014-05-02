@@ -3884,6 +3884,11 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 							newSession["description"] = $scope.surveydata.description;
 							newSession["survey_question"] = [];
 							for(i = 0; i < $scope.questions.length; i++){
+								if(!$scope.questions[i].question){
+									$("#popupMessage").html("Please enter question.");
+									$('.popup').toggle("slide");
+									return;
+								}
 								newSession["survey_question"][i] = {"question":$scope.questions[i].question};
 								newSession["survey_question"][i]["survey_type"] = $scope.questions[i].type.value;
 								if($scope.questions[i].type.value != "subjective"){
@@ -3894,6 +3899,11 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 										return;
 									}
 									for(j = 0; j < $scope.questions[i].optionArr.length; j++){
+										if(!$scope.questions[i].optionArr[j].options){
+											$("#popupMessage").html("Please enter option.");
+											$('.popup').toggle("slide");
+											return;
+										}
 										newSession["survey_question"][i]["options"][j] = $scope.questions[i].optionArr[j].options;
 									}
 								}
