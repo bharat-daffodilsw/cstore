@@ -242,12 +242,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 		];
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     for (var i=0;i<24;i++){
-        $scope.promotiondata.hours.push(i);
+        var hr = i >= 10 ? i + "" : "0" + i;
+        $scope.promotiondata.hours.push(hr);
     }
     $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
     $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
-    for(var j=0;j<59;j++){
-        $scope.promotiondata.minutes.push(j);
+    for(var j=0;j<60;j++){
+        var min = j >= 10 ? j + "" : "0" + j;
+        $scope.promotiondata.minutes.push(min);
     }
     $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
     $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
@@ -915,7 +917,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             query.max_rows = 8;
         }
         //console.log(JSON.stringify(query));
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
             $scope.loadingRecentPromotionData= false;
@@ -944,7 +947,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             query.max_rows = 5;
         }
         //console.log(JSON.stringify(query));
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
             $scope.loadingCarouselPromotionData= false;
@@ -2294,6 +2298,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
         var timeZone = new Date().getTimezoneOffset();
+        //timeZone = timeZone * 60000;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
@@ -2617,7 +2622,8 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         query.max_rows = 4;
         query.cursor = cursor;
         //console.log(JSON.stringify(query));
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
           //  console.log(JSON.stringify(promoData));
@@ -2686,7 +2692,8 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "vendorid"
         ];
         query.filter = {"_id": $routeParams.promoid};
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
 
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionDetailData) {
@@ -3015,6 +3022,11 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
 });
  /****************************ProductCodeCtrls*************************************/
  cstore.controller('productCodesCtrl', function ($scope, $appService) {
+
+     //$scope.codeTypes=[{"name":"UPC"},{"name":"PLU"},{"name":"Group"}];
+     $scope.types=["UPC","PLU","Group"];
+
+     //$scope.codedata.selectedCodeType=$scope.codedata.codeTypes[0];
          $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
          $scope.loadingProductCodeData = false;
          $scope.venderSearch = [
@@ -3061,6 +3073,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
                      $scope.productCodes[i]["deleteStatus"] = false;
                      $scope.productCodes[i]["editStatus"] = false;
                      $scope.productCodes[i]["oldstatus"] = true;
+                     //$scope.productCodes[i].type=$scope.types[0];
                  }
 
              }, function (jqxhr, error) {

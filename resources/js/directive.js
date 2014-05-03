@@ -3082,25 +3082,52 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     }
                     $scope.setPromotionState = function (promotion) {
                         var endArray = promotion["end_date"].split(" ");
-                        //console.log("enddate :: " + endArray);
-                        //console.log(endArray[1]);
                         var endMinArray =endArray[1].split(":");
-                        //console.log(endMinArray);
                         $scope.promotiondata.end_date=endArray[0];
-                        $scope.promotiondata.selectedEndHour=endMinArray[0];
-                        $scope.promotiondata.selectedEndMinute=endMinArray[1];
+                        console.log("enddate :: " + $scope.promotiondata.end_date);
                         var startArray = promotion["start_date"].split(" ");
-                        //console.log("startdate :: " + startArray);
-                        //console.log(startArray[1]);
-                        var startMinArray =endArray[1].split(":");
-                        //console.log(startMinArray);
+                        var startMinArray =startArray[1].split(":");
                         $scope.promotiondata.start_date=startArray[0];
-                        $scope.promotiondata.selectedStartHour=startMinArray[0];
-                        $scope.promotiondata.selectedStartMinute=startMinArray[1];
-                        //console.log("startdate ::" + promotion.start_date);
+                        console.log("startdate :: " + $scope.promotiondata.start_date);
+                        if (promotion.end_date && $scope.promotiondata.hours) {
+                            for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
+                                if ($scope.promotiondata.hours[j] == endMinArray[0]) {
+                                    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[j];
+                                    console.log("selected end hour:::" + $scope.promotiondata.selectedEndHour);
+                                    break;
+                                }
+                            }
+                        }
+                        if (promotion.start_date && $scope.promotiondata.hours) {
+                            for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
+                                if ($scope.promotiondata.hours[j] == startMinArray[0]) {
+                                    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[j];
+                                    console.log("selected Start hour:::" + $scope.promotiondata.selectedStartHour);
+                                    break;
+                                }
+                             }
+                        }
+                        if (promotion.end_date && $scope.promotiondata.minutes) {
+                            for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
+                                if ($scope.promotiondata.minutes[j] == endMinArray[1]) {
+                                    $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[j];
+                                    console.log("selected end minute:::" + $scope.promotiondata.selectedEndMinute);
+                                    break;
+                                }
+                            }
+                        }
+                        if (promotion.start_date && $scope.promotiondata.minutes) {
+                            for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
+                                if ($scope.promotiondata.minutes[j] == startMinArray[1]) {
+                                    $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[j];
+                                    console.log("selected Start minute:::" + $scope.promotiondata.selectedStartMinute);
+                                    break;
+                                }
+                            }
+                        }
                         $scope.promotiondata["promo_title"] = promotion.promo_title ? promotion.promo_title : "";
-                        $scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
-                        $scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
+                        //$scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
+                        //$scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
                         $scope.promotiondata["offer_description"] = promotion.offer_description ? promotion.offer_description : "";
                         $scope.promotiondata["offer_title"] = promotion.offer_title ? promotion.offer_title : "";
                         $scope.promotiondata["promo_description"] = promotion.promo_description ? promotion.promo_description : "";
@@ -3169,7 +3196,7 @@ cstore.directive('itemSignageSelect', ['$appService', function ($appService, $sc
 cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-change="setUpc(promotiondata.selectedOfferType)" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
+        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
         compile: function () {
             return{
                 pre: function ($scope) {
@@ -3292,10 +3319,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
-                    $scope.testPromotionFunction = function () {
-                    console.log("start date time::" + $scope.promotiondata.start_date+$scope.promotiondata.start_time);
-                    console.log("end date time::::" + $scope.promotiondata.end_date+$scope.promotiondata.end_time);
-                    }
                     $scope.savePromotion = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
@@ -3341,7 +3364,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 if ($scope.promotiondata["promotionid"]) {
 								$scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
 							 }
-							 $scope.newPromotion["end_date"] = $scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute;
+                             console.log("start date :::::"+$scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute);
+                             console.log("end date :::::"+$scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute);
+							 $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute);
 							 $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
 							 $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
 							 $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
@@ -3350,7 +3375,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
 							 $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
 							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
-							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute;
+							 $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute);
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
                              //changes made by anuradha 0105 evening
                              $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
@@ -4483,64 +4508,81 @@ cstore.directive('trainingCategoryDetail', ['$appService', function ($appService
     }
 }]);
 /********************************Product Codes************************************************/
+cstore.directive('typeSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="productCode.type" ng-options="type for type in types"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+                    if(!$scope.productCode.type) {
+                        $scope.productCode.type = $scope.types[0];
+                    }
+                }, post: function ($scope) {
+
+                }
+            }
+        }
+    }
+}]);
 cstore.directive('productCodeList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveStates()"><a href="">' +
-            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStates()"><a href="">Delete</a>' +
+        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveProductCodes()"><a href="">' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteProductCodes()"><a href="">Delete</a>' +
             '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
             '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
-            '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
+            '{{show.preCursor}}-{{show.preCursor + productCodes.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Abbreviation</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'abbreviation\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'abbreviation\',\'desc\')"></div></span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus" ng-show="state._id">' +
-            '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
-            '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
-            '<span ng-hide="state.editStatus">{{state.abbreviation}}</span><input type="text" ng-show="state.editStatus" ng-model="state.abbreviation"></td><td>' +
-            '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
-            '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewState()" class="add_new"><a href>' +
-            '+ Click Here To Add New State</a></div></div><div class="loadingImage" ng-hide="!loadingStateData"><img src="images/loading.gif"></div>',
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Code</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCodeOrder(\'code\',\'asc\')"></div><div class="sortDown" ng-click="setProductCodeOrder(\'code\',\'desc\')"></div>	</span></th><th><span>Description</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCodeOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCodeOrder(\'description\',\'desc\')"></div></span></th><th><span>Type</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCodeOrder(\'type\',\'asc\')"></div><div class="sortDown" ng-click="setProductCodeOrder(\'type\',\'desc\')"></div>	</span></th><th></th>' +
+            '</tr><tr ng-repeat="productCode in productCodes"><td><input type="checkbox" ng-model="productCode.deleteStatus" ng-show="productCode._id">' +
+            '</td><td><span ng-hide="productCode.editStatus">{{productCode.code}}</span>' +
+            '<input type="text" ng-show="productCode.editStatus" ng-model="productCode.code"></td><td>' +
+            '<span ng-hide="productCode.editStatus">{{productCode.description}}</span><input type="text" ng-show="productCode.editStatus" ng-model="productCode.description"></td><td>' +
+            '<span ng-hide="productCode.editStatus">{{productCode.type}}</span><type-select ng-show="productCode.editStatus"></type-select></td><td style="cursor: pointer">' +
+            '<a class="edit_btn" ng-click="productCode.editStatus=true;setProductCode(productCode)" ng-hide="productCode.editStatus">Edit</a>' +
+            '<a class="edit_btn" ng-click="remove($index,productCode._id)" ng-show="productCode.editStatus">Cancel</a></td></tr>' +
+            '</table><div ng-click="addNewProductCode()" class="add_new"><a href>' +
+            '+ Click Here To Add New Product Code</a></div></div><div class="loadingImage" ng-hide="!loadingProductCodeData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.addNewState = function () {
-                        $scope.states.push({ name: '', countryid: '' });
+                    $scope.addNewProductCode = function () {
+                        $scope.productCodes.push({ code: '', description: '',type:'' });
                         //for (var i = 0; i < $scope.countries.length; i++) {
-                        $scope.states[$scope.states.length - 1]["editStatus"] = true;
+                        $scope.productCodes[$scope.productCodes.length - 1]["editStatus"] = true;
                         //}
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllStates(1, 10, $scope.searchby.value, $scope.searchContent);
+                        $scope.getAllProductCodes(1, 10, $scope.searchby.value, $scope.searchContent);
                     }
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.deleteStateArray = [];
+                    $scope.deleteProductCodeArray = [];
                     var currentSession = $appService.getSession();
                     var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                    $scope.deleteStates = function () {
-                        for (var i = 0; i < $scope.states.length; i++) {
-                            if ($scope.states[i].deleteStatus) {
-                                $scope.deleteStateArray.push({"_id": $scope.states[i]._id, "__type__": "delete"});
+                    $scope.deleteProductCodes = function () {
+                        for (var i = 0; i < $scope.productCodes.length; i++) {
+                            if ($scope.productCodes[i].deleteStatus) {
+                                $scope.deleteProductCodeArray.push({"_id": $scope.productCodes[i]._id, "__type__": "delete"});
                             }
                         }
                         var query = {};
-                        query.table = "states__cstore";
-                        query.operations = angular.copy($scope.deleteStateArray);
-                        $scope.deleteStateArray = [];
+                        query.table = "product_codes__cstore";
+                        query.operations = angular.copy($scope.deleteProductCodeArray);
+                        $scope.deleteProductCodeArray = [];
                         if (query.operations.length) {
 
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
-                                    for (var i = 0; i < $scope.states.length; i++) {
-                                        if ($scope.states[i].deleteStatus) {
-                                            $scope.states.splice(i, 1);
+                                    for (var i = 0; i < $scope.productCodes.length; i++) {
+                                        if ($scope.productCodes[i].deleteStatus) {
+                                            $scope.productCodes.splice(i, 1);
                                             i--;
                                         }
                                     }
@@ -4548,7 +4590,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in other table");
                                     $('.popup').toggle("slide");
                                 }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -4567,56 +4609,57 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             });
                         }
                         else {
-                            $("#popupMessage").html("Please select at least one state before delete");
+                            $("#popupMessage").html("Please select at least one product code before delete");
                             $('.popup').toggle("slide");
                         }
 
                     }
                 },
                 post: function ($scope) {
-                    $scope.remove = function (index, refreshStateId) {
-                        if (!$scope.states[index]["oldstatus"]) {
-                            $scope.states.splice(index, 1);
+                    var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                    $scope.remove = function (index, refreshProductCodeId) {
+                        if (!$scope.productCodes[index]["oldstatus"]) {
+                            $scope.productCodes.splice(index, 1);
                         }
                         else {
-                            $scope.refreshStates(index, refreshStateId);
+                            $scope.refreshProductCodes(index, refreshProductCodeId);
                         }
                     }
-                    $scope.saveStates = function () {
+                    $scope.saveProductCodes = function () {
                         var savedindexes = [];
-                        for (var j = $scope.states.length-1; j >= 0; j--) {
-                            if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].abbreviation){
+                        for (var j = $scope.productCodes.length-1; j >= 0; j--) {
+                            if(!$scope.productCodes[j]._id && !$scope.productCodes[j].code && !$scope.productCodes[j].description && !$scope.productCodes[j].type){
                                 $scope.states.splice(j, 1);
                             }
                         }
-                        var stateList = $scope.states.filter(function (el) {
-                            if(!el._id && (el.name || el.countryid || el.abbreviation)){
-                                savedindexes.push($scope.states.indexOf(el));
+                        var productCodeList = $scope.productCodes.filter(function (el) {
+                            if(!el._id && (el.code || el.description || el.type)){
+                                savedindexes.push($scope.productCodes.indexOf(el));
                             }
                             return el.editStatus == true ;
                         });
-                        for (var i = 0; i < stateList.length; i++) {
-                            if (!stateList[i].name) {
-                                $("#popupMessage").html("Please enter state name");
+                        for (var i = 0; i < productCodeList.length; i++) {
+                            if (!productCodeList[i].code || !regNumberOnly.test(productCodeList[i].code)) {
+                                $("#popupMessage").html("Please enter valid code");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!stateList[i].abbreviation) {
-                                $("#popupMessage").html("Please enter abbreviation");
+                            if (!productCodeList[i].description) {
+                                $("#popupMessage").html("Please enter description");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!stateList[i].countryid) {
-                                $("#popupMessage").html("Please select country");
+                            if (!$scope.productCodes[i].type) {
+                                $("#popupMessage").html("Please select type");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
                         }
-                        if (stateList && stateList.length > 0) {
+                        if (productCodeList && productCodeList.length > 0) {
                             var query = {};
-                            query.table = "states__cstore";
-                            query.operations = stateList;
-                            $scope.addStateArray = [];
+                            query.table = "product_codes__cstore";
+                            query.operations = productCodeList;
+                            $scope.addProductCodeArray = [];
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
@@ -4624,10 +4667,10 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     for (var j = 0; j < savedindexes.length; j++) {
-                                        $scope.states[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                        $scope.productCodes[savedindexes[j]]._id = callBackData.response.insert[j]._id;
                                     }
-                                    for (var i = 0; i < $scope.states.length; i++) {
-                                        $scope.states[i]["editStatus"] = false;
+                                    for (var i = 0; i < $scope.productCodes.length; i++) {
+                                        $scope.productCodes[i]["editStatus"] = false;
                                     }
                                 }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -4649,21 +4692,14 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             $('.popup').toggle("slide");
                         }
                     }
-                    $scope.setState = function (state) {
-                        //$scope.states[state].editStatus = true;
-                        //for (var i = 0; i < $scope.data.states.length; i++) {
-                        //  if ($scope.data.states[i]._id == vendor.state._id) {
-                        //    $scope.data.selectedState = $scope.data.states[i];
-                        //  break;
-                        // }
-                        // }
-                        for (var i = 0; i < $scope.countryList.length; i++) {
-                            if ($scope.countryList[i]._id == state.countryid._id) {
-                                state.countryid = $scope.countryList[i];
+                    $scope.setProductCode = function (productcode) {
+                        for (var i = 0; i < $scope.types.length; i++) {
+                            if ($scope.types[i] == productcode.type) {
+                                $scope.productCodes[i].type = $scope.types[i];
+                                //productCode.type = $scope.types[i];
                                 break;
                             }
                         }
-
                     }
 
                 }

@@ -581,13 +581,12 @@ tr {
     width:95%;}
 
 .hour_min {
-    padding:5px;
-    width:25% !important;}
+    padding: 5px;
+    width: 23.75% !important;
+}
 
 .date_time {
     width:47.5%!important;}
-
-
 
 .table th{background-color:#e7c271;
     padding:7px;
