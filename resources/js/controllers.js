@@ -235,14 +235,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name":"Aisle"}
     ];
     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
-   if($scope.promotiondata.selectedOfferType.name == "SVB" || $scope.promotiondata.selectedOfferType.name == "MVB"){
    // change made
 		$scope.promotiondata.upc = [
 			{"name":"UPC"},
 			{"name":"PLU"},
 			{"name":"GROUP"}
 		];
-   }
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     for (var i=0;i<24;i++){
         $scope.promotiondata.hours.push(i);
