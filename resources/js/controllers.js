@@ -242,6 +242,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 			{"name":"PLU"},
 			{"name":"GROUP"}
 		];
+   }
 	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     for (var i=0;i<24;i++){
         $scope.promotiondata.hours.push(i);
@@ -266,7 +267,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
     /*bharat change for location*/
     $scope.location = '';
-	
+
     $scope.doSearch = function () {
         if ($scope.location === '') {
             alert('Directive did not update the location property in parent controller.');
@@ -779,7 +780,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 		if (index == 10)
 			$scope.imgFileLimitExceed = true;
 	};
-	
+
 	$scope.getRoles = function () {
        //change
         var query = {"table": "roles__cstore"};
