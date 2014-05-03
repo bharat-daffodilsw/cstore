@@ -854,6 +854,109 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.$apply();
         }
     }
+    //clear content
+    $scope.clearStoreContent = function () {
+        $scope.storedata.manager = {};
+        //console.log(JSON.stringify($scope.storedata.manager));
+        $scope.storedata["address"] = "";
+        $scope.storedata["contact"] = "";
+        //$scope.storedata["loyalty_status"] = "";
+        $scope.storedata["pump_model"] = "";
+        $scope.storedata["pump_brand"] = ""
+        $scope.storedata["email"] = "";
+        $scope.storedata["pos_version"] = "";
+        $scope.storedata["postalcode"] = "";
+        $scope.storedata["storename"] = "";
+        $scope.storedata["address2"] = "";
+        $scope.storedata["manager"]["contact"] = "";
+        $scope.storedata["manager"]["email"] = "";
+        $scope.storedata["manager"]["name"] = "";
+        //changes Made
+        $scope.readonlyrow.fileurl = "";
+        $scope.storedata["company_logo"] = "";
+        $scope.readonlyrow.fileurl = "";
+        $scope.storedata.selectedCountry = "";
+        $scope.storedata.selectedCity = "";
+        $scope.storedata.selectedState = "";
+        $scope.storedata.selectedPosType = $scope.storedata.posTypes[0];
+        //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
+        $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
+        //changes made 02/05
+        $scope.storedata.selectedBrand=$scope.storedata.brands[0];
+        $scope.storedata.otherBrand="";
+        $scope.storedata.otherPosType = "";
+        $scope.storedata.otherRewardType = "";
+        $scope.storedata.siteid="";
+        $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
+        $scope.storedata.selectedShift="";
+    }
+    $scope.clearProductContent = function () {
+     $scope.productdata["name"] = "";
+     $scope.productdata["cost"] = "";
+     $scope.productdata["description"] = "";
+     $scope.productdata["short_description"] = "";
+     $scope.productdata["quantity"] = "";
+     $scope.productdata["image"] = "";
+     $scope.readonlyrow.fileurl = "";
+     $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
+     //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
+
+     }
+    $scope.clearUserContent = function () {
+     $scope.userdata["username"] = "";
+     $scope.userdata["firstname"] = "";
+     $scope.userdata["lastname"] = "";
+     $scope.userdata["password"] = "";
+     $scope.userdata.selectedRole = $scope.userdata.roles[0];
+     $scope.userdata.selectedStore = $scope.userdata.roles[0];
+     }
+    $scope.clearPromotionContent = function () {
+        $scope.promotiondata["promo_title"] = "";
+        $scope.promotiondata["end_date"] = "";
+        //$scope.promotiondata["end_time"]="";
+        //$scope.promotiondata["start_time"]="";
+        $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
+        $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
+        $scope.promotiondata["start_date"] = "";
+        $scope.promotiondata["offer_description"] = "";
+        $scope.promotiondata["offer_title"] = "";
+        $scope.promotiondata["promo_description"] = "";
+        $scope.promotiondata["reward_value"] = "";
+        $scope.promotiondata["sponsor"] = "";
+        $scope.promotiondata["threshold"] = "";
+        $scope.promotiondata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
+        $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
+        $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
+        $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+        $scope.promotiondata.codes = [];
+        //changes made by anuradha 0105 evening
+        $scope.promotiondata["top_promo"]=false;
+        // $scope.promotiondata.vendorsList = $scope.vendors[0];
+    }
+    $scope.clearTrainingSessionContent = function () {
+        $scope.trainingdata["title"] = "";
+        $scope.trainingdata["description"] = "";
+        $scope.trainingdata["video_url"] = "";
+        $scope.trainingdata["file"] = "";
+        $scope.trainingdata["uploadedimages"] = [];
+        $scope.readonlydocrow.fileurl = "";
+        $scope.readonlydocrow.filename ="";
+        //$scope.readonlyrow.fileurl = "";
+        $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
+
+    }
+    $scope.clearSurveyContent = function () {
+        $scope.surveydata["title"] = "";
+        $scope.surveydata["description"] = "";
+        $scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
+        $scope.setPath('surveys');
+    }
 });
 
 /*cstore.controller('TypeaheadCtrl',function($scope, $http) {
@@ -1487,7 +1590,7 @@ cstore.controller('productList', function ($scope, $appService) {
 
 cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.clearProductContent = function () {
+   /* $scope.clearProductContent = function () {
         $scope.productdata["name"] = "";
         $scope.productdata["cost"] = "";
         $scope.productdata["description"] = "";
@@ -1498,7 +1601,7 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
 
-    }
+    }*/
     var productId = $routeParams.q;
     if (productId && productId != undefined && productId != "undefined") {
         $scope.productdata["productid"] = productId;
@@ -1588,7 +1691,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     $scope.passwordStatus = true;
-    $scope.clearStoreContent = function () {
+    /*$scope.clearStoreContent = function () {
         $scope.storedata.manager = {};
         //console.log(JSON.stringify($scope.storedata.manager));
         $scope.storedata["address"] = "";
@@ -1622,7 +1725,7 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routePa
         $scope.storedata.siteid="";
         $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
         $scope.storedata.selectedShift="";
-    }
+    } */
     var storeId = $routeParams.q;
     if (storeId && storeId != undefined && storeId != "undefined") {
         $scope.storedata["storeid"] = storeId;
@@ -2238,14 +2341,14 @@ cstore.controller('userCtrl', function ($scope, $appService) {
 /********************ADD User  *****************/
 cstore.controller('addUserCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.clearUserContent = function () {
+    /*$scope.clearUserContent = function () {
         $scope.userdata["username"] = "";
         $scope.userdata["firstname"] = "";
         $scope.userdata["lastname"] = "";
         $scope.userdata["password"] = "";
         $scope.userdata.selectedRole = $scope.userdata.roles[0];
         $scope.userdata.selectedStore = $scope.userdata.roles[0];
-    }
+    } */
 });
 
 /****************************Promotion***************************************************/
@@ -2339,7 +2442,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.clearPromotionContent = function () {
+    /*$scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["end_date"] = "";
         //$scope.promotiondata["end_time"]="";
@@ -2364,7 +2467,7 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         //changes made by anuradha 0105 evening
         $scope.promotiondata["top_promo"]=false;
        // $scope.promotiondata.vendorsList = $scope.vendors[0];
-    }
+    } */
 	
     var promotionId = $routeParams.q;
     if (promotionId && promotionId != undefined && promotionId != "undefined") {
@@ -2447,7 +2550,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
 
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.clearTrainingSessionContent = function () {
+    /*$scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
         $scope.trainingdata["description"] = "";
         $scope.trainingdata["video_url"] = "";
@@ -2458,7 +2561,7 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
         //$scope.readonlyrow.fileurl = "";
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
 
-    }
+    } */
     var trainingId = $routeParams.q;
     if (trainingId && trainingId != undefined && trainingId != "undefined") {
         $scope.trainingdata["trainingSessionId"] = trainingId;
@@ -2532,7 +2635,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.getStores();
 });
 cstore.controller('addSurveyCtrl', function ($scope, $appService) {
-    $scope.clearSurveyContent = function () {
+    /*$scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
         $scope.surveydata["description"] = "";
 		$scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];	
@@ -2540,7 +2643,7 @@ cstore.controller('addSurveyCtrl', function ($scope, $appService) {
 			$scope.$apply();
 		}
 		$scope.setPath('surveys');
-    }
+    } */
 });
 
 //changes made by Anuradha

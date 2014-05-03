@@ -109,9 +109,9 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/site-info" active-link="active">Site Info</a></li>' +
-            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li>' +
-            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li>' +
+        template: '<div class="admin_menu pull-left"><ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
+            '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li ng-click="clearSurveyContent()">' +
+            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li><li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
@@ -534,7 +534,6 @@ cstore.directive('vendorCategorySelect', ['$appService', function ($appService, 
         }
     }
 }]);
-
 
 cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
@@ -1065,7 +1064,6 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
         }
     }
 }]);
-
 
 cstore.directive('appFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
