@@ -3089,6 +3089,8 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
                         $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
+						// change made
+                        $scope.promotiondata["codes"] = promotion.codes ? promotion.codes : [];
                         //changes made by anuradha 0105 evening
                         console.log(promotion.top_promo);
                         $scope.promotiondata["top_promo"] =promotion.top_promo ? promotion.top_promo : "";
@@ -3177,16 +3179,48 @@ cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scop
         }
     }
 }]);
-
+// change made
 cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="promotiondata.selectedUpc" ng-options="upc.name for upc in promotiondata.upc"></select>',
+        template: '<div><select class="brand" ng-model="promotiondata.selectedUpc" ng-options="upc.name for upc in promotiondata.upc" ng-change="getAllAvailableTags(promotiondata.selectedUpc.name)"></select><ul id="grp_tags" data-name="nameOfSelect" class="tagit ui-sortable"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul></div>',
         compile: function () {
             return{
                 pre: function () {
                 }, post: function ($scope) {
-					
+					$scope.getAllAvailableTags = function (type){
+						var query = {"table": "product_codes__cstore"};
+						query.columns = ["description"];
+						query.filter = {"type": type};
+						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+						var serviceUrl = "/rest/data";
+						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+							var availableTags = [];
+							for (var i = 0; i < productData.response.data.length; i++) {
+								availableTags.push(productData.response.data[i].description);
+							}
+							if(type == "PLU" || type == "GROUP"){
+								$('#grp_tags').tagit({"tagSource":availableTags});
+								if($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0){
+									var fillCodes = $scope.promotiondata.codes;
+									$('#grp_tags').tagit("fill", fillCodes);
+								}
+								$('#grp_tags').tagit({allowNewTags: false});								
+								$('#grp_tags').tagit({maxTags: 1});
+							}else{
+								$('#grp_tags').tagit({"tagSource":availableTags});
+								if($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0){
+									var fillCodes = $scope.promotiondata.codes;
+									$('#grp_tags').tagit("fill", fillCodes);
+								}
+								$('#grp_tags').tagit({allowNewTags: false});								
+							}
+						}, function (jqxhr, error) {
+							$("#popupMessage").html(error);
+							$('.popup').toggle("slide");
+						})
+					}			
+					$scope.getAllAvailableTags("UPC");
                 }
             }
         }
@@ -3238,7 +3272,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_description"></td></tr>' +
             '<tr><td><div class="margin_top">Offer Type</div></td></tr>' +
             '<tr><td><offer-type-select></offer-type-select></td></tr>' +
-            '<tr><td><div class="margin_top">UPC/PLU/DEPT</div></td></tr>' +
+			// chasnge made
+            '<tr><td><div class="margin_top">UPC/PLU/GROUP</div></td></tr>' +
             '<tr><td><upc-select></upc-select></td></tr>' +
             '<tr><td><div class="margin_top">Threshold</div></td></tr>' +
             '<tr><td><input type="text" placeholder="" ng-model="promotiondata.threshold"></td></tr>' +
@@ -3266,14 +3301,10 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         $scope.clearPromotionContent();
                         window.location.href = "#!/" + path;
                     }
-
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
                     $scope.savePromotion = function () {
-                        //console.log($scope.promotiondata.top_promo);
-                        //console.log($scope.promotiondata.end_date);
-
                         $scope.CSession = $appService.getSession();
                          if ($scope.CSession) {
 							 if (!$scope.promotiondata.promo_title) {
@@ -3307,11 +3338,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-							 if (!$('#uploadfile').val()) {
+							 /*if (!$('#uploadfile').val()) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
 							     return false;
-							 }
+							 }*/
 							 var query = {};
 							 query.table = "promotions__cstore";
 							 if ($scope.promotiondata["promotionid"]) {
@@ -3328,6 +3359,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
 							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date;
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
+							 // change made
+							 $scope.newPromotion["codes"] = $scope.showTags($('#grp_tags').tagit("tags"));
                              //changes made by anuradha 0105 evening
                              $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                              $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
@@ -3607,13 +3640,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
 					$('#demo2').tagit();				
 					if($scope.trainingdata.video_url && $scope.trainingdata.video_url.length > 0){
 						$("#demo2").tagit("fill",$scope.trainingdata.video_url);
-					}
-					$scope.showTags = function(tags) {
-						var arr = []
-						for (var i in tags)
-							arr.push(tags[i].value);
-						return arr;
-					}					
+					}				
                     $scope.loadingAddTrainingData = false;
                     $scope.saveTrainingSession = function () {
                         $scope.CSession = $appService.getSession();
@@ -3926,7 +3953,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 			"</tr></tbody></table>" +
 			"<div id='opt{{$index}}_1' name='opt{{$index}}_1' ng-repeat='opt in ques.optionArr'>" +
 			"<table class='full'><tr>" +
-			"<td><textarea rows='1' maxlength=\"120\"  ng-model='opt.options' id='answer{{$index}}'></textarea></td>" +
+			"<td><input type='text' ng-model='opt.options' id='answer{{$index}}'></td>" +
 			"<td align=center>" +
 			"<a title='delete this answer' ng-click='ques.optionArr.splice($index,1)' >" +
 			"<img src='/images/comment_delete.gif' alt='delete this answer' class='no' width='8'>" +

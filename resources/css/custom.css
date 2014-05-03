@@ -1262,9 +1262,6 @@ span.sortWrap {
 .full {
     width:100%;}
 
-input {
-    width:95%;}
-
 .description_1 {
     width: 98%!important;}
 
@@ -1273,9 +1270,6 @@ input {
     max-height:15px;
     min-width:15px;
     max-width:15px;}
-
-textarea {
-    width: 100%;}
 
 .th_option {
     width:91%;
@@ -1314,3 +1308,6 @@ span.btn:hover {
 
 .ques_index {
     color:#999;}
+
+.date_time {
+	width:47.5%;}

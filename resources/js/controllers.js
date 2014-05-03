@@ -237,10 +237,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     ];
     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
    if($scope.promotiondata.selectedOfferType.name == "SVB" || $scope.promotiondata.selectedOfferType.name == "MVB"){
+   // change made
 		$scope.promotiondata.upc = [
 			{"name":"UPC"},
 			{"name":"PLU"},
-			{"name":"DEPT"}
+			{"name":"GROUP"}
 		];
 	}else{
 		$scope.promotiondata.upc = [
@@ -331,6 +332,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         delete $scope.displayData;
         console.log($scope.displayData);
     }
+	/***********************Show Tags*********************************/
+	$scope.showTags = function(tags) {
+		var arr = []
+		for (var i in tags)
+			arr.push(tags[i].value);
+		return arr;
+	}	
     /********************** Location**************************/
     /*$scope.getLocation = function(val) {
      return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
@@ -2261,7 +2269,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
 
         $scope.loadingPromotionData = true;
         var query = {"table": "promotions__cstore"};
-        //changes made by anuradha 0105 evening
+        //change made
         query.columns = [
             {"expression": "end_date", "format": "MM/DD/YYYY"},
             "image",
@@ -2277,7 +2285,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "threshold",
             "upc",
 			"vendorid",
-            "top_promo"
+            "top_promo",
+			"codes"
         ];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2336,10 +2345,12 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+        $scope.promotiondata.codes = [];
         //changes made by anuradha 0105 evening
         $scope.promotiondata["top_promo"]=false;
        // $scope.promotiondata.vendorsList = $scope.vendors[0];
     }
+	
     var promotionId = $routeParams.q;
     if (promotionId && promotionId != undefined && promotionId != "undefined") {
         $scope.promotiondata["promotionid"] = promotionId;
