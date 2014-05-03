@@ -443,17 +443,11 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     $scope.data.selectedVendorCategory = $scope.data.vendorCategories[j];
                                     break;
                                 }
-                                else {
-                                    $scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length - 1];
-                                    $scope.data.otherCategory = vendor.category;
-                                    console.log(JSON.stringify(vendor.category));
-                                    if (!$scope.$$phase) {
-                                        $scope.$apply();
-                                    }
-                                    break;
-                                }
-
                             }
+							if(!$scope.data.selectedVendorCategory) {
+								$scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length - 1];
+								$scope.data.otherCategory = vendor.category;
+							}
                         }
                         if (vendor.country) {
                             vendor.state = (vendor.state) ? {"_id": vendor.state._id} : {"_id": false};
@@ -896,7 +890,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$('#uploadfile').val()) {
+                            if ($scope.readonlyrow.filenotexist) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -1270,12 +1264,11 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     $scope.storedata.selectedPosType = $scope.storedata.posTypes[j];
                                     break;
                                 }
-                                else {
-                                    $scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length - 1];
-                                    $scope.storedata.otherPosType = store.pos_type;
-                                    break;
-                                }
                             }
+							if(!$scope.storedata.selectedPosType) {
+								$scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length - 1];
+								$scope.storedata.otherPosType = store.pos_type;
+							}
                         }
                         if (store.reward_point && $scope.storedata.rewardTypes) {
                             for (var j = 0; j < $scope.storedata.rewardTypes.length; j++) {
@@ -1283,12 +1276,11 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[j];
                                     break;
                                 }
-                                else {
-                                    $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 1];
-                                    $scope.storedata.otherRewardType = store.reward_point;
-                                    break;
-                                }
                             }
+							if(!$scope.storedata.selectedRewardType) {
+								$scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 1];
+								$scope.storedata.otherRewardType = store.reward_point;
+							}
                         }
                         if (store.brands && $scope.storedata.brands) {
                             for (var j = 0; j < $scope.storedata.brands.length; j++) {
@@ -1296,12 +1288,11 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     $scope.storedata.selectedBrand = $scope.storedata.brands[j];
                                     break;
                                 }
-                                else {
-                                    $scope.storedata.selectedBrand = $scope.storedata.brands[$scope.storedata.brands.length - 1];
-                                    $scope.storedata.otherBrand = store.brands;
-                                    break;
-                                }
                             }
+							if(!$scope.storedata.selectedBrand) {
+								$scope.storedata.selectedBrand = $scope.storedata.brands[$scope.storedata.brands.length - 1];
+								$scope.storedata.otherBrand = store.brands;
+							}
                         }
                         if (store.shift && $scope.storedata.shifts) {
                             for (var j = 0; j < $scope.storedata.shifts.length; j++) {
@@ -1590,7 +1581,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$('#uploadfile').val()) {
+                            if ($scope.readonlyrow.filenotexist) {
                                 $("#popupMessage").html("Please upload company logo");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -3365,7 +3356,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-							 if (!$('#uploadfile').val()) {
+							 if ($scope.readonlyrow.filenotexist) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
 							     return false;
