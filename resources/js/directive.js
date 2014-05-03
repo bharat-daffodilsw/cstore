@@ -890,7 +890,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if ($scope.readonlyrow.filenotexist) {
+                            if (!$('#uploadfile').val()) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -1581,7 +1581,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if ($scope.readonlyrow.filenotexist) {
+                            if (!$('#uploadfile').val()) {
                                 $("#popupMessage").html("Please upload company logo");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -3356,7 +3356,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-							 if ($scope.readonlyrow.filenotexist) {
+							 if (!$('#uploadfile').val()) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
 							     return false;
