@@ -47,7 +47,7 @@ ul.tagit {
     cursor: text;
 	overflow-x: auto;
 	font-size: 14px;
-	width: 98%;
+	width: 95%;
 	padding: 3px;
 	margin-top: 2px;
 	margin-right: 6px;
@@ -145,6 +145,6 @@ ul.tagit input[type="text"] {
     display:none;
 }
 .description{
-	width: 98%;
+	width: 95%;
 	height: 100px;
 }

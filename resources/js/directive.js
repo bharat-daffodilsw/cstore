@@ -539,28 +539,83 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
-            '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td class="city"><input type="email" ng-model="data.email">' +
-            '</td></tr></table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
-            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address"> </textarea></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address 2</div>' +
-            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address2"> </textarea></td></tr></table>' +
-            '<div class="l_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Country</div>' +
-            '</td></tr><tr><td><vendor-country-select></vendor-country-select></td></tr><tr><td><div class="margin_top">City</div>' +
-            '</td></tr><tr><td><city-select></city-select></td>' +
-            '</tr><tr><td><div class="margin_top">Postal Code</div></td>' +
-            '</tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
-            '</tr></table></div><div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
-            '<td><div class="margin_top">State</div></td></tr><tr><td>' +
-            '<state-select></state-select></td></tr><tr>' +
-            '<td><div class="margin_top">Category</div></td></tr><tr><td>' +
-            '<vendor-category-select></vendor-category-select></td></tr><tr><td>' +
-            '<div class="margin_top">Contact No.</div></td></tr><tr><td>' +
-            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
-            '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">First Name</div></td>' +
+            '<td><div class="margin_top">Last Name</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><input type="text" placeholder="" ng-model="data.firstname"></td>' +
+            '<td><input type="text" placeholder=""ng-model="data.lastname"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Email</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="city"><input type="email" ng-model="data.email"></td>'+
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Address</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="data.address"> </textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Address 2</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="data.address2"></textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Country</div></td>' +
+            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
+            '<td class="half_td"><state-select></state-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">City</div></td>' +
+            '<td class="half_td"><div class="margin_top">Category</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><city-select></city-select></td>' +
+            '<td class="half_td"><vendor-category-select></vendor-category-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
+            '<td class="half_td"><div class="margin_top">Contact No.</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
+            '<td class="half_td"><input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td>' +
+            '</tr>' +
+            '</table></div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button ng-click="saveVendor()" type="button">Save</button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
+            '</div>' +
+            '</div></td>' +
+            '</tr>' +
+            '</table></div>' +
+            '<div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div>' +
+            '</div>',
 
         compile: function () {
             return {
@@ -831,19 +886,61 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Name</div></td><td><div class="margin_top">POP Categroy</div></td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.name">' +
-            '</td><td><product-category-select></product-category-select></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"> ' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Short Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.short_description"> ' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr><td><div class="margin_top">Quantity</div></td><td><div class="margin_top">Price</div></td>' +
-            '</tr><tr><td><input type="text" placeholder="" ng-model="productdata.quantity"></td><td><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">POP Categroy</div></td>' +
             '</tr>' +
-            '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforProduct(\'pops\')"><a href>Close</a></button></div></div></td><td class="product_image"><app-file-upload></app-file-upload></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div></div>',
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.name"></td>' +
+            '<td class="half_td"><product-category-select></product-category-select></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Detailed Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Short Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="name_input"><input type="text" placeholder="" ng-model="productdata.short_description"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Quantity</div></td>' +
+            '<td class="half_td"><div class="margin_top">Price</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.quantity"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '<td class="half_td"><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveProduct()"><a href>Save</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforProduct(\'pops\')"><a href>Close</a></button>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '</tr>'+
+            '</table>' +
+            '</div>' +
+            '<div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div>' +
+            '</div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -2725,23 +2822,36 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div class="table_1 pull-left"><div class="l_bar pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">First Name</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="userdata.firstname"></td></tr>' +
-            '<tr><td><div class="margin_top">Email</div></td></tr>' +
-            '<tr><td><input type="email" placeholder="" ng-model="userdata.username"></td></tr>' +
-            '<tr><td><div class="margin_top">Role</div></td></tr>' +
-            '<tr><td><role-select></role-select></td></tr>' +
+        template: '<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">First Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Last Name</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="userdata.firstname"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="userdata.lastname"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Email</div></td>' +
+            '<td class="half_td"><div class="margin_top">Password</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="email" placeholder="" ng-model="userdata.username"></td>' +
+            '<td class="half_td"><input type="password" placeholder="" ng-model="userdata.password"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Role</div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Store Name</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><role-select></role-select></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
+            '</tr>' +
             '</tbody></table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Last Name</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="userdata.lastname"></td></tr>' +
-            '<tr><td><div class="margin_top">Password</div></td></tr>' +
-            '<tr><td><input type="password" placeholder="" ng-model="userdata.password"></td></tr>' +
-            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><div class="margin_top">Store Name</div></td></tr>' +
-            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><store-select></store-select></td></tr>' +
-            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveUser()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
@@ -2773,13 +2883,13 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.userdata.selectedRole) {
-                            $("#popupMessage").html("please select role first");
+                        if (!$scope.userdata.password) {
+                            $("#popupMessage").html("please enter password");
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.userdata.password) {
-                            $("#popupMessage").html("please enter password");
+                        if (!$scope.userdata.selectedRole) {
+                            $("#popupMessage").html("please select role first");
                             $('.popup').toggle("slide");
                             return false;
                         }
@@ -3283,50 +3393,81 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
+        template:'<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Promo Title</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_title"></td></tr>' +
-            '<tr><td><div class="margin_top">Promo Description</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_description"></td></tr>' +
-            '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
-            '<tr><td><div class="margin_top">Start Date  HH:MM</div></td></tr>' +
-            '<tr><td><input class="date_time" id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Promo Title</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Title</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.promo_title"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.offer_title"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Promo Description</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.promo_description"></textarea></td>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.offer_description"></textarea></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Sponsor</div></td>' +
+            '<td class="half_td"><div class="margin_top">Vendor</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td>' +
+            '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Start Date  HH:MM</div></td>' +
+            '<td class="half_td"><div class="margin_top">End Date HH:MM</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td">' +
+            '<input class="date_time" id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
             '<select class="hour_min" ng-model="promotiondata.selectedStartHour" ng-options="hour for hour in promotiondata.hours"></select>' +
-            '<select class="hour_min" ng-model="promotiondata.selectedStartMinute" ng-options="minute for minute in promotiondata.minutes"></select></td></tr>' +
-            '<tr><td><div class="margin_top">End Date HH:MM</div></td></tr>' +
-            '<tr><td><input class="date_time" id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
+            '<select class="hour_min" ng-model="promotiondata.selectedStartMinute" ng-options="minute for minute in promotiondata.minutes"></select>' +
+            '</td>' +
+            '<td class="half_td">' +
+            '<input class="date_time" id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
             '<select class="hour_min" ng-model="promotiondata.selectedEndHour" ng-options="hour for hour in promotiondata.hours"></select>' +
-            '<select class="hour_min" ng-model="promotiondata.selectedEndMinute" ng-options="minute for minute in promotiondata.minutes"></select></td></tr>' +
-            '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
-            '<tr><td><item-signage-select></item-signage-select></td></tr>' +
-            '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
-            '</tbody></table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Offer Title</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_title"></td></tr>' +
-            '<tr><td><div class="margin_top">Offer Description</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_description"></td></tr>' +
-            '<tr><td><div class="margin_top">Offer Type</div></td></tr>' +
-            '<tr><td><offer-type-select></offer-type-select></td></tr>' +
-			// chasnge made
-            '<tr><td><div class="margin_top">UPC/PLU/GROUP</div></td></tr>' +
-            '<tr><td><upc-select></upc-select></td></tr>' +
-            '<tr><td><div class="margin_top">Threshold</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.threshold"></td></tr>' +
-            '<tr><td><div class="margin_top">Sponsor</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td></tr>' +
-            '<tr><td><div class="margin_top">Vendor</div></td></tr>' +
-            '<tr><td><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td></tr>' +
-            '<tr><td><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"></div></td></tr>' +
-            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<select class="hour_min" ng-model="promotiondata.selectedEndMinute" ng-options="minute for minute in promotiondata.minutes"></select>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Reward Value</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Type</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td>' +
+            '<td class="half_td"><offer-type-select></offer-type-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Item Signage</div></td>' +
+            '<td class="half_td"><div class="margin_top">Threshold</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><item-signage-select></item-signage-select></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.threshold"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">UPC/PLU/GROUP</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><upc-select></upc-select></td>' +
+            '<td class="product_image"><app-file-upload></app-file-upload></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"></div>' +
+            '</td>' +
+            '<td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
-            '</div></div></td></tr>' +
-            '</tbody></table>' +
+            '</div></div></td>' +
+            '</tr>' +
+            '</tbody></table></div>' +
             '<div class="loadingImage" ng-hide="!loadingAddPromotionData"><img src="images/loading.gif"></div>' +
             '</div>',
         compile: function () {
@@ -3356,6 +3497,21 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 								 $('.popup').toggle("slide");
 								 return false;
 							 }
+                             if (!$scope.promotiondata.promo_description) {
+                                 $("#popupMessage").html("Please enter promo description");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
+                             if (!$scope.promotiondata.offer_description) {
+                                 $("#popupMessage").html("Please enter offer description");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
+                             if (!$scope.promotiondata.sponsor) {
+                                 $("#popupMessage").html("Please enter sponsor");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
 							 if (!$scope.promotiondata.start_date) {
 								 $("#popupMessage").html("Please select start date");
 								 $('.popup').toggle("slide");
@@ -3372,11 +3528,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-							  if (!$scope.promotiondata.sponsor) {
-							      $("#popupMessage").html("Please enter sponsor");
-							      $('.popup').toggle("slide");
-							      return false;
-							  }
+
 							 if (!$('#uploadfile').val()) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
@@ -3658,16 +3810,44 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div>' +
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Title</div></td>' +
+            '<td class="half_td"><div class="margin_top">Training Category</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="trainingdata.title"></td>' +
+            '<td class="half_td"><training-category-select></training-category-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td colspan="2"><textarea type="text" placeholder="" ng-model="trainingdata.description" class="description"></textarea></td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>' +
+            '</div>' +
+            '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Title</div></td><td><div class="margin_top">Training Category</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td><td><training-category-select></training-category-select></td></tr>' +
-            '<tr><td><div class="margin_top">Description</div></td></tr>' +
-            '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="trainingdata.description" class="description"></textarea></td></tr>' +
-            '</tbody></table></div>' +
-            '<div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
-            '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
+            '<tr>' +
+            '<td><div class="margin_top">Video Url</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>' +
+            '<ul id="demo2" data-name="demo2" class="tagit">' +
+            '<li class="tagit-new">' +
+            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">' +
+            '</li>' +
+            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
+            '</ul>' +
+            '</ul>' +
+            '</td>' +
+            '</tr>' +
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
 			'<ul class="uploadList">' +
@@ -3976,7 +4156,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
         template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Title</div></td></tr>' +
-            '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title" class="description_1"></td></tr>' +
+            '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title"></td></tr>' +
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
             '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
             '</tbody></table></div>' +
