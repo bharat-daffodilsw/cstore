@@ -646,6 +646,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         if ($scope.data["userid"]) {
                             $scope.newVendor["_id"] = $scope.data["userid"];
                         }
+						$scope.loadingAddVenderData = true;
                         $scope.newVendor.email = email;
                         $scope.newVendor["firstname"] = $scope.data.firstname;
                         $scope.newVendor["lastname"] = $scope.data.lastname;
@@ -669,6 +670,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+							$scope.loadingAddVenderData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
@@ -895,6 +897,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+							$scope.loadingStatus = true;
                             var query = {};
                             query.table = "products__cstore";
 
@@ -951,7 +954,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     };
                     $scope.saveFunction = function (query) {
                         //console.log(query);
-                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {							
+							$scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
@@ -1490,7 +1494,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     $scope.CSession = $appService.getSession();
                     var usk = $scope.CSession["usk"] ? $scope.CSession["usk"] : null;
                     $scope.loadingAddStoreData = false;
-                    $scope.saveStore = function () {
+                    $scope.saveStore = function () {					
                         if ($scope.CSession) {
                             $scope.newStore = {};
                             $scope.newStore["manager"] = {};
@@ -1586,6 +1590,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+							$scope.loadingStatus = true;
                             var query = {};
                             query.table = "storemanagers__cstore";
                             $scope.newStore.email = email;
@@ -1661,6 +1666,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     }
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
+							$scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
 
                                 $("#popupMessage").html("Site Info Saved");
@@ -1838,10 +1844,12 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (countryList && countryList.length > 0) {
+							$scope.loadingCountryData = true;
                             var query = {};
                             query.table = "countries__cstore";
                             query.operations = countryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
+								$scope.loadingCountryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -2007,10 +2015,12 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                             }
                         }
                         if (productCategoryList && productCategoryList.length > 0) {
+							$scope.loadingProductCategoryData = true;
                             var query = {};
                             query.table = "product_categories__cstore";
                             query.operations = productCategoryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
+								$scope.loadingProductCategoryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -2167,7 +2177,6 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                             }
                             return el.editStatus == true;
                         });
-                        console.log(savedindexes);
                         for (var i = 0; i < trainingCategoryList.length; i++) {
                             if (!trainingCategoryList[i].name) {
                                 $("#popupMessage").html("Please enter training category name");
@@ -2176,10 +2185,12 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                             }
                         }
                         if (trainingCategoryList && trainingCategoryList.length > 0) {
+							$scope.loadingTrainingCategoryData = true;
                             var query = {};
                             query.table = "training_categories__cstore";
                             query.operations = trainingCategoryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
+								$scope.loadingTrainingCategoryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -2361,6 +2372,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (stateList && stateList.length > 0) {
+							$scope.loadingStateData = true;
                             var query = {};
                             query.table = "states__cstore";
                             query.operations = stateList;
@@ -2368,6 +2380,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+								$scope.loadingStateData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -2561,12 +2574,14 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
 
                         if (cityList && cityList.length > 0) {
+							$scope.loadingCityData = true;
                             var query = {};
                             query.table = "cities__cstore";
                             query.operations = cityList;
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+								$scope.loadingCityData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -2748,7 +2763,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '<button type="button" ng-click="saveUser()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforUser(\'manage-users\')"><a href="">Close</a></button>' +
-            '</div></div></td></tr>' +
+            '</div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div></td></tr>' +
             '</tbody></table>',
 
         compile: function () {
@@ -2785,7 +2800,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-
+						$scope.loadingStatus = true;
                         $scope.newUser["userid"] = {"emailid": $scope.userdata.username, "firstname": $scope.userdata.firstname, "lastname": $scope.userdata.lastname, "password": $scope.userdata.password, "username": $scope.userdata.username};
                         if ($scope.userdata.selectedRole) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
@@ -2798,6 +2813,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         query.table = "user_profiles__cstore";
                         query.operations = [$scope.newUser];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+							$scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Saved");
                                 $('.popup').toggle("slide");
@@ -3199,30 +3215,19 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
                 }, post: function ($scope) {
 					$scope.getAllAvailableTags = function (type){
 						var query = {"table": "product_codes__cstore"};
-						query.columns = ["description"];
+						query.columns = ["description","code"];
 						query.filter = {"type": type};
 						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
 						var serviceUrl = "/rest/data";
 						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
 							var availableTags = [];
 							for (var i = 0; i < productData.response.data.length; i++) {
-								availableTags.push(productData.response.data[i].description);
+								availableTags.push(productData.response.data[i].description + " - " + productData.response.data[i].code);
 							}
-							if(type == "PLU" || type == "GROUP"){
-								$('#grp_tags').tagit({"tagSource":availableTags});
-								if($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0){
-									var fillCodes = $scope.promotiondata.codes;
-									$('#grp_tags').tagit("fill", fillCodes);
-								}
-								$('#grp_tags').tagit({allowNewTags: false});								
-								$('#grp_tags').tagit({maxTags: 1});
-							}else{
-								$('#grp_tags').tagit({"tagSource":availableTags});
-								if($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0){
-									var fillCodes = $scope.promotiondata.codes;
-									$('#grp_tags').tagit("fill", fillCodes);
-								}
-								$('#grp_tags').tagit({allowNewTags: false});								
+							$('#grp_tags').tagit({"tagSource":availableTags,"allowNewTags": false,"triggerKeys":['enter', 'comma', 'tab']});			
+							if($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0){					
+								var fillCodes = $scope.promotiondata.codes;									
+								$('#grp_tags').tagit("fill", fillCodes);	
 							}
 						}, function (jqxhr, error) {
 							$("#popupMessage").html(error);
@@ -3325,6 +3330,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
                          if ($scope.CSession) {
+							var tags = $scope.showTags($('#grp_tags').tagit("tags"));
 							 if (!$scope.promotiondata.promo_title) {
 								 $("#popupMessage").html("Please enter promo title");
 								 $('.popup').toggle("slide");
@@ -3356,11 +3362,17 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
+							  if(($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1){
+									$("#popupMessage").html("You can select only one tag in "+$scope.promotiondata.selectedUpc.name);
+									$('.popup').toggle("slide");
+									return false;
+							  }
 							 if (!$('#uploadfile').val()) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
 							     return false;
 							 }
+							 $scope.loadingStatus = true;
 							 var query = {};
 							 query.table = "promotions__cstore";
 							 if ($scope.promotiondata["promotionid"]) {
@@ -3378,7 +3390,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute;
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
 							 // change made
-							 $scope.newPromotion["codes"] = $scope.showTags($('#grp_tags').tagit("tags"));
+							 if(tags && tags.length > 0){
+								$scope.newPromotion["codes"] = tags;
+							 }
                              //changes made by anuradha 0105 evening
                              $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                              $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
@@ -3396,6 +3410,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 								 current_file.ask = ASK;
 								 current_file.osk = OSK;
 								 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+									$scope.loadingStatus = false;
 									 if (data.response) {
 										 $scope.newPromotion["image"] = data.response;
 										 query.operations = [$scope.newPromotion];
@@ -3705,11 +3720,12 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            /*if (!$('#uploaddocfile').val()) {
+                            if (!$('#uploaddocfile').val()) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }*/
+                            }
+							$scope.loadingAddTrainingdata = true;
                             var query = {};
                             query.table = "training_session__cstore";
                             if ($scope.trainingdata["trainingSessionId"]) {
@@ -3740,6 +3756,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                     $scope.saveFunction = function (query) {
                         
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+							$scope.loadingAddTrainingdata = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
@@ -4047,6 +4064,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+							$scope.loadingAddTrainingdata = true;
 							var query = {};
 							var newSession = {};
 							query.table = "surveys__cstore";
@@ -4084,6 +4102,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
 							newSession["survey_question"] = {data:newSession["survey_question"], "override":"true"};
 							query.operations = [newSession];
 							$appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+								$scope.loadingAddTrainingdata = false;
 								if (callBackData.code == 200 && callBackData.status == "ok") {
 									$("#popupMessage").html("Saved successfully");
 									$('.popup').toggle("slide");
@@ -4634,6 +4653,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             }
                         }
                         if (stateList && stateList.length > 0) {
+							$scope.loadingStateData = true;
                             var query = {};
                             query.table = "states__cstore";
                             query.operations = stateList;
@@ -4641,6 +4661,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+								$scope.loadingStateData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");

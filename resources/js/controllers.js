@@ -787,9 +787,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (roleData) {
             $scope.userdata.roles = roleData.response.data;
-            console.log($scope.userdata.roles);
             $scope.userdata.selectedRole = $scope.userdata.roles[1];
-            console.log($scope.userdata.selectedRole);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
