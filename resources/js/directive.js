@@ -4990,12 +4990,12 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.productCodes[i].type) {
+                            if (!productCodeList[i].type) {
                                 $("#popupMessage").html("Please select type");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if($scope.productCodes[i].type=="UPC" && productCodeList[i].code.length > 12) {
+                            if(productCodeList[i].type=="UPC" && productCodeList[i].code.length > 12) {
                                 $("#popupMessage").html("Code for UPC can not be greater than 12 digits");
                                 $('.popup').toggle("slide");
                                 return false;
