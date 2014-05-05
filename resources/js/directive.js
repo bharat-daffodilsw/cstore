@@ -105,13 +105,12 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 }]);
 /*change end here */
 
-//Changes made 02/05
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="admin_menu pull-left"><ul><li><a href ="#!/vendors" active-link="active">Vendor</a></li><li><a href="#!/site-info" active-link="active">Site Info</a></li>' +
-            '<li id="pops"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li>' +
-            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" active-link="active">Manage Users</a></li>' +
+        template: '<div class="admin_menu pull-left"><ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
+            '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li><li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li><li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li ng-click="clearSurveyContent()">' +
+            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li><li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
@@ -176,7 +175,8 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 //$scope.searchContent="";
                             }
                             else if (hash.indexOf("?sessionid=") > 0) {
-
+                                //console.log(hash);
+                                //window.location.href = hash + "&search=" + $scope.searchContent;
                                 window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
@@ -535,33 +535,87 @@ cstore.directive('vendorCategorySelect', ['$appService', function ($appService, 
     }
 }]);
 
-
 cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">First Name</div></td><td><div class="margin_top">Last Name</div></td></tr><tr>' +
-            '<td><input type="text" placeholder="" ng-model="data.firstname"></td><td><input type="text" placeholder=""ng-model="data.lastname"></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td class="city"><input type="email" ng-model="data.email">' +
-            '</td></tr></table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address</div>' +
-            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address"> </textarea></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Address 2</div>' +
-            '</td></tr><tr><td class="text_area"><textarea ng-model="data.address2"> </textarea></td></tr></table>' +
-            '<div class="l_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Country</div>' +
-            '</td></tr><tr><td><vendor-country-select></vendor-country-select></td></tr><tr><td><div class="margin_top">City</div>' +
-            '</td></tr><tr><td><city-select></city-select></td>' +
-            '</tr><tr><td><div class="margin_top">Postal Code</div></td>' +
-            '</tr><tr><td><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
-            '</tr></table></div><div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
-            '<td><div class="margin_top">State</div></td></tr><tr><td>' +
-            '<state-select></state-select></td></tr><tr>' +
-            '<td><div class="margin_top">Category</div></td></tr><tr><td>' +
-            '<vendor-category-select></vendor-category-select></td></tr><tr><td>' +
-            '<div class="margin_top">Contact No.</div></td></tr><tr><td>' +
-            '<input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td></tr></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button ng-click="saveVendor()" type="button">Save</button></div><div class="delete_btn pull-left"><button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
-            '</div></div></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div></div>',
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">First Name</div></td>' +
+            '<td><div class="margin_top">Last Name</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><input type="text" placeholder="" ng-model="data.firstname"></td>' +
+            '<td><input type="text" placeholder=""ng-model="data.lastname"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Email</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="city"><input type="email" ng-model="data.email"></td>'+
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Address</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="data.address"> </textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Address 2</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="data.address2"></textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Country</div></td>' +
+            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
+            '<td class="half_td"><state-select></state-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">City</div></td>' +
+            '<td class="half_td"><div class="margin_top">Category</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><city-select></city-select></td>' +
+            '<td class="half_td"><vendor-category-select></vendor-category-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
+            '<td class="half_td"><div class="margin_top">Contact No.</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
+            '<td class="half_td"><input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td>' +
+            '</tr>' +
+            '</table></div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button ng-click="saveVendor()" type="button">Save</button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button ng-click="setPathforVender(\'vendors\')" type="button">Close</button>' +
+            '</div>' +
+            '</div></td>' +
+            '</tr>' +
+            '</table></div>' +
+            '<div class="loadingImage" ng-hide="!loadingAddVenderData"><img src="images/loading.gif"></div>' +
+            '</div>',
 
         compile: function () {
             return {
@@ -834,19 +888,61 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Name</div></td><td><div class="margin_top">POP Categroy</div></td></tr><tr><td><input type="text" placeholder="" ng-model="productdata.name">' +
-            '</td><td><product-category-select></product-category-select></td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Detailed Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"> ' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">' +
-            'Short Description</div></td></tr><tr><td class="name_input"><input type="text" placeholder="" ng-model="productdata.short_description"> ' +
-            '</td></tr></table><table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr><td><div class="margin_top">Quantity</div></td><td><div class="margin_top">Price</div></td>' +
-            '</tr><tr><td><input type="text" placeholder="" ng-model="productdata.quantity"></td><td><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">POP Categroy</div></td>' +
             '</tr>' +
-            '</table><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="saveProduct()"><a href>Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforProduct(\'pops\')"><a href>Close</a></button></div></div></td><td class="product_image"><app-file-upload></app-file-upload></td></tr></table></div><div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div></div>',
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.name"></td>' +
+            '<td class="half_td"><product-category-select></product-category-select></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Detailed Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="name_input"><textarea type="text" placeholder="" ng-model="productdata.description"></textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Short Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="name_input"><textarea type="text" placeholder="" ng-model="productdata.short_description"></textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Quantity</div></td>' +
+            '<td class="half_td"><div class="margin_top">Price</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.quantity"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '<td class="half_td"><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveProduct()"><a href>Save</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforProduct(\'pops\')"><a href>Close</a></button>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '</tr>'+
+            '</table>' +
+            '</div>' +
+            '<div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div>' +
+            '</div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -1069,7 +1165,6 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
         }
     }
 }]);
-
 
 cstore.directive('appFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
@@ -1451,35 +1546,110 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Site Id</div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.siteid"></td></tr><tr><td><div class="margin_top">Site Name</div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
-            '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact">' +
-            '</td></tr>' +
-            '<tr><td><div class="margin_top">POS Type</div></td></tr><tr><td><pos-type></pos-type>' +
-            '</td></tr><tr><td><div class="margin_top">POS Version</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.pos_version"></td>' +
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Site Id</div></td>' +
+            '<td class="half_td"><div class="margin_top">Site Name</div></td>' +
             '</tr>' +
-            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.email"></td>' +
-            '</tr><tr><td><div class="margin_top">Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address"></td></tr><tr><td><div class="margin_top">Address 2</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address2"></td></tr>' +
-            '<tr><td><div class="margin_top">Country </div></td></tr><tr><td><store-country-select></store-country-select></td></tr>' +
-            '<tr><td><div class="margin_top">State </div></td></tr><tr><td><store-state-select></store-state-select></td></tr>' +
-            '<tr><td><div class="margin_top">City</div></td></tr><tr><td><store-city-select></store-city-select></td></tr>' +
-            '<tr><td><div class="margin_top">Postal Code</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.postalcode"></td></tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.siteid"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.storename"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Manager Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Shift</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.manager.name"></td>' +
+            '<td class="half_td"><shift></shift></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Site Phone</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Phone</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact"></td>' +
+            '<td class="half_td"><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Email</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Email</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.email"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Address</div></td>' +
+            '<td class="half_td"><div class="margin_top">Address 2</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.address"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.address2"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Country</div></td>' +
+            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><store-country-select></store-country-select></td>' +
+            '<td class="half_td"><store-state-select></store-state-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">City</div></td>' +
+            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><store-city-select></store-city-select></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.postalcode"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">POS Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">POS Version</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><pos-type></pos-type></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="storedata.pos_version"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Loyalty Status</div></td>' +
+            '<td class="half_td"><div class="margin_top">Reward Type</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><loyalty-status></loyalty-status></td>' +
+            '<td class="half_td"><reward-type></reward-type></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Pump Brand</div></td>' +
+            '<td class="half_td"><div class="margin_top">Pump Model </div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.pump_brand"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.pump_model"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Brand</div></td>' +
+            '<td class="half_td"><div class="margin_top">Company Logo</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><brand></brand></td>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveStore()"><a href="">Save</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button>' +
+            '</div>' +
+            '</div></td>' +
+            '</tr>' +
             '</table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Manager Name</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.name"></td></tr>' +
-            '<tr><td><div class="margin_top">Manager Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td></tr><tr><td>' +
-            '<div class="margin_top">Manager Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
-            '</tr><tr><td><div class="margin_top">Manager Shift</div></td></tr><tr><td><shift></shift></td></tr><tr><td><div class="margin_top">Loyalty Status</div></td></tr><tr><td>' +
-            '<loyalty-status></loyalty-status></td></tr><tr><td><div class="margin_top">Reward Type</div>' +
-            '</td></tr><tr><td><reward-type></reward-type></td></tr><tr><td><div class="margin_top">Pump Brand</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_brand"></td></tr><tr><td><div class="margin_top">Pump Model </div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_model"></td></tr>' +
-            '<tr><td><div class="margin_top">Brand</div></td></tr><tr><td><brand></brand></td></tr>' +
-            '<tr><td><div class="margin_top">Company Logo</div></td></tr><tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button></div></div></td></tr></table>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
+            '</div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -1512,18 +1682,28 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            if (!$scope.storedata.manager.name) {
+                                $("#popupMessage").html("Please enter manager name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.storedata.contact || !regNumberOnly.test($scope.storedata.contact)) {
                                 $("#popupMessage").html("Please enter valid site phone number");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.selectedPosType || ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType)) {
-                                $("#popupMessage").html("Please choose pos type");
+                            if (!$scope.storedata.manager.contact || !regNumberOnly.test($scope.storedata.manager.contact)) {
+                                $("#popupMessage").html("Please enter valid manager contact");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
                             if (!email || regEmail.test(email) == false) {
                                 $("#popupMessage").html("Please enter a valid email id");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!managerEmail || regEmail.test(managerEmail) == false) {
+                                $("#popupMessage").html("Please enter a valid manager email id");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1552,13 +1732,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.manager.name) {
-                                $("#popupMessage").html("Please enter manager name");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.storedata.manager.contact || !regNumberOnly.test($scope.storedata.manager.contact)) {
-                                $("#popupMessage").html("Please enter valid manager contact");
+                            if (!$scope.storedata.selectedPosType || ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType)) {
+                                $("#popupMessage").html("Please choose pos type");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1566,14 +1741,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $("#popupMessage").html("Please select loyalty status");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }
-                            if (!managerEmail || regEmail.test(managerEmail) == false) {
-                                $("#popupMessage").html("Please enter a valid manager email id");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if ($scope.storedata["storeid"]) {
-                                $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
                             if (!$scope.storedata.selectedRewardType || ($scope.storedata.selectedRewardType.name == "Others" && !$scope.storedata.otherRewardType)) {
                                 $("#popupMessage").html("Please choose reward type");
@@ -1591,6 +1758,9 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 return false;
                             }
 							$scope.loadingStatus = true;
+                            if ($scope.storedata["storeid"]) {
+                                $scope.newStore["_id"] = $scope.storedata["storeid"];
+                            }
                             var query = {};
                             query.table = "storemanagers__cstore";
                             $scope.newStore.email = email;
@@ -2742,23 +2912,36 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div class="table_1 pull-left"><div class="l_bar pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">First Name</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="userdata.firstname"></td></tr>' +
-            '<tr><td><div class="margin_top">Email</div></td></tr>' +
-            '<tr><td><input type="email" placeholder="" ng-model="userdata.username"></td></tr>' +
-            '<tr><td><div class="margin_top">Role</div></td></tr>' +
-            '<tr><td><role-select></role-select></td></tr>' +
+        template: '<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">First Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Last Name</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="userdata.firstname"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="userdata.lastname"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Email</div></td>' +
+            '<td class="half_td"><div class="margin_top">Password</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="email" placeholder="" ng-model="userdata.username"></td>' +
+            '<td class="half_td"><input type="password" placeholder="" ng-model="userdata.password"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Role</div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Store Name</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><role-select></role-select></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
+            '</tr>' +
             '</tbody></table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Last Name</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="userdata.lastname"></td></tr>' +
-            '<tr><td><div class="margin_top">Password</div></td></tr>' +
-            '<tr><td><input type="password" placeholder="" ng-model="userdata.password"></td></tr>' +
-            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><div class="margin_top">Store Name</div></td></tr>' +
-            '<tr ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><td><store-select></store-select></td></tr>' +
-            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveUser()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
@@ -2790,13 +2973,13 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.userdata.selectedRole) {
-                            $("#popupMessage").html("please select role first");
+                        if (!$scope.userdata.password) {
+                            $("#popupMessage").html("please enter password");
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.userdata.password) {
-                            $("#popupMessage").html("please enter password");
+                        if (!$scope.userdata.selectedRole) {
+                            $("#popupMessage").html("please select role first");
                             $('.popup').toggle("slide");
                             return false;
                         }
@@ -3089,25 +3272,52 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     }
                     $scope.setPromotionState = function (promotion) {
                         var endArray = promotion["end_date"].split(" ");
-                        //console.log("enddate :: " + endArray);
-                        //console.log(endArray[1]);
                         var endMinArray =endArray[1].split(":");
-                        //console.log(endMinArray);
                         $scope.promotiondata.end_date=endArray[0];
-                        $scope.promotiondata.selectedEndHour=endMinArray[0];
-                        $scope.promotiondata.selectedEndMinute=endMinArray[1];
+                        console.log("enddate :: " + $scope.promotiondata.end_date);
                         var startArray = promotion["start_date"].split(" ");
-                        //console.log("startdate :: " + startArray);
-                        //console.log(startArray[1]);
-                        var startMinArray =endArray[1].split(":");
-                        //console.log(startMinArray);
+                        var startMinArray =startArray[1].split(":");
                         $scope.promotiondata.start_date=startArray[0];
-                        $scope.promotiondata.selectedStartHour=startMinArray[0];
-                        $scope.promotiondata.selectedStartMinute=startMinArray[1];
-                        //console.log("startdate ::" + promotion.start_date);
+                        console.log("startdate :: " + $scope.promotiondata.start_date);
+                        if (promotion.end_date && $scope.promotiondata.hours) {
+                            for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
+                                if ($scope.promotiondata.hours[j] == endMinArray[0]) {
+                                    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[j];
+                                    console.log("selected end hour:::" + $scope.promotiondata.selectedEndHour);
+                                    break;
+                                }
+                            }
+                        }
+                        if (promotion.start_date && $scope.promotiondata.hours) {
+                            for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
+                                if ($scope.promotiondata.hours[j] == startMinArray[0]) {
+                                    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[j];
+                                    console.log("selected Start hour:::" + $scope.promotiondata.selectedStartHour);
+                                    break;
+                                }
+                             }
+                        }
+                        if (promotion.end_date && $scope.promotiondata.minutes) {
+                            for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
+                                if ($scope.promotiondata.minutes[j] == endMinArray[1]) {
+                                    $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[j];
+                                    console.log("selected end minute:::" + $scope.promotiondata.selectedEndMinute);
+                                    break;
+                                }
+                            }
+                        }
+                        if (promotion.start_date && $scope.promotiondata.minutes) {
+                            for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
+                                if ($scope.promotiondata.minutes[j] == startMinArray[1]) {
+                                    $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[j];
+                                    console.log("selected Start minute:::" + $scope.promotiondata.selectedStartMinute);
+                                    break;
+                                }
+                            }
+                        }
                         $scope.promotiondata["promo_title"] = promotion.promo_title ? promotion.promo_title : "";
-                        $scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
-                        $scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
+                        //$scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
+                        //$scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
                         $scope.promotiondata["offer_description"] = promotion.offer_description ? promotion.offer_description : "";
                         $scope.promotiondata["offer_title"] = promotion.offer_title ? promotion.offer_title : "";
                         $scope.promotiondata["promo_description"] = promotion.promo_description ? promotion.promo_description : "";
@@ -3178,7 +3388,7 @@ cstore.directive('itemSignageSelect', ['$appService', function ($appService, $sc
 cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-change="setUpc(promotiondata.selectedOfferType)" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
+        template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
         compile: function () {
             return{
                 pre: function ($scope) {
@@ -3263,50 +3473,81 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
+        template:'<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Promo Title</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_title"></td></tr>' +
-            '<tr><td><div class="margin_top">Promo Description</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.promo_description"></td></tr>' +
-            '<tr><td><div class="margin_top">Reward Value</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td></tr>' +
-            '<tr><td><div class="margin_top">Start Date  HH:MM</div></td></tr>' +
-            '<tr><td><input class="date_time" id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Promo Title</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Title</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.promo_title"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.offer_title"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Promo Description</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.promo_description"></textarea></td>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.offer_description"></textarea></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Sponsor</div></td>' +
+            '<td class="half_td"><div class="margin_top">Vendor</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td>' +
+            '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">End Date</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td">' +
+            '<input class="date_time" id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
             '<select class="hour_min" ng-model="promotiondata.selectedStartHour" ng-options="hour for hour in promotiondata.hours"></select>' +
-            '<select class="hour_min" ng-model="promotiondata.selectedStartMinute" ng-options="minute for minute in promotiondata.minutes"></select></td></tr>' +
-            '<tr><td><div class="margin_top">End Date HH:MM</div></td></tr>' +
-            '<tr><td><input class="date_time" id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
+            '<select class="hour_min" ng-model="promotiondata.selectedStartMinute" ng-options="minute for minute in promotiondata.minutes"></select>' +
+            '</td>' +
+            '<td class="half_td">' +
+            '<input class="date_time" id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
             '<select class="hour_min" ng-model="promotiondata.selectedEndHour" ng-options="hour for hour in promotiondata.hours"></select>' +
-            '<select class="hour_min" ng-model="promotiondata.selectedEndMinute" ng-options="minute for minute in promotiondata.minutes"></select></td></tr>' +
-            '<tr><td><div class="margin_top">Item Signage</div></td></tr>' +
-            '<tr><td><item-signage-select></item-signage-select></td></tr>' +
-            '<tr><td class="product_image"><app-file-upload></app-file-upload></td></tr>' +
-            '</tbody></table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Offer Title</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_title"></td></tr>' +
-            '<tr><td><div class="margin_top">Offer Description</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.offer_description"></td></tr>' +
-            '<tr><td><div class="margin_top">Offer Type</div></td></tr>' +
-            '<tr><td><offer-type-select></offer-type-select></td></tr>' +
-			// chasnge made
-            '<tr><td><div class="margin_top">UPC/PLU/GROUP</div></td></tr>' +
-            '<tr><td><upc-select></upc-select></td></tr>' +
-            '<tr><td><div class="margin_top">Threshold</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.threshold"></td></tr>' +
-            '<tr><td><div class="margin_top">Sponsor</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td></tr>' +
-            '<tr><td><div class="margin_top">Vendor</div></td></tr>' +
-            '<tr><td><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td></tr>' +
-            '<tr><td><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"></div></td></tr>' +
-            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<select class="hour_min" ng-model="promotiondata.selectedEndMinute" ng-options="minute for minute in promotiondata.minutes"></select>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Reward Value</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Type</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td>' +
+            '<td class="half_td"><offer-type-select></offer-type-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Item Signage</div></td>' +
+            '<td class="half_td"><div class="margin_top">Threshold</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><item-signage-select></item-signage-select></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.threshold"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">UPC/PLU/GROUP</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><upc-select></upc-select></td>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"/></div>' +
+            '</td>' +
+            '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
-            '</div></div></td></tr>' +
-            '</tbody></table>' +
+            '</div></div></td>' +
+            '</tr>' +
+            '</tbody></table></div>' +
             '<div class="loadingImage" ng-hide="!loadingAddPromotionData"><img src="images/loading.gif"></div>' +
             '</div>',
         compile: function () {
@@ -3322,10 +3563,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
-                    $scope.testPromotionFunction = function () {
-                    console.log("start date time::" + $scope.promotiondata.start_date+$scope.promotiondata.start_time);
-                    console.log("end date time::::" + $scope.promotiondata.end_date+$scope.promotiondata.end_time);
-                    }
                     $scope.savePromotion = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
@@ -3341,6 +3578,21 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 								 $('.popup').toggle("slide");
 								 return false;
 							 }
+                             if (!$scope.promotiondata.promo_description) {
+                                 $("#popupMessage").html("Please enter promo description");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
+                             if (!$scope.promotiondata.offer_description) {
+                                 $("#popupMessage").html("Please enter offer description");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
+                             if (!$scope.promotiondata.sponsor) {
+                                 $("#popupMessage").html("Please enter sponsor");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
 							 if (!$scope.promotiondata.start_date) {
 								 $("#popupMessage").html("Please select start date");
 								 $('.popup').toggle("slide");
@@ -3351,7 +3603,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-                             //cahnges made by anuradha
+                             if ($scope.promotiondata.start_date > $scope.promotiondata.end_date) {
+                                 $("#popupMessage").html("Please select valid start or end date");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
 							  if (!$scope.promotiondata.threshold || !regNumberOnly.test($scope.promotiondata.threshold)) {
 							      $("#popupMessage").html("Please enter valid numeric threshold value");
 							      $('.popup').toggle("slide");
@@ -3378,7 +3634,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 if ($scope.promotiondata["promotionid"]) {
 								$scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
 							 }
-							 $scope.newPromotion["end_date"] = $scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute;
+                             console.log("start date :::::"+$scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute);
+                             console.log("end date :::::"+$scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute);
+							 $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute);
 							 $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
 							 $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
 							 $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
@@ -3387,7 +3645,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							 $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
 							 $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
 							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
-							 $scope.newPromotion["start_date"] = $scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute;
+							 $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute);
 							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
 							 // change made
 							 if(tags && tags.length > 0){
@@ -3440,6 +3698,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.setPathforPromotion("promotions");
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.indexOf("$promo_title_1  dup key") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("$promo_title_1  dup key")>0)){
+                                $("#popupMessage").html("there is duplicacy in promo title");
+                                $('.popup').toggle("slide");
+                            }
+                            else if((callBackData.response && callBackData.response.indexOf("$offer_title_1  dup key") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("$promo_title_1  dup key")>0)){
+                                $("#popupMessage").html("there is duplicacy in offer title");
                                 $('.popup').toggle("slide");
                             }
                             else {
@@ -3650,16 +3915,44 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div>' +
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tbody>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Title</div></td>' +
+            '<td class="half_td"><div class="margin_top">Training Category</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="trainingdata.title"></td>' +
+            '<td class="half_td"><training-category-select></training-category-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">Description</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td colspan="2"><textarea type="text" placeholder="" ng-model="trainingdata.description" class="description"></textarea></td>' +
+            '</tr>' +
+            '</tbody>' +
+            '</table>' +
+            '</div>' +
+            '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Title</div></td><td><div class="margin_top">Training Category</div></td></tr>' +
-            '<tr><td><input type="text" placeholder="" ng-model="trainingdata.title"></td><td><training-category-select></training-category-select></td></tr>' +
-            '<tr><td><div class="margin_top">Description</div></td></tr>' +
-            '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="trainingdata.description" class="description"></textarea></td></tr>' +
-            '</tbody></table></div>' +
-            '<div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Video Url</div></td></tr>' +
-            '<tr><td><ul id="demo2" data-name="demo2" class="tagit"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul> 	</td></tr>' +  
+            '<tr>' +
+            '<td><div class="margin_top">Video Url</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>' +
+            '<ul id="demo2" data-name="demo2" class="tagit">' +
+            '<li class="tagit-new">' +
+            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">' +
+            '</li>' +
+            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
+            '</ul>' +
+            '</ul>' +
+            '</td>' +
+            '</tr>' +
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
 			'<ul class="uploadList">' +
@@ -3970,7 +4263,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
         template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="margin_top">Title</div></td></tr>' +
-            '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title" class="description_1"></td></tr>' +
+            '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title"></td></tr>' +
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
             '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
             '</tbody></table></div>' +
@@ -4523,64 +4816,81 @@ cstore.directive('trainingCategoryDetail', ['$appService', function ($appService
     }
 }]);
 /********************************Product Codes************************************************/
+cstore.directive('typeSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="productCode.type" ng-options="type for type in types"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+                    if(!$scope.productCode.type) {
+                        $scope.productCode.type = $scope.types[0];
+                    }
+                }, post: function ($scope) {
+
+                }
+            }
+        }
+    }
+}]);
 cstore.directive('productCodeList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveStates()"><a href="">' +
-            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStates()"><a href="">Delete</a>' +
+        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveProductCodes()"><a href="">' +
+            'Save</a></button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteProductCodes()"><a href="">Delete</a>' +
             '</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore()" ng-show="show.currentCursor"><a href=>' +
             '<img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
-            '{{show.preCursor}}-{{show.preCursor + states.length}} from start</div>' +
+            '{{show.preCursor}}-{{show.preCursor + productCodes.length}} from start</div>' +
             '<div ng-show="show.preCursor" ng-click="getLess()" class="nxt_btn pull-right"><a href=>' +
             '<img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>State</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'name\',\'desc\')"></div>	</span></th><th><span>Abbreviation</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'abbreviation\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'abbreviation\',\'desc\')"></div></span></th><th><span>Country</span><span class="sortWrap"><div class="sortUp" ng-click="setStateOrder(\'countryid.name\',\'asc\')"></div><div class="sortDown" ng-click="setStateOrder(\'countryid.name\',\'desc\')"></div>	</span></th><th></th>' +
-            '</tr><tr ng-repeat="state in states"><td><input type="checkbox" ng-model="state.deleteStatus" ng-show="state._id">' +
-            '</td><td><span ng-hide="state.editStatus">{{state.name}}</span>' +
-            '<input type="text" ng-show="state.editStatus" ng-model="state.name"></td><td>' +
-            '<span ng-hide="state.editStatus">{{state.abbreviation}}</span><input type="text" ng-show="state.editStatus" ng-model="state.abbreviation"></td><td>' +
-            '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
-            '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
-            '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewState()" class="add_new"><a href>' +
-            '+ Click Here To Add New State</a></div></div><div class="loadingImage" ng-hide="!loadingStateData"><img src="images/loading.gif"></div>',
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Code</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCodeOrder(\'code\',\'asc\')"></div><div class="sortDown" ng-click="setProductCodeOrder(\'code\',\'desc\')"></div>	</span></th><th><span>Description</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCodeOrder(\'description\',\'asc\')"></div><div class="sortDown" ng-click="setProductCodeOrder(\'description\',\'desc\')"></div></span></th><th><span>Type</span><span class="sortWrap"><div class="sortUp" ng-click="setProductCodeOrder(\'type\',\'asc\')"></div><div class="sortDown" ng-click="setProductCodeOrder(\'type\',\'desc\')"></div>	</span></th><th></th>' +
+            '</tr><tr ng-repeat="productCode in productCodes"><td><input type="checkbox" ng-model="productCode.deleteStatus" ng-show="productCode._id">' +
+            '</td><td><span ng-hide="productCode.editStatus">{{productCode.code}}</span>' +
+            '<input type="text" ng-show="productCode.editStatus" ng-model="productCode.code"></td><td>' +
+            '<span ng-hide="productCode.editStatus">{{productCode.description}}</span><input type="text" ng-show="productCode.editStatus" ng-model="productCode.description"></td><td>' +
+            '<span ng-hide="productCode.editStatus">{{productCode.type}}</span><type-select ng-show="productCode.editStatus"></type-select></td><td style="cursor: pointer">' +
+            '<a class="edit_btn" ng-click="productCode.editStatus=true;setProductCode(productCode)" ng-hide="productCode.editStatus">Edit</a>' +
+            '<a class="edit_btn" ng-click="remove($index,productCode._id)" ng-show="productCode.editStatus">Cancel</a></td></tr>' +
+            '</table><div ng-click="addNewProductCode()" class="add_new"><a href>' +
+            '+ Click Here To Add New Product Code</a></div></div><div class="loadingImage" ng-hide="!loadingProductCodeData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.addNewState = function () {
-                        $scope.states.push({ name: '', countryid: '' });
+                    $scope.addNewProductCode = function () {
+                        $scope.productCodes.push({ code: '', description: '',type:'' });
                         //for (var i = 0; i < $scope.countries.length; i++) {
-                        $scope.states[$scope.states.length - 1]["editStatus"] = true;
+                        $scope.productCodes[$scope.productCodes.length - 1]["editStatus"] = true;
                         //}
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllStates(1, 10, $scope.searchby.value, $scope.searchContent);
+                        $scope.getAllProductCodes(1, 10, $scope.searchby.value, $scope.searchContent);
                     }
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.deleteStateArray = [];
+                    $scope.deleteProductCodeArray = [];
                     var currentSession = $appService.getSession();
                     var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                    $scope.deleteStates = function () {
-                        for (var i = 0; i < $scope.states.length; i++) {
-                            if ($scope.states[i].deleteStatus) {
-                                $scope.deleteStateArray.push({"_id": $scope.states[i]._id, "__type__": "delete"});
+                    $scope.deleteProductCodes = function () {
+                        for (var i = 0; i < $scope.productCodes.length; i++) {
+                            if ($scope.productCodes[i].deleteStatus) {
+                                $scope.deleteProductCodeArray.push({"_id": $scope.productCodes[i]._id, "__type__": "delete"});
                             }
                         }
                         var query = {};
-                        query.table = "states__cstore";
-                        query.operations = angular.copy($scope.deleteStateArray);
-                        $scope.deleteStateArray = [];
+                        query.table = "product_codes__cstore";
+                        query.operations = angular.copy($scope.deleteProductCodeArray);
+                        $scope.deleteProductCodeArray = [];
                         if (query.operations.length) {
 
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
-                                    for (var i = 0; i < $scope.states.length; i++) {
-                                        if ($scope.states[i].deleteStatus) {
-                                            $scope.states.splice(i, 1);
+                                    for (var i = 0; i < $scope.productCodes.length; i++) {
+                                        if ($scope.productCodes[i].deleteStatus) {
+                                            $scope.productCodes.splice(i, 1);
                                             i--;
                                         }
                                     }
@@ -4588,7 +4898,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in other table");
                                     $('.popup').toggle("slide");
                                 }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -4607,57 +4917,63 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             });
                         }
                         else {
-                            $("#popupMessage").html("Please select at least one state before delete");
+                            $("#popupMessage").html("Please select at least one product code before delete");
                             $('.popup').toggle("slide");
                         }
 
                     }
                 },
                 post: function ($scope) {
-                    $scope.remove = function (index, refreshStateId) {
-                        if (!$scope.states[index]["oldstatus"]) {
-                            $scope.states.splice(index, 1);
+                    var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                    $scope.remove = function (index, refreshProductCodeId) {
+                        if (!$scope.productCodes[index]["oldstatus"]) {
+                            $scope.productCodes.splice(index, 1);
                         }
                         else {
-                            $scope.refreshStates(index, refreshStateId);
+                            $scope.refreshProductCodes(index, refreshProductCodeId);
                         }
                     }
-                    $scope.saveStates = function () {
+                    $scope.saveProductCodes = function () {
                         var savedindexes = [];
-                        for (var j = $scope.states.length-1; j >= 0; j--) {
-                            if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].abbreviation){
+                        for (var j = $scope.productCodes.length-1; j >= 0; j--) {
+                            if(!$scope.productCodes[j]._id && !$scope.productCodes[j].code && !$scope.productCodes[j].description && !$scope.productCodes[j].type){
                                 $scope.states.splice(j, 1);
                             }
                         }
-                        var stateList = $scope.states.filter(function (el) {
-                            if(!el._id && (el.name || el.countryid || el.abbreviation)){
-                                savedindexes.push($scope.states.indexOf(el));
+                        var productCodeList = $scope.productCodes.filter(function (el) {
+                            if(!el._id && (el.code || el.description || el.type)){
+                                savedindexes.push($scope.productCodes.indexOf(el));
                             }
                             return el.editStatus == true ;
                         });
-                        for (var i = 0; i < stateList.length; i++) {
-                            if (!stateList[i].name) {
-                                $("#popupMessage").html("Please enter state name");
+                        for (var i = 0; i < productCodeList.length; i++) {
+                            if (!productCodeList[i].code || !regNumberOnly.test(productCodeList[i].code)) {
+                                $("#popupMessage").html("Please enter valid code");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!stateList[i].abbreviation) {
-                                $("#popupMessage").html("Please enter abbreviation");
+                            if (!productCodeList[i].description) {
+                                $("#popupMessage").html("Please enter description");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!stateList[i].countryid) {
-                                $("#popupMessage").html("Please select country");
+                            if (!$scope.productCodes[i].type) {
+                                $("#popupMessage").html("Please select type");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if($scope.productCodes[i].type=="UPC" && productCodeList[i].code.length > 12) {
+                                $("#popupMessage").html("Code for UPC can not be greater than 12 digits");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
                         }
-                        if (stateList && stateList.length > 0) {
-							$scope.loadingStateData = true;
+                        if (productCodeList && productCodeList.length > 0) {
+                            $scope.loadingStateData = true;
                             var query = {};
-                            query.table = "states__cstore";
-                            query.operations = stateList;
-                            $scope.addStateArray = [];
+                            query.table = "product_codes__cstore";
+                            query.operations = productCodeList;
+                            $scope.addProductCodeArray = [];
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
@@ -4666,10 +4982,10 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     for (var j = 0; j < savedindexes.length; j++) {
-                                        $scope.states[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                        $scope.productCodes[savedindexes[j]]._id = callBackData.response.insert[j]._id;
                                     }
-                                    for (var i = 0; i < $scope.states.length; i++) {
-                                        $scope.states[i]["editStatus"] = false;
+                                    for (var i = 0; i < $scope.productCodes.length; i++) {
+                                        $scope.productCodes[i]["editStatus"] = false;
                                     }
                                 }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -4691,21 +5007,14 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             $('.popup').toggle("slide");
                         }
                     }
-                    $scope.setState = function (state) {
-                        //$scope.states[state].editStatus = true;
-                        //for (var i = 0; i < $scope.data.states.length; i++) {
-                        //  if ($scope.data.states[i]._id == vendor.state._id) {
-                        //    $scope.data.selectedState = $scope.data.states[i];
-                        //  break;
-                        // }
-                        // }
-                        for (var i = 0; i < $scope.countryList.length; i++) {
-                            if ($scope.countryList[i]._id == state.countryid._id) {
-                                state.countryid = $scope.countryList[i];
+                    $scope.setProductCode = function (productcode) {
+                        for (var i = 0; i < $scope.types.length; i++) {
+                            if ($scope.types[i] == productcode.type) {
+                                $scope.productCodes[i].type = $scope.types[i];
+                                //productCode.type = $scope.types[i];
                                 break;
                             }
                         }
-
                     }
 
                 }

@@ -28,6 +28,8 @@ appStrapServices.factory('$appService', [
 
 
         $appService.save = function (data, ask, osk, usk, callBack) {
+            //var timeZone = new Date().getTimezoneOffset();
+            //timeZone = timeZone * 60000;
             if (!ask) {
                 throw "No ask found for saving";
             }

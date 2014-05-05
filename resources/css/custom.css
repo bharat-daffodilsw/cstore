@@ -581,13 +581,12 @@ tr {
     width:95%;}
 
 .hour_min {
-    padding:5px;
-    width:25% !important;}
+    padding: 5px;
+    width: 23.75% !important;
+}
 
 .date_time {
     width:47.5%!important;}
-
-
 
 .table th{background-color:#e7c271;
     padding:7px;
@@ -841,7 +840,7 @@ tr {
     height:50px;}
 
 .search_select {
-    width: 94.5%;
+    width: 95%;
     padding: 7px;}
 
 .text_area textarea{
@@ -1262,7 +1261,7 @@ span.sortWrap {
     border-top: 1px solid #CCC;
     border-right: 1px solid #CCC;
     border-left: 1px solid #CCC;
-    width: 98%;
+    width: 95%;
     padding:5px 10px 0 20px;
     margin-bottom: 10px;}
 
@@ -1316,5 +1315,17 @@ span.btn:hover {
 .ques_index {
     color:#999;}
 
-.date_time {
-	width:47.5%;}
+.half_td {
+    width:50%;
+}
+.description_promo {
+    height: 60px;
+    width:95%;
+}
+.name_input textarea {
+    width:97.5%!important;
+    height:50px;}
+
+.minutes {
+    margin-left: 18%;
+}
