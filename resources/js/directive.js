@@ -847,6 +847,10 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         $scope.productdata["quantity"] = product.quantity ? product.quantity : "";
                         //$scope.productdata["image"] = product.image;
+                        if(product.image){
+                            $scope.oFile.fileExist=true;
+                            console.log("22222:::"+$scope.oFile.fileExist);
+                        }
                         $scope.showFile(product.image, false);
                         //changed 28/04
                         //$scope.showFile(product.image, true);
@@ -861,6 +865,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         window.location.href = "#!edit-pop?q=" + product._id;
+                    }
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
                     }
                 }
             }
@@ -959,92 +966,99 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddProductData = false;
                     $scope.saveProduct = function () {
-                        $scope.CSession = $appService.getSession();
-                        if ($scope.CSession) {
-                            if (!$scope.productdata.name) {
-                                $("#popupMessage").html("Please enter product name");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.productdata.description) {
-                                $("#popupMessage").html("Please enter detailed description");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.productdata.short_description) {
-                                $("#popupMessage").html("Please enter short description");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.productdata.quantity) {
-                                $("#popupMessage").html("Please enter quantity");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.productdata.cost || !$scope.productdata.cost.amount) {
-                                $("#popupMessage").html("Please enter price");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$('#uploadfile').val()) {
-                                $("#popupMessage").html("Please upload file");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            var query = {};
-                            query.table = "products__cstore";
+                        var regNumberOnly = /^[+]?\d[0-9\-]*$/;
 
-                            if ($scope.productdata["productid"]) {
-                                $scope.newProduct["_id"] = $scope.productdata["productid"];
-                            }
-                            $scope.newProduct["name"] = $scope.productdata.name;
-                            $scope.newProduct["description"] = $scope.productdata.description;
-                            $scope.newProduct["short_description"] = $scope.productdata.short_description;
-                            $scope.newProduct["quantity"] = $scope.productdata.quantity;
-                            //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
-                            $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
-                            $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
-                            if (document.getElementById('uploadfile').files.length === 0) {
-                                delete $scope.newProduct["image"];
-                                query.operations = [$scope.newProduct];
-                                $scope.saveFunction(query);
-                            }
-                            else {
-                                if((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)){
-                                    var current_file = {};
-                                    current_file.name = $scope.oFile.name;
-                                    current_file.type = $scope.oFile.type;
-                                    current_file.contents = $scope.oFile.data;
-                                    current_file.ask = ASK;
-                                    current_file.osk = OSK;
-                                    $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                        if (data.response) {
-                                            $scope.newProduct["image"] = data.response;
-                                            query.operations = [$scope.newProduct];
-                                            $scope.saveFunction(query);
-                                        }
-                                        else {
+                         $scope.CSession = $appService.getSession();
 
-                                            $("#popupMessage").html("some error while uploading image please try again");
-                                            $('.popup').toggle("slide");
+                         if ($scope.CSession) {
+                         if (!$scope.productdata.name) {
+                         $("#popupMessage").html("Please enter pop name");
+                         $('.popup').toggle("slide");
+                         return false;
+                         }
+                         if (!$scope.productdata.description) {
+                         $("#popupMessage").html("Please enter detailed description");
+                         $('.popup').toggle("slide");
+                         return false;
+                         }
+                         if (!$scope.productdata.short_description) {
+                         $("#popupMessage").html("Please enter short description");
+                         $('.popup').toggle("slide");
+                         return false;
+                         }
+                         if (!$scope.productdata.quantity || !regNumberOnly.test($scope.productdata.quantity)) {
+                         $("#popupMessage").html("Please enter valid quantity");
+                         $('.popup').toggle("slide");
+                         return false;
+                         }
+                         if (!$scope.productdata.cost || !$scope.productdata.cost.amount ||!regNumberOnly.test($scope.productdata.cost.amount)) {
+                         $("#popupMessage").html("Please enter price");
+                         $('.popup').toggle("slide");
+                         return false;
+                         }
+                             //console.log("33333:::"+$scope.oFile.fileExist);
+                             if (!$scope.oFile.fileExist) {
+                                 $("#popupMessage").html("Please upload file");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
 
-                                        }
-                                    }, function (callbackerror) {
-                                        $("#popupMessage").html(callbackerror);
-                                        $('.popup').toggle("slide");
-                                    });
-                                }
-                                else {
-                                    $("#popupMessage").html("Please Upload Image File only");
-                                    $('.popup').toggle("slide");
-                                }
-                            }
-                        }
-                        else {
-                            $("#popupMessage").html("Please login first");
-                            $('.popup').toggle("slide");
-                        }
+                         var query = {};
+                         query.table = "products__cstore";
+
+                         if ($scope.productdata["productid"]) {
+                         $scope.newProduct["_id"] = $scope.productdata["productid"];
+                         }
+                         $scope.newProduct["name"] = $scope.productdata.name;
+                         $scope.newProduct["description"] = $scope.productdata.description;
+                         $scope.newProduct["short_description"] = $scope.productdata.short_description;
+                         $scope.newProduct["quantity"] = $scope.productdata.quantity;
+                         //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
+                         $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
+                         $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
+                         if (document.getElementById('uploadfile').files.length === 0) {
+                         delete $scope.newProduct["image"];
+                         query.operations = [$scope.newProduct];
+                         $scope.saveFunction(query);
+                         }
+                         else {
+                         if((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)){
+                         var current_file = {};
+                         current_file.name = $scope.oFile.name;
+                         current_file.type = $scope.oFile.type;
+                         current_file.contents = $scope.oFile.data;
+                         current_file.ask = ASK;
+                         current_file.osk = OSK;
+                         $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                         if (data.response) {
+                         $scope.newProduct["image"] = data.response;
+                         query.operations = [$scope.newProduct];
+                         $scope.saveFunction(query);
+                         }
+                         else {
+
+                         $("#popupMessage").html("some error while uploading image please try again");
+                         $('.popup').toggle("slide");
+
+                         }
+                         }, function (callbackerror) {
+                         $("#popupMessage").html(callbackerror);
+                         $('.popup').toggle("slide");
+                         });
+                         }
+                         else {
+                         $("#popupMessage").html("Please Upload Image File only");
+                         $('.popup').toggle("slide");
+                         }
+                         }
+                         }
+                         else {
+                         $("#popupMessage").html("Please login first");
+                         $('.popup').toggle("slide");
+                         }
+
                     };
+
                     $scope.saveFunction = function (query) {
                         //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
@@ -1057,7 +1071,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                             }
                             else {
-                                $("#popupMessage").html("some error while saving user");
+                                $("#popupMessage").html("some error while saving product");
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
@@ -1179,11 +1193,15 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
             "</div>",
         compile: function () {
             return {
+                pre:function($scope){
+                    //$scope.oFile.fileExist=false;
+                },
                 post: function ($scope, iElement) {
                     $scope.removeFile = function () {
                         delete $scope.row[$scope.colmetadata.expression];
                         $("#uploadfile").val("");
                         $scope.readonlyrow.filenotexist = true;
+                        $scope.oFile.fileExist=false;
                     };
                     if ($scope.row[$scope.colmetadata.expression]) {
                         $scope.showFile($scope.row[$scope.colmetadata.expression], false);
@@ -1221,6 +1239,8 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                             $scope.oFile = document.getElementById('uploadfile').files[0];
                             $scope.oFReader.onload = $scope.loadFile;
                             $scope.oFReader.readAsDataURL($scope.oFile);
+                            $scope.oFile.fileExist=true;
+                            console.log("333333:::"+$scope.oFile.fileExist);
                         });
                     });
                 }
@@ -1339,6 +1359,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["storename"] = store.storename ? store.storename : "";
                         //$scope.storedata["username"] = store.username ? store.username : "";
                         $scope.storedata["siteid"] = store.siteid ? store.siteid : "";
+                        if(store.company_logo){
+                            $scope.oFile.fileExist=true;
+                            //console.log("22222:::"+$scope.oFile.fileExist);
+                        }
                         $scope.showFile(store.company_logo, false);
                         $scope.storedata["manager"] = {};
                         if (store.manager) {
@@ -1748,7 +1772,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$('#uploadfile').val()) {
+                            if (!$scope.oFile.fileExist) {
                                 $("#popupMessage").html("Please upload company logo");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -3313,7 +3337,11 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         //changes made by anuradha 0105 evening
                         console.log(promotion.top_promo);
                         $scope.promotiondata["top_promo"] =promotion.top_promo ? promotion.top_promo : "";
-                        $scope.showFile(promotion.image, false);		
+                        if(promotion.image){
+                            $scope.oFile.fileExist=true;
+                            //console.log("22222:::"+$scope.oFile.fileExist);
+                        }
+                        $scope.showFile(promotion.image, false);
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
                             for (var j = 0; j < $scope.promotiondata.offerTypes.length; j++) {
                                 if ($scope.promotiondata.offerTypes[j].name == promotion.offer_type) {
@@ -3608,11 +3636,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      return false;
 							  }
 
-							 /*if (!$('#uploadfile').val()) {
-							     $("#popupMessage").html("Please upload file");
-							     $('.popup').toggle("slide");
-							     return false;
-							 } */
+                             if (!$scope.oFile.fileExist) {
+                                 $("#popupMessage").html("Please upload file");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
 							 var query = {};
 							 query.table = "promotions__cstore";
 							 if ($scope.promotiondata["promotionid"]) {
@@ -3994,11 +4022,6 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            /*if (!$('#uploaddocfile').val()) {
-                                $("#popupMessage").html("Please upload file");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }*/
                             var query = {};
                             query.table = "training_session__cstore";
                             if ($scope.trainingdata["trainingSessionId"]) {

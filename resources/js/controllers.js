@@ -144,7 +144,6 @@ cstore.config(
     });
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
-
     $scope.currentUser = {"data": ""};
     //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
     $scope.currentLoc = {"data": ""};
@@ -152,6 +151,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     //console.log($scope.currentLoc.data.selectedLoc);
     $scope.file = {};
     $scope.oFile = {};
+    $scope.oFile.fileExist=false;
     $scope.readonlyrow = {};
     $scope.row = {};
     $scope.colmetadata = {"expression":"postfile", "type":"file"};
