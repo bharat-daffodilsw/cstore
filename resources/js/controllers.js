@@ -2902,7 +2902,7 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
         query.filter={};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"training_session_id._id": $routeParams.sessionid};
         //if (searchText && searchText != "") {
-        //    query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         //}
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
 

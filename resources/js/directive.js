@@ -105,7 +105,6 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 }]);
 /*change end here */
 
-//Changes made 02/05
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -176,7 +175,8 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 //$scope.searchContent="";
                             }
                             else if (hash.indexOf("?sessionid=") > 0) {
-
+                                //console.log(hash);
+                                //window.location.href = hash + "&search=" + $scope.searchContent;
                                 window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
@@ -903,7 +903,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<td><div class="margin_top">Detailed Description</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="name_input"><input type="text" placeholder="" ng-model="productdata.description"></td>' +
+            '<td class="name_input"><textarea type="text" placeholder="" ng-model="productdata.description"></textarea></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -911,7 +911,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<td><div class="margin_top">Short Description</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="name_input"><input type="text" placeholder="" ng-model="productdata.short_description"></td>' +
+            '<td class="name_input"><textarea type="text" placeholder="" ng-model="productdata.short_description"></textarea></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -1542,35 +1542,110 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
     return {
         restrict: 'E',
         replace: 'true',
-        template: '<div><div class="table_1 pull-left"><div class="l_bar pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div class="margin_top">Site Id</div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.siteid"></td></tr><tr><td><div class="margin_top">Site Name</div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.storename"></td></tr><tr><td>' +
-            '<div class="margin_top">Site Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact">' +
-            '</td></tr>' +
-            '<tr><td><div class="margin_top">POS Type</div></td></tr><tr><td><pos-type></pos-type>' +
-            '</td></tr><tr><td><div class="margin_top">POS Version</div></td></tr><tr><td><input type="text" placeholder="" ng-model="storedata.pos_version"></td>' +
+        template: '<div>' +
+            '<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Site Id</div></td>' +
+            '<td class="half_td"><div class="margin_top">Site Name</div></td>' +
             '</tr>' +
-            '<tr><td><div class="margin_top">Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.email"></td>' +
-            '</tr><tr><td><div class="margin_top">Address</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address"></td></tr><tr><td><div class="margin_top">Address 2</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.address2"></td></tr>' +
-            '<tr><td><div class="margin_top">Country </div></td></tr><tr><td><store-country-select></store-country-select></td></tr>' +
-            '<tr><td><div class="margin_top">State </div></td></tr><tr><td><store-state-select></store-state-select></td></tr>' +
-            '<tr><td><div class="margin_top">City</div></td></tr><tr><td><store-city-select></store-city-select></td></tr>' +
-            '<tr><td><div class="margin_top">Postal Code</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.postalcode"></td></tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.siteid"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.storename"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Manager Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Shift</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.manager.name"></td>' +
+            '<td class="half_td"><shift></shift></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Site Phone</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Phone</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact"></td>' +
+            '<td class="half_td"><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Email</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Email</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.email"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Address</div></td>' +
+            '<td class="half_td"><div class="margin_top">Address 2</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.address"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.address2"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Country</div></td>' +
+            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><store-country-select></store-country-select></td>' +
+            '<td class="half_td"><store-state-select></store-state-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">City</div></td>' +
+            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><store-city-select></store-city-select></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.postalcode"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">POS Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">POS Version</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><pos-type></pos-type></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="storedata.pos_version"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Loyalty Status</div></td>' +
+            '<td class="half_td"><div class="margin_top">Reward Type</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><loyalty-status></loyalty-status></td>' +
+            '<td class="half_td"><reward-type></reward-type></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Pump Brand</div></td>' +
+            '<td class="half_td"><div class="margin_top">Pump Model </div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.pump_brand"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.pump_model"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Brand</div></td>' +
+            '<td class="half_td"><div class="margin_top">Company Logo</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><brand></brand></td>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="save_close pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveStore()"><a href="">Save</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button>' +
+            '</div>' +
+            '</div></td>' +
+            '</tr>' +
             '</table></div>' +
-            '<div class="r_bar pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td>' +
-            '<div class="margin_top">Manager Name</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.name"></td></tr>' +
-            '<tr><td><div class="margin_top">Manager Phone</div></td></tr><tr><td><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td></tr><tr><td>' +
-            '<div class="margin_top">Manager Email</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
-            '</tr><tr><td><div class="margin_top">Manager Shift</div></td></tr><tr><td><shift></shift></td></tr><tr><td><div class="margin_top">Loyalty Status</div></td></tr><tr><td>' +
-            '<loyalty-status></loyalty-status></td></tr><tr><td><div class="margin_top">Reward Type</div>' +
-            '</td></tr><tr><td><reward-type></reward-type></td></tr><tr><td><div class="margin_top">Pump Brand</div></td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_brand"></td></tr><tr><td><div class="margin_top">Pump Model </div>' +
-            '</td></tr><tr><td><input type="text" placeholder=""ng-model="storedata.pump_model"></td></tr>' +
-            '<tr><td><div class="margin_top">Brand</div></td></tr><tr><td><brand></brand></td></tr>' +
-            '<tr><td><div class="margin_top">Company Logo</div></td></tr><tr><td class="product_image"><app-file-upload></app-file-upload></td></tr><tr><td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="saveStore()"><a href="">Save</a></button></div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button></div></div></td></tr></table>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
+            '</div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -1603,18 +1678,28 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            if (!$scope.storedata.manager.name) {
+                                $("#popupMessage").html("Please enter manager name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.storedata.contact || !regNumberOnly.test($scope.storedata.contact)) {
                                 $("#popupMessage").html("Please enter valid site phone number");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.selectedPosType || ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType)) {
-                                $("#popupMessage").html("Please choose pos type");
+                            if (!$scope.storedata.manager.contact || !regNumberOnly.test($scope.storedata.manager.contact)) {
+                                $("#popupMessage").html("Please enter valid manager contact");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
                             if (!email || regEmail.test(email) == false) {
                                 $("#popupMessage").html("Please enter a valid email id");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!managerEmail || regEmail.test(managerEmail) == false) {
+                                $("#popupMessage").html("Please enter a valid manager email id");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1643,13 +1728,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.storedata.manager.name) {
-                                $("#popupMessage").html("Please enter manager name");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.storedata.manager.contact || !regNumberOnly.test($scope.storedata.manager.contact)) {
-                                $("#popupMessage").html("Please enter valid manager contact");
+                            if (!$scope.storedata.selectedPosType || ($scope.storedata.selectedPosType.name == "Others" && !$scope.storedata.otherPosType)) {
+                                $("#popupMessage").html("Please choose pos type");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1657,14 +1737,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $("#popupMessage").html("Please select loyalty status");
                                 $('.popup').toggle("slide");
                                 return false;
-                            }
-                            if (!managerEmail || regEmail.test(managerEmail) == false) {
-                                $("#popupMessage").html("Please enter a valid manager email id");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if ($scope.storedata["storeid"]) {
-                                $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
                             if (!$scope.storedata.selectedRewardType || ($scope.storedata.selectedRewardType.name == "Others" && !$scope.storedata.otherRewardType)) {
                                 $("#popupMessage").html("Please choose reward type");
@@ -1680,6 +1752,9 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $("#popupMessage").html("Please upload company logo");
                                 $('.popup').toggle("slide");
                                 return false;
+                            }
+                            if ($scope.storedata["storeid"]) {
+                                $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
                             var query = {};
                             query.table = "storemanagers__cstore";
@@ -3420,8 +3495,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Start Date  HH:MM</div></td>' +
-            '<td class="half_td"><div class="margin_top">End Date HH:MM</div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">End Date</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td">' +
@@ -3455,13 +3530,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td><div class="margin_top">UPC/PLU/GROUP</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><upc-select></upc-select></td>' +
-            '<td class="product_image"><app-file-upload></app-file-upload></td>' +
+            '<td class="half_td"><upc-select></upc-select></td>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"></div>' +
+            '<td class="half_td"><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"/></div>' +
             '</td>' +
-            '<td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
@@ -3522,18 +3597,22 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
-                             //cahnges made by anuradha
+                             if ($scope.promotiondata.start_date > $scope.promotiondata.end_date) {
+                                 $("#popupMessage").html("Please select valid start or end date");
+                                 $('.popup').toggle("slide");
+                                 return false;
+                             }
 							  if (!$scope.promotiondata.threshold || !regNumberOnly.test($scope.promotiondata.threshold)) {
 							      $("#popupMessage").html("Please enter valid numeric threshold value");
 							      $('.popup').toggle("slide");
 							      return false;
 							  }
 
-							 if (!$('#uploadfile').val()) {
+							 /*if (!$('#uploadfile').val()) {
 							     $("#popupMessage").html("Please upload file");
 							     $('.popup').toggle("slide");
 							     return false;
-							 }
+							 } */
 							 var query = {};
 							 query.table = "promotions__cstore";
 							 if ($scope.promotiondata["promotionid"]) {
@@ -3600,6 +3679,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.setPathforPromotion("promotions");
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }else if((callBackData.response && callBackData.response.indexOf("$promo_title_1  dup key") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("$promo_title_1  dup key")>0)){
+                                $("#popupMessage").html("there is duplicacy in promo title");
+                                $('.popup').toggle("slide");
+                            }
+                            else if((callBackData.response && callBackData.response.indexOf("$offer_title_1  dup key") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("$promo_title_1  dup key")>0)){
+                                $("#popupMessage").html("there is duplicacy in offer title");
                                 $('.popup').toggle("slide");
                             }
                             else {
@@ -4850,6 +4936,11 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             }
                             if (!$scope.productCodes[i].type) {
                                 $("#popupMessage").html("Please select type");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if($scope.productCodes[i].type=="UPC" && productCodeList[i].code.length > 12) {
+                                $("#popupMessage").html("Code for UPC can not be greater than 12 digits");
                                 $('.popup').toggle("slide");
                                 return false;
                             }

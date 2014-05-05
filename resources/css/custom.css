@@ -840,7 +840,7 @@ tr {
     height:50px;}
 
 .search_select {
-    width: 92%;
+    width: 95%;
     padding: 7px;}
 
 .text_area textarea{
@@ -1315,13 +1315,17 @@ span.btn:hover {
 .ques_index {
     color:#999;}
 
-.date_time {
-	width:47.5%;}
-
 .half_td {
     width:50%;
 }
 .description_promo {
     height: 60px;
     width:95%;
+}
+.name_input textarea {
+    width:97.5%!important;
+    height:50px;}
+
+.minutes {
+    margin-left: 18%;
 }
