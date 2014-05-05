@@ -3728,7 +3728,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $('.popup').toggle("slide");
                                 $scope.setPathforPromotion("promotions");
                             }
-                            else if((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns")>0)){
+                            else if((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns")>=0)){
                                 $("#popupMessage").html("There is duplicate value for promo title or offer titile");
                                 $('.popup').toggle("slide");
                             }
