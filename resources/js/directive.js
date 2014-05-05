@@ -3727,15 +3727,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 $scope.setPathforPromotion("promotions");
-                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.indexOf("$promo_title_1  dup key") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("$promo_title_1  dup key")>0)){
-                                $("#popupMessage").html("there is duplicacy in promo title");
+                            }
+                            else if((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns")>0)){
+                                $("#popupMessage").html("There is duplicate value for promo title or offer titile");
                                 $('.popup').toggle("slide");
                             }
-                            else if((callBackData.response && callBackData.response.indexOf("$offer_title_1  dup key") > 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("$promo_title_1  dup key")>0)){
-                                $("#popupMessage").html("there is duplicacy in offer title");
+                            else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             }
                             else {
