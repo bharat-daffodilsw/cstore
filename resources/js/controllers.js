@@ -144,7 +144,6 @@ cstore.config(
     });
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
-
     $scope.currentUser = {"data": ""};
     //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
     $scope.currentLoc = {"data": ""};
@@ -152,6 +151,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     //console.log($scope.currentLoc.data.selectedLoc);
     $scope.file = {};
     $scope.oFile = {};
+    $scope.oFile.fileExist=false;
     $scope.readonlyrow = {};
     $scope.row = {};
     $scope.colmetadata = {"expression":"postfile", "type":"file"};
@@ -887,6 +887,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata.siteid="";
         $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
         $scope.storedata.selectedShift="";
+        $scope.oFile.fileExist=false;
     }
     $scope.clearProductContent = function () {
      $scope.productdata["name"] = "";
@@ -898,6 +899,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
      $scope.readonlyrow.fileurl = "";
      $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
      //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
+        $scope.oFile.fileExist=false;
 
      }
     $scope.clearUserContent = function () {
@@ -933,6 +935,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         //changes made by anuradha 0105 evening
         $scope.promotiondata["top_promo"]=false;
         // $scope.promotiondata.vendorsList = $scope.vendors[0];
+        $scope.oFile.fileExist=false;
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
