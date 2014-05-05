@@ -983,11 +983,6 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                          $('.popup').toggle("slide");
                          return false;
                          }
-                         if (!$scope.productdata.quantity || !regNumberOnly.test($scope.productdata.quantity)) {
-                         $("#popupMessage").html("Please enter valid quantity");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
                          if (!$scope.productdata.cost || !$scope.productdata.cost.amount ||!regNumberOnly.test($scope.productdata.cost.amount)) {
                          $("#popupMessage").html("Please enter price");
                          $('.popup').toggle("slide");
@@ -1009,7 +1004,6 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                          $scope.newProduct["name"] = $scope.productdata.name;
                          $scope.newProduct["description"] = $scope.productdata.description;
                          $scope.newProduct["short_description"] = $scope.productdata.short_description;
-                         $scope.newProduct["quantity"] = $scope.productdata.quantity;
                          //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
                          $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
                          $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
