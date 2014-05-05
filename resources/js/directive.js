@@ -783,9 +783,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + products.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess()"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>POP Name</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'name\',\'desc\')"></div>	</span></th>' +
-            '<th>POP Category<span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</span></th><th><span>Price</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</span></th><th><span>Quantity</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'quantity\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'quantity\',\'desc\')"></div></span></th><th><span>Sold Count</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'soldcount\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'soldcount\',\'desc\')"></div></span></th><th></th></tr><tr ng-repeat="product in products"><td>' +
+            '<th>POP Category<span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'product_category.name\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'product_category.name\',\'desc\')"></div>	</span></th><th><span>Price</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'cost\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'cost\',\'desc\')"></div>	</span></th><th><span>Sold Count</span><span class="sortWrap"><div class="sortUp" ng-click="setProductOrder(\'soldcount\',\'asc\')"></div><div class="sortDown" ng-click="setProductOrder(\'soldcount\',\'desc\')"></div></span></th><th></th></tr><tr ng-repeat="product in products"><td>' +
             '<input type="checkbox" ng-model="product.deleteStatus"></td><td>{{product.name}}</td><td>{{product.product_category.name}}</td><td>' +
-            '{{product.cost.amount | currency}}</td><td>{{product.quantity}}</td><td>{{product.soldcount}}</td>' +
+            '{{product.cost.amount | currency}}</td><td>{{product.soldcount}}</td>' +
             '<td><a class="edit_btn" ng-click="setProductState(product)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProductData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -847,7 +847,6 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["cost"] = product.cost ? product.cost : "";
                         $scope.productdata["description"] = product.description ? product.description : "";
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
-                        $scope.productdata["quantity"] = product.quantity ? product.quantity : "";
                         //$scope.productdata["image"] = product.image;
                         $scope.showFile(product.image, false);
                         //changed 28/04
@@ -918,11 +917,9 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Quantity</div></td>' +
             '<td class="half_td"><div class="margin_top">Price</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.quantity"></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
             '</tr>' +
             '</table>' +
@@ -978,11 +975,6 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.productdata.quantity) {
-                                $("#popupMessage").html("Please enter quantity");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
                             if (!$scope.productdata.cost || !$scope.productdata.cost.amount) {
                                 $("#popupMessage").html("Please enter price");
                                 $('.popup').toggle("slide");
@@ -1003,7 +995,6 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                             $scope.newProduct["name"] = $scope.productdata.name;
                             $scope.newProduct["description"] = $scope.productdata.description;
                             $scope.newProduct["short_description"] = $scope.productdata.short_description;
-                            $scope.newProduct["quantity"] = $scope.productdata.quantity;
                             //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
                             $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
                             $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
