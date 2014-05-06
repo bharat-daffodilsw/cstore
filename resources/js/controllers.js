@@ -145,6 +145,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
+    $scope.search={"searchContent":""};
     //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
@@ -1492,17 +1493,17 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         })
     }
     $scope.getAllVendors(1, 10);
-    $scope.setOrder = function (sortingCol, sortingType) {
+    $scope.setOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0;
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllVendors(1, 10, null, null);
+        $scope.getAllVendors(1, 10, column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllVendors(1, 10);
+    $scope.getMore = function (column,searchText) {
+        $scope.getAllVendors(1, 10,column,searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllVendors(0, 10);
+    $scope.getLess = function (column,searchText) {
+        $scope.getAllVendors(0, 10,column,searchText);
     }
     $scope.getEditCountries(null, null, null);
 });
@@ -1574,17 +1575,17 @@ cstore.controller('productList', function ($scope, $appService) {
         })
     }
     $scope.getAllProducts(1, 10);
-    $scope.setProductOrder = function (sortingCol, sortingType) {
+    $scope.setProductOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllProducts(1, 10, null, null);
+        $scope.getAllProducts(1, 10, column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllProducts(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllProducts(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllProducts(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllProducts(0, 10,column, searchText);
     }
     //$scope.getVendors();
 });
@@ -1674,17 +1675,17 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         });
     }
     $scope.getAllStoreManagers(1, 10);
-    $scope.setStoreOrder = function (sortingCol, sortingType) {
+    $scope.setStoreOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllStoreManagers(1, 10, null, null);
+        $scope.getAllStoreManagers(1, 10, column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllStoreManagers(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllStoreManagers(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllStoreManagers(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllStoreManagers(0, 10,column, searchText);
     }
     $scope.getEditCountries(null, null, null);
 });
@@ -1789,17 +1790,17 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllCountries(1, 10);
-    $scope.setCountryOrder = function (sortingCol, sortingType) {
+    $scope.setCountryOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllCountries(1, 10, null, null);
+        $scope.getAllCountries(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllCountries(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllCountries(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllCountries(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllCountries(0, 10,column, searchText);
     }
     $scope.refreshCountries = function (index, refreshCountryId) {
 
@@ -1878,17 +1879,17 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllProductCategories(1, 10);
-    $scope.setProductCatOrder = function (sortingCol, sortingType) {
+    $scope.setProductCatOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllProductCategories(1, 10, null, null);
+        $scope.getAllProductCategories(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllProductCategories(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllProductCategories(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllProductCategories(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllProductCategories(0, 10,column, searchText);
     }
     $scope.refreshProductCategories = function (index, refreshProductCategoryId) {
 
@@ -1967,17 +1968,17 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllTrainingCategories(1, 10);
-    $scope.setTrainingCatOrder = function (sortingCol, sortingType) {
+    $scope.setTrainingCatOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllTrainingCategories(1, 10, null, null);
+        $scope.getAllTrainingCategories(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllTrainingCategories(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllTrainingCategories(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllTrainingCategories(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllTrainingCategories(0, 10,column, searchText);
     }
     $scope.refreshTrainingCategories = function (index, refreshTrainingCategoryId) {
 
@@ -2076,17 +2077,17 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllStates(1, 10);
-    $scope.setStateOrder = function (sortingCol, sortingType) {
+    $scope.setStateOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllStates(1, 10, null, null);
+        $scope.getAllStates(1, 10, column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllStates(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllStates(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllStates(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllStates(0, 10,column, searchText);
     }
     $scope.getStateCountries();
     $scope.refreshStates = function (index, refreshStateId) {
@@ -2165,17 +2166,17 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllCities(1, 10);
-    $scope.setCityOrder = function (sortingCol, sortingType) {
+    $scope.setCityOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllCities(1, 10, null, null);
+        $scope.getAllCities(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllCities(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllCities(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllCities(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllCities(0, 10,column, searchText);
     }
     $scope.getCityStates = function () {
         $scope.stateList = {};
@@ -2322,17 +2323,17 @@ cstore.controller('userCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllUsers(1, 10);
-    $scope.setOrder = function (sortingCol, sortingType) {
+    $scope.setOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllUsers(1, 10, null, null);
+        $scope.getAllUsers(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllUsers(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllUsers(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllUsers(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllUsers(0, 10,column, searchText);
     }
     $scope.getStores();
     $scope.getRoles();
@@ -2360,8 +2361,6 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         {"value": "promo_title", "name": "Promo Title"},
         {"value": "offer_title", "name": "Offer Title"},
         {"value": "offer_type", "name": "Offer Type"},
-        {"value": "start_date", "name": "Start Date"},
-        {"value": "end_date", "name": "End Date"},
         {"value": "item_signage", "name": "Item Signage"}
     ];
     $scope.searchby = $scope.venderSearch[0];
@@ -2427,17 +2426,17 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllPromotions(1, 10);	
-    $scope.setPromotionOrder = function (sortingCol, sortingType) {
+    $scope.setPromotionOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllPromotions(1, 10, null, null);
+        $scope.getAllPromotions(1, 10, column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllPromotions(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllPromotions(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllPromotions(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllPromotions(0, 10,column, searchText);
     }
 });
 
@@ -2533,17 +2532,17 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllTrainingSessions(1, 10);
-    $scope.setTrainingSessionOrder = function (sortingCol, sortingType) {
+    $scope.setTrainingSessionOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllTrainingSessions(1, 10, null, null);
+        $scope.getAllTrainingSessions(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllTrainingSessions(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllTrainingSessions(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllTrainingSessions(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllTrainingSessions(0, 10,column, searchText);
     }
     //changes made by anuradha 0n 30-04
     $scope.getStores();
@@ -2621,17 +2620,17 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllSurveys(1, 10);
-    $scope.setSurveyOrder = function (sortingCol, sortingType) {
+    $scope.setSurveyOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllSurveys(1, 10, null, null);
+        $scope.getAllSurveys(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAllSurveys(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllSurveys(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAllSurveys(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllSurveys(0, 10,column, searchText);
     }
     $scope.getStores();
 });
@@ -2700,17 +2699,17 @@ cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routePara
         })
     }
     $scope.getAssignedSurveys(1, 10);
-    $scope.setAssignedSurveyOrder = function (sortingCol, sortingType) {
+    $scope.setAssignedSurveyOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAssignedSurveys(1, 10, null, null);
+        $scope.getAssignedSurveys(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAssignedSurveys(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAssignedSurveys(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAssignedSurveys(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAssignedSurveys(0, 10,column, searchText);
     }
 
 });
@@ -2875,17 +2874,17 @@ cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routePar
         })
     }
     $scope.getAssignedSessions(1, 10);
-    $scope.setAssignedSessionOrder = function (sortingCol, sortingType) {
+    $scope.setAssignedSessionOrder = function (sortingCol, sortingType,column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAssignedSessions(1, 10, null, null);
+        $scope.getAssignedSessions(1, 10,column, searchText);
     }
-    $scope.getMore = function () {
-        $scope.getAssignedSessions(1, 10);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAssignedSessions(1, 10,column, searchText);
     }
-    $scope.getLess = function () {
-        $scope.getAssignedSessions(0, 10);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAssignedSessions(0, 10,column, searchText);
     }
 
 });
@@ -3197,17 +3196,17 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
              })
          }
          $scope.getAllProductCodes(1, 10);
-         $scope.setProductCodeOrder = function (sortingCol, sortingType) {
+         $scope.setProductCodeOrder = function (sortingCol, sortingType,column, searchText) {
              $scope.show.currentCursor = 0
              $scope.sortingCol = sortingCol;
              $scope.sortingType = sortingType;
-             $scope.getAllProductCodes(1, 10, null, null);
+             $scope.getAllProductCodes(1, 10,column, searchText);
          }
-         $scope.getMore = function () {
-             $scope.getAllProductCodes(1, 10);
+         $scope.getMore = function (column, searchText) {
+             $scope.getAllProductCodes(1, 10,column, searchText);
          }
-         $scope.getLess = function () {
-             $scope.getAllProductCodes(0, 10);
+         $scope.getLess = function (column, searchText) {
+             $scope.getAllProductCodes(0, 10,column, searchText);
          }
          $scope.refreshProductCodes = function (index, refreshProductCodeId) {
 
