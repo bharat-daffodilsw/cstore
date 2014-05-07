@@ -143,6 +143,9 @@ cstore.config(
             }).when('/shopping-cart',{
                 templateUrl:'../shopping-cart',
                 controller:'shoppingCartCtrl'
+            }).when('/billing-address',{
+                templateUrl:'../billing-address',
+                controller:'billingAddressCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -274,7 +277,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
-
+    $scope.shoppingCartData={"quantity":[]};
+    for (var i=1;i<=10;i++){
+        $scope.shoppingCartData.quantity.push(i);
+    }
     /*bharat change for location*/
     $scope.location = '';
 	
@@ -1003,7 +1009,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     $scope.getShoppingCartLength();
-    $scope.addToCart = function (product) {
+    $scope.addToCart = function (product,quantity) {
         $scope.newShoppingCartProduct = {};
         $scope.loadingStatus = true;
         $scope.products = [];
@@ -1011,7 +1017,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.newShoppingCartProduct["userid"]={"username":$scope.currentUser.data.username};
         //$scope.newShoppingCartProduct["sub_total"]={"amount":product.cost.amount*1,"type": {"currency": "usd"}};
         productObj.name= product.name;
-        productObj.quantity= 1;
+        if(quantity){
+            productObj.quantity = quantity;
+        }
+        else {
+            productObj.quantity= 1;
+        }
         productObj.cost={"amount": product.cost.amount, "type": {"currency": "usd"}};
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"]=$scope.products;
@@ -3348,17 +3359,14 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
          }
      });
 
-/******************************** Shooping Cart*************************************/
+/******************************** Shopping Cart*************************************/
 cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
-    $scope.shoppingCartData={"quantity":[]};
-    for (var i=1;i<=10;i++){
-        $scope.shoppingCartData.quantity.push(i);
-    }
+    $scope.grandTotal=0;
+    $scope.shoppingCartProducts={"total":"","grandTotal":""};
     $scope.getShoppingCart = function () {
         $scope.loadingShoppingCartData = true;
         var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product","product.name","product.cost","product.quantity","shipping_charges","sub_total","total","userid"];
-
+        query.columns = ["product","shipping_charges","sub_total","total","userid"];
         query.filter={};
         query.filter["userid._id"] = $scope.currentUser.data.userid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -3366,7 +3374,14 @@ cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
             $scope.loadingShoppingCartData = false;
             $scope.cartData = cartData.response.data;
-            $scope.cartProducts=cartData.response.data[0].product;
+            $scope.shoppingCartProducts=cartData.response.data[0].product;
+            //console.log(JSON.stringify($scope.shoppingCartProducts));
+            for (var i=0;i<$scope.shoppingCartProducts.length;i++){
+                $scope.shoppingCartProducts[i].total=$scope.shoppingCartProducts[i].quantity*$scope.shoppingCartProducts[i].cost.amount;
+                //console.log($scope.shoppingCartProducts[i].total);
+                $scope.grandTotal += $scope.shoppingCartProducts[i].total;
+            }
+            //console.log($scope.grandTotal);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -3375,28 +3390,30 @@ cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
     $scope.getShoppingCart();
     $scope.removeFromCart = function (product) {
         console.log(product);
-      /*  $scope.newShoppingCartProduct = {};
+        $scope.removeShoppingCartProduct = {};
         $scope.loadingStatus = true;
         $scope.products = [];
-        var productObj={"name":"","cost":{},"quantity":""};
-        $scope.newShoppingCartProduct["userid"]={"username":$scope.currentUser.data.username};
-        //$scope.newShoppingCartProduct["sub_total"]={"amount":product.cost.amount*1,"type": {"currency": "usd"}};
-        productObj.name= product.name;
-        productObj.quantity= 1;
-        productObj.cost={"amount": product.cost.amount, "type": {"currency": "usd"}};
-        $scope.products.push(productObj);
-        $scope.newShoppingCartProduct["product"]=$scope.products;
-        $scope.newShoppingCartProduct["__type__"] = "insertifnotexist";
-        $scope.newShoppingCartProduct["$inc"] ={"sub_total":product.cost.amount};
+        $scope.removeShoppingCartProduct["userid"]={"_id":$scope.currentUser.data.userid};
+        $scope.products.push({"_id": product._id, "__type__": "delete"});
+        $scope.removeShoppingCartProduct["product"]=$scope.products;
+        $scope.removeShoppingCartProduct["__type__"] = "insertifnotexist";
+        $scope.removeShoppingCartProduct["$inc"] ={"sub_total":-(product.cost.amount)};
         var query = {};
         query.table = "shopping_cart__cstore";
-        query.operations = [$scope.newShoppingCartProduct];
+        query.operations = [$scope.removeShoppingCartProduct];
         $appService.save(query, ASK, OSK, null, function (callBackData) {
             $scope.loadingStatus = false;
             if (callBackData.code == 200 && callBackData.status == "ok") {
-                $("#popupMessage").html("Product is added to cart");
+                for(var i =0; i<$scope.shoppingCartProducts.length;i++){
+                    if($scope.shoppingCartProducts[i]._id==product._id)
+                    {
+                        $scope.shoppingCartProducts.splice(i,1);
+                        i--;
+                    }
+                }
+                $scope.cartProducts.length--;
+                $("#popupMessage").html("Product is removed");
                 $('.popup').toggle("slide");
-                $scope.cartProducts.length++;
             } else {
                 $("#popupMessage").html(callBackData.response);
                 $('.popup').toggle("slide");
@@ -3407,7 +3424,28 @@ cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
         }, function (err) {
             $("#popupMessage").html(err);
             $('.popup').toggle("slide");
-        }); */
+        });
     }
+});
+cstore.controller('billingAddressCtrl', function ($scope, $appService) {
+    $scope.getSavedAddress = function () {
+        $scope.loadingSavedAddress = true;
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["address","cityid","contact","countryid","stateid","email","storename","manager.name","postalcode"];
+        query.filter={};
+        query.filter["_id"] = $scope.currentUser.data.storeid;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (savedAddressData) {
+            $scope.loadingSavedAddress = false;
+            //console.log(JSON.stringify(savedAddressData));
+            $scope.savedAddressData = savedAddressData.response.data[0];
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getSavedAddress();
+
 });
 
