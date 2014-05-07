@@ -5088,9 +5088,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathForBill(\'billing-address\')"><a href="">Checkout</a></button>' +
             '</div>' +
-            '<div>Sub Total :: {{}}</div>' +
-            '<div>Shipping Charges :: free</div>' +
-            '<div>Total :: </div>' +
+
             '</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingShoppingCartData"><img src="images/loading.gif"></div>',
         compile: function () {
