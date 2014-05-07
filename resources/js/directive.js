@@ -3833,7 +3833,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
             '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Assign Store</th><th></th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
             '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id)" href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="setAssignedSessionState(trainingSession)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
+            '<td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
