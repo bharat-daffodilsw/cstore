@@ -171,6 +171,7 @@ appStrapServices.factory('$appService', [
             currentSession["roleid"] = $appService.getCookie("roleid");
             currentSession["userid"] = $appService.getCookie("userid");
             currentSession["firstname"] = $appService.getCookie("firstname");
+            currentSession["username"] = $appService.getCookie("username");
             if ($appService.getCookie("storeid")) {
                 currentSession["storeid"] = $appService.getCookie("storeid");
                 currentSession["companyLogoUrl"] = $appService.getCookie("companyLogoUrl");
@@ -195,6 +196,7 @@ appStrapServices.factory('$appService', [
             $appService.delete_cookie("adminView");
             $appService.delete_cookie("companyLogoUrl");
             $appService.delete_cookie("selectedLoc");
+            $appService.delete_cookie("username");
         }
 
 

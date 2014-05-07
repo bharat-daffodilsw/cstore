@@ -730,7 +730,8 @@ tr {
     width:48%;}
 
 .item {
-    padding:5px;}
+    padding:5px;
+    color: black;}
 
 .item_code {
     padding:5px 0;}
@@ -840,7 +841,7 @@ tr {
     height:50px;}
 
 .search_select {
-    width: 95%;
+    width: 90%;
     padding: 7px;}
 
 .text_area textarea{
@@ -1328,4 +1329,18 @@ span.btn:hover {
 
 .minutes {
     margin-left: 18%;
+}
+.shopping_cart_popup {
+    display:none;
+    top:70px;
+    z-index:1000;
+    left:500px;
+    background-color:#FFF;
+    position:absolute;
+    font-size:17px;
+    width:330px;
+    padding:10px;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);}
+.item_price {
+    color:black;
 }
