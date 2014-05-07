@@ -3369,7 +3369,6 @@ cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
         });
     }
 });
-
 cstore.controller('billingAddressCtrl', function ($scope, $appService) {
     $scope.getSavedAddress = function () {
         $scope.loadingSavedAddress = true;
@@ -3391,3 +3390,4 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
     $scope.getSavedAddress();
 
 });
+

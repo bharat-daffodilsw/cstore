@@ -5086,9 +5086,9 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<button type="button"><a href="/">Continue Shopping</a></button>' +
             '</div>' +
             '<div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathForBill(\'billing-address\')"><a href="">Checkout</a></button>' +
+            '<button type="button" ng-click="updatedOrder(\'billing-address\')"><a href="">Checkout</a></button>' +
             '</div>' +
-
+            '<div>Sub Total :: {{getTotal() | currency}}</div>' +
             '</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingShoppingCartData"><img src="images/loading.gif"></div>',
         compile: function () {
@@ -5099,7 +5099,42 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                     }
                 },
                 post:function($scope){
-
+                     $scope.getTotal=function(){
+                       var total=0;
+                         for(var i=0; i<$scope.shoppingCartProducts.length;i++){
+                             var item = $scope.shoppingCartProducts[i];
+                             total+=item.quantity*item.cost.amount;
+                         }
+                         return total;
+                     }
+                    $scope.updatedOrder=function(path){
+                        //console.log(JSON.stringify($scope.shoppingCartProducts));
+                        $scope.updateShoppingCartProduct = {};
+                        $scope.updateShoppingCartProduct["userid"]={"_id":$scope.currentUser.data.userid};
+                        $scope.updateShoppingCartProduct["product"]=$scope.shoppingCartProducts;
+                        $scope.updateShoppingCartProduct["sub_total"]=$scope.getTotal();
+                        $scope.updateShoppingCartProduct["__type__"] = "insertifnotexist";
+                        var query = {};
+                        query.table = "shopping_cart__cstore";
+                        query.operations = [$scope.updateShoppingCartProduct];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Products are updated");
+                                $('.popup').toggle("slide");
+                                window.location.href = "#!/" + path;
+                                //$scope.cartProducts.length++;
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+                    }
                 }
             }
         }
