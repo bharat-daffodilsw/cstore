@@ -104,6 +104,9 @@ cstore.config(
             }).when('/edit-training-session',{
                 templateUrl:'../add-training-session',
                 controller:'addTrainingSessionCtrl'
+            }).when('/assign-store',{
+                templateUrl:'../assign-store',
+                controller:'assignStoreCtrl'
             }).when('/surveys',{
                 templateUrl:'../surveys',
                 controller:'surveyCtrl'
@@ -274,7 +277,24 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
     /*bharat change for location*/
     $scope.location = '';
-
+	
+    $scope.getURLParam = function (strParamName) {
+        var strReturn = "";
+        var strHref = window.location.href;
+        if (strHref.indexOf("?") > -1) {
+            var strQueryString = strHref.substr(strHref.indexOf("?"));
+            var aQueryString = strQueryString.split("&");
+            for (var iParam = 0; iParam < aQueryString.length; iParam++) {
+                if (
+                    aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1) {
+                    var aParam = aQueryString[iParam].split("=");
+                    strReturn = aParam[1];
+                    break;
+                }
+            }
+        }
+        return unescape(strReturn);
+    }
     $scope.doSearch = function () {
         if ($scope.location === '') {
             alert('Directive did not update the location property in parent controller.');
@@ -2297,23 +2317,6 @@ cstore.controller('profileCtrl', function ($scope, $appService, $location, $rout
 });
 
 cstore.controller('resetpasswordCtrl', function ($scope, $appService, $location, $routeParams) {
-    $scope.getURLParam = function (strParamName) {
-        var strReturn = "";
-        var strHref = window.location.href;
-        if (strHref.indexOf("?") > -1) {
-            var strQueryString = strHref.substr(strHref.indexOf("?"));
-            var aQueryString = strQueryString.split("&");
-            for (var iParam = 0; iParam < aQueryString.length; iParam++) {
-                if (
-                    aQueryString[iParam].indexOf(strParamName.toLowerCase() + "=") > -1) {
-                    var aParam = aQueryString[iParam].split("=");
-                    strReturn = aParam[1];
-                    break;
-                }
-            }
-        }
-        return unescape(strReturn);
-    }
     $scope.resetPassword = function (password, fpcode, callback) {
         var params = {};
         params.pwd = password;
@@ -2622,6 +2625,7 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
 
     } */
+	
     var trainingId = $routeParams.q;
     if (trainingId && trainingId != undefined && trainingId != "undefined") {
         $scope.trainingdata["trainingSessionId"] = trainingId;
@@ -2630,6 +2634,60 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
         delete $scope.trainingdata["trainingSessionId"];
     }
 })
+/************************************ AssignStore *****************************************************/
+cstore.controller('assignStoreCtrl', function ($scope, $appService) {
+	$scope.getStoresName = function () {
+        if ($scope.loadingStatus) {
+            return false;
+        }
+        $scope.loadingStatus = true;
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = [ "_id","storename"];
+        query.orders = {"storename":"asc"};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+			if(storeData.response.data && storeData.response.data.length > 0){
+				$scope.storesName = storeData.response.data;
+				$scope.trainingSessionId = $scope.getURLParam("id");
+				if(!$scope.trainingSessionId){
+					return;
+				}
+				var query = {"table": "training_session__cstore"};
+				query.columns = ["store_manager_id"];
+				query.filter = {"_id":$scope.trainingSessionId};
+				query.orders = {"storename":"asc"};
+				var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+				var serviceUrl = "/rest/data";
+				$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeTrainingData) {
+					$scope.loadingStatus = false;
+					if(storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length){
+						var storeManager = storeTrainingData.response.data[0].store_manager_id;		
+						for(i=0; i < $scope.storesName.length; i++){	
+							for(j=0; j < storeManager.length; j++){
+								if($scope.storesName[i]._id == storeManager[j]._id){
+									$scope.storesName[i].assigned = true;
+								}
+							}
+							if(!$scope.storesName[i].assigned){
+								$scope.storesName[i].assigned = false;
+							}
+						}
+					}
+				}, function (jqxhr, error) {
+					$("#popupMessage").html(error);
+					$('.popup').toggle("slide");
+				});
+			}else{
+				$scope.loadingStatus = false;
+			}
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        });
+    }
+	$scope.getStoresName();
+});
 /************************************ Survey *****************************************************/
 cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};

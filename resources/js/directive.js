@@ -3824,7 +3824,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
             '</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Assign Store</th><th></th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="showAssignPopup(trainingSession)" href>Assign</a></td>' +
+            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id)" href>Assign</a></td>' +
             '<td><a class="edit_btn" ng-click="setAssignedSessionState(trainingSession)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
@@ -3833,6 +3833,9 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         window.location.href = "#!/" + path;
                     }
                     //changes
+                    $scope.setAssignedPath=function(sessionid){
+						window.location.href = "#!/assign-store?id=" + sessionid;
+                    }
                     $scope.showAssignPopup=function(session){
                         $(".assign_popup").show();
                         //console.log(session.title);
@@ -3931,6 +3934,60 @@ cstore.directive('trainingCategorySelect', ['$appService', function ($appService
     return {
         restrict: 'E',
         template: '<select class="search_select" ng-model="trainingdata.selectedTrainingCategory" ng-options="trainingCategory.name for trainingCategory in trainingdata.trainingCategories"></select>'
+    }
+}]);
+
+cstore.directive('trainingAssignStore', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+			'<button type="button" ng-click="assignTrainingSession()"><a href>Save</a></button>' +
+			'<button type="button" ng-click="setPath(\'training-sessions\')"><a href>Back</a></button>' +
+            '</div></div>' +
+			'<div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span></th>' +
+            '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storename}}</td><td>' +
+            '<input type="checkbox" ng-model="store.assigned"></td>' +
+			'</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+		 compile: function () {
+            return {
+                post: function ($scope) {
+					$scope.assignTrainingSession = function (){
+						if(!$scope.trainingSessionId){
+							return;
+						}
+						$scope.loadingStatus = true;
+						var query = {"table": "training_session__cstore"};
+						var operationArray = {};
+						$scope.CSession = $appService.getSession();
+						operationArray._id = $scope.trainingSessionId;
+						var dataArr = [];
+						for(i=0; i < $scope.storesName.length; i++){	
+							if($scope.storesName[i].assigned){
+								dataArr.push({"_id":$scope.storesName[i]._id});
+							}
+						}
+						operationArray.store_manager_id = {data:dataArr,"override":"true"};
+						query.operations = [operationArray];
+						$appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+							$scope.loadingStatus = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                            }else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }else {
+                                $("#popupMessage").html("some error while saving training session");
+                                $('.popup').toggle("slide");
+                            }
+                        }, function (err) {
+                            console.log(err.stack);
+                        });					
+					}
+				}
+			}
+		}
     }
 }]);
 
