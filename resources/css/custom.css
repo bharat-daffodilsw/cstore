@@ -856,9 +856,13 @@ tr {
 th {
     text-align:center;}
 
-.table table td input {
+table td input {
     padding: 5px;
     width: 95%;}
+
+/*.table table td input {
+    padding: 5px;
+    width: 95%;} */
 
 .s_bar {
     width:44%;}

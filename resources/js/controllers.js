@@ -273,7 +273,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 	$scope.listType = [{"name":"Multiple Selected", "value":"checkbox"},{"name":"Single Selected", "value":"radio"},{"name":"Subjective Type", "value":"subjective"}]
 	$scope.questions = [{"optionArr":[],"type":$scope.listType[0],"addOption":true}];
     $scope.cartData={"quantity":[]};
-
+    $scope.billingdata={"bill_address":{},"shipping_address":{}};
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
@@ -3467,7 +3467,7 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
     $scope.getSavedAddress = function () {
         $scope.loadingSavedAddress = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = ["address","cityid","contact","countryid","stateid","email","storename","manager.name","postalcode"];
+        query.columns = ["address","cityid","contact","countryid","stateid","email","storename","manager.name","postalcode","address2"];
         query.filter={};
         query.filter["_id"] = $scope.currentUser.data.storeid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -3482,6 +3482,6 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
         })
     }
     $scope.getSavedAddress();
-
+    $scope.getEditCountries(null, null, null);
 });
 
