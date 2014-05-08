@@ -74,8 +74,8 @@ cstore.config(
                 templateUrl: '../profile',
                 controller: 'profileCtrl'
             }).when('/profile', {
-                templateUrl:'../profile',
-                controller:'profileCtrl'
+                templateUrl: '../profile',
+                controller: 'profileCtrl'
             }).when('/resetpassword', {
                 templateUrl: '../resetpassword',
                 controller: 'resetpasswordCtrl'
@@ -95,63 +95,63 @@ cstore.config(
                 templateUrl: '../add-promotion',
                 controller: 'addPromotionCtrl'
             })//changes made by anuradha
-            .when('/training-sessions',{
-                templateUrl:'../training-sessions',
-                controller:'trainingSessionCtrl'
-            }).when('/add-training-session',{
-                templateUrl:'../add-training-session',
-                controller:'addTrainingSessionCtrl'
-            }).when('/edit-training-session',{
-                templateUrl:'../add-training-session',
-                controller:'addTrainingSessionCtrl'
-            }).when('/assign-store',{
-                templateUrl:'../assign-store',
-                controller:'assignStoreCtrl'
-            }).when('/surveys',{
-                templateUrl:'../surveys',
-                controller:'surveyCtrl'
-            }).when('/all-promos',{
-                templateUrl:'../all-promos',
-                controller:'allPromotionsCtrl'
+            .when('/training-sessions', {
+                templateUrl: '../training-sessions',
+                controller: 'trainingSessionCtrl'
+            }).when('/add-training-session', {
+                templateUrl: '../add-training-session',
+                controller: 'addTrainingSessionCtrl'
+            }).when('/edit-training-session', {
+                templateUrl: '../add-training-session',
+                controller: 'addTrainingSessionCtrl'
+            }).when('/assign-store', {
+                templateUrl: '../assign-store',
+                controller: 'assignStoreCtrl'
+            }).when('/surveys', {
+                templateUrl: '../surveys',
+                controller: 'surveyCtrl'
+            }).when('/all-promos', {
+                templateUrl: '../all-promos',
+                controller: 'allPromotionsCtrl'
             }).when('/promo', {
                 templateUrl: '../promodetail',
                 controller: 'promoDetailCtrl'
-            }).when('/assigned-survey-store',{
-                templateUrl:'../assigned-survey-store',
-                controller:'assignedSurveyCtrl'
-            }).when('/add-survey',{
-                templateUrl:'../add-survey',
-                controller:'addSurveyCtrl'
-            }).when('/edit-survey',{
-                templateUrl:'../add-survey',
-                controller:'addSurveyCtrl'
-            }).when('/assigned-session-store',{
-                templateUrl:'/assigned-session-store',
-                controller:'assignedSessionCtrl'
-            }).when('/training-session',{
-                templateUrl:'../sessiondetail',
-                controller:'sessionDetailCtrl'
-            }).when('/all-training-sessions',{
-                templateUrl:'../all-training-sessions',
-                controller:'allTrainingSessionsCtrl'
-            }).when('/session-category',{
-                templateUrl:'../session-category',
-                controller:'trainingCategoryDetailCtrl'
-            }).when('/product-codes',{
-                templateUrl:'../product-codes',
-                controller:'productCodesCtrl'
-            }).when('/shopping-cart',{
-                templateUrl:'../shopping-cart',
-                controller:'shoppingCartCtrl'
-            }).when('/billing-address',{
-                templateUrl:'../billing-address',
-                controller:'billingAddressCtrl'
-            }).when('/shipping-address',{
-                templateUrl:'../shipping-address',
-                controller:'shippingAddressCtrl'
-            }).when('/order-review',{
-                templateUrl:'../order-review',
-                controller:'orderReviewCtrl'
+            }).when('/assigned-survey-store', {
+                templateUrl: '../assigned-survey-store',
+                controller: 'assignedSurveyCtrl'
+            }).when('/add-survey', {
+                templateUrl: '../add-survey',
+                controller: 'addSurveyCtrl'
+            }).when('/edit-survey', {
+                templateUrl: '../add-survey',
+                controller: 'addSurveyCtrl'
+            }).when('/assigned-session-store', {
+                templateUrl: '/assigned-session-store',
+                controller: 'assignedSessionCtrl'
+            }).when('/training-session', {
+                templateUrl: '../sessiondetail',
+                controller: 'sessionDetailCtrl'
+            }).when('/all-training-sessions', {
+                templateUrl: '../all-training-sessions',
+                controller: 'allTrainingSessionsCtrl'
+            }).when('/session-category', {
+                templateUrl: '../session-category',
+                controller: 'trainingCategoryDetailCtrl'
+            }).when('/product-codes', {
+                templateUrl: '../product-codes',
+                controller: 'productCodesCtrl'
+            }).when('/shopping-cart', {
+                templateUrl: '../shopping-cart',
+                controller: 'shoppingCartCtrl'
+            }).when('/billing-address', {
+                templateUrl: '../billing-address',
+                controller: 'billingAddressCtrl'
+            }).when('/shipping-address', {
+                templateUrl: '../shipping-address',
+                controller: 'shippingAddressCtrl'
+            }).when('/order-review', {
+                templateUrl: '../order-review',
+                controller: 'orderReviewCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -160,136 +160,151 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
-    $scope.search={"searchContent":""};
-    $scope.cartProducts={"length":""};
+    $scope.search = {"searchContent": ""};
+    $scope.cartProducts = {"length": ""};
     //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
     //console.log($scope.currentLoc.data.selectedLoc);
     $scope.file = {};
     $scope.oFile = {};
-    $scope.oFile.fileExist=false;
+    $scope.oFile.fileExist = false;
     $scope.readonlyrow = {};
     $scope.row = {};
-    $scope.colmetadata = {"expression":"postfile", "type":"file"};
+    $scope.colmetadata = {"expression": "postfile", "type": "file"};
     var FILE_KEY = 'key';
     //changes made by anuradha
-    $scope.loadingstatus=false;
+    $scope.loadingstatus = false;
     $scope.docfile = {};
     $scope.docOFile = {};
     $scope.readonlydocrow = {};
     $scope.docrow = {};
-    $scope.colmetadocdata = {"expression":"postfile", "type":"file"};
+    $scope.colmetadocdata = {"expression": "postfile", "type": "file"};
     /*********************/
-    $scope.data = {"countries":[], "cities":[], "states":[], "selectedCity":"", "selectedState":"", "selectedVendorCategory":"", "selectedCountry":"", "vendorCategories":[]};
+    $scope.data = {"countries": [], "cities": [], "states": [], "selectedCity": "", "selectedState": "", "selectedVendorCategory": "", "selectedCountry": "", "vendorCategories": []};
     $scope.data.vendorCategories = [
-        {"name":"Beverage"},
-        {"name":"Food Service"},
-        {"name":"Salty Snacks"},
-        {"name":"Candy"},
-        {"name":"Propane"},
-        {"name":"Fuel"},
-        {"name":"Energy"},
-        {"name":"Others"}
+        {"name": "Beverage"},
+        {"name": "Food Service"},
+        {"name": "Salty Snacks"},
+        {"name": "Candy"},
+        {"name": "Propane"},
+        {"name": "Fuel"},
+        {"name": "Energy"},
+        {"name": "Others"}
     ];
     $scope.data.selectedVendorCategory = $scope.data.vendorCategories[0];
     //$scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
     //changes made 0205
-    $scope.storedata = {"cities":[], "states":[], "countries":[], "selectedCity":"", "selectedState":"", "selectedCountry":"", "posTypes":[], "selectedPosType":"", "rewardTypes":[], "selectedRewardType":"", "shifts":[], "selectedShift":"", "manager":{}, "brands":[],"selectedBrand":"", "brandName":"", "otherPosType":"", "otherRewardType":"","otherBrand":"","loyalty_status":[],"selectedLoyaltyStatus":""};
+    $scope.storedata = {"cities": [], "states": [], "countries": [], "selectedCity": "", "selectedState": "", "selectedCountry": "", "posTypes": [], "selectedPosType": "", "rewardTypes": [], "selectedRewardType": "", "shifts": [], "selectedShift": "", "manager": {}, "brands": [], "selectedBrand": "", "brandName": "", "otherPosType": "", "otherRewardType": "", "otherBrand": "", "loyalty_status": [], "selectedLoyaltyStatus": ""};
     $scope.storedata.posTypes = [
-        {"name":"Gilbarco Passport"},
-        {"name":"VeriFone Ruby Only"},
-        {"name":"VeriFone Ruby Sapphire"},
-        {"name":"VeriFone Sapphire w/Topaz"},
-        {"name":"Wayne Nucleus"},
-        {"name":"Radiant"},
-        {"name":"Retalix"},
-        {"name":"FisCal"},
-        {"name":"Pinnacle Palm"},
-        {"name":"Others"}
+        {"name": "Gilbarco Passport"},
+        {"name": "VeriFone Ruby Only"},
+        {"name": "VeriFone Ruby Sapphire"},
+        {"name": "VeriFone Sapphire w/Topaz"},
+        {"name": "Wayne Nucleus"},
+        {"name": "Radiant"},
+        {"name": "Retalix"},
+        {"name": "FisCal"},
+        {"name": "Pinnacle Palm"},
+        {"name": "Others"}
     ];
     $scope.storedata.selectedPosType = $scope.storedata.posTypes[0];
     $scope.storedata.rewardTypes = [
-        {"name":"Cents Per Gallon"},
-        {"name":"Points/Clubs"},
-        {"name":"Clubs Only"},
-        {"name":"Mobile Only"},
-        {"name":"Others"}
+        {"name": "Cents Per Gallon"},
+        {"name": "Points/Clubs"},
+        {"name": "Clubs Only"},
+        {"name": "Mobile Only"},
+        {"name": "Others"}
     ];
     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
     //changes made 02/05
     $scope.storedata.brands = [
-        {"name":"Shell"},
-        {"name":"CITGO"},
-        {"name":"BP"},
-        {"name":"Mobil"},
-        {"name":"Exxon"},
-        {"name":"Marathon"},
-        {"name":"Conoco"},
-        {"name":"Phillips 66"},
-        {"name":"Valero"},
-        {"name":"Chevron"},
-        {"name":"Others"}
+        {"name": "Shell"},
+        {"name": "CITGO"},
+        {"name": "BP"},
+        {"name": "Mobil"},
+        {"name": "Exxon"},
+        {"name": "Marathon"},
+        {"name": "Conoco"},
+        {"name": "Phillips 66"},
+        {"name": "Valero"},
+        {"name": "Chevron"},
+        {"name": "Others"}
     ];
-    $scope.storedata.selectedBrand=$scope.storedata.brands[0];
+    $scope.storedata.selectedBrand = $scope.storedata.brands[0];
     $scope.storedata.shifts = [
-        {"name":"Day"},
-        {"name":"Night"}
+        {"name": "Day"},
+        {"name": "Night"}
     ];
     //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
-    $scope.storedata.loyalty_status=[{"name":"Active"},{"name":"Inactive"},{"name":"Implementation"},{"name":"Off program"}];
-    $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
-    $scope.productdata = {"productCategories":[], "vendors":[], "selectedProductCategory":"", "selectedVendor":""};
-    $scope.userdata = {"roles":[], "selectedRole":"", "stores":[], "selectedStore":""};
+    $scope.storedata.loyalty_status = [
+        {"name": "Active"},
+        {"name": "Inactive"},
+        {"name": "Implementation"},
+        {"name": "Off program"}
+    ];
+    $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
+    $scope.productdata = {"productCategories": [], "vendors": [], "selectedProductCategory": "", "selectedVendor": ""};
+    $scope.userdata = {"roles": [], "selectedRole": "", "stores": [], "selectedStore": ""};
     //changes Made 02/05
-    $scope.promotiondata = {"offerTypes":[], "selectedOfferType":"", "itemSignage":[], "selectedItemSignage":"", "upc":[], "selectedUpc":"","hours":[],"minutes":[],"selectedStartHour":"","selectedStartMinute":"","selectedEndHour":"","selectedEndMinute":""};
+    $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedEndHour": "", "selectedEndMinute": ""};
     $scope.promotiondata.offerTypes = [
-        {"name":"NPROD"}
+        {"name": "NPROD"}
     ];
     $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
     $scope.promotiondata.itemSignage = [
-        {"name":"Cooler"},
-        {"name":"Aisle"}
+        {"name": "Cooler"},
+        {"name": "Aisle"}
     ];
     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
-   // change made
-		$scope.promotiondata.upc = [
-			{"name":"UPC"},
-			{"name":"PLU"},
-			{"name":"GROUP"}
-		];
-	$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
-    for (var i=0;i<24;i++){
+    // change made
+    $scope.promotiondata.upc = [
+        {"name": "UPC"},
+        {"name": "PLU"},
+        {"name": "GROUP"}
+    ];
+    $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+    for (var i = 0; i < 24; i++) {
         var hr = i >= 10 ? i + "" : "0" + i;
         $scope.promotiondata.hours.push(hr);
     }
-    $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
-    $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
-    for(var j=0;j<60;j++){
+    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
+    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[0];
+    for (var j = 0; j < 60; j++) {
         var min = j >= 10 ? j + "" : "0" + j;
         $scope.promotiondata.minutes.push(min);
     }
-    $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
-    $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
-    $scope.trainingdata={"trainingCategories":[],"selectedTrainingCategory":"","stores":[],"assignedStore":"","uploadedimages":[]};
-    $scope.surveydata={};
-    $scope.codedata={"codeTypes":[],"selectedCodeType":""};
-    $scope.codedata.codeTypes=[{"name":"UPC"},{"name":"PLU"},{"name":"Group"}];
-    $scope.codedata.selectedCodeType=$scope.codedata.codeTypes[0];
-	$scope.listType = [{"name":"Multiple Selected", "value":"checkbox"},{"name":"Single Selected", "value":"radio"},{"name":"Subjective Type", "value":"subjective"}]
-	$scope.questions = [{"optionArr":[],"type":$scope.listType[0],"addOption":true}];
-    $scope.cartData={"quantity":[]};
-    $scope.billingdata={"bill_address":{},"shipping_address":{}};
+    $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[0];
+    $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[0];
+    $scope.trainingdata = {"trainingCategories": [], "selectedTrainingCategory": "", "stores": [], "assignedStore": "", "uploadedimages": []};
+    $scope.surveydata = {};
+    $scope.codedata = {"codeTypes": [], "selectedCodeType": ""};
+    $scope.codedata.codeTypes = [
+        {"name": "UPC"},
+        {"name": "PLU"},
+        {"name": "Group"}
+    ];
+    $scope.codedata.selectedCodeType = $scope.codedata.codeTypes[0];
+    $scope.listType = [
+        {"name": "Multiple Selected", "value": "checkbox"},
+        {"name": "Single Selected", "value": "radio"},
+        {"name": "Subjective Type", "value": "subjective"}
+    ]
+    $scope.questions = [
+        {"optionArr": [], "type": $scope.listType[0], "addOption": true}
+    ];
+    $scope.cartData = {"quantity": []};
+    $scope.billingdata = {"bill_address": {}, "shipping_address": {}};
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
-    $scope.shoppingCartData={"quantity":[]};
-    for (var i=1;i<=10;i++){
+    $scope.shoppingCartData = {"quantity": []};
+    for (var i = 1; i <= 10; i++) {
         $scope.shoppingCartData.quantity.push(i);
     }
     /*bharat change for location*/
     $scope.location = '';
-	
+
     $scope.getURLParam = function (strParamName) {
         var strReturn = "";
         var strHref = window.location.href;
@@ -321,15 +336,15 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
     };
     /*change end*/
-	
-	$scope.getAllVendorsList = function () {
+
+    $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
         query.columns = ["firstname"];
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
             $scope.promotiondata.vendors = vendorData.response.data;
-			$scope.promotiondata.vendorsList = $scope.promotiondata.vendors[0];
+            $scope.promotiondata.vendorsList = $scope.promotiondata.vendors[0];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -341,7 +356,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.displayData["cart"] = true;
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = true;
-        $scope.displayData["role"] = {"admin":false, "storeManager":true};
+        $scope.displayData["role"] = {"admin": false, "storeManager": true};
         if ($scope.currentUser["data"]["companyLogoUrl"]) {
             $scope.displayData["companyLogo"] = true;
         }
@@ -363,7 +378,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = false;
-        $scope.displayData["role"] = {"admin":false, "storeManager":false};
+        $scope.displayData["role"] = {"admin": false, "storeManager": false};
         $scope.displayData["companyLogo"] = false;
 
     }
@@ -376,13 +391,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         delete $scope.displayData;
         console.log($scope.displayData);
     }
-	/***********************Show Tags*********************************/
-	$scope.showTags = function(tags) {
-		var arr = []
-		for (var i in tags)
-			arr.push(tags[i].value);
-		return arr;
-	}	
+    /***********************Show Tags*********************************/
+    $scope.showTags = function (tags) {
+        var arr = []
+        for (var i in tags)
+            arr.push(tags[i].value);
+        return arr;
+    }
     /********************** Location**************************/
     /*$scope.getLocation = function(val) {
      return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
@@ -794,34 +809,34 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.$apply();
         }
     }
-      $scope.showDownloadableFile = function (file, updateScope) {
-        if(file){
-            $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
+    $scope.showDownloadableFile = function (file, updateScope) {
+        if (file) {
+            $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
             $scope.readonlyrow.fileType = 'download';
             $scope.readonlyrow.filename = file[0].name;
             $scope.readonlyrow.filenotexist = false;
         }
-        if(updateScope){
-        $scope.row[$scope.colmetadata.expression] = file;
+        if (updateScope) {
+            $scope.row[$scope.colmetadata.expression] = file;
         }
     }
-	$scope.showImgFile = function (file) {
-		var index = $scope.uploadedimages.length;
-		$scope.uploadedimages[index] = {};
-		$scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask="+ASK+"&osk="+OSK;
-		$scope.uploadedimages[index].filename = file[0][FILE_NAME];
-		$scope.uploadedimages[index].image = file;
-		$scope.uploadedimages[index].default = true;
-		$scope.albumArr.uploadedimg[index] = file[0];
-		$scope.imgFilenotexist = false;
-		$scope.uploadingimage = false;
-		//  $scope.row[$scope.colmetadata.expression] = file;
-		if (index == 10)
-			$scope.imgFileLimitExceed = true;
-	};
+    $scope.showImgFile = function (file) {
+        var index = $scope.uploadedimages.length;
+        $scope.uploadedimages[index] = {};
+        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+        $scope.uploadedimages[index].filename = file[0][FILE_NAME];
+        $scope.uploadedimages[index].image = file;
+        $scope.uploadedimages[index].default = true;
+        $scope.albumArr.uploadedimg[index] = file[0];
+        $scope.imgFilenotexist = false;
+        $scope.uploadingimage = false;
+        //  $scope.row[$scope.colmetadata.expression] = file;
+        if (index == 10)
+            $scope.imgFileLimitExceed = true;
+    };
 
-	$scope.getRoles = function () {
-       //change
+    $scope.getRoles = function () {
+        //change
         var query = {"table": "roles__cstore"};
         query.columns = ["name"];
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -835,17 +850,17 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     $scope.getStores = function () {
-       //change
+        //change
         var query = {"table": "storemanagers__cstore"};
         query.columns = ["storename"];
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.userdata.stores = storeData.response.data;
-            $scope.trainingdata.stores=storeData.response.data;
+            $scope.trainingdata.stores = storeData.response.data;
             //console.log($scope.userdata.stores);
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
-            $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
+            $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -864,14 +879,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-   $scope.getTrainingCategories();
-   $scope.showDocFile = function (file, updateScope) {
+    $scope.getTrainingCategories();
+    $scope.showDocFile = function (file, updateScope) {
         if (updateScope) {
             if ((/\.(doc|docx|pdf|ppt|pptx)$/i).test(file[0].name)) {
                 $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
                 $scope.readonlydocrow.fileType = "documentfile";
                 $scope.readonlydocrow.filenotexist = false;
-                $scope.readonlydocrow.filename=file[0].name;
+                $scope.readonlydocrow.filename = file[0].name;
             }
             else {
                 $scope.readonlydocrow.filenotexist = true;
@@ -884,7 +899,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
             $scope.readonlydocrow.fileType = "documentfile";
             $scope.readonlydocrow.filenotexist = false;
-            $scope.readonlydocrow.filename=file[0].name;
+            $scope.readonlydocrow.filename = file[0].name;
         }
         if (!$scope.$$phase) {
             $scope.$apply();
@@ -918,45 +933,45 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
         $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
         //changes made 02/05
-        $scope.storedata.selectedBrand=$scope.storedata.brands[0];
-        $scope.storedata.otherBrand="";
+        $scope.storedata.selectedBrand = $scope.storedata.brands[0];
+        $scope.storedata.otherBrand = "";
         $scope.storedata.otherPosType = "";
         $scope.storedata.otherRewardType = "";
-        $scope.storedata.siteid="";
-        $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
-        $scope.storedata.selectedShift="";
-        $scope.oFile.fileExist=false;
+        $scope.storedata.siteid = "";
+        $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
+        $scope.storedata.selectedShift = "";
+        $scope.oFile.fileExist = false;
     }
     $scope.clearProductContent = function () {
-     $scope.productdata["name"] = "";
-     $scope.productdata["cost"] = "";
-     $scope.productdata["description"] = "";
-     $scope.productdata["short_description"] = "";
-     $scope.productdata["quantity"] = "";
-     $scope.productdata["image"] = "";
-     $scope.readonlyrow.fileurl = "";
-     $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
-     //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
-        $scope.oFile.fileExist=false;
+        $scope.productdata["name"] = "";
+        $scope.productdata["cost"] = "";
+        $scope.productdata["description"] = "";
+        $scope.productdata["short_description"] = "";
+        $scope.productdata["quantity"] = "";
+        $scope.productdata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
+        $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
+        //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
+        $scope.oFile.fileExist = false;
 
-     }
+    }
     $scope.clearUserContent = function () {
-     $scope.userdata["username"] = "";
-     $scope.userdata["firstname"] = "";
-     $scope.userdata["lastname"] = "";
-     $scope.userdata["password"] = "";
-     $scope.userdata.selectedRole = $scope.userdata.roles[0];
-     $scope.userdata.selectedStore = $scope.userdata.roles[0];
-     }
+        $scope.userdata["username"] = "";
+        $scope.userdata["firstname"] = "";
+        $scope.userdata["lastname"] = "";
+        $scope.userdata["password"] = "";
+        $scope.userdata.selectedRole = $scope.userdata.roles[0];
+        $scope.userdata.selectedStore = $scope.userdata.roles[0];
+    }
     $scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["end_date"] = "";
         //$scope.promotiondata["end_time"]="";
         //$scope.promotiondata["start_time"]="";
-        $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
-        $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
-        $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
-        $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
+        $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[0];
+        $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[0];
         $scope.promotiondata["start_date"] = "";
         $scope.promotiondata["offer_description"] = "";
         $scope.promotiondata["offer_title"] = "";
@@ -971,9 +986,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
         $scope.promotiondata.codes = [];
         //changes made by anuradha 0105 evening
-        $scope.promotiondata["top_promo"]=false;
+        $scope.promotiondata["top_promo"] = false;
         // $scope.promotiondata.vendorsList = $scope.vendors[0];
-        $scope.oFile.fileExist=false;
+        $scope.oFile.fileExist = false;
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
@@ -982,7 +997,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.trainingdata["file"] = "";
         $scope.trainingdata["uploadedimages"] = [];
         $scope.readonlydocrow.fileurl = "";
-        $scope.readonlydocrow.filename ="";
+        $scope.readonlydocrow.filename = "";
         //$scope.readonlyrow.fileurl = "";
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
 
@@ -990,17 +1005,19 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
         $scope.surveydata["description"] = "";
-        $scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];
+        $scope.questions = [
+            {"optionArr": [], "question": "", "type": $scope.listType[0], "addOption": true}
+        ];
         if (!$scope.$$phase) {
             $scope.$apply();
         }
         $scope.setPath('surveys');
     }
-   //changes 0605
+    //changes 0605
     $scope.getShoppingCartLength = function () {
         var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product","product.name","product.cost","product.quantity","userid"];
-        query.filter={};
+        query.columns = ["product", "product.name", "product.cost", "product.quantity", "userid"];
+        query.filter = {};
         query.filter["userid._id"] = $scope.currentUser.data.userid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
@@ -1008,32 +1025,32 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             //$scope.cartData = cartData.response.data;
             //$scope.cartProducts=cartData.response.data[0].product;
             //console.log(cartData.response.data[0].product.length);
-            $scope.cartProducts.length=cartData.response.data[0].product.length;
+            $scope.cartProducts.length = cartData.response.data[0].product.length;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
     $scope.getShoppingCartLength();
-    $scope.addToCart = function (product,quantity) {
+    $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
         $scope.loadingStatus = true;
         $scope.products = [];
-        var productObj={"name":"","cost":{},"quantity":""};
-        $scope.newShoppingCartProduct["userid"]={"username":$scope.currentUser.data.username};
+        var productObj = {"name": "", "cost": {}, "quantity": ""};
+        $scope.newShoppingCartProduct["userid"] = {"username": $scope.currentUser.data.username};
         //$scope.newShoppingCartProduct["sub_total"]={"amount":product.cost.amount*1,"type": {"currency": "usd"}};
-        productObj.name= product.name;
-        if(quantity){
+        productObj.name = product.name;
+        if (quantity) {
             productObj.quantity = quantity;
         }
         else {
-            productObj.quantity= 1;
+            productObj.quantity = 1;
         }
-        productObj.cost={"amount": product.cost.amount, "type": {"currency": "usd"}};
+        productObj.cost = {"amount": product.cost.amount, "type": {"currency": "usd"}};
         $scope.products.push(productObj);
-        $scope.newShoppingCartProduct["product"]=$scope.products;
+        $scope.newShoppingCartProduct["product"] = $scope.products;
         $scope.newShoppingCartProduct["__type__"] = "insertifnotexist";
-        $scope.newShoppingCartProduct["$inc"] ={"sub_total":product.cost.amount};
+        $scope.newShoppingCartProduct["$inc"] = {"sub_total": product.cost.amount};
         var query = {};
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.newShoppingCartProduct];
@@ -1056,23 +1073,23 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         });
     }
     //shopping Cart Functions
-    $scope.shoppingCartProducts={"total":"","grandTotal":""};
+    $scope.shoppingCartProducts = {"total": "", "grandTotal": ""};
     $scope.getShoppingCart = function () {
         $scope.loadingShoppingCartData = true;
         var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product","shipping_charges","sub_total","total","userid","bill_address","shipping_address"];
-        query.filter={};
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address"];
+        query.filter = {};
         query.filter["userid._id"] = $scope.currentUser.data.userid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
             $scope.loadingShoppingCartData = false;
             $scope.cartData = cartData.response.data[0];
-            $scope.shoppingCartProducts=cartData.response.data[0].product;
-            $scope.savedBillingAddress=cartData.response.data[0].bill_address;
-            $scope.savedShippingAddress=cartData.response.data[0].shipping_address;
-            for (var i=0;i<$scope.shoppingCartProducts.length;i++){
-                $scope.shoppingCartProducts[i].total=$scope.shoppingCartProducts[i].quantity*$scope.shoppingCartProducts[i].cost.amount;
+            $scope.shoppingCartProducts = cartData.response.data[0].product;
+            $scope.savedBillingAddress = cartData.response.data[0].bill_address;
+            $scope.savedShippingAddress = cartData.response.data[0].shipping_address;
+            for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                $scope.shoppingCartProducts[i].total = $scope.shoppingCartProducts[i].quantity * $scope.shoppingCartProducts[i].cost.amount;
                 //console.log($scope.shoppingCartProducts[i].total);
                 $scope.grandTotal += $scope.shoppingCartProducts[i].total;
             }
@@ -1087,21 +1104,20 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.removeShoppingCartProduct = {};
         $scope.loadingStatus = true;
         $scope.products = [];
-        $scope.removeShoppingCartProduct["userid"]={"_id":$scope.currentUser.data.userid};
+        $scope.removeShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
         $scope.products.push({"_id": product._id, "__type__": "delete"});
-        $scope.removeShoppingCartProduct["product"]=$scope.products;
+        $scope.removeShoppingCartProduct["product"] = $scope.products;
         $scope.removeShoppingCartProduct["__type__"] = "insertifnotexist";
-        $scope.removeShoppingCartProduct["$inc"] ={"sub_total":-(product.cost.amount)};
+        $scope.removeShoppingCartProduct["$inc"] = {"sub_total": -(product.cost.amount)};
         var query = {};
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.removeShoppingCartProduct];
         $appService.save(query, ASK, OSK, null, function (callBackData) {
             $scope.loadingStatus = false;
             if (callBackData.code == 200 && callBackData.status == "ok") {
-                for(var i =0; i<$scope.shoppingCartProducts.length;i++){
-                    if($scope.shoppingCartProducts[i]._id==product._id)
-                    {
-                        $scope.shoppingCartProducts.splice(i,1);
+                for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                    if ($scope.shoppingCartProducts[i]._id == product._id) {
+                        $scope.shoppingCartProducts.splice(i, 1);
                         i--;
                     }
                 }
@@ -1170,16 +1186,16 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $('.popup').toggle("slide");
         })
     }
-    $scope.getRecentPromotions = function (maxRow,searchText) {
+    $scope.getRecentPromotions = function (maxRow, searchText) {
         $scope.loadingRecentPromotionData = true;
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
         //console.log(currentTime);
         var query = {"table": "promotions__cstore"};
-        query.columns = ["promo_title","image","start_date","end_date"];
+        query.columns = ["promo_title", "image", "start_date", "end_date"];
         query.filter = {};
-        query.filter["start_date"] = {"$lte":currentTime};
-        query.filter["end_date"] = {"$gte":currentTime};
+        query.filter["start_date"] = {"$lte": currentTime};
+        query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
@@ -1192,10 +1208,10 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         }
         //console.log(JSON.stringify(query));
         var timeZone = new Date().getTimezoneOffset();
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
-            $scope.loadingRecentPromotionData= false;
+            $scope.loadingRecentPromotionData = false;
             //console.log(promotionData.response.data[0].end_date);
             $scope.recentPromotions = $appService.setUrls(promotionData.response.data, 291, 196);
         }, function (jqxhr, error) {
@@ -1208,11 +1224,11 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
         var query = {"table": "promotions__cstore"};
-        query.columns = ["promo_title","image"];
+        query.columns = ["promo_title", "image"];
         query.filter = {};
-        query.filter["start_date"] = {"$lte":currentTime};
-        query.filter["end_date"] = {"$gte":currentTime};
-        query.filter["top_promo"]=true;
+        query.filter["start_date"] = {"$lte": currentTime};
+        query.filter["end_date"] = {"$gte": currentTime};
+        query.filter["top_promo"] = true;
         query.orders = {"__createdon": "desc"};
         if (maxRow) {
             query.max_rows = maxRow;
@@ -1222,10 +1238,10 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         }
         //console.log(JSON.stringify(query));
         var timeZone = new Date().getTimezoneOffset();
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
-            $scope.loadingCarouselPromotionData= false;
+            $scope.loadingCarouselPromotionData = false;
             $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 270, 225);
             //$scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data);
         }, function (jqxhr, error) {
@@ -1234,13 +1250,13 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         })
     }
     $scope.getCarouselPromotions(4);
-    $scope.$on('test', function(ngRepeatFinishedEvent) {
+    $scope.$on('test', function (ngRepeatFinishedEvent) {
         $('.bxslider').bxSlider({
             auto: true,
             autoControls: true,
-            autoHover:true,
+            autoHover: true,
             captions: true,
-            pager :false
+            pager: false
         });
     });
     //changes made by anuradha on 30-04
@@ -1249,7 +1265,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         //console.log($scope.currentUser.data.storeid);
         var query = {"table": "storemanager_trainingsession__cstore"};
 
-        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description"];
+        query.columns = ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         if (searchText && searchText != "") {
@@ -1276,8 +1292,8 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             //console.log($routeParams.q);
             $scope.getPopularProducts(8, $routeParams.search);
-            $scope.getRecentPromotions(8,$routeParams.search);
-            $scope.getAssignedTrainingSessions(4,$routeParams.search);
+            $scope.getRecentPromotions(8, $routeParams.search);
+            $scope.getAssignedTrainingSessions(4, $routeParams.search);
             $scope.homeView = {"storeManager": true, "admin": false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
@@ -1315,7 +1331,7 @@ cstore.controller('allCategory', function ($scope, $appService, $routeParams) {
         if (searchText && searchText != "") {
             query.childs = [
                 {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"name": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
-                ]
+            ]
         }
         else {
             query.childs = [
@@ -1426,7 +1442,7 @@ cstore.controller('productCategoryDetailCtrl', function ($scope, $appService, $r
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getProductDetail($scope.cursor, $routeParams.q,$routeParams.search);
+                            $scope.getProductDetail($scope.cursor, $routeParams.q, $routeParams.search);
                         }
                     }
                 }
@@ -1484,10 +1500,10 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                 var usk = callBackData.response ? callBackData.response.usk : null;
                 if (usk) {
 
-                    var query = {"table":"user_profiles__cstore"};
-                    query.columns = ["userid", "roleid", "storeid", "storeid.company_logo", "storeid.stateid.name","username"];
-                    query.filter = {"userid":"{_CurrentUserId}"};
-                    var params = {"query":JSON.stringify(query), "ask":ASK, "osk":OSK, "usk":usk};
+                    var query = {"table": "user_profiles__cstore"};
+                    query.columns = ["userid", "roleid", "storeid", "storeid.company_logo", "storeid.stateid.name", "username"];
+                    query.filter = {"userid": "{_CurrentUserId}"};
+                    var params = {"query": JSON.stringify(query), "ask": ASK, "osk": OSK, "usk": usk};
 
                     $appService.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
                         $appService.deleteAllCookie();
@@ -1505,7 +1521,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                                 $scope.currentLoc["data"] = stateName;
                             }
                             var image = [
-                                {"image":""}
+                                {"image": ""}
 
                             ];
                             for (var i = 0; i < callBackData.response.data.length; i++) {
@@ -1655,17 +1671,17 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         })
     }
     $scope.getAllVendors(1, 10);
-    $scope.setOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0;
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
         $scope.getAllVendors(1, 10, column, searchText);
     }
-    $scope.getMore = function (column,searchText) {
-        $scope.getAllVendors(1, 10,column,searchText);
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllVendors(1, 10, column, searchText);
     }
-    $scope.getLess = function (column,searchText) {
-        $scope.getAllVendors(0, 10,column,searchText);
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllVendors(0, 10, column, searchText);
     }
     $scope.getEditCountries(null, null, null);
 });
@@ -1737,35 +1753,35 @@ cstore.controller('productList', function ($scope, $appService) {
         })
     }
     $scope.getAllProducts(1, 10);
-    $scope.setProductOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setProductOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
         $scope.getAllProducts(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllProducts(1, 10,column, searchText);
+        $scope.getAllProducts(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllProducts(0, 10,column, searchText);
+        $scope.getAllProducts(0, 10, column, searchText);
     }
     //$scope.getVendors();
 });
 
 cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-   /* $scope.clearProductContent = function () {
-        $scope.productdata["name"] = "";
-        $scope.productdata["cost"] = "";
-        $scope.productdata["description"] = "";
-        $scope.productdata["short_description"] = "";
-        $scope.productdata["quantity"] = "";
-        $scope.productdata["image"] = "";
-        $scope.readonlyrow.fileurl = "";
-        $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
-        //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
+    /* $scope.clearProductContent = function () {
+     $scope.productdata["name"] = "";
+     $scope.productdata["cost"] = "";
+     $scope.productdata["description"] = "";
+     $scope.productdata["short_description"] = "";
+     $scope.productdata["quantity"] = "";
+     $scope.productdata["image"] = "";
+     $scope.readonlyrow.fileurl = "";
+     $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
+     //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
 
-    }*/
+     }*/
     var productId = $routeParams.q;
     if (productId && productId != undefined && productId != "undefined") {
         $scope.productdata["productid"] = productId;
@@ -1810,7 +1826,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $scope.loadingStoreData = true;
         var query = {"table": "storemanagers__cstore"};
 
-        query.columns = ["siteid","manager.email", "manager.contact", "manager.name", "address", "cityid", "countryid", "manager", "postalcode", "stateid", "storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point", "company_logo", "pump_brand", "pump_model", "address2"];
+        query.columns = ["siteid", "manager.email", "manager.contact", "manager.name", "address", "cityid", "countryid", "manager", "postalcode", "stateid", "storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point", "company_logo", "pump_brand", "pump_model", "address2"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -1837,17 +1853,17 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         });
     }
     $scope.getAllStoreManagers(1, 10);
-    $scope.setStoreOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setStoreOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
         $scope.getAllStoreManagers(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllStoreManagers(1, 10,column, searchText);
+        $scope.getAllStoreManagers(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllStoreManagers(0, 10,column, searchText);
+        $scope.getAllStoreManagers(0, 10, column, searchText);
     }
     $scope.getEditCountries(null, null, null);
 });
@@ -1856,40 +1872,40 @@ cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routePa
     $appService.auth();
     $scope.passwordStatus = true;
     /*$scope.clearStoreContent = function () {
-        $scope.storedata.manager = {};
-        //console.log(JSON.stringify($scope.storedata.manager));
-        $scope.storedata["address"] = "";
-        $scope.storedata["contact"] = "";
-        //$scope.storedata["loyalty_status"] = "";
-        $scope.storedata["pump_model"] = "";
-        $scope.storedata["pump_brand"] = ""
-        $scope.storedata["email"] = "";
-        $scope.storedata["pos_version"] = "";
-        $scope.storedata["postalcode"] = "";
-        $scope.storedata["storename"] = "";
-        $scope.storedata["address2"] = "";
-        $scope.storedata["manager"]["contact"] = "";
-        $scope.storedata["manager"]["email"] = "";
-        $scope.storedata["manager"]["name"] = "";
-        //changes Made
-        $scope.readonlyrow.fileurl = "";
-        $scope.storedata["company_logo"] = "";
-        $scope.readonlyrow.fileurl = "";
-        $scope.storedata.selectedCountry = "";
-        $scope.storedata.selectedCity = "";
-        $scope.storedata.selectedState = "";
-        $scope.storedata.selectedPosType = $scope.storedata.posTypes[0];
-        //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
-        $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
-        //changes made 02/05
-        $scope.storedata.selectedBrand=$scope.storedata.brands[0];
-        $scope.storedata.otherBrand="";
-        $scope.storedata.otherPosType = "";
-        $scope.storedata.otherRewardType = "";
-        $scope.storedata.siteid="";
-        $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
-        $scope.storedata.selectedShift="";
-    } */
+     $scope.storedata.manager = {};
+     //console.log(JSON.stringify($scope.storedata.manager));
+     $scope.storedata["address"] = "";
+     $scope.storedata["contact"] = "";
+     //$scope.storedata["loyalty_status"] = "";
+     $scope.storedata["pump_model"] = "";
+     $scope.storedata["pump_brand"] = ""
+     $scope.storedata["email"] = "";
+     $scope.storedata["pos_version"] = "";
+     $scope.storedata["postalcode"] = "";
+     $scope.storedata["storename"] = "";
+     $scope.storedata["address2"] = "";
+     $scope.storedata["manager"]["contact"] = "";
+     $scope.storedata["manager"]["email"] = "";
+     $scope.storedata["manager"]["name"] = "";
+     //changes Made
+     $scope.readonlyrow.fileurl = "";
+     $scope.storedata["company_logo"] = "";
+     $scope.readonlyrow.fileurl = "";
+     $scope.storedata.selectedCountry = "";
+     $scope.storedata.selectedCity = "";
+     $scope.storedata.selectedState = "";
+     $scope.storedata.selectedPosType = $scope.storedata.posTypes[0];
+     //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
+     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
+     //changes made 02/05
+     $scope.storedata.selectedBrand=$scope.storedata.brands[0];
+     $scope.storedata.otherBrand="";
+     $scope.storedata.otherPosType = "";
+     $scope.storedata.otherRewardType = "";
+     $scope.storedata.siteid="";
+     $scope.storedata.selectedLoyaltyStatus=$scope.storedata.loyalty_status[0];
+     $scope.storedata.selectedShift="";
+     } */
     var storeId = $routeParams.q;
     if (storeId && storeId != undefined && storeId != "undefined") {
         $scope.storedata["storeid"] = storeId;
@@ -1952,24 +1968,24 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllCountries(1, 10);
-    $scope.setCountryOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setCountryOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllCountries(1, 10,column, searchText);
+        $scope.getAllCountries(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllCountries(1, 10,column, searchText);
+        $scope.getAllCountries(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllCountries(0, 10,column, searchText);
+        $scope.getAllCountries(0, 10, column, searchText);
     }
     $scope.refreshCountries = function (index, refreshCountryId) {
 
-        var query = {"table":"countries__cstore"};
+        var query = {"table": "countries__cstore"};
         query.columns = ["name"];
-        query.filter = {"_id":refreshCountryId};
-        var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+        query.filter = {"_id": refreshCountryId};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
 
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
@@ -2010,7 +2026,7 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
         }
         $scope.loadingProductCategoryData = true;
 
-        var query = {"table":"product_categories__cstore"};
+        var query = {"table": "product_categories__cstore"};
         query.columns = ["name", "description"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2041,17 +2057,17 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllProductCategories(1, 10);
-    $scope.setProductCatOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setProductCatOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllProductCategories(1, 10,column, searchText);
+        $scope.getAllProductCategories(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllProductCategories(1, 10,column, searchText);
+        $scope.getAllProductCategories(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllProductCategories(0, 10,column, searchText);
+        $scope.getAllProductCategories(0, 10, column, searchText);
     }
     $scope.refreshProductCategories = function (index, refreshProductCategoryId) {
 
@@ -2130,17 +2146,17 @@ cstore.controller('trainingCategoryCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllTrainingCategories(1, 10);
-    $scope.setTrainingCatOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setTrainingCatOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllTrainingCategories(1, 10,column, searchText);
+        $scope.getAllTrainingCategories(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllTrainingCategories(1, 10,column, searchText);
+        $scope.getAllTrainingCategories(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllTrainingCategories(0, 10,column, searchText);
+        $scope.getAllTrainingCategories(0, 10, column, searchText);
     }
     $scope.refreshTrainingCategories = function (index, refreshTrainingCategoryId) {
 
@@ -2239,17 +2255,17 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllStates(1, 10);
-    $scope.setStateOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setStateOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
         $scope.getAllStates(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllStates(1, 10,column, searchText);
+        $scope.getAllStates(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllStates(0, 10,column, searchText);
+        $scope.getAllStates(0, 10, column, searchText);
     }
     $scope.getStateCountries();
     $scope.refreshStates = function (index, refreshStateId) {
@@ -2328,17 +2344,17 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllCities(1, 10);
-    $scope.setCityOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setCityOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllCities(1, 10,column, searchText);
+        $scope.getAllCities(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllCities(1, 10,column, searchText);
+        $scope.getAllCities(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllCities(0, 10,column, searchText);
+        $scope.getAllCities(0, 10, column, searchText);
     }
     $scope.getCityStates = function () {
         $scope.stateList = {};
@@ -2468,17 +2484,17 @@ cstore.controller('userCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllUsers(1, 10);
-    $scope.setOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllUsers(1, 10,column, searchText);
+        $scope.getAllUsers(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllUsers(1, 10,column, searchText);
+        $scope.getAllUsers(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllUsers(0, 10,column, searchText);
+        $scope.getAllUsers(0, 10, column, searchText);
     }
     $scope.getStores();
     $scope.getRoles();
@@ -2489,13 +2505,13 @@ cstore.controller('userCtrl', function ($scope, $appService) {
 cstore.controller('addUserCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     /*$scope.clearUserContent = function () {
-        $scope.userdata["username"] = "";
-        $scope.userdata["firstname"] = "";
-        $scope.userdata["lastname"] = "";
-        $scope.userdata["password"] = "";
-        $scope.userdata.selectedRole = $scope.userdata.roles[0];
-        $scope.userdata.selectedStore = $scope.userdata.roles[0];
-    } */
+     $scope.userdata["username"] = "";
+     $scope.userdata["firstname"] = "";
+     $scope.userdata["lastname"] = "";
+     $scope.userdata["password"] = "";
+     $scope.userdata.selectedRole = $scope.userdata.roles[0];
+     $scope.userdata.selectedStore = $scope.userdata.roles[0];
+     } */
 });
 
 /****************************Promotion***************************************************/
@@ -2539,9 +2555,9 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
             "threshold",
             "upc",
-			"vendorid",
+            "vendorid",
             "top_promo",
-			"codes"
+            "codes"
         ];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2556,7 +2572,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         query.$count = 1;
         var timeZone = new Date().getTimezoneOffset();
         //timeZone = timeZone * 60000;
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
             $scope.loadingPromotionData = false;
@@ -2570,50 +2586,50 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getAllPromotions(1, 10);	
-    $scope.setPromotionOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.getAllPromotions(1, 10);
+    $scope.setPromotionOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
         $scope.getAllPromotions(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllPromotions(1, 10,column, searchText);
+        $scope.getAllPromotions(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllPromotions(0, 10,column, searchText);
+        $scope.getAllPromotions(0, 10, column, searchText);
     }
 });
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     /*$scope.clearPromotionContent = function () {
-        $scope.promotiondata["promo_title"] = "";
-        $scope.promotiondata["end_date"] = "";
-        //$scope.promotiondata["end_time"]="";
-        //$scope.promotiondata["start_time"]="";
-        $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
-        $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
-        $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
-        $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
-        $scope.promotiondata["start_date"] = "";
-        $scope.promotiondata["offer_description"] = "";
-        $scope.promotiondata["offer_title"] = "";
-        $scope.promotiondata["promo_description"] = "";
-        $scope.promotiondata["reward_value"] = "";
-        $scope.promotiondata["sponsor"] = "";
-        $scope.promotiondata["threshold"] = "";
-        $scope.promotiondata["image"] = "";
-        $scope.readonlyrow.fileurl = "";
-        $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
-        $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
-        $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
-        $scope.promotiondata.codes = [];
-        //changes made by anuradha 0105 evening
-        $scope.promotiondata["top_promo"]=false;
-       // $scope.promotiondata.vendorsList = $scope.vendors[0];
-    } */
-	
+     $scope.promotiondata["promo_title"] = "";
+     $scope.promotiondata["end_date"] = "";
+     //$scope.promotiondata["end_time"]="";
+     //$scope.promotiondata["start_time"]="";
+     $scope.promotiondata.selectedStartHour=$scope.promotiondata.hours[0];
+     $scope.promotiondata.selectedEndHour=$scope.promotiondata.hours[0];
+     $scope.promotiondata.selectedStartMinute=$scope.promotiondata.minutes[0];
+     $scope.promotiondata.selectedEndMinute=$scope.promotiondata.minutes[0];
+     $scope.promotiondata["start_date"] = "";
+     $scope.promotiondata["offer_description"] = "";
+     $scope.promotiondata["offer_title"] = "";
+     $scope.promotiondata["promo_description"] = "";
+     $scope.promotiondata["reward_value"] = "";
+     $scope.promotiondata["sponsor"] = "";
+     $scope.promotiondata["threshold"] = "";
+     $scope.promotiondata["image"] = "";
+     $scope.readonlyrow.fileurl = "";
+     $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
+     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
+     $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+     $scope.promotiondata.codes = [];
+     //changes made by anuradha 0105 evening
+     $scope.promotiondata["top_promo"]=false;
+     // $scope.promotiondata.vendorsList = $scope.vendors[0];
+     } */
+
     var promotionId = $routeParams.q;
     if (promotionId && promotionId != undefined && promotionId != "undefined") {
         $scope.promotiondata["promotionid"] = promotionId;
@@ -2649,7 +2665,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
 
         $scope.loadingTrainingSessionData = true;
         var query = {"table": "training_session__cstore"};
-        query.columns = ["title","description","file","training_category_id","video_url"];
+        query.columns = ["title", "description", "file", "training_category_id", "video_url"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -2666,10 +2682,10 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingSessionData) {
             $scope.loadingTrainingSessionData = false;
             $scope.show.currentCursor = trainingSessionData.response.cursor;
-            $scope.trainingSessions = trainingSessionData.response.data;		
+            $scope.trainingSessions = trainingSessionData.response.data;
             for (var i = 0; i < $scope.trainingSessions.length; i++) {
                 $scope.trainingSessions[i]["deleteStatus"] = false;
-				$scope.trainingSessions[i].string_video_url = ($scope.trainingSessions[i].video_url) ? $scope.trainingSessions[i].video_url.toString() : "";	
+                $scope.trainingSessions[i].string_video_url = ($scope.trainingSessions[i].video_url) ? $scope.trainingSessions[i].video_url.toString() : "";
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -2677,17 +2693,17 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllTrainingSessions(1, 10);
-    $scope.setTrainingSessionOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setTrainingSessionOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllTrainingSessions(1, 10,column, searchText);
+        $scope.getAllTrainingSessions(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllTrainingSessions(1, 10,column, searchText);
+        $scope.getAllTrainingSessions(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllTrainingSessions(0, 10,column, searchText);
+        $scope.getAllTrainingSessions(0, 10, column, searchText);
     }
     //changes made by anuradha 0n 30-04
     $scope.getStores();
@@ -2696,18 +2712,18 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     /*$scope.clearTrainingSessionContent = function () {
-        $scope.trainingdata["title"] = "";
-        $scope.trainingdata["description"] = "";
-        $scope.trainingdata["video_url"] = "";
-        $scope.trainingdata["file"] = "";
-        $scope.trainingdata["uploadedimages"] = [];
-        $scope.readonlydocrow.fileurl = "";
-        $scope.readonlydocrow.filename ="";
-        //$scope.readonlyrow.fileurl = "";
-        $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
+     $scope.trainingdata["title"] = "";
+     $scope.trainingdata["description"] = "";
+     $scope.trainingdata["video_url"] = "";
+     $scope.trainingdata["file"] = "";
+     $scope.trainingdata["uploadedimages"] = [];
+     $scope.readonlydocrow.fileurl = "";
+     $scope.readonlydocrow.filename ="";
+     //$scope.readonlyrow.fileurl = "";
+     $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
 
-    } */
-	
+     } */
+
     var trainingId = $routeParams.q;
     if (trainingId && trainingId != undefined && trainingId != "undefined") {
         $scope.trainingdata["trainingSessionId"] = trainingId;
@@ -2718,17 +2734,17 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
 })
 /************************************ AssignStore *****************************************************/
 cstore.controller('assignStoreCtrl', function ($scope, $appService) {
-	$scope.preCursor = 0
-	$scope.currentCursor = 0;
-	$scope.venderSearch = [
+    $scope.preCursor = 0
+    $scope.currentCursor = 0;
+    $scope.venderSearch = [
         {"value": "storename", "name": "Store Name"}
     ];
     $scope.searchby = $scope.venderSearch[0];
-	$scope.getStoresName = function (direction, limit, column, searchText) {
+    $scope.getStoresName = function (direction, limit, column, searchText) {
         if ($scope.loadingStatus) {
             return false;
         }
-		if (direction == 1) {
+        if (direction == 1) {
             $scope.preCursor = $scope.currentCursor;
         } else {
             $scope.preCursor = $scope.preCursor - limit;
@@ -2736,74 +2752,74 @@ cstore.controller('assignStoreCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id","storename"];
-		if (column && searchText && column != "" && searchText != "") {
+        query.columns = [ "_id", "storename"];
+        if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
-        }else{			
-			query.orders["storename"] = "asc";
-		}
-		query.max_rows = limit;
+        } else {
+            query.orders["storename"] = "asc";
+        }
+        query.max_rows = limit;
         query.cursor = $scope.currentCursor;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/data";		
+        var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
-			if(storeData.response.data && storeData.response.data.length > 0){
-				$scope.storesName = storeData.response.data;
-				$scope.currentCursor = storeData.response.cursor;
-				$scope.trainingSessionId = $scope.getURLParam("id");
-				if(!$scope.trainingSessionId){
-					return;
-				}
-				var query = {"table": "training_session__cstore"};
-				query.columns = ["store_manager_id"];
-				query.filter = {"_id":$scope.trainingSessionId};
-				query.orders = {"storename":"asc"};
-				var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-				var serviceUrl = "/rest/data";
-				$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeTrainingData) {
-					$scope.loadingStatus = false;
-					if(storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length){
-						$scope.storeManager = storeTrainingData.response.data[0].store_manager_id;		
-						for(i=0; i < $scope.storesName.length; i++){	
-							for(j=0; j < $scope.storeManager.length; j++){
-								if($scope.storesName[i]._id == $scope.storeManager[j]._id){
-									$scope.storesName[i].assigned = true;
-								}
-							}
-							if(!$scope.storesName[i].assigned){
-								$scope.storesName[i].assigned = false;
-							}
-						}
-					}
-				}, function (jqxhr, error) {
-					$("#popupMessage").html(error);
-					$('.popup').toggle("slide");
-				});
-			}else{
-				$scope.loadingStatus = false;
-			}
+            if (storeData.response.data && storeData.response.data.length > 0) {
+                $scope.storesName = storeData.response.data;
+                $scope.currentCursor = storeData.response.cursor;
+                $scope.trainingSessionId = $scope.getURLParam("id");
+                if (!$scope.trainingSessionId) {
+                    return;
+                }
+                var query = {"table": "training_session__cstore"};
+                query.columns = ["store_manager_id"];
+                query.filter = {"_id": $scope.trainingSessionId};
+                query.orders = {"storename": "asc"};
+                var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeTrainingData) {
+                    $scope.loadingStatus = false;
+                    if (storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length) {
+                        $scope.storeManager = storeTrainingData.response.data[0].store_manager_id;
+                        for (i = 0; i < $scope.storesName.length; i++) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[i]._id == $scope.storeManager[j]._id) {
+                                    $scope.storesName[i].assigned = true;
+                                }
+                            }
+                            if (!$scope.storesName[i].assigned) {
+                                $scope.storesName[i].assigned = false;
+                            }
+                        }
+                    }
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            } else {
+                $scope.loadingStatus = false;
+            }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         });
     }
-	$scope.getStoresName(1,5);
-	$scope.setStoreNameOrder = function (){
-		$scope.currentCursor = 0
+    $scope.getStoresName(1, 5);
+    $scope.setStoreNameOrder = function () {
+        $scope.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getStoresName(1, 5,column, searchText);
-	}
-	$scope.getMore = function (column, searchText) {
-        $scope.getStoresName(1, 5,column, searchText);
+        $scope.getStoresName(1, 5, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getStoresName(1, 5, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getStoresName(0, 5,column, searchText);
+        $scope.getStoresName(0, 5, column, searchText);
     }
 });
 /************************************ Survey *****************************************************/
@@ -2829,7 +2845,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
 
         $scope.loadingSurveyData = true;
         var query = {"table": "surveys__cstore"};
-        query.columns = ["title","description","survey_question","survey_question.question","survey_question.options"];
+        query.columns = ["title", "description", "survey_question", "survey_question.question", "survey_question.options"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -2856,34 +2872,34 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllSurveys(1, 10);
-    $scope.setSurveyOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setSurveyOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllSurveys(1, 10,column, searchText);
+        $scope.getAllSurveys(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAllSurveys(1, 10,column, searchText);
+        $scope.getAllSurveys(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAllSurveys(0, 10,column, searchText);
+        $scope.getAllSurveys(0, 10, column, searchText);
     }
     $scope.getStores();
 });
 cstore.controller('addSurveyCtrl', function ($scope, $appService) {
     /*$scope.clearSurveyContent = function () {
-        $scope.surveydata["title"] = "";
-        $scope.surveydata["description"] = "";
-		$scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];	
-		if (!$scope.$$phase) {
-			$scope.$apply();
-		}
-		$scope.setPath('surveys');
-    } */
+     $scope.surveydata["title"] = "";
+     $scope.surveydata["description"] = "";
+     $scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];
+     if (!$scope.$$phase) {
+     $scope.$apply();
+     }
+     $scope.setPath('surveys');
+     } */
 });
 
 //changes made by Anuradha
-cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routeParams) {
+cstore.controller('assignedSurveyCtrl', function ($scope, $appService, $routeParams) {
     var assignedSurveyId = $routeParams.q;
     console.log(assignedSurveyId);
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
@@ -2907,7 +2923,7 @@ cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routePara
 
         $scope.loadingAssignedSurveyData = true;
         var query = {"table": "storemanager_survey__cstore"};
-        query.columns = ["store_manager_id","survey_id"];
+        query.columns = ["store_manager_id", "survey_id"];
         query.filter = {};
         query.filter = {"survey_id._id": assignedSurveyId};
         if (column && searchText && column != "" && searchText != "") {
@@ -2935,17 +2951,17 @@ cstore.controller('assignedSurveyCtrl', function ($scope, $appService,$routePara
         })
     }
     $scope.getAssignedSurveys(1, 10);
-    $scope.setAssignedSurveyOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setAssignedSurveyOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAssignedSurveys(1, 10,column, searchText);
+        $scope.getAssignedSurveys(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAssignedSurveys(1, 10,column, searchText);
+        $scope.getAssignedSurveys(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAssignedSurveys(0, 10,column, searchText);
+        $scope.getAssignedSurveys(0, 10, column, searchText);
     }
 
 });
@@ -2956,16 +2972,16 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
     $scope.promotionData = {"loadingData": false, "available": false};
 
     $scope.promotions = [];
-    $scope.getAllPromos = function (cursor,searchText) {
+    $scope.getAllPromos = function (cursor, searchText) {
         if ($scope.promotionData.loadingData) {
             return false;
         }
         $scope.promotionData.loadingData = true;
         var query = {"table": "promotions__cstore"};
-        query.columns = ["end_date","start_date","image","promo_title"];
+        query.columns = ["end_date", "start_date", "image", "promo_title"];
         query.filter = {};
-        query.filter["start_date"] = {"$lte":currentTime};
-        query.filter["end_date"] = {"$gte":currentTime};
+        query.filter["start_date"] = {"$lte": currentTime};
+        query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
@@ -2973,10 +2989,10 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         query.cursor = cursor;
         //console.log(JSON.stringify(query));
         var timeZone = new Date().getTimezoneOffset();
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
-          //  console.log(JSON.stringify(promoData));
+            //  console.log(JSON.stringify(promoData));
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
             //var rawData = promoData.response.data;
             if ($scope.promotions.length) {
@@ -3004,7 +3020,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getAllPromos($scope.cursor,$routeParams.search);
+                            $scope.getAllPromos($scope.cursor, $routeParams.search);
                         }
                     }
                 }
@@ -3016,7 +3032,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         })
     }
     $scope.getInitialData = function (cursor) {
-        $scope.getAllPromos(cursor,$routeParams.search);
+        $scope.getAllPromos(cursor, $routeParams.search);
     }
 });
 
@@ -3043,7 +3059,7 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK,"state":JSON.stringify({"timezone":timeZone})};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
 
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionDetailData) {
@@ -3058,7 +3074,7 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
 });
 
 /*****************assigned session**************************/
-cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routeParams) {
+cstore.controller('assignedSessionCtrl', function ($scope, $appService, $routeParams) {
     var assignedSessionId = $routeParams.q;
     //console.log(assignedSessionId);
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
@@ -3082,7 +3098,7 @@ cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routePar
 
         $scope.loadingAssignedSessionData = true;
         var query = {"table": "storemanager_trainingsession__cstore"};
-        query.columns = ["store_manager_id","training_session_id"];
+        query.columns = ["store_manager_id", "training_session_id"];
         query.filter = {};
         query.filter = {"training_session_id._id": assignedSessionId};
         if (column && searchText && column != "" && searchText != "") {
@@ -3110,17 +3126,17 @@ cstore.controller('assignedSessionCtrl', function ($scope, $appService,$routePar
         })
     }
     $scope.getAssignedSessions(1, 10);
-    $scope.setAssignedSessionOrder = function (sortingCol, sortingType,column, searchText) {
+    $scope.setAssignedSessionOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAssignedSessions(1, 10,column, searchText);
+        $scope.getAssignedSessions(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getAssignedSessions(1, 10,column, searchText);
+        $scope.getAssignedSessions(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getAssignedSessions(0, 10,column, searchText);
+        $scope.getAssignedSessions(0, 10, column, searchText);
     }
 
 });
@@ -3131,12 +3147,12 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
     $scope.getSessionDetail = function (searchText) {
         //console.log($routeParams.sessionid);
         $scope.loadingSessionDetailData = true;
-        $scope.videoUrls=[];
-        $scope.files=[];
+        $scope.videoUrls = [];
+        $scope.files = [];
         var query = {"table": "storemanager_trainingsession__cstore"};
-        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.file","training_session_id.video_url","training_session_id.training_category_id"];
-        query.filter={};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"training_session_id._id": $routeParams.sessionid};
+        query.columns = ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description", "training_session_id.file", "training_session_id.video_url", "training_session_id.training_category_id"];
+        query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "training_session_id._id": $routeParams.sessionid};
         //if (searchText && searchText != "") {
         //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         //}
@@ -3147,33 +3163,33 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
             //console.log(JSON.stringify(sessionDetailData.response.data));
             $scope.loadingSessionDetailData = false;
             $scope.session = sessionDetailData.response.data;
-            if(sessionDetailData.response.data[0].training_session_id.video_url){
-                $scope.videoUrls=sessionDetailData.response.data[0].training_session_id.video_url;
+            if (sessionDetailData.response.data[0].training_session_id.video_url) {
+                $scope.videoUrls = sessionDetailData.response.data[0].training_session_id.video_url;
             }
-            if(sessionDetailData.response.data[0].training_session_id.file){
-                $scope.files=sessionDetailData.response.data[0].training_session_id.file;
+            if (sessionDetailData.response.data[0].training_session_id.file) {
+                $scope.files = sessionDetailData.response.data[0].training_session_id.file;
             }
-            if($scope.videoUrls || $scope.videoUrls !="undefined" || $scope.videoUrls!=""){
-                for(var i=0;i<$scope.videoUrls.length;i++){
-                    if($scope.videoUrls[i].indexOf("http")==-1){
-                        $scope.videoUrls[i]="http://"+$scope.videoUrls[i];
+            if ($scope.videoUrls || $scope.videoUrls != "undefined" || $scope.videoUrls != "") {
+                for (var i = 0; i < $scope.videoUrls.length; i++) {
+                    if ($scope.videoUrls[i].indexOf("http") == -1) {
+                        $scope.videoUrls[i] = "http://" + $scope.videoUrls[i];
                     }
                 }
             }
             console.log($scope.files);
-            if($scope.files || $scope.files!="undefined" || $scope.files!=""){
-                for(var i=0; i<$scope.files.length; i++){
-                    if((/\.(doc|docx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/doc1.png";
+            if ($scope.files || $scope.files != "undefined" || $scope.files != "") {
+                for (var i = 0; i < $scope.files.length; i++) {
+                    if ((/\.(doc|docx)$/gi).test($scope.files[i].name)) {
+                        $scope.files[i].imageSrc = "images/doc1.png";
                     }
-                    else if((/\.(pdf)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/pdf1.png";
+                    else if ((/\.(pdf)$/gi).test($scope.files[i].name)) {
+                        $scope.files[i].imageSrc = "images/pdf1.png";
                     }
-                    else if((/\.(ppt|pptx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/ppt1.png";
+                    else if ((/\.(ppt|pptx)$/gi).test($scope.files[i].name)) {
+                        $scope.files[i].imageSrc = "images/ppt1.png";
                     }
-                    else if((/\.(xls|csv|xlsx)$/gi).test($scope.files[i].name)){
-                        $scope.files[i].imageSrc="images/excel_icon1.png";
+                    else if ((/\.(xls|csv|xlsx)$/gi).test($scope.files[i].name)) {
+                        $scope.files[i].imageSrc = "images/excel_icon1.png";
                     }
 
                 }
@@ -3202,12 +3218,12 @@ cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $rou
 
         if (searchText && searchText != "") {
             query.childs = [
-                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id","training_session_id.title","training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"},"filter":{"store_manager_id._id":$scope.currentUser.data.storeid,"training_session_id.title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid, "training_session_id.title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
             ]
         }
         else {
             query.childs = [
-                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id","training_session_id.title","training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"},"filter":{"store_manager_id._id":$scope.currentUser.data.storeid}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
             ];
         }
         //console.log(JSON.stringify(query));
@@ -3245,9 +3261,9 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
         }
         $scope.categoryData.loadingData = true;
         var query = {"table": "storemanager_trainingsession__cstore"};
-        query.columns = ["store_manager_id","training_session_id","training_session_id.title","training_session_id.description","training_session_id.training_category_id"];
+        query.columns = ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description", "training_session_id.training_category_id"];
         query.filter = {};
-        query.filter["store_manager_id._id"]=$scope.currentUser.data.storeid;
+        query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         if (filter && filter != undefined && filter != "undefined") {
             query.filter["training_session_id.training_category_id._id"] = filter;
             if (searchText && searchText != "") {
@@ -3292,7 +3308,7 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getTrainingCategoryDetail($scope.cursor, $routeParams.q,$routeParams.search);
+                            $scope.getTrainingCategoryDetail($scope.cursor, $routeParams.q, $routeParams.search);
                         }
                     }
                 }
@@ -3313,15 +3329,15 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
 cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $routeParams) {
     $scope.assignedSurveyData = {"loadingData": false, "available": false};
     $scope.assignedSurveys = [];
-    $scope.getAllAssignedSurveys = function (cursor,searchText) {
+    $scope.getAllAssignedSurveys = function (cursor, searchText) {
         if ($scope.assignedSurveyData.loadingData) {
             return false;
         }
         $scope.assignedSurveyData.loadingData = true;
         var query = {"table": "storemanager_survey__cstore"};
-        query.columns = ["store_manager_id","survey_id","survey_id.title","survey_id.description"];
+        query.columns = ["store_manager_id", "survey_id", "survey_id.title", "survey_id.description"];
         query.filter = {};
-        query.filter["store_manager_id"] =$scope.currentUser.data.storeid;
+        query.filter["store_manager_id"] = $scope.currentUser.data.storeid;
         if (searchText && searchText != "") {
             query.filter["survey_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
@@ -3355,7 +3371,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
                 if ($("#scrollDiv").offset()) {
                     if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
                         if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getAllAssignedSurveys($scope.cursor,$routeParams.search);
+                            $scope.getAllAssignedSurveys($scope.cursor, $routeParams.search);
                         }
                     }
                 }
@@ -3367,116 +3383,116 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
         })
     }
     $scope.getInitialData = function (cursor) {
-        $scope.getAllAssignedSurveys(cursor,$routeParams.search);
+        $scope.getAllAssignedSurveys(cursor, $routeParams.search);
     }
 });
- /****************************ProductCodeCtrls*************************************/
- cstore.controller('productCodesCtrl', function ($scope, $appService) {
+/****************************ProductCodeCtrls*************************************/
+cstore.controller('productCodesCtrl', function ($scope, $appService) {
 
-     //$scope.codeTypes=[{"name":"UPC"},{"name":"PLU"},{"name":"Group"}];
-     $scope.types=["UPC","PLU","Group"];
+    //$scope.codeTypes=[{"name":"UPC"},{"name":"PLU"},{"name":"Group"}];
+    $scope.types = ["UPC", "PLU", "Group"];
 
-     //$scope.codedata.selectedCodeType=$scope.codedata.codeTypes[0];
-         $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
-         $scope.loadingProductCodeData = false;
-         $scope.venderSearch = [
-             {"value": "code", "name": "Code"},
-             {"value": "description", "name": "Description"},
-             {"value": "type", "name": "Type"}
-         ];
-         $scope.searchby = $scope.venderSearch[0];
-         $scope.productCodes = [];
-         $appService.auth();
-         $scope.getAllProductCodes = function (direction, limit, column, searchText) {
-             if ($scope.loadingProductCodeData) {
-                 return false;
-             }
-             if (direction == 1) {
-                 $scope.show.preCursor = $scope.show.currentCursor;
-             } else {
-                 $scope.show.preCursor = $scope.show.preCursor - limit;
-                 $scope.show.currentCursor = $scope.show.preCursor;
-             }
-             $scope.loadingProductCodeData = true;
+    //$scope.codedata.selectedCodeType=$scope.codedata.codeTypes[0];
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingProductCodeData = false;
+    $scope.venderSearch = [
+        {"value": "code", "name": "Code"},
+        {"value": "description", "name": "Description"},
+        {"value": "type", "name": "Type"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.productCodes = [];
+    $appService.auth();
+    $scope.getAllProductCodes = function (direction, limit, column, searchText) {
+        if ($scope.loadingProductCodeData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingProductCodeData = true;
 
-             var query = {"table": "product_codes__cstore"};
+        var query = {"table": "product_codes__cstore"};
 
-             query.columns = ["code", "description", "type"];
-             if (column && searchText && column != "" && searchText != "") {
-                 query.filter = {};
-                 query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
-             }
-             query.orders = {};
-             if ($scope.sortingCol && $scope.sortingType) {
-                 query.orders[$scope.sortingCol] = $scope.sortingType;
-             }
-             query.max_rows = limit;
-             query.cursor = $scope.show.currentCursor;
-             query.$count = 1;
-             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-             var serviceUrl = "/rest/data";
-             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCodeData) {
-                 $scope.loadingProductCodeData = false;
-                 $scope.show.currentCursor = productCodeData.response.cursor;
-                 $scope.productCodes = productCodeData.response.data;
-                 for (var i = 0; i < $scope.productCodes.length; i++) {
-                     $scope.productCodes[i]["deleteStatus"] = false;
-                     $scope.productCodes[i]["editStatus"] = false;
-                     $scope.productCodes[i]["oldstatus"] = true;
-                     //$scope.productCodes[i].type=$scope.types[0];
-                 }
+        query.columns = ["code", "description", "type"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCodeData) {
+            $scope.loadingProductCodeData = false;
+            $scope.show.currentCursor = productCodeData.response.cursor;
+            $scope.productCodes = productCodeData.response.data;
+            for (var i = 0; i < $scope.productCodes.length; i++) {
+                $scope.productCodes[i]["deleteStatus"] = false;
+                $scope.productCodes[i]["editStatus"] = false;
+                $scope.productCodes[i]["oldstatus"] = true;
+                //$scope.productCodes[i].type=$scope.types[0];
+            }
 
-             }, function (jqxhr, error) {
-                 $("#popupMessage").html(error);
-                 $('.popup').toggle("slide");
-             })
-         }
-         $scope.getAllProductCodes(1, 10);
-         $scope.setProductCodeOrder = function (sortingCol, sortingType,column, searchText) {
-             $scope.show.currentCursor = 0
-             $scope.sortingCol = sortingCol;
-             $scope.sortingType = sortingType;
-             $scope.getAllProductCodes(1, 10,column, searchText);
-         }
-         $scope.getMore = function (column, searchText) {
-             $scope.getAllProductCodes(1, 10,column, searchText);
-         }
-         $scope.getLess = function (column, searchText) {
-             $scope.getAllProductCodes(0, 10,column, searchText);
-         }
-         $scope.refreshProductCodes = function (index, refreshProductCodeId) {
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllProductCodes(1, 10);
+    $scope.setProductCodeOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllProductCodes(1, 10, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllProductCodes(1, 10, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllProductCodes(0, 10, column, searchText);
+    }
+    $scope.refreshProductCodes = function (index, refreshProductCodeId) {
 
-             var query = {"table": "product_codes__cstore"};
-             query.columns = ["code", "description", "type"];
-             query.filter = {"_id": refreshProductCodeId};
-             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var query = {"table": "product_codes__cstore"};
+        query.columns = ["code", "description", "type"];
+        query.filter = {"_id": refreshProductCodeId};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
 
-             var serviceUrl = "/rest/data";
-             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCodeData) {
-                 productCodeData.response.data[0].deleteStatus = false;
-                 productCodeData.response.data[0].oldstatus = true;
-                 $scope.productCodes[index] = productCodeData.response.data[0];
-                 if (!$scope.$$phase) {
-                     $scope.$apply();
-                 }
-             }, function (jqxhr, error) {
-                 $("#popupMessage").html(error);
-                 $('.popup').toggle("slide");
-             })
-         }
-     });
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCodeData) {
+            productCodeData.response.data[0].deleteStatus = false;
+            productCodeData.response.data[0].oldstatus = true;
+            $scope.productCodes[index] = productCodeData.response.data[0];
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+});
 
 /******************************** Shopping Cart*************************************/
 cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
-    $scope.grandTotal=0;
+    $scope.grandTotal = 0;
     $scope.getShoppingCart();
 });
 cstore.controller('billingAddressCtrl', function ($scope, $appService) {
     $scope.getSavedAddress = function () {
         $scope.loadingSavedAddress = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = ["address","cityid","contact","countryid","stateid","email","storename","manager.name","postalcode","address2"];
-        query.filter={};
+        query.columns = ["address", "cityid", "contact", "countryid", "stateid", "email", "storename", "manager.name", "postalcode", "address2"];
+        query.filter = {};
         query.filter["_id"] = $scope.currentUser.data.storeid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
@@ -3492,28 +3508,28 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
     $scope.getSavedAddress();
     $scope.getEditCountries(null, null, null);
     $scope.clearBillingContent = function () {
-        $scope.billingdata.bill_address.firstname="";
-        $scope.billingdata.bill_address.lastname="";
-        $scope.billingdata.bill_address.address="";
-        $scope.billingdata.bill_address.address_2="";
-        $scope.billingdata.bill_address.zipcode="";
-        $scope.billingdata.bill_address.phone="";
-        $scope.billingdata.bill_address.ext="";
-        $scope.billingdata.bill_address.email="";
+        $scope.billingdata.bill_address.firstname = "";
+        $scope.billingdata.bill_address.lastname = "";
+        $scope.billingdata.bill_address.address = "";
+        $scope.billingdata.bill_address.address_2 = "";
+        $scope.billingdata.bill_address.zipcode = "";
+        $scope.billingdata.bill_address.phone = "";
+        $scope.billingdata.bill_address.ext = "";
+        $scope.billingdata.bill_address.email = "";
         $scope.getEditCountries(null, null, null);
     }
 });
 cstore.controller('shippingAddressCtrl', function ($scope, $appService) {
     $scope.getEditCountries(null, null, null);
     $scope.clearShippingContent = function () {
-        $scope.billingdata.shipping_address.firstname="";
-        $scope.billingdata.shipping_address.lastname="";
-        $scope.billingdata.shipping_address.address="";
-        $scope.billingdata.shipping_address.address_2="";
-        $scope.billingdata.shipping_address.zipcode="";
-        $scope.billingdata.shipping_address.phone="";
-        $scope.billingdata.shipping_address.ext="";
-        $scope.billingdata.shipping_address.email="";
+        $scope.billingdata.shipping_address.firstname = "";
+        $scope.billingdata.shipping_address.lastname = "";
+        $scope.billingdata.shipping_address.address = "";
+        $scope.billingdata.shipping_address.address_2 = "";
+        $scope.billingdata.shipping_address.zipcode = "";
+        $scope.billingdata.shipping_address.phone = "";
+        $scope.billingdata.shipping_address.ext = "";
+        $scope.billingdata.shipping_address.email = "";
         $scope.getEditCountries(null, null, null);
     }
 });

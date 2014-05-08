@@ -301,7 +301,7 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
 cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template:'<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
+        template: '<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
@@ -313,9 +313,9 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template:'<div><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>'+
-            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">'+
-            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession.training_session_id._id}}">{{assignedTrainingSession.training_session_id.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.training_session_id.description}}</div>'+
+        template: '<div><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
+            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
+            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession.training_session_id._id}}">{{assignedTrainingSession.training_session_id.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.training_session_id.description}}</div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
     }
 }]);
@@ -343,11 +343,11 @@ cstore.directive('productDetail', ['$appService', function ($appService, $scope)
             '</select></div><div class="final_price">Price : <b>{{product[0].cost.amount | currency}}</b></div><div class="add_to_btn pull-left">' +
             '<a href ng-click="addToCart(product[0],qty)">ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingProductDetailData"><img src="images/loading.gif"></div>',
-        compile:function(){
+        compile: function () {
             return {
-                pre:function($scope){
-                   //console.log($scope.qty);
-                    $scope.qty=$scope.shoppingCartData.quantity[0];
+                pre: function ($scope) {
+                    //console.log($scope.qty);
+                    $scope.qty = $scope.shoppingCartData.quantity[0];
                 }
             }
         }
@@ -409,22 +409,22 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                         if ($scope.vendors[i].deleteStatus) {
                                             console.log("delete items" + i);
                                             $scope.vendors.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in promotions");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in promotions");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -455,10 +455,10 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     break;
                                 }
                             }
-							if(!$scope.data.selectedVendorCategory) {
-								$scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length - 1];
-								$scope.data.otherCategory = vendor.category;
-							}
+                            if (!$scope.data.selectedVendorCategory) {
+                                $scope.data.selectedVendorCategory = $scope.data.vendorCategories[$scope.data.vendorCategories.length - 1];
+                                $scope.data.otherCategory = vendor.category;
+                            }
                         }
                         if (vendor.country) {
                             vendor.state = (vendor.state) ? {"_id": vendor.state._id} : {"_id": false};
@@ -567,7 +567,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<td><div class="margin_top">Email</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="city"><input type="email" ng-model="data.email"></td>'+
+            '<td class="city"><input type="email" ng-model="data.email"></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -633,7 +633,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                 pre: function ($scope) {
                     $scope.loadingAddVenderData = true;
                     //evening changes
-                    $scope.disabled=false;
+                    $scope.disabled = false;
                     $scope.newVendor = {};
                     $scope.setPathforVender = function (path) {
                         $scope.clearContent();
@@ -647,7 +647,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddVenderData = false;
                     $scope.saveVendor = function () {
-                        $scope.disabled=true;
+                        $scope.disabled = true;
                         $scope.newVendor = {};
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
@@ -711,7 +711,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         if ($scope.data["userid"]) {
                             $scope.newVendor["_id"] = $scope.data["userid"];
                         }
-						$scope.loadingAddVenderData = true;
+                        $scope.loadingAddVenderData = true;
                         $scope.newVendor.email = email;
                         $scope.newVendor["firstname"] = $scope.data.firstname;
                         $scope.newVendor["lastname"] = $scope.data.lastname;
@@ -735,11 +735,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-							$scope.loadingAddVenderData = false;
+                            $scope.loadingAddVenderData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
-                                $scope.disabled=false;
+                                $scope.disabled = false;
                                 $scope.setPathforVender('vendors');
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -828,22 +828,22 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                     if ($scope.products[i].deleteStatus) {
                                         console.log("delete items" + i);
                                         $scope.products.splice(i, 1);
-										i--;
+                                        i--;
                                     }
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in another table");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
@@ -859,9 +859,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["description"] = product.description ? product.description : "";
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
                         //$scope.productdata["image"] = product.image;
-                        if(product.image){
-                            $scope.oFile.fileExist=true;
-                            console.log("22222:::"+$scope.oFile.fileExist);
+                        if (product.image) {
+                            $scope.oFile.fileExist = true;
+                            console.log("22222:::" + $scope.oFile.fileExist);
                         }
                         $scope.showFile(product.image, false);
                         //changed 28/04
@@ -944,7 +944,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>'+
+            '<tr>' +
             '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveProduct()"><a href>Save</a></button>' +
@@ -954,7 +954,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</div>' +
             '</td>' +
-            '</tr>'+
+            '</tr>' +
             '</table>' +
             '</div>' +
             '<div class="loadingImage" ng-hide="!loadingAddProductData"><img src="images/loading.gif"></div>' +
@@ -978,94 +978,94 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.loadingAddProductData = false;
                     $scope.saveProduct = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
-                         $scope.CSession = $appService.getSession();
-                         if ($scope.CSession) {
-                         if (!$scope.productdata.name) {
-                         $("#popupMessage").html("Please enter pop name");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         if (!$scope.productdata.description) {
-                         $("#popupMessage").html("Please enter detailed description");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         if (!$scope.productdata.short_description) {
-                         $("#popupMessage").html("Please enter short description");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                         if (!$scope.productdata.cost || !$scope.productdata.cost.amount ||!regNumberOnly.test($scope.productdata.cost.amount)) {
-                         $("#popupMessage").html("Please enter price");
-                         $('.popup').toggle("slide");
-                         return false;
-                         }
-                             //console.log("33333:::"+$scope.oFile.fileExist);
-                             if (!$scope.oFile.fileExist) {
-                                 $("#popupMessage").html("Please upload file");
-                                 $('.popup').toggle("slide");
-                                 return false;
-                             }
-                         $scope.loadingStatus = true;
-                         var query = {};
-                         query.table = "products__cstore";
+                        $scope.CSession = $appService.getSession();
+                        if ($scope.CSession) {
+                            if (!$scope.productdata.name) {
+                                $("#popupMessage").html("Please enter pop name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.productdata.description) {
+                                $("#popupMessage").html("Please enter detailed description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.productdata.short_description) {
+                                $("#popupMessage").html("Please enter short description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.productdata.cost || !$scope.productdata.cost.amount || !regNumberOnly.test($scope.productdata.cost.amount)) {
+                                $("#popupMessage").html("Please enter price");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            //console.log("33333:::"+$scope.oFile.fileExist);
+                            if (!$scope.oFile.fileExist) {
+                                $("#popupMessage").html("Please upload file");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            $scope.loadingStatus = true;
+                            var query = {};
+                            query.table = "products__cstore";
 
-                         if ($scope.productdata["productid"]) {
-                         $scope.newProduct["_id"] = $scope.productdata["productid"];
-                         }
-                         $scope.newProduct["name"] = $scope.productdata.name;
-                         $scope.newProduct["description"] = $scope.productdata.description;
-                         $scope.newProduct["short_description"] = $scope.productdata.short_description;
-                         //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
-                         $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
-                         $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
-                         if (document.getElementById('uploadfile').files.length === 0) {
-                         delete $scope.newProduct["image"];
-                         query.operations = [$scope.newProduct];
-                         $scope.saveFunction(query);
-                         }
-                         else {
-                         if((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)){
-                         var current_file = {};
-                         current_file.name = $scope.oFile.name;
-                         current_file.type = $scope.oFile.type;
-                         current_file.contents = $scope.oFile.data;
-                         current_file.ask = ASK;
-                         current_file.osk = OSK;
-                         $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                         if (data.response) {
-                         $scope.newProduct["image"] = data.response;
-                         query.operations = [$scope.newProduct];
-                         $scope.saveFunction(query);
-                         }
-                         else {
+                            if ($scope.productdata["productid"]) {
+                                $scope.newProduct["_id"] = $scope.productdata["productid"];
+                            }
+                            $scope.newProduct["name"] = $scope.productdata.name;
+                            $scope.newProduct["description"] = $scope.productdata.description;
+                            $scope.newProduct["short_description"] = $scope.productdata.short_description;
+                            //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
+                            $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
+                            $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                delete $scope.newProduct["image"];
+                                query.operations = [$scope.newProduct];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)) {
+                                    var current_file = {};
+                                    current_file.name = $scope.oFile.name;
+                                    current_file.type = $scope.oFile.type;
+                                    current_file.contents = $scope.oFile.data;
+                                    current_file.ask = ASK;
+                                    current_file.osk = OSK;
+                                    $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                        if (data.response) {
+                                            $scope.newProduct["image"] = data.response;
+                                            query.operations = [$scope.newProduct];
+                                            $scope.saveFunction(query);
+                                        }
+                                        else {
 
-                         $("#popupMessage").html("some error while uploading image please try again");
-                         $('.popup').toggle("slide");
+                                            $("#popupMessage").html("some error while uploading image please try again");
+                                            $('.popup').toggle("slide");
 
-                         }
-                         }, function (callbackerror) {
-                         $("#popupMessage").html(callbackerror);
-                         $('.popup').toggle("slide");
-                         });
-                         }
-                         else {
-                         $("#popupMessage").html("Please Upload Image File only");
-                         $('.popup').toggle("slide");
-                         }
-                         }
-                         }
-                         else {
-                         $("#popupMessage").html("Please login first");
-                         $('.popup').toggle("slide");
-                         }
+                                        }
+                                    }, function (callbackerror) {
+                                        $("#popupMessage").html(callbackerror);
+                                        $('.popup').toggle("slide");
+                                    });
+                                }
+                                else {
+                                    $("#popupMessage").html("Please Upload Image File only");
+                                    $('.popup').toggle("slide");
+                                }
+                            }
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
 
                     };
 
                     $scope.saveFunction = function (query) {
                         //console.log(query);
-                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {							
-							$scope.loadingStatus = false;
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
@@ -1094,42 +1094,42 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
 
 cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
-        restrict:"E",
-        replace:true,
-        scope:false ,
-        template:"<div class='app-float-left'>" +
+        restrict: "E",
+        replace: true,
+        scope: false,
+        template: "<div class='app-float-left'>" +
             "<input class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
             '<span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
             "</div>",
-        compile:function () {
+        compile: function () {
             return {
-                pre:function ($scope) {
+                pre: function ($scope) {
                     $scope.albumArr = {};
                     $scope.albumArr.uploadedimg = [];
                 },
-                post:function ($scope, iElement) {
+                post: function ($scope, iElement) {
                     $scope.removeImgFile = function (index) {
                         $scope.trainingdata.uploadedimages.splice(index, 1);
                         $scope.albumArr.uploadedimg.splice(index, 1);
-						if($scope.trainingdata.uploadedimages.length == 0){
-							$scope.imgFilenotexist = true;
-						}
+                        if ($scope.trainingdata.uploadedimages.length == 0) {
+                            $scope.imgFilenotexist = true;
+                        }
                         $scope.imgFileLimitExceed = false;
-						$("#uploadMultiImgfile").val("");
+                        $("#uploadMultiImgfile").val("");
                     };
 
-                    $scope.showImgFile = function (file,index) {
-						if(!$scope.trainingdata.uploadedimages[index]) {
-							$scope.trainingdata.uploadedimages[index] = {};
-						}
-                        $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask="+ASK+"&osk="+OSK;
+                    $scope.showImgFile = function (file, index) {
+                        if (!$scope.trainingdata.uploadedimages[index]) {
+                            $scope.trainingdata.uploadedimages[index] = {};
+                        }
+                        $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
                         $scope.trainingdata.uploadedimages[index].filename = file[0]["name"];
                         $scope.trainingdata.uploadedimages[index].image = file;
                         $scope.trainingdata.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
-						$("#uploadMultiImgfile").val("");
+                        $("#uploadMultiImgfile").val("");
                         //  $scope.row[$scope.colmetadata.expression] = file;
                         if (index == 10)
                             $scope.imgFileLimitExceed = true;
@@ -1137,30 +1137,30 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 
                     if ($scope.trainingdata.uploadedimages.length > 0) {
                         for (var k = 0; k < $scope.trainingdata.uploadedimages.length; k++) {
-                            $scope.showImgFile($scope.trainingdata.uploadedimages[k].file,k);
+                            $scope.showImgFile($scope.trainingdata.uploadedimages[k].file, k);
                         }
                     } else {
                         $scope.imgFilenotexist = true;
                     }
 
                     $scope.loadImgFile = function (evt) {
-						if( (/\.(doc|docx|xls|pdf|ppt)$/i).test($scope.oFile.name)){
-							var current_file = {};
-							$scope.uploadingimage = true;
-							current_file.name = $scope.oFile.name;
-							current_file.type = $scope.oFile.type;
-							current_file.contents = evt.target.result;
-							current_file.ask = ASK;
-							current_file.osk = OSK;
-							$appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-								if (data.response && data.response.length > 0) {
-									$scope.showImgFile(data.response,$scope.trainingdata.uploadedimages.length);
-								}
-							});
-						}else{
-							$("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
+                        if ((/\.(doc|docx|xls|pdf|ppt)$/i).test($scope.oFile.name)) {
+                            var current_file = {};
+                            $scope.uploadingimage = true;
+                            current_file.name = $scope.oFile.name;
+                            current_file.type = $scope.oFile.type;
+                            current_file.contents = evt.target.result;
+                            current_file.ask = ASK;
+                            current_file.osk = OSK;
+                            $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                if (data.response && data.response.length > 0) {
+                                    $scope.showImgFile(data.response, $scope.trainingdata.uploadedimages.length);
+                                }
+                            });
+                        } else {
+                            $("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
                             $('.popup').toggle("slide");
-						}
+                        }
                     };
 
                     iElement.bind('change', function () {
@@ -1197,7 +1197,7 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
             "</div>",
         compile: function () {
             return {
-                pre:function($scope){
+                pre: function ($scope) {
                     //$scope.oFile.fileExist=false;
                 },
                 post: function ($scope, iElement) {
@@ -1205,7 +1205,7 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                         delete $scope.row[$scope.colmetadata.expression];
                         $("#uploadfile").val("");
                         $scope.readonlyrow.filenotexist = true;
-                        $scope.oFile.fileExist=false;
+                        $scope.oFile.fileExist = false;
                     };
                     if ($scope.row[$scope.colmetadata.expression]) {
                         $scope.showFile($scope.row[$scope.colmetadata.expression], false);
@@ -1243,8 +1243,8 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                             $scope.oFile = document.getElementById('uploadfile').files[0];
                             $scope.oFReader.onload = $scope.loadFile;
                             $scope.oFReader.readAsDataURL($scope.oFile);
-                            $scope.oFile.fileExist=true;
-                            console.log("333333:::"+$scope.oFile.fileExist);
+                            $scope.oFile.fileExist = true;
+                            console.log("333333:::" + $scope.oFile.fileExist);
                         });
                     });
                 }
@@ -1298,22 +1298,22 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     if ($scope.storeManagers[i].deleteStatus) {
                                         console.log("delete items" + i);
                                         $scope.storeManagers.splice(i, 1);
-										i--;
+                                        i--;
                                     }
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in another table");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
@@ -1332,26 +1332,26 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["pump_brand"] = store.pump_brand ? store.pump_brand : "";
                         $scope.storedata["pump_model"] = store.pump_model ? store.pump_model : "";
                         /*if (store.brands && store.brands.length > 0) {
-//                            for(var i=0; i < store.brands.length;i++){
-//                                $scope.storedata.brands[i] = {};
-//                                $scope.storedata.brands[i] = store.brands[i];
-//                                console.log($scope.storedata.brands[i].name);
-//                            }
-                            for (var i = 0; i < $scope.brands.length; i++) {
-                                for (var j = 0; j < store.brands.length; j++) {
-                                    console.log(JSON.stringify($scope.brands[i]));
-                                    console.log(JSON.stringify(store.brands[j]));
-                                    if (angular.equals($scope.brands[i].name, store.brands[j])) {
-                                        if (!$scope.storedata.brands)
-                                            $scope.storedata.brands = [];
-                                        $scope.storedata.brands.push($scope.brands[i]);
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            $scope.storedata["brands"] = [];
-                        }   */
+                         //                            for(var i=0; i < store.brands.length;i++){
+                         //                                $scope.storedata.brands[i] = {};
+                         //                                $scope.storedata.brands[i] = store.brands[i];
+                         //                                console.log($scope.storedata.brands[i].name);
+                         //                            }
+                         for (var i = 0; i < $scope.brands.length; i++) {
+                         for (var j = 0; j < store.brands.length; j++) {
+                         console.log(JSON.stringify($scope.brands[i]));
+                         console.log(JSON.stringify(store.brands[j]));
+                         if (angular.equals($scope.brands[i].name, store.brands[j])) {
+                         if (!$scope.storedata.brands)
+                         $scope.storedata.brands = [];
+                         $scope.storedata.brands.push($scope.brands[i]);
+                         }
+                         }
+                         }
+                         }
+                         else {
+                         $scope.storedata["brands"] = [];
+                         }   */
                         $scope.storedata["contact"] = store.contact ? store.contact : "";
                         //$scope.storedata["loyalty_status"] = store.loyalty_status ? store.loyalty_status : "";
                         //$scope.storedata["pos_type"] = store.pos_type ? store.pos_type : "" ;
@@ -1363,8 +1363,8 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["storename"] = store.storename ? store.storename : "";
                         //$scope.storedata["username"] = store.username ? store.username : "";
                         $scope.storedata["siteid"] = store.siteid ? store.siteid : "";
-                        if(store.company_logo){
-                            $scope.oFile.fileExist=true;
+                        if (store.company_logo) {
+                            $scope.oFile.fileExist = true;
                             //console.log("22222:::"+$scope.oFile.fileExist);
                         }
                         $scope.showFile(store.company_logo, false);
@@ -1388,10 +1388,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     break;
                                 }
                             }
-							if(!$scope.storedata.selectedPosType) {
-								$scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length - 1];
-								$scope.storedata.otherPosType = store.pos_type;
-							}
+                            if (!$scope.storedata.selectedPosType) {
+                                $scope.storedata.selectedPosType = $scope.storedata.posTypes[$scope.storedata.posTypes.length - 1];
+                                $scope.storedata.otherPosType = store.pos_type;
+                            }
                         }
                         if (store.reward_point && $scope.storedata.rewardTypes) {
                             for (var j = 0; j < $scope.storedata.rewardTypes.length; j++) {
@@ -1400,10 +1400,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     break;
                                 }
                             }
-							if(!$scope.storedata.selectedRewardType) {
-								$scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 1];
-								$scope.storedata.otherRewardType = store.reward_point;
-							}
+                            if (!$scope.storedata.selectedRewardType) {
+                                $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[$scope.storedata.rewardTypes.length - 1];
+                                $scope.storedata.otherRewardType = store.reward_point;
+                            }
                         }
                         if (store.brands && $scope.storedata.brands) {
                             for (var j = 0; j < $scope.storedata.brands.length; j++) {
@@ -1412,10 +1412,10 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                     break;
                                 }
                             }
-							if(!$scope.storedata.selectedBrand) {
-								$scope.storedata.selectedBrand = $scope.storedata.brands[$scope.storedata.brands.length - 1];
-								$scope.storedata.otherBrand = store.brands;
-							}
+                            if (!$scope.storedata.selectedBrand) {
+                                $scope.storedata.selectedBrand = $scope.storedata.brands[$scope.storedata.brands.length - 1];
+                                $scope.storedata.otherBrand = store.brands;
+                            }
                         }
                         if (store.shift && $scope.storedata.shifts) {
                             for (var j = 0; j < $scope.storedata.shifts.length; j++) {
@@ -1558,7 +1558,7 @@ cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope)
         compile: function () {
             return{
                 pre: function ($scope) {
-                 console.log(JSON.stringify($scope.storedata.loyalty_status));
+                    console.log(JSON.stringify($scope.storedata.loyalty_status));
                 }, post: function ($scope) {
                 }
             }
@@ -1688,7 +1688,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     $scope.CSession = $appService.getSession();
                     var usk = $scope.CSession["usk"] ? $scope.CSession["usk"] : null;
                     $scope.loadingAddStoreData = false;
-                    $scope.saveStore = function () {					
+                    $scope.saveStore = function () {
                         if ($scope.CSession) {
                             $scope.newStore = {};
                             $scope.newStore["manager"] = {};
@@ -1781,7 +1781,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-							$scope.loadingStatus = true;
+                            $scope.loadingStatus = true;
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
                             }
@@ -1810,7 +1810,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $scope.newStore["cityid"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
                             }
                             //$scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
-                            $scope.newStore["loyalty_status"]=$scope.storedata.selectedLoyaltyStatus.name;
+                            $scope.newStore["loyalty_status"] = $scope.storedata.selectedLoyaltyStatus.name;
                             $scope.newStore["pump_brand"] = $scope.storedata.pump_brand;
                             $scope.newStore["pump_model"] = $scope.storedata.pump_model;
                             $scope.newStore["pos_type"] = ($scope.storedata.selectedPosType.name == "Others") ? $scope.storedata.otherPosType : $scope.storedata.selectedPosType.name;
@@ -1825,7 +1825,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
 
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newStore["company_logo"];
-								$scope.newStore["company_logo"] = null;
+                                $scope.newStore["company_logo"] = null;
                                 query.operations = [$scope.newStore];
                                 $scope.saveFunction(query);
                             }
@@ -1860,7 +1860,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                     }
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
-							$scope.loadingStatus = false;
+                            $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
 
                                 $("#popupMessage").html("Site Info Saved");
@@ -1975,23 +1975,23 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         if ($scope.countries[i].deleteStatus) {
                                             $scope.countries.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in products");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in products");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2018,17 +2018,17 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                     }
 
                     $scope.saveCountries = function () {
-						var savedindexes = [];
-						for (var j = $scope.countries.length-1; j >= 0; j--) {
-							if(!$scope.countries[j]._id && !$scope.countries[j].name){		
-								$scope.countries.splice(j, 1);
-							}
-						}
+                        var savedindexes = [];
+                        for (var j = $scope.countries.length - 1; j >= 0; j--) {
+                            if (!$scope.countries[j]._id && !$scope.countries[j].name) {
+                                $scope.countries.splice(j, 1);
+                            }
+                        }
                         var countryList = $scope.countries.filter(function (el) {
-							if(!el._id && el.name){							
-								savedindexes.push($scope.countries.indexOf(el));
-							}
-                            return el.editStatus == true ;
+                            if (!el._id && el.name) {
+                                savedindexes.push($scope.countries.indexOf(el));
+                            }
+                            return el.editStatus == true;
                         });
                         for (var i = 0; i < countryList.length; i++) {
                             if (!countryList[i].name) {
@@ -2038,30 +2038,30 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (countryList && countryList.length > 0) {
-							$scope.loadingCountryData = true;
+                            $scope.loadingCountryData = true;
                             var query = {};
                             query.table = "countries__cstore";
                             query.operations = countryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
-								$scope.loadingCountryData = false;
+                                $scope.loadingCountryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
-									for (var j = 0; j < savedindexes.length; j++) {
-										$scope.countries[savedindexes[j]]._id = callBackData.response.insert[j]._id;
-									}
+                                    for (var j = 0; j < savedindexes.length; j++) {
+                                        $scope.countries[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                    }
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         $scope.countries[i]["editStatus"] = false;
                                     }
 
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while saving");
-									$('.popup').toggle("slide");
-								}
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while saving");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2147,23 +2147,23 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         if ($scope.productCategories[i].deleteStatus) {
                                             $scope.productCategories.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in products");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in products");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2189,16 +2189,16 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                         }
                     }
                     $scope.saveProductCategories = function () {
-						var savedindexes = [];						
-						for (var j = $scope.productCategories.length-1; j >= 0; j--) {
-							if(!$scope.productCategories[j]._id && $scope.productCategories[j].name == "" && $scope.productCategories[j].description == ""){		
-								$scope.productCategories.splice(j, 1);
-							}
-						}
+                        var savedindexes = [];
+                        for (var j = $scope.productCategories.length - 1; j >= 0; j--) {
+                            if (!$scope.productCategories[j]._id && $scope.productCategories[j].name == "" && $scope.productCategories[j].description == "") {
+                                $scope.productCategories.splice(j, 1);
+                            }
+                        }
                         var productCategoryList = $scope.productCategories.filter(function (el) {
-							if(!el._id && (el.name || el.description)){							
-								savedindexes.push($scope.productCategories.indexOf(el));
-							}
+                            if (!el._id && (el.name || el.description)) {
+                                savedindexes.push($scope.productCategories.indexOf(el));
+                            }
                             return el.editStatus == true;
                         });
                         for (var i = 0; i < productCategoryList.length; i++) {
@@ -2209,29 +2209,29 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                             }
                         }
                         if (productCategoryList && productCategoryList.length > 0) {
-							$scope.loadingProductCategoryData = true;
+                            $scope.loadingProductCategoryData = true;
                             var query = {};
                             query.table = "product_categories__cstore";
                             query.operations = productCategoryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
-								$scope.loadingProductCategoryData = false;
+                                $scope.loadingProductCategoryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
-									for (var j = 0; j < savedindexes.length; j++) {
-										$scope.productCategories[savedindexes[j]]._id = callBackData.response.insert[j]._id;
-									}
+                                    for (var j = 0; j < savedindexes.length; j++) {
+                                        $scope.productCategories[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                    }
                                     for (var i = 0; i < $scope.productCategories.length; i++) {
                                         $scope.productCategories[i]["editStatus"] = false;
                                     }
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while saving");
-									$('.popup').toggle("slide");
-								}
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while saving");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2239,7 +2239,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
-                        }else {
+                        } else {
                             $("#popupMessage").html("No data found for saving");
                             $('.popup').toggle("slide");
                         }
@@ -2323,10 +2323,10 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                     $("#popupMessage").html("This record is referred in training session");
                                     $('.popup').toggle("slide");
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
                                 }
@@ -2360,13 +2360,13 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                     }
                     $scope.saveTrainingCategories = function () {
                         var savedindexes = [];
-                        for (var j = $scope.trainingCategories.length-1; j >= 0; j--) {
-                            if(!$scope.trainingCategories[j]._id && $scope.trainingCategories[j].name == "" && $scope.trainingCategories[j].description == ""){
+                        for (var j = $scope.trainingCategories.length - 1; j >= 0; j--) {
+                            if (!$scope.trainingCategories[j]._id && $scope.trainingCategories[j].name == "" && $scope.trainingCategories[j].description == "") {
                                 $scope.trainingCategories.splice(j, 1);
                             }
                         }
                         var trainingCategoryList = $scope.trainingCategories.filter(function (el) {
-                            if(!el._id && (el.name || el.description)){
+                            if (!el._id && (el.name || el.description)) {
                                 savedindexes.push($scope.trainingCategories.indexOf(el));
                             }
                             return el.editStatus == true;
@@ -2379,12 +2379,12 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                             }
                         }
                         if (trainingCategoryList && trainingCategoryList.length > 0) {
-							$scope.loadingTrainingCategoryData = true;
+                            $scope.loadingTrainingCategoryData = true;
                             var query = {};
                             query.table = "training_categories__cstore";
                             query.operations = trainingCategoryList;
                             $appService.save(query, ASK, OSK, null, function (callBackData) {
-								$scope.loadingTrainingCategoryData = false;
+                                $scope.loadingTrainingCategoryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -2394,7 +2394,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                     for (var i = 0; i < $scope.trainingCategories.length; i++) {
                                         $scope.trainingCategories[i]["editStatus"] = false;
                                     }
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
                                 }
@@ -2409,7 +2409,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
-                        }else {
+                        } else {
                             $("#popupMessage").html("No data found for saving");
                             $('.popup').toggle("slide");
                         }
@@ -2494,23 +2494,23 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                     for (var i = 0; i < $scope.states.length; i++) {
                                         if ($scope.states[i].deleteStatus) {
                                             $scope.states.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in products");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in products");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2536,17 +2536,17 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.saveStates = function () {
-						var savedindexes = [];		
-						for (var j = $scope.states.length-1; j >= 0; j--) {
-							if(!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].abbreviation){		
-								$scope.states.splice(j, 1);
-							}
-						}						
+                        var savedindexes = [];
+                        for (var j = $scope.states.length - 1; j >= 0; j--) {
+                            if (!$scope.states[j]._id && !$scope.states[j].name && !$scope.states[j].countryid && !$scope.states[j].abbreviation) {
+                                $scope.states.splice(j, 1);
+                            }
+                        }
                         var stateList = $scope.states.filter(function (el) {
-							if(!el._id && (el.name || el.countryid || el.abbreviation)){							
-								savedindexes.push($scope.states.indexOf(el));
-							}
-                            return el.editStatus == true ;
+                            if (!el._id && (el.name || el.countryid || el.abbreviation)) {
+                                savedindexes.push($scope.states.indexOf(el));
+                            }
+                            return el.editStatus == true;
                         });
                         for (var i = 0; i < stateList.length; i++) {
                             if (!stateList[i].name) {
@@ -2566,7 +2566,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (stateList && stateList.length > 0) {
-							$scope.loadingStateData = true;
+                            $scope.loadingStateData = true;
                             var query = {};
                             query.table = "states__cstore";
                             query.operations = stateList;
@@ -2574,24 +2574,24 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
-								$scope.loadingStateData = false;
+                                $scope.loadingStateData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
-									for (var j = 0; j < savedindexes.length; j++) {
-										$scope.states[savedindexes[j]]._id = callBackData.response.insert[j]._id;
-									}
+                                    for (var j = 0; j < savedindexes.length; j++) {
+                                        $scope.states[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                    }
                                     for (var i = 0; i < $scope.states.length; i++) {
                                         $scope.states[i]["editStatus"] = false;
                                     }
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while saving");
-									$('.popup').toggle("slide");
-								}
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while saving");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2599,7 +2599,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
-                        }else {
+                        } else {
                             $("#popupMessage").html("No data found for saving");
                             $('.popup').toggle("slide");
                         }
@@ -2700,23 +2700,23 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         if ($scope.cities[i].deleteStatus) {
                                             $scope.cities.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in vendor");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in vendor");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2742,16 +2742,16 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.saveCities = function () {
-						var savedindexes = [];
-						for (var j = $scope.cities.length-1; j >= 0; j--) {
-							if(!$scope.cities[j]._id && $scope.cities[j].name == "" && $scope.cities[j].stateid == ""){		
-								$scope.cities.splice(j, 1);
-							}
-						}
+                        var savedindexes = [];
+                        for (var j = $scope.cities.length - 1; j >= 0; j--) {
+                            if (!$scope.cities[j]._id && $scope.cities[j].name == "" && $scope.cities[j].stateid == "") {
+                                $scope.cities.splice(j, 1);
+                            }
+                        }
                         var cityList = $scope.cities.filter(function (el) {
-							if(!el._id && (el.name || el.stateid)){							
-								savedindexes.push($scope.cities.indexOf(el));
-							}
+                            if (!el._id && (el.name || el.stateid)) {
+                                savedindexes.push($scope.cities.indexOf(el));
+                            }
                             return el.editStatus == true;
                         });
                         for (var i = 0; i < cityList.length; i++) {
@@ -2768,31 +2768,31 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
 
                         if (cityList && cityList.length > 0) {
-							$scope.loadingCityData = true;
+                            $scope.loadingCityData = true;
                             var query = {};
                             query.table = "cities__cstore";
                             query.operations = cityList;
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
-								$scope.loadingCityData = false;
+                                $scope.loadingCityData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
-									for (var j = 0; j < savedindexes.length; j++) {
-										$scope.cities[savedindexes[j]]._id = callBackData.response.insert[j]._id;
-									}
+                                    for (var j = 0; j < savedindexes.length; j++) {
+                                        $scope.cities[savedindexes[j]]._id = callBackData.response.insert[j]._id;
+                                    }
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         $scope.cities[i]["editStatus"] = false;
                                     }
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -2880,23 +2880,23 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                     for (var i = 0; i < $scope.users.length; i++) {
                                         if ($scope.users[i].deleteStatus) {
                                             $scope.users.splice(i, 1);
-											i--;
+                                            i--;
                                         }
                                     }
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
-									$("#popupMessage").html("This record is referred in another table");
-									$('.popup').toggle("slide");								
-								}else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("Some error occur while deleting");
-									$('.popup').toggle("slide");
-								}
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in another table");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
                                 if (!$scope.$$phase) {
                                     $scope.$apply();
                                 }
@@ -3007,7 +3007,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-						$scope.loadingStatus = true;
+                        $scope.loadingStatus = true;
                         $scope.newUser["userid"] = {"emailid": $scope.userdata.username, "firstname": $scope.userdata.firstname, "lastname": $scope.userdata.lastname, "password": $scope.userdata.password, "username": $scope.userdata.username};
                         if ($scope.userdata.selectedRole) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
@@ -3020,7 +3020,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         query.table = "user_profiles__cstore";
                         query.operations = [$scope.newUser];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-							$scope.loadingStatus = false;
+                            $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Saved");
                                 $('.popup').toggle("slide");
@@ -3274,10 +3274,10 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                 $("#popupMessage").html("This record is referred in another table");
                                 $('.popup').toggle("slide");
-                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             }
@@ -3296,12 +3296,12 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     }
                     $scope.setPromotionState = function (promotion) {
                         var endArray = promotion["end_date"].split(" ");
-                        var endMinArray =endArray[1].split(":");
-                        $scope.promotiondata.end_date=endArray[0];
+                        var endMinArray = endArray[1].split(":");
+                        $scope.promotiondata.end_date = endArray[0];
                         console.log("enddate :: " + $scope.promotiondata.end_date);
                         var startArray = promotion["start_date"].split(" ");
-                        var startMinArray =startArray[1].split(":");
-                        $scope.promotiondata.start_date=startArray[0];
+                        var startMinArray = startArray[1].split(":");
+                        $scope.promotiondata.start_date = startArray[0];
                         console.log("startdate :: " + $scope.promotiondata.start_date);
                         if (promotion.end_date && $scope.promotiondata.hours) {
                             for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
@@ -3319,7 +3319,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                     console.log("selected Start hour:::" + $scope.promotiondata.selectedStartHour);
                                     break;
                                 }
-                             }
+                            }
                         }
                         if (promotion.end_date && $scope.promotiondata.minutes) {
                             for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
@@ -3348,13 +3348,13 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
                         $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
-						// change made
+                        // change made
                         $scope.promotiondata["codes"] = promotion.codes ? promotion.codes : [];
                         //changes made by anuradha 0105 evening
                         console.log(promotion.top_promo);
-                        $scope.promotiondata["top_promo"] =promotion.top_promo ? promotion.top_promo : "";
-                        if(promotion.image){
-                            $scope.oFile.fileExist=true;
+                        $scope.promotiondata["top_promo"] = promotion.top_promo ? promotion.top_promo : "";
+                        if (promotion.image) {
+                            $scope.oFile.fileExist = true;
                             //console.log("22222:::"+$scope.oFile.fileExist);
                         }
                         $scope.showFile(promotion.image, false);
@@ -3365,7 +3365,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                     break;
                                 }
                             }
-                        }	
+                        }
                         if (promotion.vendorid && $scope.promotiondata.vendors) {
                             for (var j = 0; j < $scope.promotiondata.vendors.length; j++) {
                                 if ($scope.promotiondata.vendors[j]._id == promotion.vendorid._id) {
@@ -3422,21 +3422,21 @@ cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scop
                 pre: function ($scope) {
 
                 }, post: function ($scope) {
-					$scope.setUpc = function(offertype){
-						if(offertype.name == "SVB" || offertype.name == "MVB"){
-							$scope.promotiondata.upc = [
-								{"name":"UPC"},
-								{"name":"PLU"},
-								{"name":"DEPT"}
-							];
-						}else{
-							$scope.promotiondata.upc = [
-								{"name":"UPC"},
-								{"name":"PLU"}
-							];
-						}
-						$scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
-					}
+                    $scope.setUpc = function (offertype) {
+                        if (offertype.name == "SVB" || offertype.name == "MVB") {
+                            $scope.promotiondata.upc = [
+                                {"name": "UPC"},
+                                {"name": "PLU"},
+                                {"name": "DEPT"}
+                            ];
+                        } else {
+                            $scope.promotiondata.upc = [
+                                {"name": "UPC"},
+                                {"name": "PLU"}
+                            ];
+                        }
+                        $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+                    }
                 }
             }
         }
@@ -3451,28 +3451,28 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
             return{
                 pre: function () {
                 }, post: function ($scope) {
-					$scope.getAllAvailableTags = function (type){
-						var query = {"table": "product_codes__cstore"};
-						query.columns = ["description","code"];
-						query.filter = {"type": type};
-						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-						var serviceUrl = "/rest/data";
-						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
-							var availableTags = [];
-							for (var i = 0; i < productData.response.data.length; i++) {
-								availableTags.push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-							}
-							$('#grp_tags').tagit({"tagSource":availableTags,"allowNewTags": false,"triggerKeys":['enter', 'comma', 'tab']});			
-							if($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0){					
-								var fillCodes = $scope.promotiondata.codes;									
-								$('#grp_tags').tagit("fill", fillCodes);	
-							}
-						}, function (jqxhr, error) {
-							$("#popupMessage").html(error);
-							$('.popup').toggle("slide");
-						})
-					}			
-					$scope.getAllAvailableTags("UPC");
+                    $scope.getAllAvailableTags = function (type) {
+                        var query = {"table": "product_codes__cstore"};
+                        query.columns = ["description", "code"];
+                        query.filter = {"type": type};
+                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                        var serviceUrl = "/rest/data";
+                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+                            var availableTags = [];
+                            for (var i = 0; i < productData.response.data.length; i++) {
+                                availableTags.push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+                            }
+                            $('#grp_tags').tagit({"tagSource": availableTags, "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                            if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0) {
+                                var fillCodes = $scope.promotiondata.codes;
+                                $('#grp_tags').tagit("fill", fillCodes);
+                            }
+                        }, function (jqxhr, error) {
+                            $("#popupMessage").html(error);
+                            $('.popup').toggle("slide");
+                        })
+                    }
+                    $scope.getAllAvailableTags("UPC");
                 }
             }
         }
@@ -3501,7 +3501,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
     return {
         restrict: 'E',
         replace: 'true',
-        template:'<div><div class="table_1 pull-left"><div>' +
+        template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Promo Title</div></td>' +
@@ -3594,133 +3594,133 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                     $scope.savePromotion = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
-                         if ($scope.CSession) {
-							var tags = $scope.showTags($('#grp_tags').tagit("tags"));
-							 if (!$scope.promotiondata.promo_title) {
-								 $("#popupMessage").html("Please enter promo title");
-								 $('.popup').toggle("slide");
-								 return false;
-							 }
-							 if (!$scope.promotiondata.offer_title) {
-								 $("#popupMessage").html("Please enter offer title");
-								 $('.popup').toggle("slide");
-								 return false;
-							 }
-                             if (!$scope.promotiondata.promo_description) {
-                                 $("#popupMessage").html("Please enter promo description");
-                                 $('.popup').toggle("slide");
-                                 return false;
-                             }
-                             if (!$scope.promotiondata.offer_description) {
-                                 $("#popupMessage").html("Please enter offer description");
-                                 $('.popup').toggle("slide");
-                                 return false;
-                             }
-                             if (!$scope.promotiondata.sponsor) {
-                                 $("#popupMessage").html("Please enter sponsor");
-                                 $('.popup').toggle("slide");
-                                 return false;
-                             }
-							 if (!$scope.promotiondata.start_date) {
-								 $("#popupMessage").html("Please select start date");
-								 $('.popup').toggle("slide");
-								 return false;
-							  }
-							  if (!$scope.promotiondata.end_date) {
-							      $("#popupMessage").html("Please select end date");
-							      $('.popup').toggle("slide");
-							      return false;
-							  }
-                             if ($scope.promotiondata.start_date > $scope.promotiondata.end_date) {
-                                 $("#popupMessage").html("Please select valid start or end date");
-                                 $('.popup').toggle("slide");
-                                 return false;
-                             }
-							  if (!$scope.promotiondata.threshold || !regNumberOnly.test($scope.promotiondata.threshold)) {
-							      $("#popupMessage").html("Please enter valid numeric threshold value");
-							      $('.popup').toggle("slide");
-							      return false;
-							  }
+                        if ($scope.CSession) {
+                            var tags = $scope.showTags($('#grp_tags').tagit("tags"));
+                            if (!$scope.promotiondata.promo_title) {
+                                $("#popupMessage").html("Please enter promo title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.offer_title) {
+                                $("#popupMessage").html("Please enter offer title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.promo_description) {
+                                $("#popupMessage").html("Please enter promo description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.offer_description) {
+                                $("#popupMessage").html("Please enter offer description");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.sponsor) {
+                                $("#popupMessage").html("Please enter sponsor");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.start_date) {
+                                $("#popupMessage").html("Please select start date");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.end_date) {
+                                $("#popupMessage").html("Please select end date");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if ($scope.promotiondata.start_date > $scope.promotiondata.end_date) {
+                                $("#popupMessage").html("Please select valid start or end date");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.threshold || !regNumberOnly.test($scope.promotiondata.threshold)) {
+                                $("#popupMessage").html("Please enter valid numeric threshold value");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
 
 
-                             if (!$scope.oFile.fileExist) {
-                                 $("#popupMessage").html("Please upload file");
-                                 $('.popup').toggle("slide");
-                                 return false;
-                             }
+                            if (!$scope.oFile.fileExist) {
+                                $("#popupMessage").html("Please upload file");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
 
-							  if (!$scope.promotiondata.sponsor) {
-							      $("#popupMessage").html("Please enter sponsor");
-							      $('.popup').toggle("slide");
-							      return false;
-							  }
-							  if(($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1){
-									$("#popupMessage").html("You can select only one tag in "+$scope.promotiondata.selectedUpc.name);
-									$('.popup').toggle("slide");
-									return false;
-							  }
+                            if (!$scope.promotiondata.sponsor) {
+                                $("#popupMessage").html("Please enter sponsor");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1) {
+                                $("#popupMessage").html("You can select only one tag in " + $scope.promotiondata.selectedUpc.name);
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
 
-							 $scope.loadingStatus = true;
+                            $scope.loadingStatus = true;
 
-							 var query = {};
-							 query.table = "promotions__cstore";
-							 if ($scope.promotiondata["promotionid"]) {
-								$scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
-							 }
-                             console.log("start date :::::"+$scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute);
-                             console.log("end date :::::"+$scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute);
-							 $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date+" "+$scope.promotiondata.selectedEndHour + ":" +$scope.promotiondata.selectedEndMinute);
-							 $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
-							 $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
-							 $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
-							 $scope.newPromotion["offer_type"] = $scope.promotiondata.selectedOfferType.name;
-							 $scope.newPromotion["promo_description"] = $scope.promotiondata.promo_description;
-							 $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
-							 $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
-							 $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
-							 $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date+" "+$scope.promotiondata.selectedStartHour + ":" +$scope.promotiondata.selectedStartMinute);
-							 $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
-							 // change made
-							 if(tags && tags.length > 0){
-								$scope.newPromotion["codes"] = tags;
-							 }
-                             //changes made by anuradha 0105 evening
-                             $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
-                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
-							 $scope.newPromotion["vendorid"] = {"_id":$scope.promotiondata.vendorsList._id};
-							 if (document.getElementById('uploadfile').files.length === 0) {
-								 delete $scope.newPromotion["image"];
-								 query.operations = [$scope.newPromotion];
-								 $scope.saveFunction(query);
-							 }
-							 else {
-								 var current_file = {};
-								 current_file.name = $scope.oFile.name;
-								 current_file.type = $scope.oFile.type;
-								 current_file.contents = $scope.oFile.data;
-								 current_file.ask = ASK;
-								 current_file.osk = OSK;
-								 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-									$scope.loadingStatus = false;
-									 if (data.response) {
-										 $scope.newPromotion["image"] = data.response;
-										 query.operations = [$scope.newPromotion];
-										 $scope.saveFunction(query);
-									 }
-									 else {
-										 $("#popupMessage").html("some error while uploading image please try again");
-										 $('.popup').toggle("slide");
-									 }
-								 }, function (callbackerror) {
-									 $("#popupMessage").html(callbackerror);
-									 $('.popup').toggle("slide");
-								 });
-							 }
-                         }
-                         else {
-							 $("#popupMessage").html("Please login first");
-							 $('.popup').toggle("slide");
-                         }
+                            var query = {};
+                            query.table = "promotions__cstore";
+                            if ($scope.promotiondata["promotionid"]) {
+                                $scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
+                            }
+                            console.log("start date :::::" + $scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute);
+                            console.log("end date :::::" + $scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
+                            $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
+                            $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
+                            $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
+                            $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
+                            $scope.newPromotion["offer_type"] = $scope.promotiondata.selectedOfferType.name;
+                            $scope.newPromotion["promo_description"] = $scope.promotiondata.promo_description;
+                            $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
+                            $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
+                            $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
+                            $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute);
+                            $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
+                            // change made
+                            if (tags && tags.length > 0) {
+                                $scope.newPromotion["codes"] = tags;
+                            }
+                            //changes made by anuradha 0105 evening
+                            $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
+                            $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
+                            $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                delete $scope.newPromotion["image"];
+                                query.operations = [$scope.newPromotion];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                var current_file = {};
+                                current_file.name = $scope.oFile.name;
+                                current_file.type = $scope.oFile.type;
+                                current_file.contents = $scope.oFile.data;
+                                current_file.ask = ASK;
+                                current_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                    $scope.loadingStatus = false;
+                                    if (data.response) {
+                                        $scope.newPromotion["image"] = data.response;
+                                        query.operations = [$scope.newPromotion];
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
+                                        $("#popupMessage").html("some error while uploading image please try again");
+                                        $('.popup').toggle("slide");
+                                    }
+                                }, function (callbackerror) {
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
+                                });
+                            }
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
                     };
                     $scope.saveFunction = function (query) {
                         //console.log(query);
@@ -3730,7 +3730,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $('.popup').toggle("slide");
                                 $scope.setPathforPromotion("promotions");
                             }
-                            else if((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns")>=0)){
+                            else if ((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns") >= 0)) {
                                 $("#popupMessage").html("There is duplicate value for promo title or offer titile");
                                 $('.popup').toggle("slide");
                             }
@@ -3765,9 +3765,9 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
             $(element).datepicker({
                 dateFormat: 'mm/dd/yy',
                 onSelect: function (date) {
-					if(!$scope[model[0]])
-						$scope[model[0]] = {};
-					$scope[model[0]][model[1]] = date;
+                    if (!$scope[model[0]])
+                        $scope[model[0]] = {};
+                    $scope[model[0]][model[1]] = date;
                     $scope.$apply();
                 }
             });
@@ -3783,7 +3783,7 @@ cstore.directive('jqtimepicker', [ '$appService', function ($appService, $scope)
             var model = attrs.ngModel.split(".");
             $(element).timepicker({
                 onSelect: function (time) {
-                    if(!$scope[model[0]])
+                    if (!$scope[model[0]])
                         $scope[model[0]] = {};
                     $scope[model[0]][model[1]] = time;
                     $scope.$apply();
@@ -3794,18 +3794,18 @@ cstore.directive('jqtimepicker', [ '$appService', function ($appService, $scope)
 }]);
 
 /*bharat chnage */
-cstore.directive('googlePlaces', function(){
+cstore.directive('googlePlaces', function () {
     return {
-        restrict:'E',
-        replace:true,
+        restrict: 'E',
+        replace: true,
         // transclude:true,
-        scope: {location:'='},
+        scope: {location: '='},
         template: '<input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/>',
-        link: function($scope, elm, attrs){
+        link: function ($scope, elm, attrs) {
             var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
-            google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var place = autocomplete.getPlace();
-                $scope.location=place["address_components"][0].long_name;
+                $scope.location = place["address_components"][0].long_name;
 //
 // $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
                 $scope.$apply();
@@ -3841,14 +3841,14 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         window.location.href = "#!/" + path;
                     }
                     //changes
-                    $scope.setAssignedPath=function(sessionid){
-						window.location.href = "#!/assign-store?id=" + sessionid;
+                    $scope.setAssignedPath = function (sessionid) {
+                        window.location.href = "#!/assign-store?id=" + sessionid;
                     }
-                    $scope.showAssignPopup=function(session){
+                    $scope.showAssignPopup = function (session) {
                         $(".assign_popup").show();
                         //console.log(session.title);
-                        $scope.sessionTitle=session.title;
-                        $scope.sessionId=session._id;
+                        $scope.sessionTitle = session.title;
+                        $scope.sessionId = session._id;
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -3879,10 +3879,10 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                 $("#popupMessage").html("This record is referred in another table");
                                 $('.popup').toggle("slide");
-                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             }
@@ -3903,7 +3903,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         $scope.trainingdata["title"] = trainingSession.title ? trainingSession.title : "";
                         $scope.trainingdata["video_url"] = trainingSession.video_url ? trainingSession.video_url : "";
                         $scope.trainingdata["description"] = trainingSession.description ? trainingSession.description : "";
-                        $scope.showDocFile(trainingSession.file,false);
+                        $scope.showDocFile(trainingSession.file, false);
                         //$scope.productdata["image"] = product.image;
                         //$scope.showFile(product.image, false);
                         //console.log($scope.productdata.image);
@@ -3916,19 +3916,19 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                             }
                         }
-						if(trainingSession.file && trainingSession.file.length > 0){
-							for (var k = 0; k < trainingSession.file.length; k++) {
-								$scope.trainingdata.uploadedimages[k] = {"filename":trainingSession.file[k].name};
-								$scope.trainingdata.uploadedimages[k].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[k].key + "&ask="+ASK+"&osk="+OSK;
-							}
-						}
+                        if (trainingSession.file && trainingSession.file.length > 0) {
+                            for (var k = 0; k < trainingSession.file.length; k++) {
+                                $scope.trainingdata.uploadedimages[k] = {"filename": trainingSession.file[k].name};
+                                $scope.trainingdata.uploadedimages[k].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[k].key + "&ask=" + ASK + "&osk=" + OSK;
+                            }
+                        }
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
                     //changes made on 3004  by anu
                     $scope.setAssignedSessionState = function (session) {
                         //$scope.survey["title"] = survey.title ? survey.title : "";
                         //console.log(JSON.stringify(session));
-                        $scope.session_title=session.title;
+                        $scope.session_title = session.title;
                         window.location.href = "#!/assigned-session-store?q=" + session._id;
                     }
                     /*****end*******/
@@ -3949,74 +3949,74 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
     return {
         restrict: 'E',
         template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
-			'<button type="button" ng-click="assignTrainingSession()"><a href>Save</a></button>' +
-			'<button type="button" ng-click="setPath(\'training-sessions\')"><a href>Back</a></button>' +
+            '<button type="button" ng-click="assignTrainingSession()"><a href>Save</a></button>' +
+            '<button type="button" ng-click="setPath(\'training-sessions\')"><a href>Back</a></button>' +
             '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="searchStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-			'<div class="table pull-left">' +
+            '<div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storename}}</td><td>' +
             '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
-			'</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
-		 compile: function () {
+            '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+        compile: function () {
             return {
                 post: function ($scope) {
-					$scope.getOperationData = function(index){
-						var push = true;
-						for(j=0; j < $scope.storeManager.length; j++){
-							if($scope.storesName[index]._id == $scope.storeManager[j]._id){
-								$scope.storeManager.splice(j,1);
-								push = false;
-								break;
-							}
-						}
-						if(push){
-							$scope.storeManager.push({"_id":$scope.storesName[index]._id});
-						}
-					}
-					$scope.assignTrainingSession = function (){
-						if(!$scope.trainingSessionId){
-							return;
-						}
-						$scope.loadingStatus = true;
-						var query = {"table": "training_session__cstore"};
-						var operationArray = {};
-						$scope.CSession = $appService.getSession();
-						operationArray._id = $scope.trainingSessionId;
-						var dataArr = [];
-						for(j=0; j < $scope.storeManager.length; j++){
-							dataArr.push({"_id":$scope.storeManager[j]._id});
-						}
-						operationArray.store_manager_id = {data:dataArr,"override":"true"};
-						query.operations = [operationArray];
-						$appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-							$scope.loadingStatus = false;
+                    $scope.getOperationData = function (index) {
+                        var push = true;
+                        for (j = 0; j < $scope.storeManager.length; j++) {
+                            if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+                                $scope.storeManager.splice(j, 1);
+                                push = false;
+                                break;
+                            }
+                        }
+                        if (push) {
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                        }
+                    }
+                    $scope.assignTrainingSession = function () {
+                        if (!$scope.trainingSessionId) {
+                            return;
+                        }
+                        $scope.loadingStatus = true;
+                        var query = {"table": "training_session__cstore"};
+                        var operationArray = {};
+                        $scope.CSession = $appService.getSession();
+                        operationArray._id = $scope.trainingSessionId;
+                        var dataArr = [];
+                        for (j = 0; j < $scope.storeManager.length; j++) {
+                            dataArr.push({"_id": $scope.storeManager[j]._id});
+                        }
+                        operationArray.store_manager_id = {data: dataArr, "override": "true"};
+                        query.operations = [operationArray];
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
-                            }else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
-                            }else {
+                            } else {
                                 $("#popupMessage").html("some error while saving training session");
                                 $('.popup').toggle("slide");
                             }
                         }, function (err) {
                             console.log(err.stack);
-                        });					
-					}
-					$scope.searchStoreName = function () {
+                        });
+                    }
+                    $scope.searchStoreName = function () {
                         $scope.preCursor = 0;
                         $scope.currentCursor = 0;
                         $scope.getStoresName(1, 5, $scope.searchby.value, $scope.search.searchContent);
                     }
-				}
-			}
-		}
+                }
+            }
+        }
     }
 }]);
 
@@ -4064,12 +4064,12 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '</tr>' +
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
-			'<ul class="uploadList">' +
+            '<ul class="uploadList">' +
             '<li ng-repeat="uploadedimage in trainingdata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
             '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
             '</li>' +
             '</ul>' +
-			'</td></tr>' +
+            '</td></tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
@@ -4090,22 +4090,22 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                     }
                 },
                 post: function ($scope) {
-					$('#demo2').tagit();				
-					if($scope.trainingdata.video_url && $scope.trainingdata.video_url.length > 0){
-						$("#demo2").tagit("fill",$scope.trainingdata.video_url);
-					}				
+                    $('#demo2').tagit();
+                    if ($scope.trainingdata.video_url && $scope.trainingdata.video_url.length > 0) {
+                        $("#demo2").tagit("fill", $scope.trainingdata.video_url);
+                    }
                     $scope.loadingAddTrainingData = false;
                     $scope.saveTrainingSession = function () {
                         $scope.CSession = $appService.getSession();
-						var regexp = /(ftp|http|https|www)(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-						var video_url = $scope.showTags($('#demo2').tagit("tags"));
-						var invalid_url = false;
-						for(i = 0; i < video_url.length; i++){
-							if(!regexp.test(video_url[i])){
-								invalid_url = true;
-								break;
-							}
-						}
+                        var regexp = /(ftp|http|https|www)(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+                        var video_url = $scope.showTags($('#demo2').tagit("tags"));
+                        var invalid_url = false;
+                        for (i = 0; i < video_url.length; i++) {
+                            if (!regexp.test(video_url[i])) {
+                                invalid_url = true;
+                                break;
+                            }
+                        }
                         if ($scope.CSession) {
                             if (!$scope.trainingdata.title) {
                                 $("#popupMessage").html("Please enter training session title");
@@ -4128,13 +4128,13 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-							$scope.loadingAddTrainingdata = true;
+                            $scope.loadingAddTrainingdata = true;
 
                             var query = {};
                             query.table = "training_session__cstore";
                             if ($scope.trainingdata["trainingSessionId"]) {
                                 $scope.newSession["_id"] = $scope.trainingdata["trainingSessionId"];
-							}
+                            }
                             $scope.newSession["title"] = $scope.trainingdata.title;
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
@@ -4144,13 +4144,13 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $scope.saveFunction(query);
                             }
                             else {
-								$scope.newSession["file"] = [];
-								for(j = 0; j < $scope.trainingdata.uploadedimages.length; j++){
-									$scope.newSession["file"][j] = $scope.trainingdata.uploadedimages[j].image[0];
-								}
-								query.operations = [$scope.newSession];
-								$scope.saveFunction(query);
-							}
+                                $scope.newSession["file"] = [];
+                                for (j = 0; j < $scope.trainingdata.uploadedimages.length; j++) {
+                                    $scope.newSession["file"][j] = $scope.trainingdata.uploadedimages[j].image[0];
+                                }
+                                query.operations = [$scope.newSession];
+                                $scope.saveFunction(query);
+                            }
                         }
                         else {
                             $("#popupMessage").html("Please login first");
@@ -4158,9 +4158,9 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                         }
                     };
                     $scope.saveFunction = function (query) {
-                        
+
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-							$scope.loadingAddTrainingdata = false;
+                            $scope.loadingAddTrainingdata = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
@@ -4217,10 +4217,10 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
                         $scope.readonlydocrow.filenotexist = true;
                     }
                     $scope.loadFile = function (evt) {
-                        $scope.docfile  = {};
+                        $scope.docfile = {};
                         $scope.docfile.name = $scope.docOFile.name;
                         console.log(JSON.stringify(evt));
-                        $scope.docfile .result = evt.target.result;
+                        $scope.docfile.result = evt.target.result;
                         $scope.docOFile['data'] = evt.target.result;
                         $scope.showUploadedFile($scope.docfile);
                     };
@@ -4269,16 +4269,16 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
-                pre: function ($scope) {					
+                pre: function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
                     //changes made 2904
-                    $scope.showAssignPopup=function(survey){
+                    $scope.showAssignPopup = function (survey) {
                         $(".assign_popup").show();
                         console.log(survey.title);
-                        $scope.surveyTitle=survey.title;
-                        $scope.surveyId=survey._id;
+                        $scope.surveyTitle = survey.title;
+                        $scope.surveyId = survey._id;
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -4309,10 +4309,10 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                 $("#popupMessage").html("This record is referred in another table");
                                 $('.popup').toggle("slide");
-                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             }
@@ -4330,37 +4330,37 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
 
                     }
                     $scope.setAssignedSurveyState = function (survey) {
-                     //$scope.survey["title"] = survey.title ? survey.title : "";
-                       console.log(JSON.stringify(survey));
-                     window.location.href = "#!/assigned-survey-store?q=" + survey._id;
-                     }
+                        //$scope.survey["title"] = survey.title ? survey.title : "";
+                        console.log(JSON.stringify(survey));
+                        window.location.href = "#!/assigned-survey-store?q=" + survey._id;
+                    }
                     $scope.setSurveyState = function (survey) {
                         $scope.surveydata["surveyId"] = survey._id ? survey._id : "";
                         $scope.surveydata["title"] = survey.title ? survey.title : "";
                         $scope.surveydata["description"] = survey.description ? survey.description : "";
-						if(survey.survey_question && survey.survey_question.length > 0){
-							$scope.questions.length = survey.survey_question.length;
-							for(i = 0; i < survey.survey_question.length; i++){
-								$scope.questions[i] = {"question":survey.survey_question[i].question};		
-								for (var j = 0; j < $scope.listType.length; j++) {
-									if ($scope.listType[j].value == survey.survey_question[i].survey_type) {
-										$scope.questions[i].type = $scope.listType[j];
-										break;
-									}
-								}
-								$scope.questions[i]["optionArr"] = [];
-								if(survey.survey_question[i].survey_type != "subjective" && (survey.survey_question[i].options && survey.survey_question[i].options.length > 0 )){
-									for(k = 0; k < survey.survey_question[i].options.length; k++){
-										$scope.questions[i]["optionArr"][k] = {"options":survey.survey_question[i].options[k]};
-									}
-									$scope.questions[i].addOption = true;
-								}else{
-									$scope.questions[i].addOption = false;
-								}
-							}	
-						}
+                        if (survey.survey_question && survey.survey_question.length > 0) {
+                            $scope.questions.length = survey.survey_question.length;
+                            for (i = 0; i < survey.survey_question.length; i++) {
+                                $scope.questions[i] = {"question": survey.survey_question[i].question};
+                                for (var j = 0; j < $scope.listType.length; j++) {
+                                    if ($scope.listType[j].value == survey.survey_question[i].survey_type) {
+                                        $scope.questions[i].type = $scope.listType[j];
+                                        break;
+                                    }
+                                }
+                                $scope.questions[i]["optionArr"] = [];
+                                if (survey.survey_question[i].survey_type != "subjective" && (survey.survey_question[i].options && survey.survey_question[i].options.length > 0 )) {
+                                    for (k = 0; k < survey.survey_question[i].options.length; k++) {
+                                        $scope.questions[i]["optionArr"][k] = {"options": survey.survey_question[i].options[k]};
+                                    }
+                                    $scope.questions[i].addOption = true;
+                                } else {
+                                    $scope.questions[i].addOption = false;
+                                }
+                            }
+                        }
                         window.location.href = "#!/edit-survey?q=" + survey._id;
-                    } 
+                    }
                 }
             }
         }
@@ -4378,59 +4378,59 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             '<tr><td><div class="margin_top">Description</div></td></tr>' +
             '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
             '</tbody></table></div>' +
-			'<h2 class="sub-head-border">' +
-			'<span class="small-txt">Choose the type and add as many questions as you need.</span>  ' +
-			'</h2>  ' +
-			"<div class='questionWrap' ng-repeat='ques in questions'>" +
-			"<div><div>" +
-			"<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +			
+            '<h2 class="sub-head-border">' +
+            '<span class="small-txt">Choose the type and add as many questions as you need.</span>  ' +
+            '</h2>  ' +
+            "<div class='questionWrap' ng-repeat='ques in questions'>" +
+            "<div><div>" +
+            "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
             '<tr><td class="pull-left"><div class="margin_top">Question Type</div></td>' +
             '<td class="pull-left" colspan="2"><select class="typelist" ng-model="ques.type" ng-change="showOption(ques)" ng-options="list.name for list in listType"></select></td></tr>' +
-			"</table>" +
-			"<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-			"<tr>" +
-			"<td class='full'>" +
-			"<span class='ques_index'>Question {{$index+1}}.</span> " +
-			"</td>" +
-			"<td align='right' valign='middle'>&nbsp;<a ng-click='questions.splice($index,1)'>" +
-			"<img src='/images/icon_delete.gif' alt='delete this question' class='question_answer'>" +
-			"</a></td> " +
-			"</tr></table>" +
-			"</div> " +
-			"<div id='question_desc'><div id='bg'>" +
-			"<textarea cols=76 class='description_1' rows=3 ng-model='ques.question' id='question{{$index}}' ></textarea>" +
-			"</div>" +
-			"</div>" +
-			"<table class='full' border=0 ng-show='ques.addOption'>" +
-			"<tr><td colspan='2'>" +
-			"<div id='mc_answers{{$index}}' name='mc_answers{{$index}}'>" +
-			"<table class='full'><tbody><tr><th>" +
-			"<th class='th_option' ng-hide='ques.optionArr.length == 0'>Option</th>" +
-			"<th class='th_action' ng-hide='ques.optionArr.length == 0'>Action</th>" +
-			"</tr></tbody></table>" +
-			"<div id='opt{{$index}}_1' name='opt{{$index}}_1' ng-repeat='opt in ques.optionArr'>" +
-			"<table class='full'><tr>" +
-			"<td><input type='text' ng-model='opt.options' id='answer{{$index}}'></td>" +
-			"<td align=center>" +
-			"<a title='delete this answer' ng-click='ques.optionArr.splice($index,1)' >" +
-			"<img src='/images/comment_delete.gif' alt='delete this answer' class='no' width='8'>" +
-			"</a>" +
-			"</td>" +
-			"</tr>" +
-			"</table>" +
-			"</div>" +
-			"</div></td></tr></table>" +
-			"<br/><div id='add_options{{$index}}' ng-show='ques.addOption'>" +
-			"<a title='Add alternate correct answers.' ng-click='ques.optionArr.push({options:[]})'>" +
-			"<strong>+ Add New Option</strong>" +
-			"</a></b><br/><br/></div>" +
-			"</div></div>" +
-			'<div class="questionToolBox">' +
-			'<div style="width: 800px;" class="add-questions-box" id="qButtons"> ' +
-			'<span style="position: relative;" ng-click="questions.push({optionArr:[],type:listType[0],addOption:true})" class="btn">  ' +
-			'<strong id="checkbox" class="plusSign">&nbsp;</strong>&nbsp;+ Add Question&nbsp;</span> ' +
-			'</div>   ' +
-			'</div> ' +
+            "</table>" +
+            "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+            "<tr>" +
+            "<td class='full'>" +
+            "<span class='ques_index'>Question {{$index+1}}.</span> " +
+            "</td>" +
+            "<td align='right' valign='middle'>&nbsp;<a ng-click='questions.splice($index,1)'>" +
+            "<img src='/images/icon_delete.gif' alt='delete this question' class='question_answer'>" +
+            "</a></td> " +
+            "</tr></table>" +
+            "</div> " +
+            "<div id='question_desc'><div id='bg'>" +
+            "<textarea cols=76 class='description_1' rows=3 ng-model='ques.question' id='question{{$index}}' ></textarea>" +
+            "</div>" +
+            "</div>" +
+            "<table class='full' border=0 ng-show='ques.addOption'>" +
+            "<tr><td colspan='2'>" +
+            "<div id='mc_answers{{$index}}' name='mc_answers{{$index}}'>" +
+            "<table class='full'><tbody><tr><th>" +
+            "<th class='th_option' ng-hide='ques.optionArr.length == 0'>Option</th>" +
+            "<th class='th_action' ng-hide='ques.optionArr.length == 0'>Action</th>" +
+            "</tr></tbody></table>" +
+            "<div id='opt{{$index}}_1' name='opt{{$index}}_1' ng-repeat='opt in ques.optionArr'>" +
+            "<table class='full'><tr>" +
+            "<td><input type='text' ng-model='opt.options' id='answer{{$index}}'></td>" +
+            "<td align=center>" +
+            "<a title='delete this answer' ng-click='ques.optionArr.splice($index,1)' >" +
+            "<img src='/images/comment_delete.gif' alt='delete this answer' class='no' width='8'>" +
+            "</a>" +
+            "</td>" +
+            "</tr>" +
+            "</table>" +
+            "</div>" +
+            "</div></td></tr></table>" +
+            "<br/><div id='add_options{{$index}}' ng-show='ques.addOption'>" +
+            "<a title='Add alternate correct answers.' ng-click='ques.optionArr.push({options:[]})'>" +
+            "<strong>+ Add New Option</strong>" +
+            "</a></b><br/><br/></div>" +
+            "</div></div>" +
+            '<div class="questionToolBox">' +
+            '<div style="width: 800px;" class="add-questions-box" id="qButtons"> ' +
+            '<span style="position: relative;" ng-click="questions.push({optionArr:[],type:listType[0],addOption:true})" class="btn">  ' +
+            '<strong id="checkbox" class="plusSign">&nbsp;</strong>&nbsp;+ Add Question&nbsp;</span> ' +
+            '</div>   ' +
+            '</div> ' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveSurvey()"><a href>Save</a></button>' +
@@ -4439,25 +4439,27 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             '</div></div></td></tr>' +
             '</tbody></table>' +
             '<div class="loadingImage" ng-hide="!loadingAddTrainingdata"><img src="/images/loading.gif"></div>' +
-            '</div>'+
+            '</div>' +
             '</div>',
         compile: function () {
             return {
-                pre: function ($scope) {				
-					if(window.location.hash == "#!/add-survey")
-						$scope.questions = [{"optionArr":[],"question":"","type":$scope.listType[0],"addOption":true}];	
+                pre: function ($scope) {
+                    if (window.location.hash == "#!/add-survey")
+                        $scope.questions = [
+                            {"optionArr": [], "question": "", "type": $scope.listType[0], "addOption": true}
+                        ];
                 },
                 post: function ($scope) {
-					$scope.CSession = $appService.getSession();	
-					$scope.showOption = function(ques){
-						if(ques.type.value != "subjective"){
-							ques.addOption = true;
-						}else{
-							ques.addOption = false;
-						}
-					}					
-					$scope.saveSurvey = function () {
-						if ($scope.CSession) {
+                    $scope.CSession = $appService.getSession();
+                    $scope.showOption = function (ques) {
+                        if (ques.type.value != "subjective") {
+                            ques.addOption = true;
+                        } else {
+                            ques.addOption = false;
+                        }
+                    }
+                    $scope.saveSurvey = function () {
+                        if ($scope.CSession) {
                             if (!$scope.surveydata.title) {
                                 $("#popupMessage").html("Please enter survey title");
                                 $('.popup').toggle("slide");
@@ -4468,69 +4470,69 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-							$scope.loadingAddTrainingdata = true;
-							var query = {};
-							var newSession = {};
-							query.table = "surveys__cstore";
-							if ($scope.surveydata["surveyId"]) {
-								newSession["_id"] = $scope.surveydata["surveyId"];
-							}
-							newSession["title"] = $scope.surveydata.title;
-							newSession["description"] = $scope.surveydata.description;
-							newSession["survey_question"] = [];
-							for(i = 0; i < $scope.questions.length; i++){
-								if(!$scope.questions[i].question){
-									$("#popupMessage").html("Please enter question "+Number(i+1)+".");
-									$('.popup').toggle("slide");
-									return;
-								}
-								newSession["survey_question"][i] = {"question":$scope.questions[i].question};
-								newSession["survey_question"][i]["survey_type"] = $scope.questions[i].type.value;
-								if($scope.questions[i].type.value != "subjective"){
-									newSession["survey_question"][i]["options"] = [];
-									if($scope.questions[i].optionArr.length < 2){
-										$("#popupMessage").html("Please add at least two options of question "+ Number(i+1) +".");
-										$('.popup').toggle("slide");
-										return;
-									}
-									for(j = 0; j < $scope.questions[i].optionArr.length; j++){
-										if(!$scope.questions[i].optionArr[j].options || ($scope.questions[i].optionArr[j].options && $scope.questions[i].optionArr[j].options.length == 0)){
-											$("#popupMessage").html("Please enter option "+Number(j+1)+" of question "+Number(i+1)+".");
-											$('.popup').toggle("slide");
-											return;
-										}
-										newSession["survey_question"][i]["options"][j] = $scope.questions[i].optionArr[j].options;
-									}
-								}
-							}
-							newSession["survey_question"] = {data:newSession["survey_question"], "override":"true"};
-							query.operations = [newSession];
-							$appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-								$scope.loadingAddTrainingdata = false;
-								if (callBackData.code == 200 && callBackData.status == "ok") {
-									$("#popupMessage").html("Saved successfully");
-									$('.popup').toggle("slide");
-									$scope.setPath('surveys');
-								} else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-									$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-									$('.popup').toggle("slide");
-								}
-								else {
-									$("#popupMessage").html("some error while saving survey");
-									$('.popup').toggle("slide");
-								}
-								$scope.clearSurveyContent();
-							}, function (err) {
-								console.log(err.stack);
+                            $scope.loadingAddTrainingdata = true;
+                            var query = {};
+                            var newSession = {};
+                            query.table = "surveys__cstore";
+                            if ($scope.surveydata["surveyId"]) {
+                                newSession["_id"] = $scope.surveydata["surveyId"];
+                            }
+                            newSession["title"] = $scope.surveydata.title;
+                            newSession["description"] = $scope.surveydata.description;
+                            newSession["survey_question"] = [];
+                            for (i = 0; i < $scope.questions.length; i++) {
+                                if (!$scope.questions[i].question) {
+                                    $("#popupMessage").html("Please enter question " + Number(i + 1) + ".");
+                                    $('.popup').toggle("slide");
+                                    return;
+                                }
+                                newSession["survey_question"][i] = {"question": $scope.questions[i].question};
+                                newSession["survey_question"][i]["survey_type"] = $scope.questions[i].type.value;
+                                if ($scope.questions[i].type.value != "subjective") {
+                                    newSession["survey_question"][i]["options"] = [];
+                                    if ($scope.questions[i].optionArr.length < 2) {
+                                        $("#popupMessage").html("Please add at least two options of question " + Number(i + 1) + ".");
+                                        $('.popup').toggle("slide");
+                                        return;
+                                    }
+                                    for (j = 0; j < $scope.questions[i].optionArr.length; j++) {
+                                        if (!$scope.questions[i].optionArr[j].options || ($scope.questions[i].optionArr[j].options && $scope.questions[i].optionArr[j].options.length == 0)) {
+                                            $("#popupMessage").html("Please enter option " + Number(j + 1) + " of question " + Number(i + 1) + ".");
+                                            $('.popup').toggle("slide");
+                                            return;
+                                        }
+                                        newSession["survey_question"][i]["options"][j] = $scope.questions[i].optionArr[j].options;
+                                    }
+                                }
+                            }
+                            newSession["survey_question"] = {data: newSession["survey_question"], "override": "true"};
+                            query.operations = [newSession];
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                $scope.loadingAddTrainingdata = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
+                                    $scope.setPath('surveys');
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while saving survey");
+                                    $('.popup').toggle("slide");
+                                }
+                                $scope.clearSurveyContent();
+                            }, function (err) {
+                                console.log(err.stack);
 
-							});
-						}else{
-							$("#popupMessage").html("Please login first");
+                            });
+                        } else {
+                            $("#popupMessage").html("Please login first");
                             $('.popup').toggle("slide");
-						}
+                        }
                     }
-				
-				}
+
+                }
             }
         }
     }
@@ -4566,7 +4568,7 @@ cstore.directive('carouselPromos', ['$appService', function ($appService, $scope
             return {
                 pre: function () {
                 },
-                post:function(){
+                post: function () {
 
                 }
             }
@@ -4609,16 +4611,16 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
             '<select class="brand" ng-model="trainingdata.assignedStore" ng-options="store.storename for store in trainingdata.stores"></select></td></tr></table>' +
             '</div><div class="add_btn"><button type="button" ng-click="assignStoreSurvey()"><a href>Save</a></button>' +
             '<button type="button" ng-click="hideAssignPopup()"><a href>Cancel</a></button></div></div></div>',
-        compile:function(){
+        compile: function () {
             return{
-                pre:function($scope){
-                    $scope.hideAssignPopup=function(){
+                pre: function ($scope) {
+                    $scope.hideAssignPopup = function () {
                         $(".assign_popup").hide();
-                        $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
+                        $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
                     }
-                    $scope.newStoreSurvey={};
+                    $scope.newStoreSurvey = {};
                 },
-                post:function($scope){
+                post: function ($scope) {
 //                        console.log($scope.surveyTitle);
 //                        console.log($scope.trainingdata.assignedStore);
 //                        console.log($scope.surveyId);
@@ -4626,8 +4628,8 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
                     $scope.assignStoreSurvey = function () {
                         var query = {};
                         query.table = "storemanager_survey__cstore";
-                        $scope.newStoreSurvey["store_manager_id"] = {"storename":$scope.trainingdata.assignedStore.storename,"_id":$scope.trainingdata.assignedStore._id};
-                        $scope.newStoreSurvey["survey_id"] = {"title":$scope.surveyTitle,"_id":$scope.surveyId};
+                        $scope.newStoreSurvey["store_manager_id"] = {"storename": $scope.trainingdata.assignedStore.storename, "_id": $scope.trainingdata.assignedStore._id};
+                        $scope.newStoreSurvey["survey_id"] = {"title": $scope.surveyTitle, "_id": $scope.surveyId};
                         query.operations = [$scope.newStoreSurvey];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
@@ -4655,7 +4657,7 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
         }
     }
 }]);
- //changes made by anuradha on 30-04
+//changes made by anuradha on 30-04
 cstore.directive('assignedSurveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -4703,10 +4705,10 @@ cstore.directive('assignedSurveyList', ['$appService', function ($appService, $s
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                 $("#popupMessage").html("This record is referred in another table");
                                 $('.popup').toggle("slide");
-                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             }
@@ -4739,16 +4741,16 @@ cstore.directive('assignStoreSessionPopup', ['$appService', function ($appServic
             '<select class="brand" ng-model="trainingdata.assignedStore" ng-options="store.storename for store in trainingdata.stores"></select></td></tr></table>' +
             '</div><div class="add_btn"><button type="button" ng-click="assignStoreSession()"><a href>Save</a></button>' +
             '<button type="button" ng-click="hideAssignPopup()"><a href>Cancel</a></button></div></div></div>',
-        compile:function(){
+        compile: function () {
             return{
-                pre:function($scope){
-                    $scope.hideAssignPopup=function(){
+                pre: function ($scope) {
+                    $scope.hideAssignPopup = function () {
                         $(".assign_popup").hide();
-                        $scope.trainingdata.assignedStore=$scope.trainingdata.stores[0];
+                        $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
                     }
-                    $scope.newStoreSession={};
+                    $scope.newStoreSession = {};
                 },
-                post:function($scope){
+                post: function ($scope) {
 
 
                     $scope.assignStoreSession = function () {
@@ -4757,8 +4759,8 @@ cstore.directive('assignStoreSessionPopup', ['$appService', function ($appServic
 //                        console.log($scope.sessionId);
                         var query = {};
                         query.table = "storemanager_trainingsession__cstore";
-                        $scope.newStoreSession["store_manager_id"] = {"storename":$scope.trainingdata.assignedStore.storename,"_id":$scope.trainingdata.assignedStore._id};
-                        $scope.newStoreSession["training_session_id"] = {"title":$scope.sessionTitle,"_id":$scope.sessionId};
+                        $scope.newStoreSession["store_manager_id"] = {"storename": $scope.trainingdata.assignedStore.storename, "_id": $scope.trainingdata.assignedStore._id};
+                        $scope.newStoreSession["training_session_id"] = {"title": $scope.sessionTitle, "_id": $scope.sessionId};
                         query.operations = [$scope.newStoreSession];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
@@ -4834,10 +4836,10 @@ cstore.directive('assignedSessionList', ['$appService', function ($appService, $
                                 }
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
-                            }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                 $("#popupMessage").html("This record is referred in another table");
                                 $('.popup').toggle("slide");
-                            }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             }
@@ -4873,23 +4875,23 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
             '</div>' +
             '<div class="pdf_name">' +
             '<a href="{{videoUrl}}" target="_blank" target="_blank" title="{{videoUrl}}">{{videoUrl}}</a>' +
-            '</div></div>'+
+            '</div></div>' +
             '<div class="training pull-left" ng-repeat="file in files">' +
             '<div class="pdf_img">' +
             '<a href={{url}} target="_blank" ng-click="download(file)"><img ng-src="{{file.imageSrc}}" title="{{file.name}}"></a>' +
             '</div>' +
             '<div class="pdf_name">' +
             '<a href={{url}} target="_blank" ng-click="download(file)" title="{{file.name}}">{{file.name}}</a>' +
-            '</div></div>'+
+            '</div></div>' +
             '</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingSessionDetailData"><img src="images/loading.gif"></div></div>',
-        compile:function(){
+        compile: function () {
             return{
-                pre:function($scope){
+                pre: function ($scope) {
                 },
-                post:function($scope){
-                    $scope.download=function(file){
-                        $scope.url= BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
+                post: function ($scope) {
+                    $scope.download = function (file) {
+                        $scope.url = BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
                     }
                 }
             }
@@ -4934,7 +4936,7 @@ cstore.directive('typeSelect', ['$appService', function ($appService, $scope) {
         compile: function () {
             return{
                 pre: function ($scope) {
-                    if(!$scope.productCode.type) {
+                    if (!$scope.productCode.type) {
                         $scope.productCode.type = $scope.types[0];
                     }
                 }, post: function ($scope) {
@@ -4969,7 +4971,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
             return {
                 pre: function ($scope) {
                     $scope.addNewProductCode = function () {
-                        $scope.productCodes.push({ code: '', description: '',type:'' });
+                        $scope.productCodes.push({ code: '', description: '', type: '' });
                         //for (var i = 0; i < $scope.countries.length; i++) {
                         $scope.productCodes[$scope.productCodes.length - 1]["editStatus"] = true;
                         //}
@@ -5008,10 +5010,10 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
-                                }else if((callBackData.response && callBackData.response.substring(0,29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0,29) == "Opertion can not be processed")){
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                     $("#popupMessage").html("This record is referred in other table");
                                     $('.popup').toggle("slide");
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
                                 }
@@ -5046,16 +5048,16 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                     }
                     $scope.saveProductCodes = function () {
                         var savedindexes = [];
-                        for (var j = $scope.productCodes.length-1; j >= 0; j--) {
-                            if(!$scope.productCodes[j]._id && !$scope.productCodes[j].code && !$scope.productCodes[j].description && !$scope.productCodes[j].type){
+                        for (var j = $scope.productCodes.length - 1; j >= 0; j--) {
+                            if (!$scope.productCodes[j]._id && !$scope.productCodes[j].code && !$scope.productCodes[j].description && !$scope.productCodes[j].type) {
                                 $scope.states.splice(j, 1);
                             }
                         }
                         var productCodeList = $scope.productCodes.filter(function (el) {
-                            if(!el._id && (el.code || el.description || el.type)){
+                            if (!el._id && (el.code || el.description || el.type)) {
                                 savedindexes.push($scope.productCodes.indexOf(el));
                             }
-                            return el.editStatus == true ;
+                            return el.editStatus == true;
                         });
                         for (var i = 0; i < productCodeList.length; i++) {
                             if (!productCodeList[i].code || !regNumberOnly.test(productCodeList[i].code)) {
@@ -5073,7 +5075,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if(productCodeList[i].type=="UPC" && productCodeList[i].code.length > 12) {
+                            if (productCodeList[i].type == "UPC" && productCodeList[i].code.length > 12) {
                                 $("#popupMessage").html("Code for UPC can not be greater than 12 digits");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -5088,7 +5090,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
-								$scope.loadingProductCodeData = false;
+                                $scope.loadingProductCodeData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
@@ -5098,7 +5100,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     for (var i = 0; i < $scope.productCodes.length; i++) {
                                         $scope.productCodes[i]["editStatus"] = false;
                                     }
-                                }else if(callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
                                 }
@@ -5113,7 +5115,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
-                        }else {
+                        } else {
                             $("#popupMessage").html("No data found for saving");
                             $('.popup').toggle("slide");
                         }
@@ -5176,29 +5178,31 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         window.location.href = "#!/" + path;
                     }
                 },
-                post:function($scope){
-                     $scope.getTotal=function(){
-                       var total=0;
-                         for(var i=0; i<$scope.shoppingCartProducts.length;i++){
-                             var item = $scope.shoppingCartProducts[i];
-                             total+=item.quantity*item.cost.amount;
-                         }
-                         return total;
-                     }
-                    $scope.updatedOrder=function(path){
+                post: function ($scope) {
+                    $scope.getTotal = function () {
+                        var total = 0;
+                        for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                            var item = $scope.shoppingCartProducts[i];
+                            total += item.quantity * item.cost.amount;
+                        }
+                        return total;
+                    }
+                    $scope.updatedOrder = function (path) {
                         //console.log(JSON.stringify($scope.shoppingCartProducts));
+                        $scope.loadingShoppingCartData = true;
                         $scope.updateShoppingCartProduct = {};
-                        $scope.updateShoppingCartProduct["userid"]={"_id":$scope.currentUser.data.userid};
-                        $scope.updateShoppingCartProduct["product"]=$scope.shoppingCartProducts;
-                        $scope.updateShoppingCartProduct["sub_total"]=$scope.getTotal();
+                        $scope.updateShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
+                        $scope.updateShoppingCartProduct["product"] = $scope.shoppingCartProducts;
+                        $scope.updateShoppingCartProduct["sub_total"] = $scope.getTotal();
                         $scope.updateShoppingCartProduct["__type__"] = "insertifnotexist";
                         var query = {};
                         query.table = "shopping_cart__cstore";
                         query.operations = [$scope.updateShoppingCartProduct];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                //$("#popupMessage").html("Products are updated");
-                                //$('.popup').toggle("slide");
+                                $scope.loadingShoppingCartData = false;
+                                $("#popupMessage").html("Products are updated");
+                                $('.popup').toggle("slide");
                                 window.location.href = "#!/" + path;
                                 //$scope.cartProducts.length++;
                             } else {
@@ -5341,12 +5345,12 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.cancel=function(){
+                    $scope.cancel = function () {
                         $scope.clearBillingContent();
                         $scope.setPath('shopping-cart');
                     }
                 },
-                post:function($scope){
+                post: function ($scope) {
                     $scope.useSavedAddress = function (address) {
                         //console.log(JSON.stringify(address));
                         $scope.billingdata["bill_address"]["firstname"] = address.manager.name ? address.manager.name : "";
@@ -5418,16 +5422,16 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                             return false;
                         }
                         $scope.loadingSavedAddress = true;
-                        $scope.newBillingAddress["userid"]={"_id":$scope.currentUser.data.userid};
+                        $scope.newBillingAddress["userid"] = {"_id": $scope.currentUser.data.userid};
                         //$scope.newBillingAddress["same_shipping_address"]=$scope.billingdata.same_shipping_address;
-                        $scope.newBillingAddress["bill_address"]["firstname"]=$scope.billingdata.bill_address.firstname;
-                        $scope.newBillingAddress["bill_address"]["lastname"]=$scope.billingdata.bill_address.lastname;
-                        $scope.newBillingAddress["bill_address"]["address"]=$scope.billingdata.bill_address.address;
-                        $scope.newBillingAddress["bill_address"]["address_2"]=$scope.billingdata.bill_address.address_2;
-                        $scope.newBillingAddress["bill_address"]["zipcode"]=$scope.billingdata.bill_address.zipcode;
-                        $scope.newBillingAddress["bill_address"]["phone"]=$scope.billingdata.bill_address.phone;
-                        $scope.newBillingAddress["bill_address"]["ext"]=$scope.billingdata.bill_address.ext;
-                        $scope.newBillingAddress["bill_address"]["email"]=$scope.billingdata.bill_address.email;
+                        $scope.newBillingAddress["bill_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
+                        $scope.newBillingAddress["bill_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
+                        $scope.newBillingAddress["bill_address"]["address"] = $scope.billingdata.bill_address.address;
+                        $scope.newBillingAddress["bill_address"]["address_2"] = $scope.billingdata.bill_address.address_2;
+                        $scope.newBillingAddress["bill_address"]["zipcode"] = $scope.billingdata.bill_address.zipcode;
+                        $scope.newBillingAddress["bill_address"]["phone"] = $scope.billingdata.bill_address.phone;
+                        $scope.newBillingAddress["bill_address"]["ext"] = $scope.billingdata.bill_address.ext;
+                        $scope.newBillingAddress["bill_address"]["email"] = $scope.billingdata.bill_address.email;
                         if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
                             $scope.newBillingAddress["bill_address"]["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
                         }
@@ -5437,15 +5441,15 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         if ($scope.data.selectedState && $scope.data.selectedState != null && $scope.data.selectedState != undefined && $scope.data.selectedState != "undefined" && $scope.data.selectedState != "null") {
                             $scope.newBillingAddress["bill_address"]["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
                         }
-                        if($scope.billingdata.same_shipping_address==true){
-                            $scope.newBillingAddress["shipping_address"]["firstname"]=$scope.billingdata.bill_address.firstname;
-                            $scope.newBillingAddress["shipping_address"]["lastname"]=$scope.billingdata.bill_address.lastname;
-                            $scope.newBillingAddress["shipping_address"]["address"]=$scope.billingdata.bill_address.address;
-                            $scope.newBillingAddress["shipping_address"]["address_2"]=$scope.billingdata.bill_address.address_2;
-                            $scope.newBillingAddress["shipping_address"]["zipcode"]=$scope.billingdata.bill_address.zipcode;
-                            $scope.newBillingAddress["shipping_address"]["phone"]=$scope.billingdata.bill_address.phone;
-                            $scope.newBillingAddress["shipping_address"]["ext"]=$scope.billingdata.bill_address.ext;
-                            $scope.newBillingAddress["shipping_address"]["email"]=$scope.billingdata.bill_address.email;
+                        if ($scope.billingdata.same_shipping_address == true) {
+                            $scope.newBillingAddress["shipping_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
+                            $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
+                            $scope.newBillingAddress["shipping_address"]["address"] = $scope.billingdata.bill_address.address;
+                            $scope.newBillingAddress["shipping_address"]["address_2"] = $scope.billingdata.bill_address.address_2;
+                            $scope.newBillingAddress["shipping_address"]["zipcode"] = $scope.billingdata.bill_address.zipcode;
+                            $scope.newBillingAddress["shipping_address"]["phone"] = $scope.billingdata.bill_address.phone;
+                            $scope.newBillingAddress["shipping_address"]["ext"] = $scope.billingdata.bill_address.ext;
+                            $scope.newBillingAddress["shipping_address"]["email"] = $scope.billingdata.bill_address.email;
                             if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
                                 $scope.newBillingAddress["shipping_address"]["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
                             }
@@ -5465,7 +5469,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Billing Address is saved");
                                 $('.popup').toggle("slide");
-                                if($scope.billingdata.same_shipping_address==true){
+                                if ($scope.billingdata.same_shipping_address == true) {
                                     $scope.setPath('order-review');
                                 }
                                 else {
@@ -5494,11 +5498,11 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
         restrict: "E",
         template: '<div>' +
             '<div class="table_1 pull-left">' +
-            '<div class="admin_menu pull-left" >'+
-            '<div class="billing_info active_1 pull-left">Shipping Address</div>'+
-            '<div class="billing_info pull-left">Order</div>'+
-            '<div class="billing_info pull-left">Payment</div>'+
-            '</div>'+
+            '<div class="admin_menu pull-left" >' +
+            '<div class="billing_info active_1 pull-left">Shipping Address</div>' +
+            '<div class="billing_info pull-left">Order</div>' +
+            '<div class="billing_info pull-left">Payment</div>' +
+            '</div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td><div class="margin_top">First Name</div></td>' +
@@ -5578,12 +5582,12 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
                     $scope.setPathForShipping = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.cancelShipping =function(){
+                    $scope.cancelShipping = function () {
                         $scope.clearShippingContent();
                         $scope.setPathForShipping('order-review');
                     }
                 },
-                post:function($scope){
+                post: function ($scope) {
                     $scope.saveShippingAddress = function () {
                         $scope.newShippingAddress = {};
                         $scope.newShippingAddress["shipping_address"] = {};
@@ -5637,15 +5641,15 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
                             return false;
                         }
                         $scope.savingShippingAddress = true;
-                        $scope.newShippingAddress["userid"]={"_id":$scope.currentUser.data.userid};
-                        $scope.newShippingAddress["shipping_address"]["firstname"]=$scope.billingdata.shipping_address.firstname;
-                        $scope.newShippingAddress["shipping_address"]["lastname"]=$scope.billingdata.shipping_address.lastname;
-                        $scope.newShippingAddress["shipping_address"]["address"]=$scope.billingdata.shipping_address.address;
-                        $scope.newShippingAddress["shipping_address"]["address_2"]=$scope.billingdata.shipping_address.address_2;
-                        $scope.newShippingAddress["shipping_address"]["zipcode"]=$scope.billingdata.shipping_address.zipcode;
-                        $scope.newShippingAddress["shipping_address"]["phone"]=$scope.billingdata.shipping_address.phone;
-                        $scope.newShippingAddress["shipping_address"]["ext"]=$scope.billingdata.shipping_address.ext;
-                        $scope.newShippingAddress["shipping_address"]["email"]=$scope.billingdata.shipping_address.email;
+                        $scope.newShippingAddress["userid"] = {"_id": $scope.currentUser.data.userid};
+                        $scope.newShippingAddress["shipping_address"]["firstname"] = $scope.billingdata.shipping_address.firstname;
+                        $scope.newShippingAddress["shipping_address"]["lastname"] = $scope.billingdata.shipping_address.lastname;
+                        $scope.newShippingAddress["shipping_address"]["address"] = $scope.billingdata.shipping_address.address;
+                        $scope.newShippingAddress["shipping_address"]["address_2"] = $scope.billingdata.shipping_address.address_2;
+                        $scope.newShippingAddress["shipping_address"]["zipcode"] = $scope.billingdata.shipping_address.zipcode;
+                        $scope.newShippingAddress["shipping_address"]["phone"] = $scope.billingdata.shipping_address.phone;
+                        $scope.newShippingAddress["shipping_address"]["ext"] = $scope.billingdata.shipping_address.ext;
+                        $scope.newShippingAddress["shipping_address"]["email"] = $scope.billingdata.shipping_address.email;
                         if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
                             $scope.newShippingAddress["shipping_address"]["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
                         }
@@ -5686,110 +5690,111 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
 cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="table_4 pull-left">'+
-            '<div class="admin_menu pull-left" >'+
-            '<div class="billing_info pull-left">Shipping Address</div>'+
-            '<div class="billing_info active_1 pull-left">Order</div>'+
-            '<div class="billing_info pull-left">Payment</div>'+
-            '</div>'+
-            '<div class="table_5 pull-left">'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<th></th>'+
-            '<th>Item</th>'+
-            '<th>Item Price</th>'+
-            '<th>Qty</th>'+
-            '<th>Price</th>'+
-            '</tr>'+
-            '<tr ng-repeat="orderedProduct in shoppingCartProducts">'+
-            '<td>{{$index+1}}</td>'+
-            '<td>'+
-            '<div class="item">'+
-            '<div class="item_name">{{orderedProduct.name}}</div>'+
-            '<div class="item_remove" ng-click="removeFromCart(orderedProduct)"><a href="">Remove</a></div>'+
-            '</div>'+
-            '</td>'+
-            '<td>{{orderedProduct.cost.amount | currency}}</td>'+
-            '<td class="qty_1">'+
-            '<select class="qty_select" ng-model="orderedProduct.quantity" ng-options="quantity for quantity in shoppingCartData.quantity"></select>'+
-            '</td>'+
-            '<td>{{orderedProduct.quantity*orderedProduct.cost.amount | currency}}</td>'+
-            '</tr>'+
-            '</table>'+
-            '<div class="table-bordered">'+
-            '<div class="saved_l_bar pull-right">'+
-            '<div class="fix_address pull-right">'+
-            '<div class="saved_address">Amount Detail :</div>'+
-            '<div class="saved_1 col-sm-5 colmd-5 pull-left">'+
-            '<div class="fix_height">Subtotal :</div>'+
-            '<div class="fix_height">Shipping Charge :</div>'+
-            '<div class="fix_height margin_top">Total :</div>'+
-            '</div>'+
-            '<div class="saved_1 col-sm-7 colmd-7 pull-left">'+
-            '<div class="fix_height text-right">{{getTotal() | currency}}</div>'+
-            '<div class="fix_height text-right">Free</div>'+
-            '<div class="fix_height margin_top text-right">{{getTotal() | currency}}</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '<div class="add_delete pull-left">'+
-            '<div class="add_btn pull-left"><button type="button"><a href="">Payment</a></button></div>'+
-            '<div class="delete_btn pull-left"><button type="button"><a href="">Cancel</a></button></div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '<div class="s_bar pull-right">'+
-            '<div class="saved_l_bar pull-right">'+
-            '<div class="fix_address pull-right">'+
-            '<div class="saved_address" >Billing Address</div>'+
-            '<div class="saved_1 col-sm-5 colmd-5 pull-left">'+
-            '<div>Name</div>'+
-            '<div class="address">Address</div>'+
-            '<div class="fix_height">City</div>'+
-            '<div class="fix_height">State</div>'+
-            '<div class="fix_height">Postal Code</div>'+
-            '<div class="fix_height">Phone No:</div>'+
-            '<div class="fix_height">Extension</div>'+
-            '<div class="fix_height">Email:</div>'+
-            '</div>'+
-            '<div class="saved_1 col-sm-7 colmd-7 pull-left">'+
-            '<div class="fix_height">{{savedBillingAddress.firstname}} {{savedBillingAddress.lastname}}</div>'+
-            '<div class="address">{{savedBillingAddress.city.name}}</div>'+
-            '<div class="fix_height">{{savedBillingAddress.state.name}}</div>'+
-            '<div class="fix_height">{{savedBillingAddress.country.name}}</div>'+
-            '<div class="fix_height">{{savedBillingAddress.zipcode}}</div>'+
-            '<div class="fix_height">{{savedBillingAddress.phone}}</div>'+
-            '<div class="fix_height">{{savedBillingAddress.ext}}</div>'+
-            '<div class="fix_height">{{savedBillingAddress.email}}</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '<div class="saved_l_bar pull-right">'+
-            '<div class="fix_address pull-right">'+
-            '<div class="saved_address" >Shipping Address</div>'+
-            '<div class="saved_1 col-sm-5 colmd-5 pull-left">'+
-            '<div>Name</div>'+
-            '<div class="address">Address</div>'+
-            '<div class="fix_height">City</div>'+
-            '<div class="fix_height">State</div>'+
-            '<div class="fix_height">Postal Code</div>'+
-            '<div class="fix_height">Phone No:</div>'+
-            '<div class="fix_height">Extension</div>'+
-            '<div class="fix_height">Email:</div>'+
-            '</div>'+
-            '<div class="saved_1 col-sm-7 colmd-7 pull-left">'+
-            '<div class="fix_height">{{savedShippingAddress.firstname}} {{savedShippingAddress.lastname}}</div>'+
-            '<div class="address">{{savedShippingAddress.city.name}}</div>'+
-            '<div class="fix_height">{{savedShippingAddress.state.name}}</div>'+
-            '<div class="fix_height">{{savedShippingAddress.country.name}}</div>'+
-            '<div class="fix_height">{{savedShippingAddress.zipcode}}</div>'+
-            '<div class="fix_height">{{savedShippingAddress.phone}}</div>'+
-            '<div class="fix_height">{{savedShippingAddress.ext}}</div>'+
-            '<div class="fix_height">{{savedShippingAddress.email}}</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
+        template: '<div class="table_4 pull-left">' +
+            '<div class="admin_menu pull-left" >' +
+            '<div class="billing_info pull-left">Shipping Address</div>' +
+            '<div class="billing_info active_1 pull-left">Order</div>' +
+            '<div class="billing_info pull-left">Payment</div>' +
+            '</div>' +
+            '<div class="table_5 pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<th></th>' +
+            '<th>Item</th>' +
+            '<th>Item Price</th>' +
+            '<th>Qty</th>' +
+            '<th>Price</th>' +
+            '</tr>' +
+            '<tr ng-repeat="orderedProduct in shoppingCartProducts">' +
+            '<td>{{$index+1}}</td>' +
+            '<td>' +
+            '<div class="item">' +
+            '<div class="item_name">{{orderedProduct.name}}</div>' +
+            '<div class="item_remove" ng-click="removeFromCart(orderedProduct)"><a href="">Remove</a></div>' +
+            '</div>' +
+            '</td>' +
+            '<td>{{orderedProduct.cost.amount | currency}}</td>' +
+            '<td class="qty_1">' +
+            '<select class="qty_select" ng-model="orderedProduct.quantity" ng-options="quantity for quantity in shoppingCartData.quantity"></select>' +
+            '</td>' +
+            '<td>{{orderedProduct.quantity*orderedProduct.cost.amount | currency}}</td>' +
+            '</tr>' +
+            '</table>' +
+            '<div class="table-bordered">' +
+            '<div class="saved_l_bar pull-right">' +
+            '<div class="fix_address pull-right">' +
+            '<div class="saved_address">Amount Detail :</div>' +
+            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div class="fix_height">Subtotal :</div>' +
+            '<div class="fix_height">Shipping Charge :</div>' +
+            '<div class="fix_height margin_top">Total :</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="fix_height text-right">{{getTotal() | currency}}</div>' +
+            '<div class="fix_height text-right">Free</div>' +
+            '<div class="fix_height margin_top text-right">{{getTotal() | currency}}</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="add_delete pull-left">' +
+            '<div class="add_btn pull-left"><button type="button"><a href="">Payment</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button"><a href="">Cancel</a></button></div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="s_bar pull-right">' +
+            '<div class="saved_l_bar pull-right">' +
+            '<div class="fix_address pull-right">' +
+            '<div class="saved_address" >Billing Address</div>' +
+            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div>Name</div>' +
+            '<div class="address">Address</div>' +
+            '<div class="fix_height">City</div>' +
+            '<div class="fix_height">State</div>' +
+            '<div class="fix_height">Postal Code</div>' +
+            '<div class="fix_height">Phone No:</div>' +
+            '<div class="fix_height">Extension</div>' +
+            '<div class="fix_height">Email:</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="fix_height">{{savedBillingAddress.firstname}} {{savedBillingAddress.lastname}}</div>' +
+            '<div class="address">{{savedBillingAddress.city.name}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.state.name}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.country.name}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.zipcode}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.phone}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.ext}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.email}}</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="saved_l_bar pull-right">' +
+            '<div class="fix_address pull-right">' +
+            '<div class="saved_address" >Shipping Address</div>' +
+            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div>Name</div>' +
+            '<div class="address">Address</div>' +
+            '<div class="fix_height">City</div>' +
+            '<div class="fix_height">State</div>' +
+            '<div class="fix_height">Postal Code</div>' +
+            '<div class="fix_height">Phone No:</div>' +
+            '<div class="fix_height">Extension</div>' +
+            '<div class="fix_height">Email:</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="fix_height">{{savedShippingAddress.firstname}} {{savedShippingAddress.lastname}}</div>' +
+            '<div class="address">{{savedShippingAddress.city.name}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.state.name}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.country.name}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.zipcode}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.phone}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.ext}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.email}}</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="loadingImage" ng-hide="!loadingShoppingCartData"><img src="images/loading.gif"></div>' +
             '</div>',
         compile: function () {
             return {
@@ -5798,21 +5803,21 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         window.location.href = "#!/" + path;
                     }
                 },
-                post:function($scope){
-                    $scope.getTotal=function(){
-                        var total=0;
-                        for(var i=0; i<$scope.shoppingCartProducts.length;i++){
+                post: function ($scope) {
+                    $scope.getTotal = function () {
+                        var total = 0;
+                        for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                             var item = $scope.shoppingCartProducts[i];
-                            total+=item.quantity*item.cost.amount;
+                            total += item.quantity * item.cost.amount;
                         }
                         return total;
                     }
-                    $scope.updatedOrder=function(path){
+                    $scope.updatedOrder = function (path) {
                         //console.log(JSON.stringify($scope.shoppingCartProducts));
                         $scope.updateShoppingCartProduct = {};
-                        $scope.updateShoppingCartProduct["userid"]={"_id":$scope.currentUser.data.userid};
-                        $scope.updateShoppingCartProduct["product"]=$scope.shoppingCartProducts;
-                        $scope.updateShoppingCartProduct["sub_total"]=$scope.getTotal();
+                        $scope.updateShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
+                        $scope.updateShoppingCartProduct["product"] = $scope.shoppingCartProducts;
+                        $scope.updateShoppingCartProduct["sub_total"] = $scope.getTotal();
                         $scope.updateShoppingCartProduct["__type__"] = "insertifnotexist";
                         var query = {};
                         query.table = "shopping_cart__cstore";
