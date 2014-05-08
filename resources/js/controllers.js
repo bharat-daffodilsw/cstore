@@ -2718,19 +2718,43 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
 })
 /************************************ AssignStore *****************************************************/
 cstore.controller('assignStoreCtrl', function ($scope, $appService) {
-	$scope.getStoresName = function () {
+	$scope.preCursor = 0
+	$scope.currentCursor = 0;
+	$scope.venderSearch = [
+        {"value": "storename", "name": "Store Name"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+	$scope.getStoresName = function (direction, limit, column, searchText) {
         if ($scope.loadingStatus) {
             return false;
+        }
+		if (direction == 1) {
+            $scope.preCursor = $scope.currentCursor;
+        } else {
+            $scope.preCursor = $scope.preCursor - limit;
+            $scope.currentCursor = $scope.preCursor;
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
         query.columns = [ "_id","storename"];
-        query.orders = {"storename":"asc"};
+		if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }else{			
+			query.orders["storename"] = "asc";
+		}
+		query.max_rows = limit;
+        query.cursor = $scope.currentCursor;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/data";
+        var serviceUrl = "/rest/data";		
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
 			if(storeData.response.data && storeData.response.data.length > 0){
 				$scope.storesName = storeData.response.data;
+				$scope.currentCursor = storeData.response.cursor;
 				$scope.trainingSessionId = $scope.getURLParam("id");
 				if(!$scope.trainingSessionId){
 					return;
@@ -2744,10 +2768,10 @@ cstore.controller('assignStoreCtrl', function ($scope, $appService) {
 				$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeTrainingData) {
 					$scope.loadingStatus = false;
 					if(storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length){
-						var storeManager = storeTrainingData.response.data[0].store_manager_id;		
+						$scope.storeManager = storeTrainingData.response.data[0].store_manager_id;		
 						for(i=0; i < $scope.storesName.length; i++){	
-							for(j=0; j < storeManager.length; j++){
-								if($scope.storesName[i]._id == storeManager[j]._id){
+							for(j=0; j < $scope.storeManager.length; j++){
+								if($scope.storesName[i]._id == $scope.storeManager[j]._id){
 									$scope.storesName[i].assigned = true;
 								}
 							}
@@ -2768,7 +2792,19 @@ cstore.controller('assignStoreCtrl', function ($scope, $appService) {
             $('.popup').toggle("slide");
         });
     }
-	$scope.getStoresName();
+	$scope.getStoresName(1,5);
+	$scope.setStoreNameOrder = function (){
+		$scope.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getStoresName(1, 5,column, searchText);
+	}
+	$scope.getMore = function (column, searchText) {
+        $scope.getStoresName(1, 5,column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getStoresName(0, 5,column, searchText);
+    }
 });
 /************************************ Survey *****************************************************/
 cstore.controller('surveyCtrl', function ($scope, $appService) {

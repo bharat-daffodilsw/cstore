@@ -3951,15 +3951,33 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
         template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
 			'<button type="button" ng-click="assignTrainingSession()"><a href>Save</a></button>' +
 			'<button type="button" ng-click="setPath(\'training-sessions\')"><a href>Back</a></button>' +
-            '</div></div>' +
+            '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="searchStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
 			'<div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storename}}</td><td>' +
-            '<input type="checkbox" ng-model="store.assigned"></td>' +
+            '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
 			'</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
 		 compile: function () {
             return {
                 post: function ($scope) {
+					$scope.getOperationData = function(index){
+						var push = true;
+						for(j=0; j < $scope.storeManager.length; j++){
+							if($scope.storesName[index]._id == $scope.storeManager[j]._id){
+								$scope.storeManager.splice(j,1);
+								push = false;
+								break;
+							}
+						}
+						if(push){
+							$scope.storeManager.push({"_id":$scope.storesName[index]._id});
+						}
+					}
 					$scope.assignTrainingSession = function (){
 						if(!$scope.trainingSessionId){
 							return;
@@ -3970,10 +3988,8 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
 						$scope.CSession = $appService.getSession();
 						operationArray._id = $scope.trainingSessionId;
 						var dataArr = [];
-						for(i=0; i < $scope.storesName.length; i++){	
-							if($scope.storesName[i].assigned){
-								dataArr.push({"_id":$scope.storesName[i]._id});
-							}
+						for(j=0; j < $scope.storeManager.length; j++){
+							dataArr.push({"_id":$scope.storeManager[j]._id});
 						}
 						operationArray.store_manager_id = {data:dataArr,"override":"true"};
 						query.operations = [operationArray];
@@ -3993,6 +4009,11 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                             console.log(err.stack);
                         });					
 					}
+					$scope.searchStoreName = function () {
+                        $scope.preCursor = 0;
+                        $scope.currentCursor = 0;
+                        $scope.getStoresName(1, 5, $scope.searchby.value, $scope.search.searchContent);
+                    }
 				}
 			}
 		}
