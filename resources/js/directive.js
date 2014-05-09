@@ -3835,7 +3835,6 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    //changes
                     $scope.setAssignedPath = function (sessionid) {
                         window.location.href = "#!/assign-store?id=" + sessionid;
                     }
@@ -4260,13 +4259,16 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Assign Store </th><th></th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
-            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ng-click="showAssignPopup(survey)"><a class="edit_btn" href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="setAssignedSurveyState(survey)" href>Assigned Store</a></td><td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id)" href>Assign</a></td>' +
+            '<td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
+                    }
+					$scope.setSurveyAssignedPath = function (sessionid) {
+                        window.location.href = "#!/assign-survey-store?id=" + sessionid;
                     }
                     //changes made 2904
                     $scope.showAssignPopup = function (survey) {
@@ -4533,6 +4535,84 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('surveyAssignStore', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="assignSurveySession()"><a href>Save</a></button>' +
+            '<button type="button" ng-click="setPath(\'surveys\')"><a href>Back</a></button>' +
+            '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="searchSurveyStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storename}}</td><td>' +
+            '<input type="checkbox" ng-model="store.assigned" ng-click="getSurveyOperationData($index)"></td>' +
+            '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.getSurveyOperationData = function (index) {
+                        var push = true;
+						if($scope.storeManager && $scope.storeManager.length > 0){
+							for (j = 0; j < $scope.storeManager.length; j++) {
+								if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+									$scope.storeManager.splice(j, 1);
+									push = false;
+									break;
+								}
+							}
+						}else{
+							$scope.storeManager = [];
+						}
+                        if (push) {
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                        }
+                    }
+                    $scope.assignSurveySession = function () {
+                        if (!$scope.trainingSessionId) {
+                            return;
+                        }
+                        $scope.loadingStatus = true;
+                        var query = {"table": "surveys__cstore"};
+                        var operationArray = {};
+                        $scope.CSession = $appService.getSession();
+                        operationArray._id = $scope.trainingSessionId;
+                        var dataArr = [];
+                        for (j = 0; j < $scope.storeManager.length; j++) {
+                            dataArr.push({"_id": $scope.storeManager[j]._id});
+                        }
+                        operationArray.store_manager_id = {data: dataArr, "override": "true"};
+                        query.operations = [operationArray];
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingStatus = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html("some error while saving training session");
+                                $('.popup').toggle("slide");
+                            }
+                        }, function (err) {
+                            console.log(err.stack);
+                        });
+                    }
+                    $scope.searchSurveyStoreName = function () {
+                        $scope.preCursor = 0;
+                        $scope.currentCursor = 0;
+                        $scope.getSurveyStoresName(1, 5, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                }
+            }
+        }
+    }
+}]);
 
 /******************************* All Promotions **************************************/
 cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
