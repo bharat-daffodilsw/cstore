@@ -1328,7 +1328,8 @@ span.btn:hover {
     width:95%;
 }
 .name_input textarea {
-    width:97.5%!important;
+    width:95%!important;
+    /*width:97.5%!important;*/
     height:50px;}
 
 .minutes {

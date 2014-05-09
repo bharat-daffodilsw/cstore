@@ -554,8 +554,8 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<div class="table_1 pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">First Name</div></td>' +
-            '<td><div class="margin_top">Last Name</div></td>' +
+            '<td><div class="margin_top">First Name*</div></td>' +
+            '<td><div class="margin_top">Last Name*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td><input type="text" placeholder="" ng-model="data.firstname"></td>' +
@@ -564,7 +564,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Email</div></td>' +
+            '<td><div class="margin_top">Email*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="city"><input type="email" ng-model="data.email"></td>' +
@@ -572,7 +572,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Address</div></td>' +
+            '<td><div class="margin_top">Address*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="text_area"><textarea ng-model="data.address"> </textarea></td>' +
@@ -589,24 +589,24 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Country</div></td>' +
-            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '<td class="half_td"><div class="margin_top">Country*</div></td>' +
+            '<td class="half_td"><div class="margin_top">State*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
             '<td class="half_td"><state-select></state-select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">City</div></td>' +
-            '<td class="half_td"><div class="margin_top">Category</div></td>' +
+            '<td class="half_td"><div class="margin_top">City*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Category*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><city-select></city-select></td>' +
             '<td class="half_td"><vendor-category-select></vendor-category-select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
-            '<td class="half_td"><div class="margin_top">Contact No.</div></td>' +
+            '<td class="half_td"><div class="margin_top">Postal Code*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Contact No.*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
@@ -909,8 +909,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<div class="table_1 pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Name</div></td>' +
-            '<td class="half_td"><div class="margin_top">POP Categroy</div></td>' +
+            '<td class="half_td"><div class="margin_top">Name*</div></td>' +
+            '<td class="half_td"><div class="margin_top">POP Categroy*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.name"></td>' +
@@ -919,7 +919,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Detailed Description</div></td>' +
+            '<td><div class="margin_top">Detailed Description*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="name_input"><textarea type="text" placeholder="" ng-model="productdata.description"></textarea></td>' +
@@ -927,7 +927,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Short Description</div></td>' +
+            '<td><div class="margin_top">Short Description*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="name_input"><textarea type="text" placeholder="" ng-model="productdata.short_description"></textarea></td>' +
@@ -935,8 +935,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Price</div></td>' +
-            '<td class="half_td"><div class="margin_top">POP Image</div></td>' +
+            '<td class="half_td"><div class="margin_top">Price*</div></td>' +
+            '<td class="half_td"><div class="margin_top">POP Image*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
@@ -1575,15 +1575,15 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Site Id</div></td>' +
-            '<td class="half_td"><div class="margin_top">Site Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Site Id*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Site Name*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.siteid"></td>' +
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.storename"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Manager Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Name*</div></td>' +
             '<td class="half_td"><div class="margin_top">Manager Shift</div></td>' +
             '</tr>' +
             '<tr>' +
@@ -1591,23 +1591,23 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<td class="half_td"><shift></shift></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Site Phone</div></td>' +
-            '<td class="half_td"><div class="margin_top">Manager Phone</div></td>' +
+            '<td class="half_td"><div class="margin_top">Site Phone*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Phone*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact"></td>' +
             '<td class="half_td"><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Email</div></td>' +
-            '<td class="half_td"><div class="margin_top">Manager Email</div></td>' +
+            '<td class="half_td"><div class="margin_top">Email*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Manager Email*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.email"></td>' +
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.manager.email"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Address</div></td>' +
+            '<td class="half_td"><div class="margin_top">Address*</div></td>' +
             '<td class="half_td"><div class="margin_top">Address 2</div></td>' +
             '</tr>' +
             '<tr>' +
@@ -1615,23 +1615,23 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.address2"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Country</div></td>' +
-            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '<td class="half_td"><div class="margin_top">Country*</div></td>' +
+            '<td class="half_td"><div class="margin_top">State*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><store-country-select></store-country-select></td>' +
             '<td class="half_td"><store-state-select></store-state-select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">City</div></td>' +
-            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
+            '<td class="half_td"><div class="margin_top">City*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Postal Code*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><store-city-select></store-city-select></td>' +
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.postalcode"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">POS Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">POS Type*</div></td>' +
             '<td class="half_td"><div class="margin_top">POS Version</div></td>' +
             '</tr>' +
             '<tr>' +
@@ -1639,8 +1639,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<td class="half_td"><input type="text" placeholder="" ng-model="storedata.pos_version"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Loyalty Status</div></td>' +
-            '<td class="half_td"><div class="margin_top">Reward Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">Loyalty Status*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Reward Type*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><loyalty-status></loyalty-status></td>' +
@@ -1655,8 +1655,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<td class="half_td"><input type="text" placeholder=""ng-model="storedata.pump_model"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Brand</div></td>' +
-            '<td class="half_td"><div class="margin_top">Company Logo</div></td>' +
+            '<td class="half_td"><div class="margin_top">Brand*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Company Logo*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><brand></brand></td>' +
@@ -2941,7 +2941,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tbody>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">First Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">First Name*</div></td>' +
             '<td class="half_td"><div class="margin_top">Last Name</div></td>' +
             '</tr>' +
             '<tr>' +
@@ -2949,16 +2949,16 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><input type="text" placeholder="" ng-model="userdata.lastname"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Email</div></td>' +
-            '<td class="half_td"><div class="margin_top">Password</div></td>' +
+            '<td class="half_td"><div class="margin_top">Email*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Password*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="email" placeholder="" ng-model="userdata.username"></td>' +
             '<td class="half_td"><input type="password" placeholder="" ng-model="userdata.password"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Role</div></td>' +
-            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Store Name</div></td>' +
+            '<td class="half_td"><div class="margin_top">Role*</div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Store Name*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
@@ -3504,32 +3504,32 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
         template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Promo Title</div></td>' +
-            '<td class="half_td"><div class="margin_top">Offer Title</div></td>' +
+            '<td class="half_td"><div class="margin_top">Promo Title*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Title*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.promo_title"></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.offer_title"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Promo Description</div></td>' +
-            '<td class="half_td"><div class="margin_top">Offer Description</div></td>' +
+            '<td class="half_td"><div class="margin_top">Promo Description*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Description*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.promo_description"></textarea></td>' +
             '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.offer_description"></textarea></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Sponsor</div></td>' +
-            '<td class="half_td"><div class="margin_top">Vendor</div></td>' +
+            '<td class="half_td"><div class="margin_top">Sponsor*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Vendor*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td>' +
             '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
-            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">End Date</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date*</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">End Date*</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td">' +
@@ -3545,22 +3545,23 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Reward Value</div></td>' +
-            '<td class="half_td"><div class="margin_top">Offer Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">Offer Type*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td>' +
             '<td class="half_td"><offer-type-select></offer-type-select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Item Signage</div></td>' +
-            '<td class="half_td"><div class="margin_top">Threshold</div></td>' +
+            '<td class="half_td"><div class="margin_top">Item Signage*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Threshold*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><item-signage-select></item-signage-select></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.threshold"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="margin_top">UPC/PLU/GROUP</div></td>' +
+            '<td><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
+            '<td><div class="margin_top">Promo Image*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><upc-select></upc-select></td>' +
@@ -3645,12 +3646,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 
                             if (!$scope.oFile.fileExist) {
                                 $("#popupMessage").html("Please upload file");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-
-                            if (!$scope.promotiondata.sponsor) {
-                                $("#popupMessage").html("Please enter sponsor");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -4030,15 +4025,15 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tbody>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Title</div></td>' +
-            '<td class="half_td"><div class="margin_top">Training Category</div></td>' +
+            '<td class="half_td"><div class="margin_top">Title*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Training Category*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="trainingdata.title"></td>' +
             '<td class="half_td"><training-category-select></training-category-select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="margin_top">Description</div></td>' +
+            '<td><div class="margin_top">Description*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td colspan="2"><textarea type="text" placeholder="" ng-model="trainingdata.description" class="description"></textarea></td>' +
@@ -4049,7 +4044,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr>' +
-            '<td><div class="margin_top">Video Url</div></td>' +
+            '<td><div class="margin_top">Video Url*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td>' +
@@ -4373,9 +4368,9 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
         replace: 'true',
         template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Title</div></td></tr>' +
+            '<tr><td><div class="margin_top">Title*</div></td></tr>' +
             '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title"></td></tr>' +
-            '<tr><td><div class="margin_top">Description</div></td></tr>' +
+            '<tr><td><div class="margin_top">Description*</div></td></tr>' +
             '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
             '</tbody></table></div>' +
             '<h2 class="sub-head-border">' +
@@ -4390,7 +4385,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
             "<tr>" +
             "<td class='full'>" +
-            "<span class='ques_index'>Question {{$index+1}}.</span> " +
+            "<span class='ques_index'>Question* {{$index+1}}.</span> " +
             "</td>" +
             "<td align='right' valign='middle'>&nbsp;<a ng-click='questions.splice($index,1)'>" +
             "<img src='/images/icon_delete.gif' alt='delete this question' class='question_answer'>" +

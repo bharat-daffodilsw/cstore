@@ -2502,6 +2502,8 @@ cstore.controller('userCtrl', function ($scope, $appService) {
 /********************ADD User  *****************/
 cstore.controller('addUserCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
+    $scope.getStores();
+    $scope.getRoles();
     /*$scope.clearUserContent = function () {
      $scope.userdata["username"] = "";
      $scope.userdata["firstname"] = "";
