@@ -5201,8 +5201,8 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.loadingShoppingCartData = false;
-                                $("#popupMessage").html("Products are updated");
-                                $('.popup').toggle("slide");
+                                //$("#popupMessage").html("Products are updated");
+                                //$('.popup').toggle("slide");
                                 window.location.href = "#!/" + path;
                                 //$scope.cartProducts.length++;
                             } else {
@@ -5321,6 +5321,8 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '<td class="text_area"><input type="text" placeholder=""ng-model="billingdata.bill_address.email"></td>' +
             '</tr>' +
             '</table>' +
+            '<div class="shipping_info pull-left">' +
+            '<input id="" name="" type="checkbox" value="1" ng-model="billingdata.same_shipping_address" ng-init="billingdata.same_shipping_address=true"> Shipping Information same as Billing Information </div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td>' +
@@ -5335,8 +5337,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</td>' +
             '</tr>' +
             '</table>' +
-            '<div class="shipping_info pull-left">' +
-            '<input id="" name="" type="checkbox" value="1" ng-model="billingdata.same_shipping_address"> Shipping Information same as Billing Information </div>' +
+            '<div ng-hide="billingdata.same_shipping_address">Test Test</div>' +
             '<div class="loadingImage" ng-hide="!loadingSavedAddress"><img src="images/loading.gif"></div>' +
             '</div>',
         compile: function () {
@@ -5467,8 +5468,8 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             $scope.loadingSavedAddress = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $("#popupMessage").html("Billing Address is saved");
-                                $('.popup').toggle("slide");
+                                //$("#popupMessage").html("Billing Address is saved");
+                                //$('.popup').toggle("slide");
                                 if ($scope.billingdata.same_shipping_address == true) {
                                     $scope.setPath('order-review');
                                 }
@@ -5710,13 +5711,10 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<td>' +
             '<div class="item">' +
             '<div class="item_name">{{orderedProduct.name}}</div>' +
-            '<div class="item_remove" ng-click="removeFromCart(orderedProduct)"><a href="">Remove</a></div>' +
             '</div>' +
             '</td>' +
             '<td>{{orderedProduct.cost.amount | currency}}</td>' +
-            '<td class="qty_1">' +
-            '<select class="qty_select" ng-model="orderedProduct.quantity" ng-options="quantity for quantity in shoppingCartData.quantity"></select>' +
-            '</td>' +
+            '<td class="qty_1">{{orderedProduct.quantity}}</td>' +
             '<td>{{orderedProduct.quantity*orderedProduct.cost.amount | currency}}</td>' +
             '</tr>' +
             '</table>' +
@@ -5730,15 +5728,15 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<div class="fix_height margin_top">Total :</div>' +
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
-            '<div class="fix_height text-right">{{getTotal() | currency}}</div>' +
+            '<div class="fix_height text-right">{{cartData.sub_total | currency}}</div>' +
             '<div class="fix_height text-right">Free</div>' +
-            '<div class="fix_height margin_top text-right">{{getTotal() | currency}}</div>' +
+            '<div class="fix_height margin_top text-right">{{cartData.sub_total | currency}}</div>' +
             '</div>' +
             '</div>' +
             '</div>' +
             '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button"><a href="">Payment</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button"><a href="">Cancel</a></button></div>' +
+            '<div class="add_btn pull-left"><button type="button" ng-click><a href="">Payment</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="setPathForOrder(\'billing-address\')"><a href="">Back</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -5758,9 +5756,9 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
             '<div class="fix_height">{{savedBillingAddress.firstname}} {{savedBillingAddress.lastname}}</div>' +
-            '<div class="address">{{savedBillingAddress.city.name}}</div>' +
+            '<div class="address">{{savedBillingAddress.address}}</div>' +
+            '<div class="fix_height">{{savedBillingAddress.city.name}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.state.name}}</div>' +
-            '<div class="fix_height">{{savedBillingAddress.country.name}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.zipcode}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.phone}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.ext}}</div>' +
@@ -5783,9 +5781,9 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
             '<div class="fix_height">{{savedShippingAddress.firstname}} {{savedShippingAddress.lastname}}</div>' +
-            '<div class="address">{{savedShippingAddress.city.name}}</div>' +
+            '<div class="address">{{savedShippingAddress.address}}</div>' +
+            '<div class="fix_height">{{savedShippingAddress.city.name}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.state.name}}</div>' +
-            '<div class="fix_height">{{savedShippingAddress.country.name}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.zipcode}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.phone}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.ext}}</div>' +
@@ -5804,30 +5802,20 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post: function ($scope) {
-                    $scope.getTotal = function () {
-                        var total = 0;
-                        for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
-                            var item = $scope.shoppingCartProducts[i];
-                            total += item.quantity * item.cost.amount;
-                        }
-                        return total;
-                    }
-                    $scope.updatedOrder = function (path) {
-                        //console.log(JSON.stringify($scope.shoppingCartProducts));
-                        $scope.updateShoppingCartProduct = {};
-                        $scope.updateShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
-                        $scope.updateShoppingCartProduct["product"] = $scope.shoppingCartProducts;
-                        $scope.updateShoppingCartProduct["sub_total"] = $scope.getTotal();
-                        $scope.updateShoppingCartProduct["__type__"] = "insertifnotexist";
+                    $scope.removeCart = function () {
+                        console.log($scope.cartData);
+                        $scope.removeShoppingCart = {};
+                        $scope.loadingStatus = true;
+                        $scope.removeShoppingCartProduct["_id"] =$scope.cartData._id;
+                        $scope.removeShoppingCartProduct["__type__"] = "delete";
                         var query = {};
                         query.table = "shopping_cart__cstore";
-                        query.operations = [$scope.updateShoppingCartProduct];
+                        query.operations = [$scope.removeShoppingCart];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                //$("#popupMessage").html("Products are updated");
-                                //$('.popup').toggle("slide");
-                                window.location.href = "#!/" + path;
-                                //$scope.cartProducts.length++;
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");

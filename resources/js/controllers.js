@@ -1050,7 +1050,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;
         $scope.newShoppingCartProduct["__type__"] = "insertifnotexist";
-        $scope.newShoppingCartProduct["$inc"] = {"sub_total": product.cost.amount};
+        $scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};
         var query = {};
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.newShoppingCartProduct];
@@ -1100,7 +1100,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     $scope.removeFromCart = function (product) {
-        console.log(product);
+        //console.log(product);
         $scope.removeShoppingCartProduct = {};
         $scope.loadingStatus = true;
         $scope.products = [];
