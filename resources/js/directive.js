@@ -463,7 +463,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         if (vendor.country) {
                             vendor.state = (vendor.state) ? {"_id": vendor.state._id} : {"_id": false};
                             vendor.city = (vendor.city) ? {"_id": vendor.city._id} : {"_id": false};
-                            $scope.getEditCountries(vendor.country._id, vendor.state._id, vendor.city._id);
+                            $scope.getEditCountries(vendor.country._id, vendor.state._id, vendor.city._id,$scope.data);
                         }
                         window.location.href = "#!edit-vendor?q=" + vendor._id;
                     }
@@ -1443,7 +1443,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         if (store.countryid) {
                             store.stateid = (store.stateid) ? {"_id": store.stateid._id} : {"_id": false};
                             store.cityid = (store.cityid) ? {"_id": store.cityid._id} : {"_id": false};
-                            $scope.getEditCountries(store.countryid._id, store.stateid._id, store.cityid._id);
+                            $scope.getEditCountries(store.countryid._id, store.stateid._id, store.cityid._id,$scope.storedata);
                         }
                         window.location.href = "#!edit-site-info?q=" + store._id;
                     }
@@ -1558,7 +1558,7 @@ cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope)
         compile: function () {
             return{
                 pre: function ($scope) {
-                    console.log(JSON.stringify($scope.storedata.loyalty_status));
+                    //console.log(JSON.stringify($scope.storedata.loyalty_status));
                 }, post: function ($scope) {
                 }
             }
@@ -5366,7 +5366,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         if (address.countryid) {
                             //address.stateid = (address.stateid) ? {"_id": address.stateid._id} : {"_id": false};
                             //address.cityid = (address.cityid) ? {"_id": address.cityid._id} : {"_id": false};
-                            $scope.getEditCountries(address.countryid._id, address.stateid._id, address.cityid._id);
+                            $scope.getEditCountries(address.countryid._id, address.stateid._id, address.cityid._id,$scope.data);
                         }
 
                     }
@@ -5776,7 +5776,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         $scope.billingdata["bill_address"]["phone"] = cart.bill_address.phone ? cart.bill_address.phone : "";
                         $scope.billingdata["bill_address"]["email"] = cart.bill_address.email ? cart.bill_address.email : "";
                         if (cart.bill_address.country) {
-                            $scope.getEditCountries(cart.bill_address.country._id, cart.bill_address.state._id, cart.bill_address.city._id);
+                            $scope.getEditCountries(cart.bill_address.country._id, cart.bill_address.state._id, cart.bill_address.city._id,$scope.data);
                         }
                         $scope.billingdata["same_shipping_address"] = cart.same_shipping_address;
                         if(!cart.same_shipping_address){
@@ -5788,7 +5788,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             $scope.billingdata["shipping_address"]["phone"] = cart.shipping_address.phone ? cart.shipping_address.phone : "";
                             $scope.billingdata["shipping_address"]["email"] = cart.shipping_address.email ? cart.shipping_address.email : "";
                             if (cart.shipping_address.country) {
-                                $scope.getEditCountries(cart.shipping_address.country._id, cart.shipping_address.state._id, cart.shipping_address.city._id);
+                                $scope.getEditCountries(cart.shipping_address.country._id, cart.shipping_address.state._id, cart.shipping_address.city._id,$scope.storedata);
                             }
                         }
                         $scope.setPathForOrder('billing-address?q=setBackData');

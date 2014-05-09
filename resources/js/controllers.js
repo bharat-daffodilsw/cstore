@@ -429,35 +429,33 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
      } */
     /******************   Revised Country States Cities****************************/
 
-    $scope.getEditCountries = function (countryid, stateid, cityid,bool) {
+    $scope.getEditCountries = function (countryid, stateid, cityid,setCountryData) {
 
         var query = {"table": "countries__cstore"};
         query.columns = ["name"];
         query.orders = {"name": "asc"};
-        $scope.data.selectedCountry = {"_id": countryid};
+        setCountryData.selectedCountry = {"_id": countryid};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
-            $scope.data.countries = countryData.response.data;
-            if ($scope.data.selectedCountry._id) {
-                for (var i = 0; i < $scope.data.countries.length; i++) {
-                    if ($scope.data.countries[i]._id == $scope.data.selectedCountry._id) {
-                        $scope.data.selectedCountry = $scope.data.countries[i];
+            setCountryData.countries = countryData.response.data;
+            if (setCountryData.selectedCountry._id) {
+                for (var i = 0; i < setCountryData.countries.length; i++) {
+                    if (setCountryData.countries[i]._id == setCountryData.selectedCountry._id) {
+                        setCountryData.selectedCountry = setCountryData.countries[i];
                         break;
                     }
                 }
             }
             else {
-                for (var i = 0; i < $scope.data.countries.length; i++) {
-                    if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
-                        $scope.data.selectedCountry = $scope.data.countries[i];
+                for (var i = 0; i < setCountryData.countries.length; i++) {
+                    if (setCountryData.countries[i]._id == "531d3e9b8826fc304706a460") {
+                        setCountryData.selectedCountry = setCountryData.countries[i];
                         break;
                     }
                 }
             }
-            $scope.storedata.selectedCountry = $scope.data.selectedCountry;
-            $scope.storedata.countries = $scope.data.countries;
-            $scope.getEditStates($scope.data, stateid, cityid);
+            $scope.getEditStates(setCountryData, stateid, cityid);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -487,8 +485,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 else {
                     countryid.selectedState = countryid.states[0];
                 }
-                $scope.storedata.states = countryid.states;
-                $scope.storedata.selectedState = countryid.selectedState;
+               // $scope.storedata.states = countryid.states;
+              //  $scope.storedata.selectedState = countryid.selectedState;
                 $scope.getEditCities(countryid, cityid);
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
@@ -518,8 +516,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     stateid.selectedCity = stateid.cities[0];
                 }
 
-                $scope.storedata.cities = stateid.cities;
-                $scope.storedata.selectedCity = stateid.selectedCity;
+                //$scope.storedata.cities = stateid.cities;
+                //$scope.storedata.selectedCity = stateid.selectedCity;
             }, function (jqxhr, error) {
             })
         } else {
@@ -1013,21 +1011,23 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
     //changes 0605
     $scope.getShoppingCartLength = function () {
-        var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product", "product.name", "product.cost", "product.quantity", "userid"];
-        query.filter = {};
-        query.filter["userid._id"] = $scope.currentUser.data.userid;
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/data";
-        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
-            //$scope.cartData = cartData.response.data;
-            //$scope.cartProducts=cartData.response.data[0].product;
-            //console.log(cartData.response.data[0].product.length);
-            $scope.cartProducts.length = cartData.response.data[0].product.length;
-        }, function (jqxhr, error) {
-            $("#popupMessage").html(error);
-            $('.popup').toggle("slide");
-        })
+        if($scope.currentUser.data.roleid==STOREMANAGER){
+            var query = {"table": "shopping_cart__cstore"};
+            query.columns = ["product", "product.name", "product.cost", "product.quantity", "userid"];
+            query.filter = {};
+            query.filter["userid._id"] = $scope.currentUser.data.userid;
+            var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+            var serviceUrl = "/rest/data";
+            $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
+                //$scope.cartData = cartData.response.data;
+                //$scope.cartProducts=cartData.response.data[0].product;
+                //console.log(cartData.response.data[0].product.length);
+                $scope.cartProducts.length = cartData.response.data[0].product.length;
+            }, function (jqxhr, error) {
+                $("#popupMessage").html(error);
+                $('.popup').toggle("slide");
+            })
+        }
     }
     $scope.getShoppingCartLength();
     $scope.addToCart = function (product, quantity) {
@@ -1681,7 +1681,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllVendors(0, 10, column, searchText);
     }
-    $scope.getEditCountries(null, null, null);
+    $scope.getEditCountries(null, null, null,$scope.data);
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -1863,7 +1863,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllStoreManagers(0, 10, column, searchText);
     }
-    $scope.getEditCountries(null, null, null);
+    $scope.getEditCountries(null, null, null,$scope.storedata);
 });
 
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routeParams) {
@@ -3507,8 +3507,11 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
     }
     $scope.getSavedAddress();
     if($scope.getURLParam("q")!="setBackData"){
-        $scope.getEditCountries(null, null, null);
+        $scope.getEditCountries(null, null, null,$scope.data);
         $scope.billingdata.same_shipping_address=true;
+        //if(!$scope.billingdata.same_shipping_address){
+            $scope.getEditCountries(null, null, null,$scope.storedata);
+        //}
     }
     $scope.clearBillingContent = function () {
         $scope.billingdata.bill_address.firstname = "";
