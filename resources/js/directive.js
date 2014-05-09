@@ -1456,7 +1456,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
 cstore.directive('storeCitySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand"  ng-model="storedata.selectedCity" ' +
+        template: '<select class="select_city"  ng-model="storedata.selectedCity" ' +
             'ng-options="city.name for city in storedata.cities"></select>',
         compile: function () {
             return {
@@ -1471,7 +1471,7 @@ cstore.directive('storeCitySelect', ['$appService', function ($appService, $scop
 cstore.directive('storeStateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-change="getCitiesNew(storedata,null)" ng-model="storedata.selectedState" ng-options="state.name for state in storedata.states"></select>',
+        template: '<select class="select_city" ng-change="getCitiesNew(storedata,null)" ng-model="storedata.selectedState" ng-options="state.name for state in storedata.states"></select>',
         compile: function () {
             return{
                 pre: function () {
@@ -1487,7 +1487,7 @@ cstore.directive('storeStateSelect', ['$appService', function ($appService, $sco
 cstore.directive('storeCountrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand"  ng-change="getStatesNew(storedata,null)" ng-model="storedata.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
+        template: '<select class="select_city"  ng-change="getStatesNew(storedata,null)" ng-model="storedata.selectedCountry" ng-options="country.name for country in storedata.countries"></select>',
         compile: function () {
             return{
                 pre: function () {
@@ -5259,8 +5259,8 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '<div class="saved_address">Billing Information</div>' +
             '<table width="100%" border="0" cellspac1ing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">First Name</div></td>' +
-            '<td><div class="margin_top">Last Name</div></td>' +
+            '<td><div class="margin_top">First Name*</div></td>' +
+            '<td><div class="margin_top">Last Name*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td><input type="text" placeholder="" ng-model="billingdata.bill_address.firstname"></td>' +
@@ -5269,7 +5269,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Address</div></td>' +
+            '<td><div class="margin_top">Address*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="text_area"><textarea ng-model="billingdata.bill_address.address"></textarea></td>' +
@@ -5285,8 +5285,8 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Country</div></td>' +
-            '<td class="half_td"><div class="margin_top">State</div></td>' +
+            '<td class="half_td"><div class="margin_top">Country*</div></td>' +
+            '<td class="half_td"><div class="margin_top">State*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
@@ -5295,8 +5295,8 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">City</div></td>' +
-            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
+            '<td class="half_td"><div class="margin_top">City*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Zip Code*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><city-select></city-select></td>' +
@@ -5305,7 +5305,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Phone</div></td>' +
+            '<td class="half_td"><div class="margin_top">Phone*</div></td>' +
             '<td class="half_td"><div class="margin_top">Extension</div></td>' +
             '</tr>' +
             '<tr>' +
@@ -5315,29 +5315,33 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Email</div></td>' +
+            '<td><div class="margin_top">Email*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="text_area"><input type="text" placeholder=""ng-model="billingdata.bill_address.email"></td>' +
             '</tr>' +
             '</table>' +
             '<div class="shipping_info pull-left">' +
-            '<input id="" name="" type="checkbox" value="1" ng-model="billingdata.same_shipping_address" ng-init="billingdata.same_shipping_address=true"> Shipping Information same as Billing Information </div>' +
+            '<input id="" name="" type="checkbox" value="1" ng-model="billingdata.same_shipping_address"> Shipping Information same as Billing Information </div>' +
+            '</div>'+
+            '<div class="saved_r_bar pull-right col-sm-7 col-md-7" ng-hide="billingdata.same_shipping_address">' +
+            '<div class="saved_address">Shipping Information</div>' +
+            '<shipping-address></shipping-address>' +
+            '</div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td>' +
-            '<div class="save_close pull-left">' +
-            '<div class="add_btn pull-left">' +
+            '<div class="save_close right_btn pull-right">' +
+            '<div class="add_btn pull-right">' +
             '<button type="button" ng-click="saveBillingAddress()"><a href="">Continue</a></button>' +
             '</div>' +
-            '<div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="cancel()"><a href="">Cancel</a></button>' +
+            '<div class="delete_btn pull-right">' +
+            '<button type="button" ng-click="setPath(\'shopping-cart\')"><a href="">Back</a></button>' +
             '</div>' +
             '</div>' +
             '</td>' +
             '</tr>' +
             '</table>' +
-            '<div ng-hide="billingdata.same_shipping_address">Test Test</div>' +
             '<div class="loadingImage" ng-hide="!loadingSavedAddress"><img src="images/loading.gif"></div>' +
             '</div>',
         compile: function () {
@@ -5345,13 +5349,12 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                 pre: function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
-                    }
-                    $scope.cancel = function () {
                         $scope.clearBillingContent();
-                        $scope.setPath('shopping-cart');
+                        $scope.clearShippingContent();
                     }
                 },
                 post: function ($scope) {
+
                     $scope.useSavedAddress = function (address) {
                         //console.log(JSON.stringify(address));
                         $scope.billingdata["bill_address"]["firstname"] = address.manager.name ? address.manager.name : "";
@@ -5368,63 +5371,110 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
 
                     }
                     $scope.saveBillingAddress = function () {
-                        //console.log($scope.billingdata.same_shipping_address);
-
-                        $scope.newBillingAddress = {};
-                        $scope.newBillingAddress["bill_address"] = {};
-                        $scope.newBillingAddress["shipping_address"] = {};
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
-                        var email = $scope.billingdata.bill_address.email;
+                        var billing_email = $scope.billingdata.bill_address.email;
                         if (!$scope.billingdata.bill_address.firstname) {
-                            $("#popupMessage").html("Please enter firstname");
+                            $("#popupMessage").html("Please enter billing info firstname");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.billingdata.bill_address.lastname) {
-                            $("#popupMessage").html("Please enter lastname");
+                            $("#popupMessage").html("Please enter billing info lastname");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.billingdata.bill_address.address) {
-                            $("#popupMessage").html("Please enter address");
+                            $("#popupMessage").html("Please enter billing info address");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.data.selectedCountry) {
-                            $("#popupMessage").html("Please select country first");
+                            $("#popupMessage").html("Please select billing info country first");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.data.selectedState) {
-                            $("#popupMessage").html("Please select state first");
+                            $("#popupMessage").html("Please select billing info state first");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.data.selectedCity) {
-                            $("#popupMessage").html("Please select city first");
+                            $("#popupMessage").html("Please select billing info city first");
                             $('.popup').toggle("slide");
                             return false;
                         }
 
                         if (!$scope.billingdata.bill_address.zipcode || !regNumberOnly.test($scope.billingdata.bill_address.zipcode)) {
-                            $("#popupMessage").html("Please enter valid postal code");
+                            $("#popupMessage").html("Please enter valid billing info zip code");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.billingdata.bill_address.phone || !regNumberOnly.test($scope.billingdata.bill_address.phone)) {
-                            $("#popupMessage").html("Please enter valid phone no");
+                            $("#popupMessage").html("Please enter valid billing info phone no");
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if (!email || regEmail.test(email) == false) {
-                            $("#popupMessage").html("Please enter a valid email id");
+                        if (!billing_email || regEmail.test(billing_email) == false) {
+                            $("#popupMessage").html("Please enter a valid billing email id");
                             $('.popup').toggle("slide");
                             return false;
                         }
+                        if(!$scope.billingdata.same_shipping_address){
+                            var shipping_email = $scope.billingdata.shipping_address.email;
+                            if (!$scope.billingdata.shipping_address.firstname) {
+                                $("#popupMessage").html("Please enter shipping info firstname");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.billingdata.shipping_address.lastname) {
+                                $("#popupMessage").html("Please enter shipping info lastname");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.billingdata.shipping_address.address) {
+                                $("#popupMessage").html("Please enter shipping info address");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedCountry) {
+                                $("#popupMessage").html("Please select shipping info country first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedState) {
+                                $("#popupMessage").html("Please select shipping info state first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.storedata.selectedCity) {
+                                $("#popupMessage").html("Please select shipping info city first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+
+                            if (!$scope.billingdata.shipping_address.zipcode || !regNumberOnly.test($scope.billingdata.shipping_address.zipcode)) {
+                                $("#popupMessage").html("Please enter valid shipping info zip code");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.billingdata.shipping_address.phone || !regNumberOnly.test($scope.billingdata.shipping_address.phone)) {
+                                $("#popupMessage").html("Please enter valid shipping info phone no");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!shipping_email || regEmail.test(shipping_email) == false) {
+                                $("#popupMessage").html("Please enter a valid shipping info email id");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                        }
+                        $scope.newBillingAddress = {};
+                        $scope.newBillingAddress["bill_address"] = {};
+                        $scope.newBillingAddress["shipping_address"] = {};
                         $scope.loadingSavedAddress = true;
                         $scope.newBillingAddress["userid"] = {"_id": $scope.currentUser.data.userid};
-                        //$scope.newBillingAddress["same_shipping_address"]=$scope.billingdata.same_shipping_address;
+                        $scope.newBillingAddress["same_shipping_address"]=$scope.billingdata.same_shipping_address;
                         $scope.newBillingAddress["bill_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
                         $scope.newBillingAddress["bill_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
                         $scope.newBillingAddress["bill_address"]["address"] = $scope.billingdata.bill_address.address;
@@ -5461,6 +5511,25 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                                 $scope.newBillingAddress["shipping_address"]["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
                             }
                         }
+                        else{
+                            $scope.newBillingAddress["shipping_address"]["firstname"] = $scope.billingdata.shipping_address.firstname;
+                            $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.shipping_address.lastname;
+                            $scope.newBillingAddress["shipping_address"]["address"] = $scope.billingdata.shipping_address.address;
+                            $scope.newBillingAddress["shipping_address"]["address_2"] = $scope.billingdata.shipping_address.address_2;
+                            $scope.newBillingAddress["shipping_address"]["zipcode"] = $scope.billingdata.shipping_address.zipcode;
+                            $scope.newBillingAddress["shipping_address"]["phone"] = $scope.billingdata.shipping_address.phone;
+                            $scope.newBillingAddress["shipping_address"]["ext"] = $scope.billingdata.shipping_address.ext;
+                            $scope.newBillingAddress["shipping_address"]["email"] = $scope.billingdata.shipping_address.email;
+                            if ($scope.storedata.selectedCountry) {
+                                $scope.newBillingAddress["shipping_address"]["country"] = {"_id": $scope.storedata.selectedCountry._id, "name": $scope.storedata.selectedCountry.name};
+                            }
+                            if ($scope.storedata.selectedState) {
+                                $scope.newBillingAddress["shipping_address"]["state"] = {"_id": $scope.storedata.selectedState._id, "name": $scope.storedata.selectedState.name};
+                            }
+                            if ($scope.storedata.selectedCity) {
+                                $scope.newBillingAddress["shipping_address"]["city"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
+                            }
+                        }
                         $scope.newBillingAddress["__type__"] = "insertifnotexist";
                         var query = {};
                         query.table = "shopping_cart__cstore";
@@ -5470,12 +5539,8 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 //$("#popupMessage").html("Billing Address is saved");
                                 //$('.popup').toggle("slide");
-                                if ($scope.billingdata.same_shipping_address == true) {
                                     $scope.setPath('order-review');
-                                }
-                                else {
-                                    $scope.setPath('shipping-address');
-                                }
+
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -5497,191 +5562,90 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
 cstore.directive('shippingAddress', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div>' +
-            '<div class="table_1 pull-left">' +
-            '<div class="admin_menu pull-left" >' +
-            '<div class="billing_info active_1 pull-left">Shipping Address</div>' +
-            '<div class="billing_info pull-left">Order</div>' +
-            '<div class="billing_info pull-left">Payment</div>' +
-            '</div>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td><div class="margin_top">First Name</div></td>' +
-            '<td><div class="margin_top">Last Name</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.firstname"></td>' +
-            '<td><input type="text" placeholder=""ng-model="billingdata.shipping_address.lastname"></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td><div class="margin_top">Address</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address"> </textarea></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td><div class="margin_top">Address 2</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address_2"></textarea></td>' +
-            '</tr>' +
-            '</table>' +
-            '<div>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Country</div></td>' +
-            '<td class="half_td"><div class="margin_top">State</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
-            '<td class="half_td"><state-select></state-select></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">City</div></td>' +
-            '<td class="half_td"><div class="margin_top">Postal Code</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><city-select></city-select></td>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="billingdata.shipping_address.zipcode"></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Phone</div></td>' +
-            '<td class="half_td"><div class="margin_top">Extension</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><input type="text"  placeholder="" ng-model="billingdata.shipping_address.phone"></td>' +
-            '<td class="half_td"><input maxlength="10" type="text" ng-model="billingdata.shipping_address.ext" placeholder=""></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td><div class="margin_top">Email</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="text_area"><input type="text" placeholder=""ng-model="billingdata.shipping_address.email"></td>' +
-            '</tr>' +
-            '</table></div>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td><div class="save_close pull-left">' +
-            '<div class="add_btn pull-left">' +
-            '<button ng-click="saveShippingAddress()" type="button">Continue</button>' +
-            '</div>' +
-            '<div class="delete_btn pull-left">' +
-            '<button ng-click="" type="button">Cancel</button>' +
-            '</div>' +
-            '</div></td>' +
-            '</tr>' +
-            '</table></div>' +
-            '<div class="loadingImage" ng-hide="!savingShippingAddress"><img src="images/loading.gif"></div>' +
-            '</div>',
+        template: '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td>'+
+            '<div class="margin_top">First Name*</div>'+
+            '</td>'+
+            '<td>'+
+            '<div class="margin_top">Last Name*</div>'+
+            '</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.firstname"></td>'+
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.lastname"></td>'+
+            '</tr>'+
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td>'+
+            '<div class="margin_top">Address*</div>'+
+            '</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address"> </textarea></td>'+
+            '</tr>'+
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td>'+
+            '<div class="margin_top">Address 2</div>'+
+            '</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address_2"> </textarea></td>'+
+            '</tr>'+
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td class="half_td"><div class="margin_top">Country*</div></td>'+
+            '<td class="half_td"><div class="margin_top">State*</div></td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td class="half_td"><store-country-select></store-country-select></td>' +
+            '<td class="half_td"><store-state-select></store-state-select></td>'+
+            '</tr>'+
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td class="half_td"><div class="margin_top">City*</div></td class="half_td">'+
+            '<td class="half_td"><div class="margin_top">Zip Code*</div></td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td class="half_td"><store-city-select></store-city-select></td>'+
+            '<td class="half_td"><input type="text" placeholder="" ng-model="billingdata.shipping_address.zipcode"></td>'+
+            '</tr>'+
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td>'+
+            '<div class="margin_top">Phone*</div>'+
+            '</td>'+
+            '<td>'+
+            '<div class="margin_top">Extension</div>'+
+            '</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.phone"></td>'+
+            '<td><input type="text" placeholder=""ng-model="billingdata.shipping_address.ext"></td>'+
+            '</tr>'+
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
+            '<tr>'+
+            '<td>'+
+            '<div class="margin_top">Email*</div>'+
+            '</td>'+
+            '</tr>'+
+            '<tr>'+
+            '<td class="text_area"><input type="text" placeholder=""ng-model="billingdata.shipping_address.email"></td>'+
+            '</tr>'+
+            '</table>',
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.setPathForShipping = function (path) {
-                        window.location.href = "#!/" + path;
-                    }
-                    $scope.cancelShipping = function () {
-                        $scope.clearShippingContent();
-                        $scope.setPathForShipping('order-review');
-                    }
+
                 },
                 post: function ($scope) {
-                    $scope.saveShippingAddress = function () {
-                        $scope.newShippingAddress = {};
-                        $scope.newShippingAddress["shipping_address"] = {};
-                        var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                        var regNumberOnly = /^[+]?\d[0-9\-]*$/;
-                        var email = $scope.billingdata.shipping_address.email;
-                        if (!$scope.billingdata.shipping_address.firstname) {
-                            $("#popupMessage").html("Please enter firstname");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!$scope.billingdata.shipping_address.lastname) {
-                            $("#popupMessage").html("Please enter lastname");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!$scope.billingdata.shipping_address.address) {
-                            $("#popupMessage").html("Please enter address");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!$scope.data.selectedCountry) {
-                            $("#popupMessage").html("Please select country first");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!$scope.data.selectedState) {
-                            $("#popupMessage").html("Please select state first");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!$scope.data.selectedCity) {
-                            $("#popupMessage").html("Please select city first");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-
-                        if (!$scope.billingdata.shipping_address.zipcode || !regNumberOnly.test($scope.billingdata.shipping_address.zipcode)) {
-                            $("#popupMessage").html("Please enter valid postal code");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!$scope.billingdata.shipping_address.phone || !regNumberOnly.test($scope.billingdata.shipping_address.phone)) {
-                            $("#popupMessage").html("Please enter valid phone no");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        if (!email || regEmail.test(email) == false) {
-                            $("#popupMessage").html("Please enter a valid email id");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
-                        $scope.savingShippingAddress = true;
-                        $scope.newShippingAddress["userid"] = {"_id": $scope.currentUser.data.userid};
-                        $scope.newShippingAddress["shipping_address"]["firstname"] = $scope.billingdata.shipping_address.firstname;
-                        $scope.newShippingAddress["shipping_address"]["lastname"] = $scope.billingdata.shipping_address.lastname;
-                        $scope.newShippingAddress["shipping_address"]["address"] = $scope.billingdata.shipping_address.address;
-                        $scope.newShippingAddress["shipping_address"]["address_2"] = $scope.billingdata.shipping_address.address_2;
-                        $scope.newShippingAddress["shipping_address"]["zipcode"] = $scope.billingdata.shipping_address.zipcode;
-                        $scope.newShippingAddress["shipping_address"]["phone"] = $scope.billingdata.shipping_address.phone;
-                        $scope.newShippingAddress["shipping_address"]["ext"] = $scope.billingdata.shipping_address.ext;
-                        $scope.newShippingAddress["shipping_address"]["email"] = $scope.billingdata.shipping_address.email;
-                        if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
-                            $scope.newShippingAddress["shipping_address"]["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
-                        }
-                        if ($scope.data.selectedCity && $scope.data.selectedCity != null && $scope.data.selectedCity != undefined && $scope.data.selectedCity != "undefined" && $scope.data.selectedCity != "null") {
-                            $scope.newShippingAddress["shipping_address"]["city"] = {"_id": $scope.data.selectedCity._id, "name": $scope.data.selectedCity.name}
-                        }
-                        if ($scope.data.selectedState && $scope.data.selectedState != null && $scope.data.selectedState != undefined && $scope.data.selectedState != "undefined" && $scope.data.selectedState != "null") {
-                            $scope.newShippingAddress["shipping_address"]["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
-                        }
-                        $scope.newShippingAddress["__type__"] = "insertifnotexist";
-                        var query = {};
-                        query.table = "shopping_cart__cstore";
-                        query.operations = [$scope.newShippingAddress];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            $scope.savingShippingAddress = false;
-                            if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $("#popupMessage").html("Shipping Address is saved");
-                                $('.popup').toggle("slide");
-                                $scope.setPathForShipping('order-review');
-                            } else {
-                                $("#popupMessage").html(callBackData.response);
-                                $('.popup').toggle("slide");
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
-                            $('.popup').toggle("slide");
-                        });
-                    }
                 }
 
             }
@@ -5736,7 +5700,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click><a href="">Payment</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click="setPathForOrder(\'billing-address\')"><a href="">Back</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -5802,6 +5766,33 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post: function ($scope) {
+                    $scope.setAddressState = function(cart){
+                        console.log(JSON.stringify(cart));
+                        $scope.billingdata["bill_address"]["firstname"] = cart.bill_address.firstname ? cart.bill_address.firstname : "";
+                        $scope.billingdata["bill_address"]["lastname"] = cart.bill_address.lastname ? cart.bill_address.lastname : "";
+                        $scope.billingdata["bill_address"]["address"] = cart.bill_address.address ? cart.bill_address.address : "";
+                        $scope.billingdata["bill_address"]["address_2"] = cart.bill_address.address_2 ? cart.bill_address.address_2 : "";
+                        $scope.billingdata["bill_address"]["zipcode"] = cart.bill_address.zipcode ? cart.bill_address.zipcode : "";
+                        $scope.billingdata["bill_address"]["phone"] = cart.bill_address.phone ? cart.bill_address.phone : "";
+                        $scope.billingdata["bill_address"]["email"] = cart.bill_address.email ? cart.bill_address.email : "";
+                        if (cart.bill_address.country) {
+                            $scope.getEditCountries(cart.bill_address.country._id, cart.bill_address.state._id, cart.bill_address.city._id);
+                        }
+                        $scope.billingdata["same_shipping_address"] = cart.same_shipping_address;
+                        if(!cart.same_shipping_address){
+                            $scope.billingdata["shipping_address"]["firstname"] = cart.shipping_address.firstname ? cart.shipping_address.firstname : "";
+                            $scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
+                            $scope.billingdata["shipping_address"]["address"] = cart.shipping_address.address ? cart.shipping_address.address : "";
+                            $scope.billingdata["shipping_address"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
+                            $scope.billingdata["shipping_address"]["zipcode"] = cart.shipping_address.zipcode ? cart.shipping_address.zipcode : "";
+                            $scope.billingdata["shipping_address"]["phone"] = cart.shipping_address.phone ? cart.shipping_address.phone : "";
+                            $scope.billingdata["shipping_address"]["email"] = cart.shipping_address.email ? cart.shipping_address.email : "";
+                            if (cart.shipping_address.country) {
+                                $scope.getEditCountries(cart.shipping_address.country._id, cart.shipping_address.state._id, cart.shipping_address.city._id);
+                            }
+                        }
+                        $scope.setPathForOrder('billing-address?q=setBackData');
+                    }
                     $scope.removeCart = function () {
                         console.log($scope.cartData);
                         $scope.removeShoppingCart = {};

@@ -1348,3 +1348,6 @@ span.btn:hover {
 .item_price {
     color:black;
 }
+div.save_close.right_btn {
+    margin-right: 357px;
+}

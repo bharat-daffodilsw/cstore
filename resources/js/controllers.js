@@ -146,9 +146,6 @@ cstore.config(
             }).when('/billing-address', {
                 templateUrl: '../billing-address',
                 controller: 'billingAddressCtrl'
-            }).when('/shipping-address', {
-                templateUrl: '../shipping-address',
-                controller: 'shippingAddressCtrl'
             }).when('/order-review', {
                 templateUrl: '../order-review',
                 controller: 'orderReviewCtrl'
@@ -294,7 +291,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"optionArr": [], "type": $scope.listType[0], "addOption": true}
     ];
     $scope.cartData = {"quantity": []};
-    $scope.billingdata = {"bill_address": {}, "shipping_address": {}};
+    $scope.billingdata = {"bill_address": {}, "shipping_address": {},"setData":""};
+    //$scope.billingdata.setData=
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
@@ -431,7 +429,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
      } */
     /******************   Revised Country States Cities****************************/
 
-    $scope.getEditCountries = function (countryid, stateid, cityid) {
+    $scope.getEditCountries = function (countryid, stateid, cityid,bool) {
 
         var query = {"table": "countries__cstore"};
         query.columns = ["name"];
@@ -1077,7 +1075,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getShoppingCart = function () {
         $scope.loadingShoppingCartData = true;
         var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address"];
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address","same_shipping_address"];
         query.filter = {};
         query.filter["userid._id"] = $scope.currentUser.data.userid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -3484,10 +3482,12 @@ cstore.controller('productCodesCtrl', function ($scope, $appService) {
 
 /******************************** Shopping Cart*************************************/
 cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
+    $appService.auth();
     $scope.grandTotal = 0;
     $scope.getShoppingCart();
 });
 cstore.controller('billingAddressCtrl', function ($scope, $appService) {
+    $appService.auth();
     $scope.getSavedAddress = function () {
         $scope.loadingSavedAddress = true;
         var query = {"table": "storemanagers__cstore"};
@@ -3506,7 +3506,10 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
         })
     }
     $scope.getSavedAddress();
-    $scope.getEditCountries(null, null, null);
+    if($scope.getURLParam("q")!="setBackData"){
+        $scope.getEditCountries(null, null, null);
+        $scope.billingdata.same_shipping_address=true;
+    }
     $scope.clearBillingContent = function () {
         $scope.billingdata.bill_address.firstname = "";
         $scope.billingdata.bill_address.lastname = "";
@@ -3516,11 +3519,8 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
         $scope.billingdata.bill_address.phone = "";
         $scope.billingdata.bill_address.ext = "";
         $scope.billingdata.bill_address.email = "";
-        $scope.getEditCountries(null, null, null);
+        //$scope.getEditCountries(null, null, null);
     }
-});
-cstore.controller('shippingAddressCtrl', function ($scope, $appService) {
-    $scope.getEditCountries(null, null, null);
     $scope.clearShippingContent = function () {
         $scope.billingdata.shipping_address.firstname = "";
         $scope.billingdata.shipping_address.lastname = "";
@@ -3530,9 +3530,10 @@ cstore.controller('shippingAddressCtrl', function ($scope, $appService) {
         $scope.billingdata.shipping_address.phone = "";
         $scope.billingdata.shipping_address.ext = "";
         $scope.billingdata.shipping_address.email = "";
-        $scope.getEditCountries(null, null, null);
+        //$scope.getEditCountries(null, null, null);
     }
 });
 cstore.controller('orderReviewCtrl', function ($scope, $appService) {
+    $appService.auth();
     $scope.getShoppingCart();
 });
