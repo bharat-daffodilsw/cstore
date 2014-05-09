@@ -106,7 +106,7 @@ cstore.config(
                 controller: 'addTrainingSessionCtrl'
             }).when('/assign-store', {
                 templateUrl: '../assign-store',
-                controller: 'assignStoreCtrl'
+                controller: 'assignTrainingCtrl'
             }).when('/surveys', {
                 templateUrl: '../surveys',
                 controller: 'surveyCtrl'
@@ -125,6 +125,9 @@ cstore.config(
             }).when('/edit-survey', {
                 templateUrl: '../add-survey',
                 controller: 'addSurveyCtrl'
+            }).when('/assign-survey-store', {
+                templateUrl: '/assign-survey-store',
+                controller: 'assignSurveyCtrl'
             }).when('/assigned-session-store', {
                 templateUrl: '/assigned-session-store',
                 controller: 'assignedSessionCtrl'
@@ -2730,8 +2733,8 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
         delete $scope.trainingdata["trainingSessionId"];
     }
 })
-/************************************ AssignStore *****************************************************/
-cstore.controller('assignStoreCtrl', function ($scope, $appService) {
+/************************************ Assign Training Session *****************************************************/
+cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
@@ -2807,7 +2810,7 @@ cstore.controller('assignStoreCtrl', function ($scope, $appService) {
         });
     }
     $scope.getStoresName(1, 5);
-    $scope.setStoreNameOrder = function () {
+    $scope.setStoreNameOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
@@ -2897,6 +2900,98 @@ cstore.controller('addSurveyCtrl', function ($scope, $appService) {
 });
 
 //changes made by Anuradha
+
+/************************************ Assign Training Session *****************************************************/
+cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
+    $scope.preCursor = 0
+    $scope.currentCursor = 0;
+    $scope.venderSearch = [
+        {"value": "storename", "name": "Store Name"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
+        if ($scope.loadingStatus) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.preCursor = $scope.currentCursor;
+        } else {
+            $scope.preCursor = $scope.preCursor - limit;
+            $scope.currentCursor = $scope.preCursor;
+        }
+        $scope.loadingStatus = true;
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = [ "_id", "storename"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        } else {
+            query.orders["storename"] = "asc";
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.currentCursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+            if (storeData.response.data && storeData.response.data.length > 0) {
+                $scope.storesName = storeData.response.data;
+                $scope.currentCursor = storeData.response.cursor;
+                $scope.trainingSessionId = $scope.getURLParam("id");
+                if (!$scope.trainingSessionId) {
+                    return;
+                }
+                var query = {"table": "surveys__cstore"};
+                query.columns = ["store_manager_id"];
+                query.filter = {"_id": $scope.trainingSessionId};
+                query.orders = {"storename": "asc"};
+                var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeSurveyData) {
+                    $scope.loadingStatus = false;
+                    if (storeSurveyData.response.data && storeSurveyData.response.data.length > 0 && storeSurveyData.response.data[0].store_manager_id && storeSurveyData.response.data[0].store_manager_id.length) {
+                        $scope.storeManager = storeSurveyData.response.data[0].store_manager_id;
+                        for (i = 0; i < $scope.storesName.length; i++) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[i]._id == $scope.storeManager[j]._id) {
+                                    $scope.storesName[i].assigned = true;
+                                }
+                            }
+                            if (!$scope.storesName[i].assigned) {
+                                $scope.storesName[i].assigned = false;
+                            }
+                        }
+                    }
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            } else {
+                $scope.loadingStatus = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        });
+    }
+    $scope.getSurveyStoresName(1, 5);
+    $scope.setStoreNameOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getSurveyStoresName(1, 5, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getSurveyStoresName(1, 5, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getSurveyStoresName(0, 5, column, searchText);
+    }
+});
+
 cstore.controller('assignedSurveyCtrl', function ($scope, $appService, $routeParams) {
     var assignedSurveyId = $routeParams.q;
     console.log(assignedSurveyId);
