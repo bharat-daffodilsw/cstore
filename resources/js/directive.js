@@ -5246,12 +5246,12 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
             '<div class="fix_height">Subtotal :</div>' +
             '<div class="fix_height">Shipping Charge :</div>' +
-            '<div class="fix_height margin_top">Total :</div>' +
+            '<div class="fix_height margin_top total_amount">Total :</div>' +
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
-            '<div class="fix_height text-right ng-binding">{{getTotal() | currency}}</div>' +
+            '<div class="fix_height text-right">{{getTotal() | currency}}</div>' +
             '<div class="fix_height text-right">Free</div>' +
-            '<div class="fix_height margin_top text-right ng-binding">{{getTotal() | currency}}</div>' +
+            '<div class="fix_height margin_top text-right total_amount">{{getTotal() | currency}}</div>' +
             '</div>' +
             '</div>' +
             '<div class="add_delete pull-right">' +
@@ -5782,12 +5782,12 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
             '<div class="fix_height">Subtotal :</div>' +
             '<div class="fix_height">Shipping Charge :</div>' +
-            '<div class="fix_height margin_top">Total :</div>' +
+            '<div class="fix_height margin_top total_amount">Total :</div>' +
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
             '<div class="fix_height text-right">{{cartData.sub_total | currency}}</div>' +
             '<div class="fix_height text-right">Free</div>' +
-            '<div class="fix_height margin_top text-right">{{cartData.total.amount | currency}}</div>' +
+            '<div class="fix_height margin_top text-right total_amount">{{cartData.total.amount | currency}}</div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -5802,8 +5802,8 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<div class="fix_address pull-right">' +
             '<div class="saved_address" >Billing Address</div>' +
             '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
-            '<div>Name</div>' +
-            '<div class="address">Address</div>' +
+            '<div class="fix_height">Name</div>' +
+            '<div class="address fix_height">Address</div>' +
             '<div class="fix_height">City</div>' +
             '<div class="fix_height">State</div>' +
             '<div class="fix_height">Postal Code</div>' +
@@ -5813,7 +5813,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
             '<div class="fix_height">{{savedBillingAddress.firstname}} {{savedBillingAddress.lastname}}</div>' +
-            '<div class="address">{{savedBillingAddress.address}}</div>' +
+            '<div class="address fix_height">{{savedBillingAddress.address}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.city.name}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.state.name}}</div>' +
             '<div class="fix_height">{{savedBillingAddress.zipcode}}</div>' +
@@ -5827,8 +5827,8 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<div class="fix_address pull-right">' +
             '<div class="saved_address" >Shipping Address</div>' +
             '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
-            '<div>Name</div>' +
-            '<div class="address">Address</div>' +
+            '<div class="fix_height">Name</div>' +
+            '<div class="address fix_height">Address</div>' +
             '<div class="fix_height">City</div>' +
             '<div class="fix_height">State</div>' +
             '<div class="fix_height">Postal Code</div>' +
@@ -5838,7 +5838,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
             '<div class="fix_height">{{savedShippingAddress.firstname}} {{savedShippingAddress.lastname}}</div>' +
-            '<div class="address">{{savedShippingAddress.address}}</div>' +
+            '<div class="address fix_height">{{savedShippingAddress.address}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.city.name}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.state.name}}</div>' +
             '<div class="fix_height">{{savedShippingAddress.zipcode}}</div>' +
