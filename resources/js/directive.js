@@ -5243,12 +5243,12 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '</table>' +
             '<div class="saved_last pull-right">'+
             '<div class="fix_price pull-right">' +
-            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div class="saved_1 col-sm-7 col-md-7 pull-left">' +
             '<div class="fix_height">Subtotal :</div>' +
             '<div class="fix_height">Shipping Charge :</div>' +
             '<div class="fix_height margin_top total_amount">Total :</div>' +
             '</div>' +
-            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
             '<div class="fix_height text-right">{{getTotal() | currency}}</div>' +
             '<div class="fix_height text-right">Free</div>' +
             '<div class="fix_height margin_top text-right total_amount">{{getTotal() | currency}}</div>' +
@@ -5779,12 +5779,12 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<div class="saved_l_bar pull-right">' +
             '<div class="fix_address pull-right">' +
             '<div class="saved_address">Amount Detail :</div>' +
-            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div class="saved_1 col-sm-7 col-md-7 pull-left">' +
             '<div class="fix_height">Subtotal :</div>' +
             '<div class="fix_height">Shipping Charge :</div>' +
             '<div class="fix_height margin_top total_amount">Total :</div>' +
             '</div>' +
-            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
             '<div class="fix_height text-right">{{cartData.sub_total | currency}}</div>' +
             '<div class="fix_height text-right">Free</div>' +
             '<div class="fix_height margin_top text-right total_amount">{{cartData.total.amount | currency}}</div>' +
