@@ -1352,3 +1352,14 @@ span.btn:hover {
 div.save_close.right_btn {
     margin-right: 357px;
 }
+.total {
+    margin-right: 57px;
+}
+.fix_price {
+    margin-top:10px;
+    font-size:16px;
+    width:70%;}
+.saved_last {
+    width:43%;
+    padding:0px;
+    margin:10px;}

@@ -5175,7 +5175,12 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     for (var i = 0; i < $scope.productCodes.length; i++) {
                                         $scope.productCodes[i]["editStatus"] = false;
                                     }
-                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                }
+                                else if ((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns") >= 0)) {
+                                    $("#popupMessage").html("There is duplicate value for code");
+                                    $('.popup').toggle("slide");
+                                }
+                                else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
                                 }
@@ -5223,7 +5228,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<th>Qty</th>' +
             '<th>Price</th>' +
             '</tr>' +
-            '<tr ng-repeat="cartProduct in shoppingCartProducts">' +
+            '<tr ng-show="shoppingCartProducts.length" ng-repeat="cartProduct in shoppingCartProducts">' +
             '<td>{{$index+1}}</td>' +
             '<td>' +
             '<div class="item">' +
@@ -5236,15 +5241,26 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<td class="item_price">{{cartProduct.quantity*cartProduct.cost.amount | currency}}</td>' +
             '</tr>' +
             '</table>' +
+            '<div class="saved_last pull-right">'+
+            '<div class="fix_price pull-right">' +
+            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div class="fix_height">Subtotal :</div>' +
+            '<div class="fix_height">Shipping Charge :</div>' +
+            '<div class="fix_height margin_top">Total :</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="fix_height text-right ng-binding">{{getTotal() | currency}}</div>' +
+            '<div class="fix_height text-right">Free</div>' +
+            '<div class="fix_height margin_top text-right ng-binding">{{getTotal() | currency}}</div>' +
+            '</div>' +
+            '</div>' +
             '<div class="add_delete pull-right">' +
-            '<div class="add_btn pull-left">' +
+            '<div class="add_btn pull-right"  ng-click="updatedOrder(\'billing-address\')">' +
+            '<button type="button"><a href>Checkout</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-right">' +
             '<button type="button"><a href="/">Continue Shopping</a></button>' +
-            '</div>' +
-            '<div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="updatedOrder(\'billing-address\')"><a href="">Checkout</a></button>' +
-            '</div>' +
-            '<div>Sub Total :: {{getTotal() | currency}}</div>' +
-            '</div></div>' +
+            '</div></div></div></div>' +
             '<div class="loadingImage" ng-hide="!loadingShoppingCartData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -5269,6 +5285,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         $scope.updateShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
                         $scope.updateShoppingCartProduct["product"] = $scope.shoppingCartProducts;
                         $scope.updateShoppingCartProduct["sub_total"] = $scope.getTotal();
+                        $scope.updateShoppingCartProduct["total"]={"amount":$scope.updateShoppingCartProduct["sub_total"],"type":{"currency": "usd"}};
                         $scope.updateShoppingCartProduct["__type__"] = "insertifnotexist";
                         var query = {};
                         query.table = "shopping_cart__cstore";
@@ -5280,7 +5297,8 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                                 //$('.popup').toggle("slide");
                                 window.location.href = "#!/" + path;
                                 //$scope.cartProducts.length++;
-                            } else {
+                            }
+                            else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
                             }
@@ -5769,7 +5787,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
             '<div class="fix_height text-right">{{cartData.sub_total | currency}}</div>' +
             '<div class="fix_height text-right">Free</div>' +
-            '<div class="fix_height margin_top text-right">{{cartData.sub_total | currency}}</div>' +
+            '<div class="fix_height margin_top text-right">{{cartData.total.amount | currency}}</div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -5842,7 +5860,8 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                 },
                 post: function ($scope) {
                     $scope.setAddressState = function(cart){
-                        console.log(JSON.stringify(cart));
+                        //console.log(JSON.stringify(cart));
+                        if(cart.bill_address){
                         $scope.billingdata["bill_address"]["firstname"] = cart.bill_address.firstname ? cart.bill_address.firstname : "";
                         $scope.billingdata["bill_address"]["lastname"] = cart.bill_address.lastname ? cart.bill_address.lastname : "";
                         $scope.billingdata["bill_address"]["address"] = cart.bill_address.address ? cart.bill_address.address : "";
@@ -5853,8 +5872,9 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         if (cart.bill_address.country) {
                             $scope.getEditCountries(cart.bill_address.country._id, cart.bill_address.state._id, cart.bill_address.city._id,$scope.data);
                         }
+                        }
                         $scope.billingdata["same_shipping_address"] = cart.same_shipping_address;
-                        if(!cart.same_shipping_address){
+                        if(!cart.same_shipping_address && cart.shipping_address){
                             $scope.billingdata["shipping_address"]["firstname"] = cart.shipping_address.firstname ? cart.shipping_address.firstname : "";
                             $scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
                             $scope.billingdata["shipping_address"]["address"] = cart.shipping_address.address ? cart.shipping_address.address : "";
@@ -5868,20 +5888,86 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         }
                         $scope.setPathForOrder('billing-address?q=setBackData');
                     }
-                    $scope.removeCart = function () {
-                        console.log($scope.cartData);
+                    $scope.saveOrder = function (cart) {
+                        var order_date=new Date();
+                        console.log(order_date);
+                        $scope.loadingShoppingCartData=false;
+                        $scope.newOrder = {};
+                        $scope.newOrder["bill_address"] = {};
+                        $scope.newOrder["shipping_address"] = {};
+                        $scope.newOrder["product"] = [{"name":"","cost":"","quantity":""}];
+                        $scope.newOrder["userid"] = cart.userid;
+                        $scope.newOrder["sub_total"] = cart.sub_total;
+                        $scope.newOrder["total"]=cart.total;
+                        $scope.newOrder["order_date"]=order_date;
+                        $scope.newOrder["bill_address"]["address"] = cart.bill_address.address;
+                        $scope.newOrder["bill_address"]["address2"] = cart.bill_address.address_2;
+                        $scope.newOrder["bill_address"]["city"] = cart.bill_address.city;
+                        $scope.newOrder["bill_address"]["country"] = cart.bill_address.country;
+                        $scope.newOrder["bill_address"]["email"] = cart.bill_address.email;
+                        $scope.newOrder["bill_address"]["ext"] = cart.bill_address.ext;
+                        $scope.newOrder["bill_address"]["firstname"] = cart.bill_address.firstname;
+                        $scope.newOrder["bill_address"]["lastname"] = cart.bill_address.lastname;
+                        $scope.newOrder["bill_address"]["phone"] = cart.bill_address.phone;
+                        $scope.newOrder["bill_address"]["zipcode"] = cart.bill_address.zipcode;
+                        $scope.newOrder["bill_address"]["state"] = cart.bill_address.state;
+                        $scope.newOrder["shipping_address"]["address"] = cart.shipping_address.address;
+                        $scope.newOrder["shipping_address"]["address2"] = cart.shipping_address.address_2;
+                        $scope.newOrder["shipping_address"]["city"] = cart.shipping_address.city;
+                        $scope.newOrder["shipping_address"]["country"] = cart.shipping_address.country;
+                        $scope.newOrder["shipping_address"]["email"] = cart.shipping_address.email;
+                        $scope.newOrder["shipping_address"]["ext"] = cart.shipping_address.ext;
+                        $scope.newOrder["shipping_address"]["firstname"] = cart.shipping_address.firstname;
+                        $scope.newOrder["shipping_address"]["lastname"] = cart.shipping_address.lastname;
+                        $scope.newOrder["shipping_address"]["phone"] = cart.shipping_address.phone;
+                        $scope.newOrder["shipping_address"]["zipcode"] = cart.shipping_address.zipcode;
+                        $scope.newOrder["shipping_address"]["state"] = cart.shipping_address.state;
+                        $scope.newOrder["product"] = cart.product;
+                        var query = {};
+                        query.table = "orders__cstore";
+                        query.operations = [$scope.newOrder];
+                        //console.log(JSON.stringify(query));
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        if (callBackData.code == 200 && callBackData.status == "ok") {
+                            //$scope.removeCart(cart);
+                        //$("#popupMessage").html("Saved");
+                        //$('.popup').toggle("slide");
+                        } else {
+                        $("#popupMessage").html(callBackData.response);
+                        $('.popup').toggle("slide");
+                        }
+                        if (!$scope.$$phase) {
+                        $scope.$apply();
+                        }
+                        }, function (err) {
+                        $("#popupMessage").html(err);
+                        $('.popup').toggle("slide");
+                        });
+                    }
+                    $scope.removeCart = function (cart) {
+                        console.log(JSON.stringify(cart.product.length));
                         $scope.removeShoppingCart = {};
-                        $scope.loadingStatus = true;
-                        $scope.removeShoppingCartProduct["_id"] =$scope.cartData._id;
-                        $scope.removeShoppingCartProduct["__type__"] = "delete";
+                        $scope.removeShoppingCart["_id"] =cart._id;
+                        $scope.removeShoppingCart["__type__"] = "delete";
                         var query = {};
                         query.table = "shopping_cart__cstore";
                         query.operations = [$scope.removeShoppingCart];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            $scope.loadingStatus = false;
+                            $scope.loadingShoppingCartData=true;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $("#popupMessage").html("Deleted");
-                                $('.popup').toggle("slide");
+                                if(cart.product.length >0){
+                                    $scope.cartProducts.length=$scope.cartProducts.length-cart.product.length;
+                                    for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                                        //if ($scope.shoppingCartProducts[i]._id == product._id) {
+                                        $scope.shoppingCartProducts.splice(i, cart.product.length);
+                                        i--;
+                                        //}
+                                    }
+                                }
+                                 window.location.href = "#!/payment";
+
+                                //$("#popupMessage").html("Deleted");
+                                //$('.popup').toggle("slide");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
