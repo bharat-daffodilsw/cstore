@@ -1028,7 +1028,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 //$scope.cartData = cartData.response.data;
                 //$scope.cartProducts=cartData.response.data[0].product;
                 //console.log(cartData.response.data[0].product.length);
-                $scope.cartProducts.length = cartData.response.data[0].product.length;
+                if(cartData.response.data && cartData.response.data.length){
+                    $scope.cartProducts.length = cartData.response.data[0].product.length;
+                }
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
                 $('.popup').toggle("slide");
@@ -1053,8 +1055,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         productObj.cost = {"amount": product.cost.amount, "type": {"currency": "usd"}};
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;
+        //$scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};
         $scope.newShoppingCartProduct["__type__"] = "insertifnotexist";
-        $scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};
         var query = {};
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.newShoppingCartProduct];
@@ -1089,22 +1091,24 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
             $scope.loadingShoppingCartData = false;
             $scope.cartData = cartData.response.data[0];
-            $scope.shoppingCartProducts = cartData.response.data[0].product;
-            $scope.savedBillingAddress = cartData.response.data[0].bill_address;
-            $scope.savedShippingAddress = cartData.response.data[0].shipping_address;
-            for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
-                $scope.shoppingCartProducts[i].total = $scope.shoppingCartProducts[i].quantity * $scope.shoppingCartProducts[i].cost.amount;
-                //console.log($scope.shoppingCartProducts[i].total);
-                $scope.grandTotal += $scope.shoppingCartProducts[i].total;
-            }
-            //console.log($scope.grandTotal);
+            if(cartData.response.data && cartData.response.data.length){
+                $scope.shoppingCartProducts = cartData.response.data[0].product;
+                $scope.savedBillingAddress = cartData.response.data[0].bill_address;
+                $scope.savedShippingAddress = cartData.response.data[0].shipping_address;
+                for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                    $scope.shoppingCartProducts[i].total = $scope.shoppingCartProducts[i].quantity * $scope.shoppingCartProducts[i].cost.amount;
+                    //console.log($scope.shoppingCartProducts[i].total);
+                    $scope.grandTotal += $scope.shoppingCartProducts[i].total;
+                }
+            }//console.log($scope.grandTotal);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
     $scope.removeFromCart = function (product) {
-        //console.log(product);
+        console.log(product);
+        if(product){
         $scope.removeShoppingCartProduct = {};
         $scope.loadingStatus = true;
         $scope.products = [];
@@ -1112,7 +1116,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.products.push({"_id": product._id, "__type__": "delete"});
         $scope.removeShoppingCartProduct["product"] = $scope.products;
         $scope.removeShoppingCartProduct["__type__"] = "insertifnotexist";
-        $scope.removeShoppingCartProduct["$inc"] = {"sub_total": -(product.cost.amount)};
+        //$scope.removeShoppingCartProduct["$inc"] = {"sub_total": -(product.cost.amount)};
         var query = {};
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.removeShoppingCartProduct];
@@ -1139,6 +1143,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $("#popupMessage").html(err);
             $('.popup').toggle("slide");
         });
+        }
     }
 });
 
@@ -3586,7 +3591,7 @@ cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
     $scope.grandTotal = 0;
     $scope.getShoppingCart();
 });
-cstore.controller('billingAddressCtrl', function ($scope, $appService) {
+cstore.controller('billingAddressCtrl', function ($scope, $appService,$routeParams) {
     $appService.auth();
     $scope.getSavedAddress = function () {
         $scope.loadingSavedAddress = true;
@@ -3606,7 +3611,7 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
         })
     }
     $scope.getSavedAddress();
-    if($scope.getURLParam("q")!="setBackData"){
+    if($routeParams.q!="setBackData"){
         $scope.getEditCountries(null, null, null,$scope.data);
         $scope.billingdata.same_shipping_address=true;
         //if(!$scope.billingdata.same_shipping_address){

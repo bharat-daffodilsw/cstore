@@ -743,9 +743,11 @@ tr {
     width:65%;}
 
 .saved_address {
-    margin-left:50px;
-    font-size:17px;
-    margin-bottom:15px;}
+    text-align: center;
+	font-size: 17px;
+	color: #000;
+	font-weight: bold;
+	margin-bottom: 15px;}
 
 .fix_address {
     margin-top:10px;
@@ -757,14 +759,15 @@ tr {
     overflow:hidden;
 	text-overflow: ellipsis;
 	display: -webkit-box;
-	-webkit-line-clamp: 3;
+	-webkit-line-clamp: 2;
+	margin-bottom:10px;
 	-webkit-box-orient: vertical;}
 
 .saved_1 {
     padding:0 10px;}
 
 .fix_height{
-    height:25px;}
+	height:40px;}
 
 .saved_l_bar {
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
@@ -1373,7 +1376,7 @@ div.save_close.right_btn {
     padding:0px;
     margin:10px;}
 	
-	.cstore_payment {
+.cstore_payment {
     width:65%;
     text-align:center;
     margin-top:10px;
@@ -1460,12 +1463,9 @@ box-sizing: border-box;
 }
 
 div.hlpydt div.hlmkpy input[type='submit'] {
-background: #FF9201;
-border-radius: 0;
-padding:7px;
-font-weight:bold;
+background: #e7c271;
+padding:10px;
 font-size:16px;
-color:#fff;
 }
 
 .htdar {
@@ -1491,7 +1491,7 @@ padding: 0 10px !important;
 	margin-top:30px;}
 	
 .option_selector_cc a {
-	color:#FF9201;
+	color:#000;
 	font-weight:bold;}
 	
 .CCcvv {
@@ -1511,3 +1511,35 @@ padding: 0 10px !important;
     margin-top:10px;
     font-size:16px;
     width:70%;}
+	
+.total_amount {
+	font-size: 17px;
+	margin-bottom: 15px;
+	font-weight: bold;}
+	
+.title {
+	text-align:center;
+	font-size:16px;}
+
+.survey_dic {
+	margin-top:10px;}
+	
+.survey_left {
+	width:30%;
+	text-align:center;
+	font-weight:bold;
+	font-size:18px;}
+	
+.survey_right {
+	width:68%;
+	font-size:16px;}
+	
+.clear {
+	clear:both;}
+	
+.survey_title {
+	margin-top:20px;	
+	text-align:center;
+	font-size:18px;
+	font-weight:bold;
+	color:#e7c271;}
