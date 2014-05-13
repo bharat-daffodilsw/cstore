@@ -608,7 +608,7 @@ tr {
     padding:5px;}
 
 .add_delete {
-    margin-top:10px;
+    padding:10px 10px 10px 0px;
     width:98%;}
 
 .table_1 {
@@ -759,7 +759,8 @@ tr {
     overflow:hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
+    margin-bottom:10px;
     -webkit-box-orient: vertical;}
 
 .saved_1 {
@@ -1356,10 +1357,6 @@ span.btn:hover {
     color:black;
 }
 
-div.save_close.right_btn {
-    margin-right: 357px;
-}
-
 .total {
     margin-right: 57px;
 }
@@ -1515,3 +1512,61 @@ div.cart-container {
     font-size: 17px;
     margin-bottom: 15px;
     font-weight: bold;}
+
+.survey_dic {
+    padding:10px;
+    width:100%}
+
+.survey_left {
+    width:30%;
+    text-align:center;
+    font-weight:bold;
+    font-size:18px;}
+
+.survey_que {
+    width:40%;
+    text-align:center;
+    font-size:16px;
+    font-weight:bold;}
+
+.survey_right {
+    width:68%;
+    font-size:16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;}
+
+.survey_ans {
+    width:58%;
+    font-size:16px;}
+
+.clear {
+    clear:both;}
+
+.survey_title {
+    margin-top:10px;
+    text-align:center;
+    font-size:18px;
+    font-weight:bold;
+    color:#e7c271;}
+
+.survey_form {
+    border-bottom:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;
+    border-left:1px solid #CCC;
+    width:100%;}
+
+.survey_ans textarea {
+    width:95%;
+    height:60px;}
+
+.survey_all {
+    width:80%;
+    margin:auto;}
+
+.more_btn {
+    font-weight:bold;
+    padding:0px 10px 10px 0;}

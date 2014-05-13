@@ -94,7 +94,7 @@ cstore.config(
             }).when('/edit-promotion', {
                 templateUrl: '../add-promotion',
                 controller: 'addPromotionCtrl'
-            })//changes made by anuradha
+            })
             .when('/training-sessions', {
                 templateUrl: '../training-sessions',
                 controller: 'trainingSessionCtrl'
@@ -152,6 +152,12 @@ cstore.config(
             }).when('/order-review', {
                 templateUrl: '../order-review',
                 controller: 'orderReviewCtrl'
+            }).when('/all-surveys', {
+                templateUrl: '../all-surveys',
+                controller: 'allAssignedSurveysCtrl'
+            }).when('/survey',{
+                templateUrl:'../surveydetail',
+                controller:'surveyDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -1269,9 +1275,9 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
     $scope.getAssignedTrainingSessions = function (maxRow, searchText) {
         $scope.loadingAssignedTrainingSessionData = true;
         //console.log($scope.currentUser.data.storeid);
-        var query = {"table": "storemanager_trainingsession__cstore"};
+        var query = {"table": "training_session__cstore"};
 
-        query.columns = ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description"];
+        query.columns = ["store_manager_id","title","description"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         if (searchText && searchText != "") {
@@ -3249,10 +3255,10 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
         $scope.loadingSessionDetailData = true;
         $scope.videoUrls = [];
         $scope.files = [];
-        var query = {"table": "storemanager_trainingsession__cstore"};
-        query.columns = ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description", "training_session_id.file", "training_session_id.video_url", "training_session_id.training_category_id"];
+        var query = {"table": "training_session__cstore"};
+        query.columns = ["store_manager_id", "description","file","title","training_category_id","video_url"];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "training_session_id._id": $routeParams.sessionid};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.sessionid};
         //if (searchText && searchText != "") {
         //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         //}
@@ -3263,11 +3269,11 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
             //console.log(JSON.stringify(sessionDetailData.response.data));
             $scope.loadingSessionDetailData = false;
             $scope.session = sessionDetailData.response.data;
-            if (sessionDetailData.response.data[0].training_session_id.video_url) {
-                $scope.videoUrls = sessionDetailData.response.data[0].training_session_id.video_url;
+            if (sessionDetailData.response.data[0].video_url) {
+                $scope.videoUrls = sessionDetailData.response.data[0].video_url;
             }
-            if (sessionDetailData.response.data[0].training_session_id.file) {
-                $scope.files = sessionDetailData.response.data[0].training_session_id.file;
+            if (sessionDetailData.response.data[0].file) {
+                $scope.files = sessionDetailData.response.data[0].file;
             }
             if ($scope.videoUrls || $scope.videoUrls != "undefined" || $scope.videoUrls != "") {
                 for (var i = 0; i < $scope.videoUrls.length; i++) {
@@ -3276,7 +3282,7 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
                     }
                 }
             }
-            console.log($scope.files);
+            //console.log($scope.files);
             if ($scope.files || $scope.files != "undefined" || $scope.files != "") {
                 for (var i = 0; i < $scope.files.length; i++) {
                     if ((/\.(doc|docx)$/gi).test($scope.files[i].name)) {
@@ -3318,12 +3324,12 @@ cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $rou
 
         if (searchText && searchText != "") {
             query.childs = [
-                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid, "training_session_id.title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+                {"alias": "trainingCategoryWiseData", "query": {"table": "training_session__cstore", "columns": ["store_manager_id", "title", "description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid, "title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_category_id", "parentcolumn": "_id"}
             ]
         }
         else {
             query.childs = [
-                {"alias": "trainingCategoryWiseData", "query": {"table": "storemanager_trainingsession__cstore", "columns": ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid}}, "relatedcolumn": "training_session_id.training_category_id", "parentcolumn": "_id"}
+                {"alias": "trainingCategoryWiseData", "query": {"table": "training_session__cstore", "columns": ["store_manager_id", "title", "description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid}}, "relatedcolumn": "training_category_id", "parentcolumn": "_id"}
             ];
         }
         //console.log(JSON.stringify(query));
@@ -3360,14 +3366,14 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
             return false;
         }
         $scope.categoryData.loadingData = true;
-        var query = {"table": "storemanager_trainingsession__cstore"};
-        query.columns = ["store_manager_id", "training_session_id", "training_session_id.title", "training_session_id.description", "training_session_id.training_category_id"];
+        var query = {"table": "training_session__cstore"};
+        query.columns = ["store_manager_id", "title", "description", "training_category_id"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         if (filter && filter != undefined && filter != "undefined") {
-            query.filter["training_session_id.training_category_id._id"] = filter;
+            query.filter["training_category_id._id"] = filter;
             if (searchText && searchText != "") {
-                query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+                query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
             }
         }
         else {
@@ -3434,12 +3440,12 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
             return false;
         }
         $scope.assignedSurveyData.loadingData = true;
-        var query = {"table": "storemanager_survey__cstore"};
-        query.columns = ["store_manager_id", "survey_id", "survey_id.title", "survey_id.description"];
+        var query = {"table": "surveys__cstore"};
+        query.columns = ["store_manager_id", "title", "description"];
         query.filter = {};
-        query.filter["store_manager_id"] = $scope.currentUser.data.storeid;
+        query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         if (searchText && searchText != "") {
-            query.filter["survey_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.max_rows = 4;
         query.cursor = cursor;
@@ -3482,7 +3488,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
             $('.popup').toggle("slide");
         })
     }
-    $scope.getInitialData = function (cursor) {
+    $scope.getInitialSurveyData = function (cursor) {
         $scope.getAllAssignedSurveys(cursor, $routeParams.search);
     }
 });
@@ -3641,4 +3647,49 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService,$routePara
 cstore.controller('orderReviewCtrl', function ($scope, $appService) {
     $appService.auth();
     $scope.getShoppingCart();
+});
+
+/*************Survey Detail Ctrl***************/
+cstore.controller('surveyDetailCtrl', function ($scope, $appService,$routeParams) {
+    $appService.auth();
+    $scope.getSurveyDetail = function (searchText) {
+        $scope.surveyQuestions = [
+            {"optionArray": [], "optionType":"" }
+        ];
+        $scope.loadingSurveyDetailData = true;
+        var query = {"table": "surveys__cstore"};
+        query.columns = ["description","title","survey_question"];
+        query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.surveyid};
+        //if (searchText && searchText != "") {
+        //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        //}
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyDetailData) {
+            console.log(JSON.stringify(surveyDetailData));
+            $scope.loadingSurveyDetailData = false;
+            $scope.survey = surveyDetailData.response.data[0];
+            if (surveyDetailData.response.data[0].survey_question) {
+                $scope.surveyQuestions = surveyDetailData.response.data[0].survey_question;
+            }
+            if($scope.surveyQuestions.length >0){
+                for(var i =0; i<$scope.surveyQuestions.length;i++){
+                    if($scope.surveyQuestions[i].options){
+                        $scope.surveyQuestions[i].optionArray = $scope.surveyQuestions[i].options;
+                        console.log($scope.surveyQuestions[i].optionArray);
+                    }
+                    console.log($scope.surveyQuestions[i].survey_type);
+                }
+            }
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getSurveyDetail();
 });
