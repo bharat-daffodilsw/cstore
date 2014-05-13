@@ -3658,7 +3658,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService,$routeParams
     $appService.auth();
     $scope.getSurveyDetail = function (searchText) {
         $scope.surveyQuestions = [
-            {"optionArray": [], "optionType":"" }
+            {"options": [{"optionVal":"","optionStatus":false}], "optionType":"" }
         ];
         $scope.loadingSurveyDetailData = true;
         var query = {"table": "surveys__cstore"};
@@ -3672,7 +3672,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService,$routeParams
 
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyDetailData) {
-            console.log(JSON.stringify(surveyDetailData));
+            //console.log(JSON.stringify(surveyDetailData));
             $scope.loadingSurveyDetailData = false;
             $scope.survey = surveyDetailData.response.data[0];
             if (surveyDetailData.response.data[0].survey_question) {
@@ -3681,10 +3681,18 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService,$routeParams
             if($scope.surveyQuestions.length >0){
                 for(var i =0; i<$scope.surveyQuestions.length;i++){
                     if($scope.surveyQuestions[i].options){
-                        $scope.surveyQuestions[i].optionArray = $scope.surveyQuestions[i].options;
-                        console.log($scope.surveyQuestions[i].optionArray);
+                        //$scope.surveyQuestions[i].optionArray = $scope.surveyQuestions[i].options;
+                        for(var j=0;j<$scope.surveyQuestions[i].options.length;j++){
+
+                            if($scope.surveyQuestions[i].options.length){
+                                $scope.surveyQuestions[i].options[j]={"optionVal":$scope.surveyQuestions[i].options[j],"optionStatus":false};
+                            }
+
+                            //console.log( $scope.surveyQuestions[i].options[j]);
+                        }
+
                     }
-                    console.log($scope.surveyQuestions[i].survey_type);
+
                 }
             }
         }, function (jqxhr, error) {
@@ -3696,6 +3704,24 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService,$routeParams
             }
     }
     $scope.getSurveyDetail();
+    $scope.clearSubmittedSurvey = function (path) {
+        for (i = 0; i < $scope.surveyQuestions.length; i++){
+            if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="radio") {
+
+               $scope.surveyQuestions[i].radioAns=false;
+
+            }
+            else if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="checkbox") {
+                for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
+                    $scope.surveyQuestions[i].options[j].optionStatus = false;
+                    }
+            }
+            else {
+                $scope.surveyQuestions[i].answer = "";
+            }
+        }
+        window.location.href = "#!/" + path;
+    }
 });
 
 cstore.controller('paymentCtrl', function ($scope, $appService) {

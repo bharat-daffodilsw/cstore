@@ -5799,8 +5799,8 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</div>' +
             '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="setPaymentPath(cartData._id)"><a href="">Payment</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="setPaymentPath(cartData._id)"><a href="">Payment</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -6040,19 +6040,23 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
             '<div class="survey_dic pull-left" ng-repeat="surveyQuestion in surveyQuestions">'+
             '<div class="survey_que pull-left">{{surveyQuestion.question}}</div>'+
             '<div class="survey_ans pull-right">' +
-            '<form action ng-if="surveyQuestion.survey_type!=\'subjective\'">' +
-            '<div ng-repeat="option in surveyQuestion.optionArray">' +
-            '<input type="{{surveyQuestion.survey_type}}" name="option" ng-model="answer" value="{{option}}"/> {{option}}</div></form>' +
-            '<textarea ng-if="surveyQuestion.survey_type==\'subjective\'" ng-model="answer" ></textarea></div>' +
+            '<form action ng-if="surveyQuestion.survey_type==\'radio\'">' +
+            '<div ng-repeat="option in surveyQuestion.options">' +
+            '<input type="radio" name="option" value="{{option.optionVal}}" ng-model="surveyQuestion.radioAns"/> {{option.optionVal}}</div></form>' +
+            '<form action ng-if="surveyQuestion.survey_type==\'checkbox\'">' +
+            '<div ng-repeat="option in surveyQuestion.options">' +
+            '<input type="checkbox" value="{{option.optionVal}}" ng-model="option.optionStatus"/> {{option.optionVal}}</div></form>' +
+            '<textarea ng-if="surveyQuestion.survey_type==\'subjective\'" ng-model="surveyQuestion.answer" ></textarea></div>' +
             '</div>'+
-            '<div class="add_delete pull-right"><div class="add_btn pull-right"><button type="button" ng-click=""><a href="">Cancel</a></button></div><div class="delete_btn pull-right">'+
-            '<button type="button" ng-click=""><a href="">Submit</a></button></div></div>'+
+            '<div class="add_delete pull-right"><div class="add_btn pull-right"><button type="button" ng-click="clearSubmittedSurvey(\'all-surveys\')"><a href="">Cancel</a></button></div><div class="delete_btn pull-right">'+
+            '<button type="button" ng-click="submitSurvey()"><a href="">Submit</a></button></div></div>'+
             '</div>' +
             '<div class="loadingImage" ng-hide="!loadingSurveyDetailData"><img src="images/loading.gif"></div>'+
             '</div>',
         compile: function () {
             return {
                 pre: function ($scope) {
+
                 },
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
@@ -6065,12 +6069,49 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                 query.table = "answered_survey__cstore";
                                 $scope.newSurveyAnswer["survey_id"] = {"_id":$scope.survey._id};
                                 $scope.newSurveyAnswer["store_id"] = {"_id":$scope.currentUser.data.storeid};
+
                                 for (i = 0; i < $scope.surveyQuestions.length; i++){
-                                    console.log($scope.surveyQuestions[i].optionArray);
-                                    //for (j = 0; j < $scope.surveyQuestions[i].optionArray.length; j++){
-                                    //    console.log($scope.answer);
-                                    //}
+                                    if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="radio") {
+                                        //for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
+
+                                        $scope.newSurveyAnswer["answers"][i]=$scope.surveyQuestions[i].radioAns;
+                                        console.log($scope.surveyQuestions[i].radioAns);
+                                        //}
+                                    }
+                                    else if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="checkbox") {
+                                        var temp=[];
+                                        for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
+                                            if($scope.surveyQuestions[i].options[j].optionStatus){
+                                                temp.push($scope.surveyQuestions[i].options[j].optionVal);
+
+                                                console.log($scope.surveyQuestions[i].options[j].optionVal);
+                                            }
+                                        }
+                                        $scope.newSurveyAnswer["answers"][i]=temp;
+                                    }
+                                    else {
+                                        console.log($scope.surveyQuestions[i].answer);
+                                        $scope.newSurveyAnswer["answers"][i]=$scope.surveyQuestions[i].answer;
+                                    }
                                 }
+                                query.operations = [$scope.newSurveyAnswer];
+                                $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                    $scope.loadingSurveyDetailData = false;
+                                    if (callBackData.code == 200 && callBackData.status == "ok") {
+                                        $("#popupMessage").html("Submitted");
+                                        $('.popup').toggle("slide");
+                                        $scope.clearSubmittedSurvey('all-surveys');
+                                    } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                        $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                        $('.popup').toggle("slide");
+                                    }
+                                    else {
+                                        $("#popupMessage").html("some error while submitting survey");
+                                        $('.popup').toggle("slide");
+                                    }
+                                }, function (err) {
+                                    console.log(err.stack);
+                                });
                             }
                             else {
                                 $("#popupMessage").html("Please login first");
