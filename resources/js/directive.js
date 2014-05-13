@@ -6053,7 +6053,6 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.getInitialSurveyData(0);
                 },
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
