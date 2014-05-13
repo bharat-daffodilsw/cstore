@@ -3961,13 +3961,17 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                 post: function ($scope) {
                     $scope.getOperationData = function (index) {
                         var push = true;
-                        for (j = 0; j < $scope.storeManager.length; j++) {
-                            if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
-                                $scope.storeManager.splice(j, 1);
-                                push = false;
-                                break;
-                            }
-                        }
+						if($scope.storeManager && $scope.storeManager.length > 0){
+							for (j = 0; j < $scope.storeManager.length; j++) {
+								if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+									$scope.storeManager.splice(j, 1);
+									push = false;
+									break;
+								}
+							}
+						}else{
+							$scope.storeManager = [];
+						}
                         if (push) {
                             $scope.storeManager.push({"_id": $scope.storesName[index]._id});
                         }
@@ -4259,7 +4263,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Assign Store </th><th></th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
-            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id)" href>Assign</a></td>' +
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id)" href>Assign</a></td><td ><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a></td>' +
             '<td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
@@ -4269,6 +4273,9 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                     }
 					$scope.setSurveyAssignedPath = function (sessionid) {
                         window.location.href = "#!/assign-survey-store?id=" + sessionid;
+                    }
+					$scope.setSurveyAnsweredPath = function (sessionid) {
+                        window.location.href = "#!/answered-survey-store?id=" + sessionid;
                     }
                     //changes made 2904
                     $scope.showAssignPopup = function (survey) {
@@ -5792,7 +5799,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</div>' +
             '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click><a href="">Payment</a></button></div>' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="setPaymentPath(cartData._id)"><a href="">Payment</a></button></div>' +
             '<div class="delete_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
             '</div>' +
             '</div>' +
@@ -5859,6 +5866,9 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post: function ($scope) {
+					$scope.setPaymentPath = function (paymentId){
+						window.location.href = "#!/payment?id=" + paymentId;
+					}
                     $scope.setAddressState = function(cart){
                         //console.log(JSON.stringify(cart));
                         if(cart.bill_address){
@@ -5986,6 +5996,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
         }
     }
 }]);
+
 /*********************All Survey****************************************/
 cstore.directive('allAssignedSurveys', ['$appService', function ($appService, $scope) {
     return{
@@ -6012,6 +6023,7 @@ cstore.directive('allAssignedSurveys', ['$appService', function ($appService, $s
         }
     }
 }]);
+/************************* Survey Detail****************************/
 cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
@@ -6041,75 +6053,195 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
         compile: function () {
             return {
                 pre: function ($scope) {
-
+                    $scope.getInitialSurveyData(0);
                 },
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
-                    $scope.submitSurvey = function () {
-                        if ($scope.CSession) {
-                            //$scope.loadingSurveyDetailData = true;
-                            var query = {};
-                            $scope.newSurveyAnswer = {};
-                            $scope.newSurveyAnswer["answers"]={};
-                            query.table = "answered_survey__cstore";
-                            $scope.newSurveyAnswer["survey_id"] = {"_id":$scope.survey._id};
-                            $scope.newSurveyAnswer["store_id"] = {"_id":$scope.currentUser.data.storeid};
-                            for (i = 0; i < $scope.surveyQuestions.length; i++){
-                                console.log($scope.surveyQuestions[i].optionArray);
-                                //for (j = 0; j < $scope.surveyQuestions[i].optionArray.length; j++){
-                                //    console.log($scope.answer);
-                                //}
+                        $scope.submitSurvey = function () {
+                            if ($scope.CSession) {
+                                //$scope.loadingSurveyDetailData = true;
+                                var query = {};
+                                $scope.newSurveyAnswer = {};
+                                $scope.newSurveyAnswer["answers"]={};
+                                query.table = "answered_survey__cstore";
+                                $scope.newSurveyAnswer["survey_id"] = {"_id":$scope.survey._id};
+                                $scope.newSurveyAnswer["store_id"] = {"_id":$scope.currentUser.data.storeid};
+                                for (i = 0; i < $scope.surveyQuestions.length; i++){
+                                    console.log($scope.surveyQuestions[i].optionArray);
+                                    //for (j = 0; j < $scope.surveyQuestions[i].optionArray.length; j++){
+                                    //    console.log($scope.answer);
+                                    //}
+                                }
                             }
-                            //for (i = 0; i < $scope.questions.length; i++) {
-                            //    if (!$scope.questions[i].question) {
-                            //        $("#popupMessage").html("Please enter question " + Number(i + 1) + ".");
-                            //        $('.popup').toggle("slide");
-                            //        return;
-                            //    }
-                            //    newSession["survey_question"][i] = {"question": $scope.questions[i].question};
-                             //   newSession["survey_question"][i]["survey_type"] = $scope.questions[i].type.value;
-                             //   if ($scope.questions[i].type.value != "subjective") {
-                             //       newSession["survey_question"][i]["options"] = [];
-                             //       if ($scope.questions[i].optionArr.length < 2) {
-                             //           $("#popupMessage").html("Please add at least two options of question " + Number(i + 1) + ".");
-                             //           $('.popup').toggle("slide");
-                             //           return;
-                             //       }
-                             //       for (j = 0; j < $scope.questions[i].optionArr.length; j++) {
-                             //           if (!$scope.questions[i].optionArr[j].options || ($scope.questions[i].optionArr[j].options && $scope.questions[i].optionArr[j].options.length == 0)) {
-                             //               $("#popupMessage").html("Please enter option " + Number(j + 1) + " of question " + Number(i + 1) + ".");
-                             //               $('.popup').toggle("slide");
-                             //               return;
-                             //           }
-                             //           newSession["survey_question"][i]["options"][j] = $scope.questions[i].optionArr[j].options;
-                             //       }
-                             //   }
-                            //}
-                            //newSession["survey_question"] = {data: newSession["survey_question"], "override": "true"};
-                            //query.operations = [newSession];
-                            //$appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                            //    $scope.loadingAddTrainingdata = false;
-                            //    if (callBackData.code == 200 && callBackData.status == "ok") {
-                            //        $("#popupMessage").html("Saved successfully");
-                            //        $('.popup').toggle("slide");
-                            //        $scope.setPath('surveys');
-                            //    } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                            //        $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                            //        $('.popup').toggle("slide");
-                            //    }
-                            //    else {
-                             //       $("#popupMessage").html("some error while saving survey");
-                             //       $('.popup').toggle("slide");
-                             //   }
-                             //   $scope.clearSurveyContent();
-                            //}, function (err) {
-                            //    console.log(err.stack);
-
-                           // });
-                        } else {
-                            $("#popupMessage").html("Please login first");
-                            $('.popup').toggle("slide");
+                            else {
+                                $("#popupMessage").html("Please login first");
+                                $('.popup').toggle("slide");
+                            }
                         }
+                    }
+                }
+            }
+        }
+}]);
+
+cstore.directive('payment', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="admin_menu pull-left"><div class="billing_info pull-left">Shipping Address</div>' +
+            '<div class="billing_info pull-left">Order</div>' +
+            '<div class="billing_info active_1 pull-left">Payment</div></div>' +
+            '<div class="cstore_payment pull-left">' +
+            '<div class="cstore-payment-content-left"><div class="cstore-payment-button pull-left">' +
+            '<ul>' +
+            '<li class="option_selector_cc"><a href="javascript:void(0);" onclick="show_payment_option(\'cc\');">Credit/Debit Card</a></li>' +
+            '</ul>' +
+            '</div>' +
+            '<div class="hlpydt pu_cnt" style="display: block;">' +
+            '<div class="hccwrp">' +
+            '<div class="storedCC" style="display: none;">' +
+            '<span>Choose from Saved Card(s)</span>' +
+            '<div class="hcctb"><a class="hcctbat" href="javascript:void(0);" style="display: none;">Remove Card</a></div>' +
+            '<div class="hysv">' +
+            '<div class="hvs">' +
+            '<select class="CCstore" style="background-color: #fff;">' +
+            '<option value="0">New Card</option>' +
+            '</select>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="cart-container">' +
+            '<div class="pu_cnt dn" style="display: none;"></div>' +
+            '<ul class="we-accept-cards cards CC">' +
+            '<li class="visa on pull-right" style="background-position-y: 0px;"></li>' +
+            '<li class="amex on pull-right" style="background-position-y: 0px;"></li>' +
+            '<li class="mastercard on pull-right" style="background-position-y: 0px;"></li>' +
+            '<li class="maestro on pull-right" style="background-position-y: 0px;"></li>' +
+            '<li class="diners on pull-right" style="background-position-y: 0px;"></li>' +
+            '</ul>' +
+            '<div class="hlno"><input class="CCnum" tabindex="2" type="text" placeholder="Card Number" ng-model="card_num"></div>' +
+            '<div class="hlnmcrd"><input class="CCname" tabindex="3" type="text" placeholder="Name on the card" ng-model="card_name">' +
+            '<span class="hlcvc"><input class="CCcvv pull-right" maxlength="3" tabindex="6" type="text" placeholder="CVV" ng-model="cvv"></span></div>' +
+            '<div class="hlexp">' +
+            '<span>' +
+            '<select class="htflb htdar" tabindex="4" ng-model="expiry_month">' +
+            '<option>Month</option>' +
+            '<option value="01">01</option>' +
+            '<option value="02">02</option>' +
+            '<option value="03">03</option>' +
+            '<option value="04">04</option>' +
+            '<option value="05">05</option>' +
+            '<option value="06">06</option>' +
+            '<option value="07">07</option>' +
+            '<option value="08">08</option>' +
+            '<option value="09">09</option>' +
+            '<option value="10">10</option>' +
+            '<option value="11">11</option>' +
+            '<option value="12">12</option>' +
+            '</select>' +
+            '</span>' +
+            '<span>' +
+            '<select class="htflb htdar" tabindex="5" ng-model="expiry_year">' +
+            '<option>Year</option>' +
+            '<option value="2012">2012</option>' +
+            '<option value="2013">2013</option>' +
+            '<option value="2014">2014</option>' +
+            '<option value="2015">2015</option>' +
+            '<option value="2016">2016</option>' +
+            '<option value="2017">2017</option>' +
+            '<option value="2018">2018</option>' +
+            '<option value="2019">2019</option>' +
+            '<option value="2020">2020</option>' +
+            '<option value="2021">2021</option>' +
+            '<option value="2022">2022</option>' +
+            '<option value="2023">2023</option>' +
+            '<option value="2024">2024</option>' +
+            '<option value="2025">2025</option>' +
+            '<option value="2026">2026</option>' +
+            '<option value="2027">2027</option>' +
+            '<option value="2028">2028</option>' +
+            '<option value="2029">2029</option>' +
+            '<option value="2030">2030</option>' +
+            '<option value="2031">2031</option>' +
+            '<option value="2032">2032</option>' +
+            '<option value="2033">2033</option>' +
+            '<option value="2034">2034</option>' +
+            '<option value="2035">2035</option>' +
+            '<option value="2036">2036</option>' +
+            '</select>' +
+            '<div class="saveCardBarCC" style="display: block; clear: both; font-size: 14px;">' +
+            '<span class="checked"></span> <input class="storeCardFlagCC" name="store-card" type="checkbox"> Save this card for faster checkout (100% Secure)</div>' +
+            '<div class="hlmkpy"><input class="payment1" type="submit" value="Proceed Securely" ng-click="send_payment()"></div>' +
+            '</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="amount_details pull-right">' +
+            '<div class="saved_address">Amount Detail :</div>' +
+            '<div class="saved_1 col-sm-7 col-md-7 pull-left">' +
+            '<div class="fix_height">Subtotal :</div>' +
+            '<div class="fix_height">Shipping Charge :</div>' +
+            '<div class="fix_height">Shipping Discount :</div>' +
+            '<div class="fix_height">GV Discount :</div>' +
+            '<div class="fix_height margin_top">Total :</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
+            '<div class="fix_height text-right"> {{cartdata.subtotal | currency}}</div>' +
+            '<div class="fix_height text-right">{{cartdata.shipping_charges | currency}}</div>' +
+            '<div class="fix_height text-right">0</div>' +
+            '<div class="fix_height text-right">0</div>' +
+            '<div class="fix_height margin_top text-right">{{cartdata.total | currency}}</div>' +
+            '</div>' +
+            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                },
+                post: function ($scope) {
+                    $scope.send_payment = function (){
+                        var payment_details = {
+                            "intent": "sale",
+                            "payer": {
+                                "payment_method": "credit_card",
+                                "funding_instruments": [{
+                                    "credit_card": {
+                                        "type": "visa",
+                                        "number": "4417119669820331",
+                                        "expire_month": "11",
+                                        "expire_year": "2018",
+                                        "cvv2": "123",
+                                        "first_name": "Joe",
+                                        "last_name": "Shopper",
+                                        "billing_address": {
+                                            "line1": "52 N Main ST",
+                                            "city": "Johnstown",
+                                            "state": "OH",
+                                            "postal_code": "43210",
+                                            "country_code": "US"
+                                        }
+                                    }
+                                }]
+                            },
+                            "transactions": [{
+                                "amount": {
+                                    "total": "100",
+                                    "currency": "USD",
+                                    "details": {
+                                        "subtotal": "100",
+                                        "tax": "0.00",
+                                        "shipping": "0.00"}},
+                                "description": "This is the payment transaction description." }]};
+
+                        paypal_sdk.payment.create(payment_details,config_options, function(error, payment){
+                            if(error){
+                                console.error(error);
+                            } else {
+                                console.error(payment);
+                            }
+                        });
                     }
                 }
             }
