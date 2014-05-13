@@ -152,6 +152,9 @@ cstore.config(
             }).when('/order-review', {
                 templateUrl: '../order-review',
                 controller: 'orderReviewCtrl'
+            }).when('/payment', {
+                templateUrl: '../payment',
+                controller: 'paymentCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -3636,4 +3639,32 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService) {
 cstore.controller('orderReviewCtrl', function ($scope, $appService) {
     $appService.auth();
     $scope.getShoppingCart();
+});
+
+cstore.controller('paymentCtrl', function ($scope, $appService) {
+    $appService.auth();
+	$scope.cartdata = {"total" : 0.00,"subtotal" : 0.00,"shipping_charges" : 0.00};
+	$scope.getPayment = function () {
+		var paymentId = $scope.getURLParam("id");
+		if(!paymentId){
+			return;
+		}
+        $scope.loadingStatus = true;
+        var query = {"table": "shopping_cart__cstore"};
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address","same_shipping_address"];
+        query.filter = {"_id":paymentId};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartResp) {
+            $scope.loadingStatus = false;
+			var cartData = cartResp.response.data[0];
+            $scope.cartdata.total = (cartData.total && cartData.total.amount) ? cartData.total.amount : 0.00;
+            $scope.cartdata.subtotal = (cartData.sub_total) ? cartData.sub_total : 0.00;
+            $scope.cartdata.shipping_charges = (cartData.shipping_charges && cartData.shipping_charges.amount) ? cartData.shipping_charges.amount : 0.00;	
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }	
+	$scope.getPayment();
 });
