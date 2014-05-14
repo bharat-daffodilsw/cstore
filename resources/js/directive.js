@@ -3419,25 +3419,6 @@ cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scop
         template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
         compile: function () {
             return{
-                pre: function ($scope) {
-
-                }, post: function ($scope) {
-                    $scope.setUpc = function (offertype) {
-                        if (offertype.name == "SVB" || offertype.name == "MVB") {
-                            $scope.promotiondata.upc = [
-                                {"name": "UPC"},
-                                {"name": "PLU"},
-                                {"name": "DEPT"}
-                            ];
-                        } else {
-                            $scope.promotiondata.upc = [
-                                {"name": "UPC"},
-                                {"name": "PLU"}
-                            ];
-                        }
-                        $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
-                    }
-                }
             }
         }
     }
@@ -3446,33 +3427,93 @@ cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scop
 cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div><select class="brand" ng-model="promotiondata.selectedUpc" ng-options="upc.name for upc in promotiondata.upc" ng-change="getAllAvailableTags(promotiondata.selectedUpc.name)"></select><ul id="grp_tags" data-name="nameOfSelect" class="tagit ui-sortable"><li class="tagit-new"><input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li><ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;"></ul></ul></div>',
+        template: '<div>' +
+            '<select class="brand" ng-model="promotiondata.selectedUpc" ng-options="upc.name for upc in promotiondata.upc" ng-change="changeUpc(promotiondata.selectedUpc.name)">' +
+            '</select>' +
+            '<ul id="upc_grp_tags" data-name="nameOfSelect" class="tagit ui-sortable" ng-show="showUpc">' +
+            '<li class="tagit-new">' +
+            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li>' +
+            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
+            '</ul>' +
+            '</ul>' +
+            '<ul id="plu_grp_tags" data-name="nameOfSelect" class="tagit ui-sortable" ng-show="showPlu">' +
+            '<li class="tagit-new">' +
+            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li>' +
+            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
+            '</ul>' +
+            '</ul>' +
+            '<ul id="group_grp_tags" data-name="nameOfSelect" class="tagit ui-sortable" ng-show="showGroup">' +
+            '<li class="tagit-new">' +
+            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li>' +
+            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
+            '</ul>' +
+            '</ul>' +
+            '</div>',
         compile: function () {
             return{
                 pre: function () {
-                }, post: function ($scope) {
-                    $scope.getAllAvailableTags = function (type) {
-                        var query = {"table": "product_codes__cstore"};
-                        query.columns = ["description", "code"];
-                        query.filter = {"type": type};
-                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-                        var serviceUrl = "/rest/data";
-                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
-                            var availableTags = [];
-                            for (var i = 0; i < productData.response.data.length; i++) {
-                                availableTags.push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-                            }
-                            $('#grp_tags').tagit({"tagSource": availableTags, "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
-                            if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0) {
-                                var fillCodes = $scope.promotiondata.codes;
-                                $('#grp_tags').tagit("fill", fillCodes);
-                            }
-                        }, function (jqxhr, error) {
-                            $("#popupMessage").html(error);
-                            $('.popup').toggle("slide");
-                        })
-                    }
-                    $scope.getAllAvailableTags("UPC");
+                }, post: function ($scope) {				
+					$scope.getAllAvailableTags = function () {
+						var query = {"table": "product_codes__cstore"};
+						query.columns = ["description", "code","type"];
+						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+						var serviceUrl = "/rest/data";
+						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+							$scope.availableTags = {0:[],1:[],2:[]};
+							for (var i = 0; i < productData.response.data.length; i++) {
+								var type = productData.response.data[i].type;
+								switch(type){
+									case "UPC":
+										$scope.availableTags[0].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+										break;
+									case "PLU":
+										$scope.availableTags[1].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+										break;
+									case "GROUP":
+										$scope.availableTags[2].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+										break;
+								}
+							}
+							$('#upc_grp_tags').tagit({"tagSource": $scope.availableTags[0], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+							$('#plu_grp_tags').tagit({"tagSource": $scope.availableTags[1], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+							$('#group_grp_tags').tagit({"tagSource": $scope.availableTags[2], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});							
+							$scope.changeUpc($scope.promotiondata.selectedUpc.name);
+						}, function (jqxhr, error) {
+							$("#popupMessage").html(error);
+							$('.popup').toggle("slide");
+						})
+					}
+					$scope.changeUpc = function (type) {	
+						var i = "";
+						switch(type.toUpperCase()){
+							case "UPC":
+								$scope.showUpc = true;
+								$scope.showPlu = false;
+								$scope.showGroup = false;
+								$scope.parentId = "upc_grp_tags";
+								i = 0;
+								break;
+							case "PLU":
+								$scope.showPlu = true;
+								$scope.showUpc = false;
+								$scope.showGroup = false;
+								$scope.parentId = "plu_grp_tags";
+								i = 1;
+								break;
+							case "GROUP":
+								$scope.showGroup = true;
+								$scope.showUpc = false;
+								$scope.showPlu = false;
+								$scope.parentId = "group_grp_tags";
+								i = 2;
+								break;
+						}
+						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId) {
+							var fillCodes = $scope.promotiondata.codes;
+							$('#'+$scope.parentId).tagit('fill', fillCodes);
+						}
+					}
+					$scope.getAllAvailableTags();
                 }
             }
         }
@@ -3568,7 +3609,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo"/></div>' +
+            '<td class="half_td"><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo" style="width:auto"/></div>' +
             '</td>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
@@ -3596,7 +3637,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
-                            var tags = $scope.showTags($('#grp_tags').tagit("tags"));
+                            var tags = $scope.showTags($('#'+$scope.parentId).tagit("tags"));
                             if (!$scope.promotiondata.promo_title) {
                                 $("#popupMessage").html("Please enter promo title");
                                 $('.popup').toggle("slide");
@@ -3662,8 +3703,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             if ($scope.promotiondata["promotionid"]) {
                                 $scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
                             }
-                            console.log("start date :::::" + $scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute);
-                            console.log("end date :::::" + $scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
                             $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
                             $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
