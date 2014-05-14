@@ -879,6 +879,14 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                 }
                             }
                         }
+                        if (product.programid) {
+                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
+                                if ($scope.productdata.programs[j]._id == product.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
+                                    break;
+                                }
+                            }
+                        }
                         window.location.href = "#!edit-pop?q=" + product._id;
                     }
                     if (!$scope.$$phase) {
@@ -901,6 +909,13 @@ cstore.directive('productCategorySelect', ['$appService', function ($appService,
     return {
         restrict: 'E',
         template: '<select class="search_select" ng-model="productdata.selectedProductCategory" ng-options="productCategory.name for productCategory in productdata.productCategories"></select>'
+    }
+}]);
+
+cstore.directive('programSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="productdata.selectedProgram" ng-options="program.name for program in productdata.programs"></select>'
     }
 }]);
 
@@ -939,10 +954,16 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Price*</div></td>' +
-            '<td class="half_td"><div class="margin_top">POP Image*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
+            '<td class="product_image half_td"><program-select></program-select></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">POP Image*</div></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</tr>' +
             '</table>' +
@@ -981,6 +1002,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.loadingAddProductData = false;
                     $scope.saveProduct = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                        var regDecimalNumberOnly = /^[+]?\d[0-9\.-]*$/
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             if (!$scope.productdata.name) {
@@ -998,8 +1020,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.productdata.cost || !$scope.productdata.cost.amount || !regNumberOnly.test($scope.productdata.cost.amount)) {
-                                $("#popupMessage").html("Please enter price");
+                            if (!$scope.productdata.cost || !$scope.productdata.cost.amount || !regDecimalNumberOnly.test($scope.productdata.cost.amount)) {
+                                $("#popupMessage").html("Please enter valid price");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -1021,6 +1043,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                             $scope.newProduct["short_description"] = $scope.productdata.short_description;
                             //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
                             $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
+                            $scope.newProduct["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
                             $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProduct["image"];
@@ -1448,6 +1471,14 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             store.cityid = (store.cityid) ? {"_id": store.cityid._id} : {"_id": false};
                             $scope.getEditCountries(store.countryid._id, store.stateid._id, store.cityid._id,$scope.storedata);
                         }
+                        if (store.programid) {
+                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
+                                if ($scope.productdata.programs[j]._id == store.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
+                                    break;
+                                }
+                            }
+                        }
                         window.location.href = "#!edit-site-info?q=" + store._id;
                     }
                 }
@@ -1659,11 +1690,11 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Brand*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Company Logo*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><brand></brand></td>' +
-            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '<td class="half_td"><program-select></program-select></td>' +
             '</tr>' +
             '<tr>' +
             '<td><div class="save_close pull-left">' +
@@ -1779,11 +1810,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.oFile.fileExist) {
-                                $("#popupMessage").html("Please upload company logo");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
                             $scope.loadingStatus = true;
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
@@ -1812,7 +1838,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             if ($scope.storedata.selectedCity) {
                                 $scope.newStore["cityid"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
                             }
-                            //$scope.newStore["loyalty_status"] = $scope.storedata.loyalty_status;
+                            $scope.newStore["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
                             $scope.newStore["loyalty_status"] = $scope.storedata.selectedLoyaltyStatus.name;
                             $scope.newStore["pump_brand"] = $scope.storedata.pump_brand;
                             $scope.newStore["pump_model"] = $scope.storedata.pump_model;
@@ -1824,36 +1850,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                             $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
                             $scope.newStore["manager"]["name"] = $scope.storedata.manager.name;
-
-
-                            if (document.getElementById('uploadfile').files.length === 0) {
-                                delete $scope.newStore["company_logo"];
-                                $scope.newStore["company_logo"] = null;
                                 query.operations = [$scope.newStore];
                                 $scope.saveFunction(query);
-                            }
-                            else {
-                                var current_file = {};
-                                current_file.name = $scope.oFile.name;
-                                current_file.type = $scope.oFile.type;
-                                current_file.contents = $scope.oFile.data;
-                                current_file.ask = ASK;
-                                current_file.osk = OSK;
-                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    if (data.response) {
-                                        $scope.newStore["company_logo"] = data.response;
-                                        query.operations = [$scope.newStore];
-                                        $scope.saveFunction(query);
-                                    }
-                                    else {
-                                        $("#popupMessage").html("Some error while uploading image please try again");
-                                        $('.popup').toggle("slide");
-                                    }
-                                }, function (callbackerror) {
-                                    $("#popupMessage").html(callbackerror);
-                                    $('.popup').toggle("slide");
-                                });
-                            }
                         }
                         else {
                             $("#popupMessage").html("Please login first");
@@ -6526,7 +6524,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
 
                 },
                 post: function ($scope) {
-                    $scope.loadingAddProgramData = false;
                     $scope.saveProgram = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
@@ -6542,9 +6539,9 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            $scope.loadingAddProgramData = true;
                             var query = {};
                             query.table = "program__cstore";
-
                             if ($scope.programdata["programid"]) {
                                 $scope.newProgram["_id"] = $scope.programdata["programid"];
                             }
@@ -6595,6 +6592,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                     $scope.saveFunction = function (query) {
                         //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingAddProgramData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
