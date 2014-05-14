@@ -128,6 +128,12 @@ cstore.config(
             }).when('/assign-survey-store', {
                 templateUrl: '/assign-survey-store',
                 controller: 'assignSurveyCtrl'
+            }).when('/answered-survey-store', {
+                templateUrl: '/answered-survey-store',
+                controller: 'answeredStoreCtrl'
+            }).when('/assigned-survey-response', {
+                templateUrl: '/assigned-survey-response',
+                controller: ''
             }).when('/assigned-session-store', {
                 templateUrl: '/assigned-session-store',
                 controller: 'assignedSessionCtrl'
@@ -318,6 +324,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
     $scope.shoppingCartData = {"quantity": []};
+	$scope.answeredSurveys = [];
     for (var i = 1; i <= 10; i++) {
         $scope.shoppingCartData.quantity.push(i);
     }
@@ -2840,18 +2847,18 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
             $('.popup').toggle("slide");
         });
     }
-    $scope.getStoresName(1, 5);
+    $scope.getStoresName(1, 10);
     $scope.setStoreNameOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getStoresName(1, 5, column, searchText);
+        $scope.getStoresName(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getStoresName(1, 5, column, searchText);
+        $scope.getStoresName(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getStoresName(0, 5, column, searchText);
+        $scope.getStoresName(0, 10, column, searchText);
     }
 });
 /************************************ Survey *****************************************************/
@@ -2932,7 +2939,7 @@ cstore.controller('addSurveyCtrl', function ($scope, $appService) {
 
 //changes made by Anuradha
 
-/************************************ Assign Training Session *****************************************************/
+/************************************ Assign Survey *****************************************************/
 cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
@@ -3008,18 +3015,87 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
             $('.popup').toggle("slide");
         });
     }
-    $scope.getSurveyStoresName(1, 5);
+    $scope.getSurveyStoresName(1, 10);
     $scope.setStoreNameOrder = function (sortingCol, sortingType, column, searchText) {
         $scope.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getSurveyStoresName(1, 5, column, searchText);
+        $scope.getSurveyStoresName(1, 10, column, searchText);
     }
     $scope.getMore = function (column, searchText) {
-        $scope.getSurveyStoresName(1, 5, column, searchText);
+        $scope.getSurveyStoresName(1, 10, column, searchText);
     }
     $scope.getLess = function (column, searchText) {
-        $scope.getSurveyStoresName(0, 5, column, searchText);
+        $scope.getSurveyStoresName(0, 10, column, searchText);
+    }
+});
+
+/************************************ Answered Survey Store *****************************************************/
+cstore.controller('answeredStoreCtrl', function ($scope, $appService) {
+    $scope.preCursor = 0
+    $scope.currentCursor = 0;
+    $scope.venderSearch = [
+        {"value": "storename", "name": "Store Name"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
+        if ($scope.loadingStatus) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.preCursor = $scope.currentCursor;
+        } else {
+            $scope.preCursor = $scope.preCursor - limit;
+            $scope.currentCursor = $scope.preCursor;
+        }
+        $scope.loadingStatus = true;
+        var query = {"table": "answered_survey__cstore"};
+        query.columns = [ "_id", "store_id","survey_id","answers"];
+        query.filter = {};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {"store_id.storename":{"$regex": "(" + searchText + ")", "$options": "-i"}};
+        }
+		var survey_id = $scope.getURLParam("id");
+		if(survey_id){
+			query.filter["survey_id"] = survey_id;
+		}
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        } else {
+            query.orders["store_id"] = {};
+            query.orders["store_id"].storename = "asc";
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.currentCursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+            $scope.loadingStatus = false;
+            if (storeData.response.data && storeData.response.data.length > 0) {
+                $scope.storesName = storeData.response.data;
+                $scope.currentCursor = storeData.response.cursor;             
+            }else{
+				$scope.storesName = [];
+				$scope.currentCursor = 0;
+			} 
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        });
+    }
+    $scope.getSurveyStoresName(1, 10);
+    $scope.setStoreNameOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getSurveyStoresName(1, 10, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getSurveyStoresName(1, 10, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getSurveyStoresName(0, 10, column, searchText);
     }
 });
 
