@@ -1368,7 +1368,7 @@ span.btn:hover {
 }
 
 .saved_last {
-    width:43%;
+    width:42%;
     padding:0px;
     margin:10px;}
 
@@ -1383,18 +1383,14 @@ span.btn:hover {
     border-left:1px solid #CCC;
     padding:10px;}
 
-
-
 .cstore-payment-button {
     width: 20%;
-    padding: 0;
-}
+    padding: 0;}
 
 .cstore-payment-button ul {
     list-style: none;
     margin: 25px 0 0 0;
-    padding: 0;
-}
+    padding: 0;}
 
 
 .cstore-payment-button ul li {
@@ -1410,29 +1406,23 @@ span.btn:hover {
     border-bottom-color: #cccccc;
     border-left-style: solid;
     border-left-width: 1px;
-    border-left-color: #cccccc;
-}
+    border-left-color: #cccccc;}
 
 div.hlgst form div, div.hlpydt div {
     padding: 5px 0;
-    overflow: hidden;
-}
+    overflow: hidden;}
 
 .we-accept-cards {
-    padding: .6em 0 .3em 0;
-}
+    padding: .6em 0 .3em 0;}
 
 .visa.on {
-    background-position: 0 0;
-}
+    background-position: 0 0;}
 
 .amex.on {
-    background-position: -51px 0;
-}
+    background-position: -51px 0;}
 
 .mastercard.on {
-    background-position: -102px 0;
-}
+    background-position: -102px 0;}
 
 .cards li {
     width: 51px;
@@ -1440,35 +1430,30 @@ div.hlgst form div, div.hlpydt div {
     margin-left: 3px;
     background-image: url(images/card_logos.png);
     background-repeat: no-repeat;
-    display: inline-block;
-}
+    display: inline-block;}
 
 .maestro.on {
-    background-position: -153px 0;
-}
+    background-position: -153px 0;}
 
 .diners.on {
-    background-position: -204px 0;
-}
+    background-position: -204px 0;}
 
 .CCname {
     float: left;
     width: 70%;
     padding:12px;
-    box-sizing: border-box;
-}
+    box-sizing: border-box;}
 
 div.hlpydt div.hlmkpy input[type='submit'] {
     background: #e7c271;
     padding:10px;
-    font-size:16px;
-}
+    font-size:16px;	}
 
 .htdar {
     background-position-x: 98%;
     width:20%;
     padding:8px;
-}
+    margin-right:10px;}
 
 div.cart-container {
     background: #FAFAFA;
@@ -1476,8 +1461,7 @@ div.cart-container {
     border-radius: 7px;
     background-repeat: no-repeat;
     background-position: 97% 91%;
-    padding: 0 10px !important;
-}
+    padding: 0 10px !important;}
 
 .CCnum {
     padding:12px;
@@ -1506,7 +1490,7 @@ div.cart-container {
 .fix_price {
     margin-top:10px;
     font-size:16px;
-    width:70%;}
+    width:80%;}
 
 .total_amount {
     font-size: 17px;
@@ -1574,3 +1558,11 @@ div.cart-container {
 .more_btn {
     font-weight:bold;
     padding:0px 10px 10px 0;}
+
+.queans {
+    margin-top:10px;}
+
+.que {
+    margin-left:10%;
+    text-align:left;
+    font-size:16px;}

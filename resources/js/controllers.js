@@ -161,6 +161,15 @@ cstore.config(
             }).when('/payment', {
                 templateUrl: '../payment',
                 controller: 'paymentCtrl'
+            }).when('/programs', {
+                templateUrl: '../programs',
+                controller: 'programList'
+            }).when('/add-program', {
+                templateUrl: '../add-program',
+                controller: 'addProgramCtrl'
+            }).when('/edit-program', {
+                templateUrl: '../add-program',
+                controller: 'addProgramCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -312,6 +321,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     for (var i = 1; i <= 10; i++) {
         $scope.shoppingCartData.quantity.push(i);
     }
+    $scope.programdata={};
     /*bharat change for location*/
     $scope.location = '';
 
@@ -1021,6 +1031,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
         $scope.setPath('surveys');
     }
+     $scope.clearProgramContent = function () {
+        $scope.programdata["name"] = "";
+        $scope.productdata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
+     }
     //changes 0605
     $scope.getShoppingCartLength = function () {
         if($scope.currentUser.data.roleid==STOREMANAGER){
@@ -3755,3 +3770,79 @@ cstore.controller('paymentCtrl', function ($scope, $appService) {
 	$scope.getPayment();
 });
 
+/********************************************* Program 14/05**********************************************************/
+cstore.controller('programList', function ($scope, $appService) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingProgramData = false;
+    $scope.venderSearch = [
+        {"value": "name", "name": " Program Name"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.programs = [];
+    $appService.auth();
+    $scope.getAllPrograms = function (direction, limit, column, searchText) {
+        if ($scope.loadingProgramData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingProgramData = true;
+
+        var query = {"table": "program__cstore"};
+        query.columns = ["name","image"];
+
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
+            $scope.loadingProgramData = false;
+            $scope.show.currentCursor = programData.response.cursor;
+            $scope.programs = programData.response.data;
+            for (var i = 0; i < $scope.programs.length; i++) {
+                $scope.programs[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllPrograms(1, 10);
+    $scope.setProgramOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllPrograms(1, 10, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllPrograms(1, 10, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllPrograms(0, 10, column, searchText);
+    }
+});
+
+cstore.controller('addProgramCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    var programId = $routeParams.q;
+    if (programId && programId != undefined && programId != "undefined") {
+        $scope.programdata["programid"] = programId;
+    }
+    else {
+        delete $scope.programdata["programid"];
+    }
+});
