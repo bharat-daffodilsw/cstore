@@ -7,7 +7,7 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
             '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
 
-            '<ul><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
+            '<ul><li ng-show="displayData.options" class="active"><a href = "/#!/all-surveys">Survey</a></li><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
             '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>' +
             '<div class="popup" style="display:none;">' +
@@ -309,13 +309,13 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
     }
 }]);
 /***************/
-//changes by anuradha 3004
+
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
-            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession.training_session_id._id}}">{{assignedTrainingSession.training_session_id.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.training_session_id.description}}</div>' +
+            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
     }
 }]);
@@ -501,7 +501,7 @@ cstore.directive('searchBy', ['$appService', function ($appService, $scope) {
         }
     }
 }]);
-//changes made 0805
+
 cstore.directive('stateSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -1499,7 +1499,7 @@ cstore.directive('storeCountrySelect', ['$appService', function ($appService, $s
         }
     }
 }]);
-//changes made 02/05
+
 cstore.directive('brand', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -1550,7 +1550,7 @@ cstore.directive('shift', ['$appService', function ($appService, $scope) {
         }
     }
 }]);
-//changes made 02/05
+
 cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -2250,7 +2250,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
     }
 }]);
 
-//changes made by anuradha
+
 cstore.directive('trainingCategoryList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -3225,7 +3225,7 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
 }]);
 
 /****************************Promotions************************/
-//changes made by anuradha
+
 cstore.directive('promotionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -5020,7 +5020,7 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
         restrict: "E",
         template: '<div><div class="m_bar pull-left">' +
             '<div class="category pull-left">' +
-            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-training-sessions">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_session_id.training_category_id._id}}">{{session[0].training_session_id.training_category_id.name}}</a> > {{session[0].training_session_id.title}}</div>' +
+            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-training-sessions">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_category_id._id}}">{{session[0].training_category_id.name}}</a> > {{session[0].title}}</div>' +
             '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
             '<div class="pdf_img">' +
             '<a href={{videoUrl}} target="_blank"><img title="{{videoUrl}}" src="images/Photo-Video-Start-icon.png"></a>' +
@@ -5058,8 +5058,8 @@ cstore.directive('allTrainingSessions', ['$appService', function ($appService, $
         template: '<div class="m_bar pull-left"><div class="category pull-left" ng-repeat="sessionCategory in sessionCategories" ng-show="sessionCategory.trainingCategoryWiseData.length">' +
             '<div class="pop_products">{{sessionCategory.name}} <a href="#!/session-category?q={{sessionCategory._id}}">( View all )</a></div>' +
             '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="childSession in sessionCategory.trainingCategoryWiseData">' +
-            '<div class="name"><a href="#!/training-session?sessionid={{childSession.training_session_id._id}}">{{childSession.training_session_id.title}}</a></div>' +
-            '<div class="short_product_details">{{childSession.training_session_id.description}}</div></div>' +
+            '<div class="name"><a href="#!/training-session?sessionid={{childSession._id}}">{{childSession.title}}</a></div>' +
+            '<div class="short_product_details">{{childSession.description}}</div></div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAllTrainingData"><img src="images/loading.gif"></div>'
     }
 }]);
@@ -5067,10 +5067,10 @@ cstore.directive('allTrainingSessions', ['$appService', function ($appService, $
 cstore.directive('trainingCategoryDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{sessions[0].training_session_id.training_category_id.name}}</div>' +
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{sessions[0].training_category_id.name}}</div>' +
             '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="session in sessions">' +
-            '<div class="name"><a href="#!/training-session?sessionid={{session.training_session_id._id}}">{{session.training_session_id.title}}</a></div>' +
-            '<div class="short_product_details">{{session.training_session_id.description}}</div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
+            '<div class="name"><a href="#!/training-session?sessionid={{session._id}}">{{session.title}}</a></div>' +
+            '<div class="short_product_details">{{session.description}}</div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -5869,8 +5869,8 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</div>' +
             '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="setPaymentPath(cartData._id)"><a href="">Payment</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="setPaymentPath(cartData._id)"><a href="">Payment</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -6066,6 +6066,169 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
         }
     }
 }]);
+
+/*********************All Survey****************************************/
+cstore.directive('allAssignedSurveys', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div><div class="survey_all">'+
+            '<div class="survey_form pull-left" ng-repeat="assignedSurvey in assignedSurveys">'+
+            '<div class="survey_dic pull-left">'+
+            '<div class="survey_left pull-left">Title</div>'+
+            '<div class="survey_right pull-right">{{assignedSurvey.title}}</div></div>'+
+            '<div class="survey_dic pull-left">'+
+            '<div class="survey_left pull-left">Description</div>'+
+            '<div class="survey_right pull-right">{{assignedSurvey.description}}</div></div>'+
+            '<div class="more_btn pull-right"><a href="#!/survey?surveyid={{assignedSurvey._id}}">More>></a></div>'+
+            '</div>' +
+            '<div id="scrollDiv"></div>' +
+            '<div class="loadingImage" ng-hide="!assignedSurveyData.loadingData"><img src="images/loading.gif"></div>'+
+            '</div></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.getInitialSurveyData(0);
+                }
+            }
+        }
+    }
+}]);
+/************************* Survey Detail****************************/
+cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: 'E',
+        template: '<div class="survey_all">'+
+            '<div class="survey_dic pull-left">'+
+            '<div class="survey_left pull-left">Title</div>'+
+            '<div class="survey_right pull-right">{{survey.title}}</div></div>'+
+            '<div class="survey_dic pull-left">'+
+            '<div class="survey_left pull-left">Description</div>'+
+            '<div class="survey_right pull-right">{{survey.description}}</div></div>'+
+            '<div class="clear"></div>'+
+            '<div class="survey_form pull-left">'+
+            '<div class="survey_title">Please complete the following Questions regarding your experiences with us.</div>'+
+            '<div class="survey_dic pull-left" ng-repeat="surveyQuestion in surveyQuestions">'+
+            '<div class="survey_que pull-left">{{surveyQuestion.question}}</div>'+
+            '<div class="survey_ans pull-right">' +
+            '<form action ng-if="surveyQuestion.survey_type==\'radio\'">' +
+            '<div ng-repeat="option in surveyQuestion.options">' +
+            '<input type="radio" name="option" value="{{option.optionVal}}" ng-model="surveyQuestion.radioAns"/> {{option.optionVal}}</div></form>' +
+            '<form action ng-if="surveyQuestion.survey_type==\'checkbox\'">' +
+            '<div ng-repeat="option in surveyQuestion.options">' +
+            '<input type="checkbox" value="{{option.optionVal}}" ng-model="option.optionStatus"/> {{option.optionVal}}</div></form>' +
+            '<textarea ng-if="surveyQuestion.survey_type==\'subjective\'" ng-model="surveyQuestion.answer" ></textarea></div>' +
+            '</div>'+
+            '<div class="add_delete pull-right"><div class="add_btn pull-right"><button type="button" ng-click="clearSubmittedSurvey(\'all-surveys\')"><a href="">Cancel</a></button></div><div class="delete_btn pull-right">'+
+            '<button type="button" ng-click="submitSurvey()"><a href="">Submit</a></button></div></div>'+
+            '</div>' +
+            '<div class="loadingImage" ng-hide="!loadingSurveyDetailData"><img src="images/loading.gif"></div>'+
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+
+                },
+                post:function($scope){
+                    $scope.CSession = $appService.getSession();
+                        $scope.submitSurvey = function () {
+                            if ($scope.CSession) {
+                                //$scope.loadingSurveyDetailData = true;
+                                var query = {};
+                                $scope.newSurveyAnswer = {};
+                                $scope.newSurveyAnswer["answers"]={};
+                                query.table = "answered_survey__cstore";
+                                $scope.newSurveyAnswer["survey_id"] = {"_id":$scope.survey._id};
+                                $scope.newSurveyAnswer["store_id"] = {"_id":$scope.currentUser.data.storeid};
+
+                                for (i = 0; i < $scope.surveyQuestions.length; i++){
+                                    if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="radio") {
+                                        //for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
+
+                                        $scope.newSurveyAnswer["answers"][i]=$scope.surveyQuestions[i].radioAns;
+                                        console.log($scope.surveyQuestions[i].radioAns);
+                                        //}
+                                    }
+                                    else if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="checkbox") {
+                                        var temp=[];
+                                        for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
+                                            if($scope.surveyQuestions[i].options[j].optionStatus){
+                                                temp.push($scope.surveyQuestions[i].options[j].optionVal);
+
+                                                console.log($scope.surveyQuestions[i].options[j].optionVal);
+                                            }
+                                        }
+                                        $scope.newSurveyAnswer["answers"][i]=temp;
+                                    }
+                                    else {
+                                        console.log($scope.surveyQuestions[i].answer);
+                                        $scope.newSurveyAnswer["answers"][i]=$scope.surveyQuestions[i].answer;
+                                    }
+                                }
+                                query.operations = [$scope.newSurveyAnswer];
+                                $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                    //$scope.loadingSurveyDetailData = false;
+                                    if (callBackData.code == 200 && callBackData.status == "ok") {
+                                        $scope.changeStatusOfSurvey();
+                                        //$("#popupMessage").html("Submitted");
+                                        //$('.popup').toggle("slide");
+                                        //$scope.clearSubmittedSurvey('all-surveys');
+                                    } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                        $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                        $('.popup').toggle("slide");
+                                    }
+                                    else {
+                                        $("#popupMessage").html("some error while submitting survey");
+                                        $('.popup').toggle("slide");
+                                    }
+                                }, function (err) {
+                                    console.log(err.stack);
+                                });
+                            }
+                            else {
+                                $("#popupMessage").html("Please login first");
+                                $('.popup').toggle("slide");
+                            }
+                        }
+                    $scope.changeStatusOfSurvey = function () {
+                        if ($scope.CSession) {
+                            var query = {};
+                            $scope.newSurveyStatus = {};
+                            $scope.newSurveyStatus["store_manager_id"] = {};
+                            query.table = "surveys__cstore";
+                            $scope.newSurveyStatus["_id"] = $scope.survey._id;
+                            var storeArray=[];
+                            storeArray.push({"_id": $scope.survey.store_manager_id._id,"status":"answered"});
+                            $scope.newSurveyStatus.store_manager_id={data: storeArray, "override": "true"};
+                            query.operations = [$scope.newSurveyStatus];
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                $scope.loadingSurveyDetailData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Submitted");
+                                    $('.popup').toggle("slide");
+                                    $scope.clearSubmittedSurvey('all-surveys');
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while submitting survey");
+                                    $('.popup').toggle("slide");
+                                }
+                            }, function (err) {
+                                console.log(err.stack);
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
+                    }
+                }
+            }
+        }
+}]);
+
 cstore.directive('payment', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -6183,48 +6346,48 @@ cstore.directive('payment', ['$appService', function ($appService, $scope) {
                 pre: function ($scope) {
                 },
                 post: function ($scope) {
-					$scope.send_payment = function (){
-						var payment_details = {
-						  "intent": "sale",
-						  "payer": {
-							"payment_method": "credit_card",
-							"funding_instruments": [{
-							  "credit_card": {
-								"type": "visa",
-							"number": "4417119669820331",
-							"expire_month": "11",
-							"expire_year": "2018",
-							"cvv2": "123",
-							"first_name": "Joe",
-							"last_name": "Shopper",
-								"billing_address": {
-								  "line1": "52 N Main ST",
-								  "city": "Johnstown",
-								  "state": "OH",
-								  "postal_code": "43210",
-								  "country_code": "US" 
-								  }
-								}
-							}]
-						  },
-						  "transactions": [{
-							"amount": {
-							  "total": "100",
-							  "currency": "USD",
-							  "details": {
-								"subtotal": "100",
-								"tax": "0.00",
-								"shipping": "0.00"}},
-							"description": "This is the payment transaction description." }]};
+                    $scope.send_payment = function (){
+                        var payment_details = {
+                            "intent": "sale",
+                            "payer": {
+                                "payment_method": "credit_card",
+                                "funding_instruments": [{
+                                    "credit_card": {
+                                        "type": "visa",
+                                        "number": "4417119669820331",
+                                        "expire_month": "11",
+                                        "expire_year": "2018",
+                                        "cvv2": "123",
+                                        "first_name": "Joe",
+                                        "last_name": "Shopper",
+                                        "billing_address": {
+                                            "line1": "52 N Main ST",
+                                            "city": "Johnstown",
+                                            "state": "OH",
+                                            "postal_code": "43210",
+                                            "country_code": "US"
+                                        }
+                                    }
+                                }]
+                            },
+                            "transactions": [{
+                                "amount": {
+                                    "total": "100",
+                                    "currency": "USD",
+                                    "details": {
+                                        "subtotal": "100",
+                                        "tax": "0.00",
+                                        "shipping": "0.00"}},
+                                "description": "This is the payment transaction description." }]};
 
-						paypal_sdk.payment.create(payment_details,config_options, function(error, payment){
-						  if(error){
-							console.error(error);
-						  } else {
-							console.error(payment);
-						  }
-						});
-					}
+                        paypal_sdk.payment.create(payment_details,config_options, function(error, payment){
+                            if(error){
+                                console.error(error);
+                            } else {
+                                console.error(payment);
+                            }
+                        });
+                    }
                 }
             }
         }
