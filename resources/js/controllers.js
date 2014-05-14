@@ -3447,6 +3447,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
         query.columns = ["store_manager_id", "title", "description"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
+        query.filter["store_manager_id.status"] = "unanswered";
         if (searchText && searchText != "") {
             query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
@@ -3662,7 +3663,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService,$routeParams
         ];
         $scope.loadingSurveyDetailData = true;
         var query = {"table": "surveys__cstore"};
-        query.columns = ["description","title","survey_question"];
+        query.columns = ["description","title","survey_question","store_manager_id"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.surveyid};
         //if (searchText && searchText != "") {

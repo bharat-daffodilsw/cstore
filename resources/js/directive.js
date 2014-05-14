@@ -6096,11 +6096,12 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                 }
                                 query.operations = [$scope.newSurveyAnswer];
                                 $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                                    $scope.loadingSurveyDetailData = false;
+                                    //$scope.loadingSurveyDetailData = false;
                                     if (callBackData.code == 200 && callBackData.status == "ok") {
-                                        $("#popupMessage").html("Submitted");
-                                        $('.popup').toggle("slide");
-                                        $scope.clearSubmittedSurvey('all-surveys');
+                                        $scope.changeStatusOfSurvey();
+                                        //$("#popupMessage").html("Submitted");
+                                        //$('.popup').toggle("slide");
+                                        //$scope.clearSubmittedSurvey('all-surveys');
                                     } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                         $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                         $('.popup').toggle("slide");
@@ -6118,6 +6119,40 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                 $('.popup').toggle("slide");
                             }
                         }
+                    $scope.changeStatusOfSurvey = function () {
+                        if ($scope.CSession) {
+                            var query = {};
+                            $scope.newSurveyStatus = {};
+                            $scope.newSurveyStatus["store_manager_id"] = {};
+                            query.table = "surveys__cstore";
+                            $scope.newSurveyStatus["_id"] = $scope.survey._id;
+                            var storeArray=[];
+                            storeArray.push({"_id": $scope.survey.store_manager_id._id,"status":"answered"});
+                            $scope.newSurveyStatus.store_manager_id={data: storeArray, "override": "true"};
+                            query.operations = [$scope.newSurveyStatus];
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                $scope.loadingSurveyDetailData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Submitted");
+                                    $('.popup').toggle("slide");
+                                    $scope.clearSubmittedSurvey('all-surveys');
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while submitting survey");
+                                    $('.popup').toggle("slide");
+                                }
+                            }, function (err) {
+                                console.log(err.stack);
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
                     }
                 }
             }
