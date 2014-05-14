@@ -1857,8 +1857,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 
         {"value": "storename", "name": "Store Name"},
         {"value": "shift", "name": "Manager Shift"},
-        {"value": "pos_type", "name": "POS Type"},
-        {"value": "pos_version", "name": "POS Version"},
+        {"value": "programid.name", "name": "Program"},
         {"value": "loyalty_status", "name": "Loyalty Status"},
         {"value": "reward_point", "name": "Reward Type"},
         {"value": "email", "name": "Email"},
