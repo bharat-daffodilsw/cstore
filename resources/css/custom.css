@@ -608,7 +608,7 @@ tr {
     padding:5px;}
 
 .add_delete {
-    margin-top:10px;
+	padding:10px 10px 10px 0px;
     width:98%;}
 
 .table_1 {
@@ -1357,10 +1357,6 @@ span.btn:hover {
     color:black;
 }
 
-div.save_close.right_btn {
-    margin-right: 357px;
-}
-
 .total {
     margin-right: 57px;
 }
@@ -1372,7 +1368,7 @@ div.save_close.right_btn {
 	}
 	
 .saved_last {
-    width:43%;
+    width:42%;
     padding:0px;
     margin:10px;}
 	
@@ -1387,18 +1383,14 @@ div.save_close.right_btn {
     border-left:1px solid #CCC;
     padding:10px;}
 	
-
-
 .cstore-payment-button {
-width: 20%;
-padding: 0;
-}
+	width: 20%;
+	padding: 0;}
 
 .cstore-payment-button ul {
 list-style: none;
 margin: 25px 0 0 0;
-padding: 0;
-}
+padding: 0;}
 
 
 .cstore-payment-button ul li {
@@ -1414,74 +1406,62 @@ border-bottom-width: 1px;
 border-bottom-color: #cccccc;
 border-left-style: solid;
 border-left-width: 1px;
-border-left-color: #cccccc;
-}
+border-left-color: #cccccc;}
 
 div.hlgst form div, div.hlpydt div {
-padding: 5px 0;
-overflow: hidden;
-}
+	padding: 5px 0;
+	overflow: hidden;}
 
 .we-accept-cards {
-padding: .6em 0 .3em 0;
-}
+	padding: .6em 0 .3em 0;}
 
 .visa.on {
-background-position: 0 0;
-}
+	background-position: 0 0;}
 
 .amex.on {
-background-position: -51px 0;
-}
+	background-position: -51px 0;}
 
 .mastercard.on {
-background-position: -102px 0;
-}
+	background-position: -102px 0;}
 
 .cards li {
-width: 51px;
-height: 32px;
-margin-left: 3px;
-background-image: url(images/card_logos.png);
-background-repeat: no-repeat;
-display: inline-block;
-}
+	width: 51px;
+	height: 32px;
+	margin-left: 3px;
+	background-image: url(images/card_logos.png);
+	background-repeat: no-repeat;
+	display: inline-block;}
 
 .maestro.on {
-background-position: -153px 0;
-}
+	background-position: -153px 0;}
 
 .diners.on {
-background-position: -204px 0;
-}
+	background-position: -204px 0;}
 
 .CCname {
-float: left;
-width: 70%;
-padding:12px;
-box-sizing: border-box;
-}
+	float: left;
+	width: 70%;
+	padding:12px;
+	box-sizing: border-box;}
 
 div.hlpydt div.hlmkpy input[type='submit'] {
-background: #e7c271;
-padding:10px;
-font-size:16px;
-}
+	background: #e7c271;
+	padding:10px;
+	font-size:16px;	}
 
 .htdar {
-background-position-x: 98%;
-width:20%;
-padding:8px;
-}
+	background-position-x: 98%;
+	width:20%;
+	padding:8px;
+	margin-right:10px;}
 
 div.cart-container {
-background: #FAFAFA;
-border: 1px solid #DDD;
-border-radius: 7px;
-background-repeat: no-repeat;
-background-position: 97% 91%;
-padding: 0 10px !important;
-}
+	background: #FAFAFA;
+	border: 1px solid #DDD;
+	border-radius: 7px;
+	background-repeat: no-repeat;
+	background-position: 97% 91%;
+	padding: 0 10px !important;}
 
 .CCnum {
 	padding:12px;
@@ -1510,36 +1490,81 @@ padding: 0 10px !important;
 .fix_price {
     margin-top:10px;
     font-size:16px;
-    width:70%;}
+    width:80%;}
 	
 .total_amount {
 	font-size: 17px;
 	margin-bottom: 15px;
 	font-weight: bold;}
 	
-.title {
-	text-align:center;
-	font-size:16px;}
-
 .survey_dic {
-	margin-top:10px;}
+	padding:10px;
+	width:100%}
 	
 .survey_left {
-	width:30%;
-	text-align:center;
+	width:20%;
 	font-weight:bold;
 	font-size:18px;}
 	
+.survey_que {
+	width:40%;
+	font-size:16px;
+	font-weight:bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;}
+	
 .survey_right {
-	width:68%;
+	width:80%;
+	font-size:16px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;}
+	
+.survey_ans {
+	width:60%;
 	font-size:16px;}
 	
 .clear {
 	clear:both;}
 	
 .survey_title {
-	margin-top:20px;	
+	margin-top:10px;	
 	text-align:center;
 	font-size:18px;
 	font-weight:bold;
 	color:#e7c271;}
+	
+.survey_form {
+	border-bottom:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;
+    border-left:1px solid #CCC;
+	margin-bottom:5px;
+	width:100%;}
+	
+.survey_ans textarea {
+	width:100%;
+	height:60px;}
+	
+.survey_all {
+	width:80%;
+	margin:auto;}
+	
+.more_btn {
+	font-weight:bold;
+	padding:0px 10px 10px 0;}
+	
+.queans {
+	margin-top:10px;}
+	
+.que {
+	margin-left:10%;
+	text-align:left;
+	font-size:16px;}
+.ans_label{float:left;}
+.answers{margin: 0;list-style: none;}

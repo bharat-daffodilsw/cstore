@@ -4010,7 +4010,7 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                     $scope.searchStoreName = function () {
                         $scope.preCursor = 0;
                         $scope.currentCursor = 0;
-                        $scope.getStoresName(1, 5, $scope.searchby.value, $scope.search.searchContent);
+                        $scope.getStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                 }
             }
@@ -4590,7 +4590,7 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                         operationArray._id = $scope.trainingSessionId;
                         var dataArr = [];
                         for (j = 0; j < $scope.storeManager.length; j++) {
-                            dataArr.push({"_id": $scope.storeManager[j]._id});
+                            dataArr.push({"_id": $scope.storeManager[j]._id,"status":"unanswered"});
                         }
                         operationArray.store_manager_id = {data: dataArr, "override": "true"};
                         query.operations = [operationArray];
@@ -4613,8 +4613,78 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                     $scope.searchSurveyStoreName = function () {
                         $scope.preCursor = 0;
                         $scope.currentCursor = 0;
-                        $scope.getSurveyStoresName(1, 5, $scope.searchby.value, $scope.search.searchContent);
+                        $scope.getSurveyStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="setPath(\'surveys\')"><a href>Back</a></button>' +
+            '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="searchSurveyStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '</tr><tr ng-repeat="store in storesName"><td><a ng-click = "setQuesAns(store)">{{store.store_id.storename}}</a></td>' +
+            '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                post: function ($scope) {                    
+					$scope.setQuesAns = function (store){
+						$scope.loadingStatus = true;					
+						var query = {};
+						query.table = "surveys__cstore";
+						query.columns = ["store_manager_id","survey_question"];
+						query.filter = {"_id":store.survey_id};
+						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+						var serviceUrl = "/rest/data";
+						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyResp) {
+							$scope.loadingStatus = false;
+							var surveyData = surveyResp.response.data[0].survey_question;
+							for(i = 0; i < surveyData.length; i++){
+								$scope.answeredSurveys[i] = {"question" : surveyData[i].question};
+								if(typeof store.answers[i] == "object"){
+									$scope.answeredSurveys[i].answer = store.answers[i];
+									$scope.answeredSurveys[i].is_array = true;
+								}else{	
+									$scope.answeredSurveys[i].answer = store.answers[i];
+									$scope.answeredSurveys[i].is_array = false;
+								}
+							} 
+							window.location.href = "#!/assigned-survey-response";
+						});
+					}	
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('assignedSurveyResponse', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="setPath(\'surveys\')"><a href>Back</a></button>' +
+            '</div>' +
+            '</div>' +
+            '<div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Answered Surveys</span></th>' +
+            '</tr></table><div class="queans" ng-repeat="answeredSurvey in answeredSurveys"><div class="que"><b>Ques {{$index + 1}}. </b>{{answeredSurvey.question}}</div>' +
+            '<div class="que" ng-show="answeredSurvey.is_array"><span class="ans_label"><b>Ans.</b></span><ul class="answers"> <li ng-repeat="answer in answeredSurvey.answer">{{answer}}</li></ul></div>' +
+            '<div class="que" ng-show="!answeredSurvey.is_array"><b>Ans.</b> {{answeredSurvey.answer}}</div>' +
+            '</div></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                post: function ($scope) {                    					
                 }
             }
         }
@@ -6097,14 +6167,14 @@ cstore.directive('payment', ['$appService', function ($appService, $scope) {
             '<div class="fix_height">Shipping Charge :</div>' +
             '<div class="fix_height">Shipping Discount :</div>' +
             '<div class="fix_height">GV Discount :</div>' +
-            '<div class="fix_height margin_top">Total :</div>' +
+            '<div class="fix_height total_amount  margin_top">Total :</div>' +
             '</div>' +
             '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
             '<div class="fix_height text-right"> {{cartdata.subtotal | currency}}</div>' +
             '<div class="fix_height text-right">{{cartdata.shipping_charges | currency}}</div>' +
             '<div class="fix_height text-right">0</div>' +
             '<div class="fix_height text-right">0</div>' +
-            '<div class="fix_height margin_top text-right">{{cartdata.total | currency}}</div>' +
+            '<div class="fix_height margin_top total_amount  text-right">{{cartdata.total | currency}}</div>' +
             '</div>' +
             '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
             '</div>',
