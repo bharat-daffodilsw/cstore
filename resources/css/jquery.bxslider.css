@@ -148,7 +148,7 @@
 	width: 10px;
 	height: 11px;
 	outline: 0;
-	background: url(../images/controls.png) -86px -11px no-repeat;
+	/*background: url(../images/controls.png) -86px -11px no-repeat;*/
 	margin: 0 3px;
 }
 
@@ -163,7 +163,7 @@
 	width: 9px;
 	height: 11px;
 	outline: 0;
-	background: url(../images/controls.png) -86px -44px no-repeat;
+	/*background: url(../images/controls.png) -86px -44px no-repeat; */
 	margin: 0 3px;
 }
 
@@ -189,7 +189,7 @@
 .bx-wrapper .bx-caption {
     position: absolute;
     left: 0;
-    margin-bottom: 17px;
+   /* margin-bottom: 17px; */
     text-align: center;
     bottom: 0;
     background: #666\9;
@@ -203,4 +203,7 @@
 	display: block;
 	font-size: .85em;
 	padding: 10px;
+}
+.bx-wrapper .bx-viewport {
+    height: 250px !important;
 }

@@ -436,6 +436,7 @@ a:hover {
 
 .admin_menu {
     width:100%;
+    margin-bottom: 10px;
     background-color:#000;}
 
 .admin_menu ul li {
@@ -601,7 +602,8 @@ tr {
 .edit_btn {
     background-color:#e7c271;
     text-decoration:underline;
-    padding:5px;}
+    padding:5px;
+    margin: 0 5px;}
 
 .assign_btn {
     text-decoration:underline;
@@ -1333,8 +1335,7 @@ span.btn:hover {
     width:95%;
 }
 .name_input textarea {
-    width:95%!important;
-    /*width:97.5%!important;*/
+    width:97.5%!important;
     height:50px;}
 
 .minutes {
@@ -1375,7 +1376,6 @@ span.btn:hover {
 .cstore_payment {
     width:65%;
     text-align:center;
-    margin-top:10px;
     font-size:14px;
     border-bottom:1px solid #CCC;
     border-top:1px solid #CCC;
@@ -1562,7 +1562,6 @@ div.cart-container {
 	padding:12px;}
 	
 .amount_details {
-    margin-top:10px;
     font-size:16px;
     width:34%;
     border-bottom:1px solid #CCC;
