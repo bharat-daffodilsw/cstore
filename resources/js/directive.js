@@ -2947,7 +2947,7 @@ cstore.directive('roleSelect', ['$appService', function ($appService, $scope) {
 cstore.directive('storeSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'" class="brand" ng-model="userdata.selectedStore" ng-options="store.storename for store in userdata.stores"></select>'
+        template: '<select ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'" class="brand" ng-model="userdata.selectedStore" ng-options="store.storename for store in userdata.stores"></select>'
     }
 }]);
 
@@ -2981,7 +2981,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
-            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
+            '<td class="half_td" ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
             '</tr>' +
             '</tbody></table></div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
@@ -3032,7 +3032,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
                         }
                         $scope.newUser["username"] = $scope.userdata.username;
-                        if ($scope.userdata.selectedStore) {
+                        if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id=='531d4aa0bd1515ea1a9bbaf6') {
                             $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
                         }
                         var query = {};
