@@ -4759,7 +4759,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
 cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<ul class="bxslider" style="margin-top:0px"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><a href="#!/promo?promoid={{carouselPromotion._id}}"><img title="{{carouselPromotion.promo_title}}" ng-src="{{carouselPromotion.imageUrl}}" height="225px" width="270px;"/></a></li></ul>',
+        template: '<ul class="bxslider" style="margin-top:0px"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><a href="#!/promo?promoid={{carouselPromotion._id}}"><img title="{{carouselPromotion.promo_title}}" ng-src="{{carouselPromotion.imageUrl}}" height="237px" width="270px;"/></a></li></ul>',
         compile: function () {
             return {
                 pre: function () {
