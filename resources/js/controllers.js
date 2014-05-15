@@ -306,7 +306,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.codedata.codeTypes = [
         {"name": "UPC"},
         {"name": "PLU"},
-        {"name": "Group"}
+        {"name": "GROUP"}
     ];
     $scope.codedata.selectedCodeType = $scope.codedata.codeTypes[0];
     $scope.listType = [
@@ -3616,7 +3616,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
 cstore.controller('productCodesCtrl', function ($scope, $appService) {
 
     //$scope.codeTypes=[{"name":"UPC"},{"name":"PLU"},{"name":"Group"}];
-    $scope.types = ["UPC", "PLU", "Group"];
+    $scope.types = ["UPC", "PLU", "GROUP"];
 
     //$scope.codedata.selectedCodeType=$scope.codedata.codeTypes[0];
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
