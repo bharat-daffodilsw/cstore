@@ -1178,7 +1178,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     };
                     if ($scope.trainingdata.editImages && $scope.trainingdata.editImages.length > 0) {
                         for (var k = 0; k < $scope.trainingdata.editImages.length; k++) {
-                            $scope.showMultiImgFile($scope.trainingdata.editImages[k], k);
+                            $scope.showMultiImgFile([$scope.trainingdata.editImages[k]], k);
                         }
                     } else {
                         $scope.imgFilenotexist = true;
