@@ -453,6 +453,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         //$scope.data["vendorCategory"]=vendor.category ;//? vendor.category :$scope.vendorCategories[0];
                         if (vendor.category) {
                             for (var j = 0; j < $scope.data.vendorCategories.length; j++) {
+								$scope.data.selectedVendorCategory = "";
                                 if ($scope.data.vendorCategories[j].name == vendor.category) {
                                     $scope.data.selectedVendorCategory = $scope.data.vendorCategories[j];
                                     break;
@@ -1163,8 +1164,8 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                         if (!$scope.trainingdata.uploadedimages[index]) {
                             $scope.trainingdata.uploadedimages[index] = {};
                         }
-                        $scope.trainingdata.uploadedimages[index].fileurl = file.fileurl;
-                        $scope.trainingdata.uploadedimages[index].filename = file.filename;
+                        $scope.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+						$scope.uploadedimages[index].filename = file[0][FILE_NAME];
                         $scope.trainingdata.uploadedimages[index].image = file;
                         $scope.trainingdata.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
@@ -1175,10 +1176,9 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                         if (index == 10)
                             $scope.imgFileLimitExceed = true;
                     };
-
-                    if ($scope.trainingdata.uploadedimages.length > 0) {
-                        for (var k = 0; k < $scope.trainingdata.uploadedimages.length; k++) {
-                            $scope.showMultiImgFile($scope.trainingdata.uploadedimages[k], k);
+                    if ($scope.trainingdata.editImages && $scope.trainingdata.editImages.length > 0) {
+                        for (var k = 0; k < $scope.trainingdata.editImages.length; k++) {
+                            $scope.showMultiImgFile($scope.trainingdata.editImages[k], k);
                         }
                     } else {
                         $scope.imgFilenotexist = true;
@@ -1195,9 +1195,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                             current_file.osk = OSK;
                             $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                 if (data.response && data.response.length > 0) {
-									data.response.filename = data.response[0].name;
-									data.response.fileurl = BAAS_SERVER + "/file/download?filekey=" + data.response[0].key + "&ask=" + ASK + "&osk=" + OSK;
-                                    $scope.showMultiImgFile(data.response, $scope.trainingdata.uploadedimages.length);
+									$scope.showMultiImgFile(data.response, $scope.trainingdata.uploadedimages.length);
                                 }
                             });
                         } else {
@@ -1426,6 +1424,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         if (store.pos_type && $scope.storedata.posTypes) {
                             for (var j = 0; j < $scope.storedata.posTypes.length; j++) {
+								$scope.storedata.selectedPosType = "";
                                 if ($scope.storedata.posTypes[j].name == store.pos_type) {
                                     $scope.storedata.selectedPosType = $scope.storedata.posTypes[j];
                                     break;
@@ -1438,6 +1437,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         if (store.reward_point && $scope.storedata.rewardTypes) {
                             for (var j = 0; j < $scope.storedata.rewardTypes.length; j++) {
+								$scope.storedata.selectedRewardType = "";
                                 if ($scope.storedata.rewardTypes[j].name == store.reward_point) {
                                     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[j];
                                     break;
@@ -1450,6 +1450,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         if (store.brands && $scope.storedata.brands) {
                             for (var j = 0; j < $scope.storedata.brands.length; j++) {
+								$scope.storedata.selectedBrand = "";
                                 if ($scope.storedata.brands[j].name == store.brands) {
                                     $scope.storedata.selectedBrand = $scope.storedata.brands[j];
                                     break;
@@ -3967,6 +3968,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                             }
                         }
+						$scope.trainingdata.editImages = trainingSession.file;						
                         if (trainingSession.file && trainingSession.file.length > 0) {
                             for (var k = 0; k < trainingSession.file.length; k++) {
                                 $scope.trainingdata.uploadedimages[k] = {"filename": trainingSession.file[k].name};
