@@ -1546,6 +1546,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
         params.ask = ASK;
         params.osk = OSK;
         $appService.getDataFromJQuery("/rest/login", params, "GET", "JSON", function (callBackData) {
+            console.log(JSON.stringify(callBackData));
             if (callBackData.code && callBackData.code == 8) {
                 $("#popupMessage").html(callBackData.response);
                 $('.popup').toggle("slide");

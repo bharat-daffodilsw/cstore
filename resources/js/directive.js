@@ -3236,7 +3236,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><input class="date_time" id="start_date" type="text" ng-model="testdata.choose_date" jqdatepicker /><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
@@ -4694,16 +4694,17 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
 						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyResp) {
 							$scope.loadingStatus = false;
 							var surveyData = surveyResp.response.data[0].survey_question;
-							for(i = 0; i < surveyData.length; i++){
+							for(var i = 0; i < surveyData.length; i++){
 								$scope.answeredSurveys[i] = {"question" : surveyData[i].question};
-								if(typeof store.answers[i] == "object"){
-									$scope.answeredSurveys[i].answer = store.answers[i];
+                                var questionType = surveyData[i].survey_type;
+								if(questionType.toUpperCase() == "CHECKBOX"){
+									$scope.answeredSurveys[i].answer = store.answers[i + ""];
 									$scope.answeredSurveys[i].is_array = true;
-								}else{	
-									$scope.answeredSurveys[i].answer = store.answers[i];
+								}else{
+									$scope.answeredSurveys[i].answer = store.answers[i + ""];
 									$scope.answeredSurveys[i].is_array = false;
 								}
-							} 
+							}
 							window.location.href = "#!/assigned-survey-response";
 						});
 					}	
@@ -4723,8 +4724,8 @@ cstore.directive('assignedSurveyResponse', ['$appService', function ($appService
             '<div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Answered Surveys</span></th>' +
             '</tr></table><div class="queans" ng-repeat="answeredSurvey in answeredSurveys"><div class="que"><b>Ques {{$index + 1}}. </b>{{answeredSurvey.question}}</div>' +
-            '<div class="que" ng-show="answeredSurvey.is_array"><span class="ans_label"><b>Ans.</b></span><ul class="answers"> <li ng-repeat="answer in answeredSurvey.answer">{{answer}}</li></ul></div>' +
-            '<div class="que" ng-show="!answeredSurvey.is_array"><b>Ans.</b> {{answeredSurvey.answer}}</div>' +
+            '<div class="que" ng-if="answeredSurvey.is_array == true"><span class="ans_label"><b>Ans.</b></span><ul class="answers"> <li ng-repeat="answer in answeredSurvey.answer">{{answer}}</li></ul></div>' +
+            '<div class="que" ng-if="answeredSurvey.is_array == false"><b>Ans.</b> {{answeredSurvey.answer}}</div>' +
             '</div></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
