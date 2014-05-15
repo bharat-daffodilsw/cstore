@@ -1636,9 +1636,16 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
             }
 
         }, function (jqxhr, error) {
-            $("#popupMessage").html("error while making request");
-            $('.popup').toggle("slide");
-            return;
+            if (jqxhr.responseText && JSON.parse(jqxhr.responseText).response) {
+                $("#popupMessage").html(JSON.parse(jqxhr.responseText).response);
+                $('.popup').toggle("slide");
+                return;
+            }
+            else {
+                $("#popupMessage").html("error while making request");
+                $('.popup').toggle("slide");
+                return;
+            }
         });
 
     }
