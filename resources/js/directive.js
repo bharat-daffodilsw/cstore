@@ -1124,7 +1124,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
         replace: true,
         scope: false,
         template: "<div class='app-float-left'>" +
-            "<input class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
+            "<input  onchange='angular.element(this).scope().uploadFileChange()' class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
             '<span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
             "</div>",
         compile: function () {
@@ -1134,6 +1134,17 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     $scope.albumArr.uploadedimg = [];
                 },
                 post: function ($scope, iElement) {
+					$scope.uploadFileChange = function (){
+						$scope.$apply(function () {
+                            $scope.oFReader = new FileReader();
+                            if (document.getElementById('uploadMultiImgfile').files.length === 0) {
+                                return;
+                            }
+                            $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
+                            $scope.oFReader.onload = $scope.loadImgFile;
+                            $scope.oFReader.readAsDataURL($scope.oFile);
+                        });
+					}
                     $scope.removeImgFile = function (index) {
                         $scope.trainingdata.uploadedimages.splice(index, 1);
                         $scope.albumArr.uploadedimg.splice(index, 1);
@@ -1144,12 +1155,12 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                         $("#uploadMultiImgfile").val("");
                     };
 
-                    $scope.showImgFile = function (file, index) {
+                    $scope.showMultiImgFile = function (file, index) {
                         if (!$scope.trainingdata.uploadedimages[index]) {
                             $scope.trainingdata.uploadedimages[index] = {};
                         }
-                        $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
-                        $scope.trainingdata.uploadedimages[index].filename = file[0]["name"];
+                        $scope.trainingdata.uploadedimages[index].fileurl = file.fileurl;
+                        $scope.trainingdata.uploadedimages[index].filename = file.filename;
                         $scope.trainingdata.uploadedimages[index].image = file;
                         $scope.trainingdata.uploadedimages[index].default = true;
                         $scope.albumArr.uploadedimg[index] = file[0];
@@ -1163,7 +1174,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
 
                     if ($scope.trainingdata.uploadedimages.length > 0) {
                         for (var k = 0; k < $scope.trainingdata.uploadedimages.length; k++) {
-                            $scope.showImgFile($scope.trainingdata.uploadedimages[k].file, k);
+                            $scope.showMultiImgFile($scope.trainingdata.uploadedimages[k], k);
                         }
                     } else {
                         $scope.imgFilenotexist = true;
@@ -1180,7 +1191,9 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                             current_file.osk = OSK;
                             $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                 if (data.response && data.response.length > 0) {
-                                    $scope.showImgFile(data.response, $scope.trainingdata.uploadedimages.length);
+									data.response.filename = data.response[0].name;
+									data.response.fileurl = BAAS_SERVER + "/file/download?filekey=" + data.response[0].key + "&ask=" + ASK + "&osk=" + OSK;
+                                    $scope.showMultiImgFile(data.response, $scope.trainingdata.uploadedimages.length);
                                 }
                             });
                         } else {
@@ -1189,7 +1202,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                         }
                     };
 
-                    iElement.bind('change', function () {
+                   /* iElement.bind('change', function () {
                         $scope.$apply(function () {
                             $scope.oFReader = new FileReader();
                             if (document.getElementById('uploadMultiImgfile').files.length === 0) {
@@ -1199,7 +1212,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                             $scope.oFReader.onload = $scope.loadImgFile;
                             $scope.oFReader.readAsDataURL($scope.oFile);
                         });
-                    });
+                    });*/
                 }
             }
         }
@@ -4692,10 +4705,10 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
 							var surveyData = surveyResp.response.data[0].survey_question;
 							for(i = 0; i < surveyData.length; i++){
 								$scope.answeredSurveys[i] = {"question" : surveyData[i].question};
-								if(typeof store.answers[i] == "object"){
+								if(store.answers[i] instanceof Object){
 									$scope.answeredSurveys[i].answer = store.answers[i];
 									$scope.answeredSurveys[i].is_array = true;
-								}else{	
+								}else{
 									$scope.answeredSurveys[i].answer = store.answers[i];
 									$scope.answeredSurveys[i].is_array = false;
 								}
@@ -4719,7 +4732,7 @@ cstore.directive('assignedSurveyResponse', ['$appService', function ($appService
             '<div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Answered Surveys</span></th>' +
             '</tr></table><div class="queans" ng-repeat="answeredSurvey in answeredSurveys"><div class="que"><b>Ques {{$index + 1}}. </b>{{answeredSurvey.question}}</div>' +
-            '<div class="que" ng-show="answeredSurvey.is_array"><span class="ans_label"><b>Ans.</b></span><ul class="answers"> <li ng-repeat="answer in answeredSurvey.answer">{{answer}}</li></ul></div>' +
+            '<div class="que" ng-switch="answeredSurvey.is_array"><div ng-switch-when="true"><span class="ans_label"><b>Ans.</b></span><ul class="answers"> <li ng-repeat="answer in answeredSurvey.answer">{{answer}}</li></ul></div></div>' +
             '<div class="que" ng-show="!answeredSurvey.is_array"><b>Ans.</b> {{answeredSurvey.answer}}</div>' +
             '</div></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
