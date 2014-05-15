@@ -6558,7 +6558,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.loadingAddProgramData = true;
                     $scope.newProgram = {};
                     $scope.setPathforProgram = function (path) {
                         $scope.clearProgramContent();
