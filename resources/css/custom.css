@@ -602,7 +602,8 @@ tr {
 .edit_btn {
     background-color:#e7c271;
     text-decoration:underline;
-    padding:5px;}
+    padding:5px;
+    margin: 0 5px;}
 
 .assign_btn {
     text-decoration:underline;
@@ -847,7 +848,7 @@ tr {
     height:50px;}
 
 .search_select {
-    width: 95%;
+    width: 90%;
     padding: 7px;}
 
 .text_area textarea{

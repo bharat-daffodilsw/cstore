@@ -208,12 +208,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.data = {"countries": [], "cities": [], "states": [], "selectedCity": "", "selectedState": "", "selectedVendorCategory": "", "selectedCountry": "", "vendorCategories": []};
     $scope.data.vendorCategories = [
         {"name": "Beverage"},
-        {"name": "Food Service"},
-        {"name": "Salty Snacks"},
         {"name": "Candy"},
-        {"name": "Propane"},
-        {"name": "Fuel"},
         {"name": "Energy"},
+        {"name": "Food Service"},
+        {"name": "Fuel"},
+        {"name": "Propane"},
+        {"name": "Salty Snacks"},
         {"name": "Others"}
     ];
     $scope.data.selectedVendorCategory = $scope.data.vendorCategories[0];
@@ -221,38 +221,38 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     //changes made 0205
     $scope.storedata = {"cities": [], "states": [], "countries": [], "selectedCity": "", "selectedState": "", "selectedCountry": "", "posTypes": [], "selectedPosType": "", "rewardTypes": [], "selectedRewardType": "", "shifts": [], "selectedShift": "", "manager": {}, "brands": [], "selectedBrand": "", "brandName": "", "otherPosType": "", "otherRewardType": "", "otherBrand": "", "loyalty_status": [], "selectedLoyaltyStatus": ""};
     $scope.storedata.posTypes = [
+        {"name": "FisCal"},
         {"name": "Gilbarco Passport"},
+        {"name": "Pinnacle Palm"},
+        {"name": "Radiant"},
+        {"name": "Retalix"},
         {"name": "VeriFone Ruby Only"},
         {"name": "VeriFone Ruby Sapphire"},
         {"name": "VeriFone Sapphire w/Topaz"},
         {"name": "Wayne Nucleus"},
-        {"name": "Radiant"},
-        {"name": "Retalix"},
-        {"name": "FisCal"},
-        {"name": "Pinnacle Palm"},
         {"name": "Others"}
     ];
     $scope.storedata.selectedPosType = $scope.storedata.posTypes[0];
     $scope.storedata.rewardTypes = [
         {"name": "Cents Per Gallon"},
-        {"name": "Points/Clubs"},
         {"name": "Clubs Only"},
         {"name": "Mobile Only"},
+        {"name": "Points/Clubs"},
         {"name": "Others"}
     ];
     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
     //changes made 02/05
     $scope.storedata.brands = [
-        {"name": "Shell"},
-        {"name": "CITGO"},
         {"name": "BP"},
-        {"name": "Mobil"},
+        {"name": "CITGO"},
+        {"name": "Chevron"},
+        {"name": "Conoco"},
         {"name": "Exxon"},
         {"name": "Marathon"},
-        {"name": "Conoco"},
+        {"name": "Mobil"},
         {"name": "Phillips 66"},
+        {"name": "Shell"},
         {"name": "Valero"},
-        {"name": "Chevron"},
         {"name": "Others"}
     ];
     $scope.storedata.selectedBrand = $scope.storedata.brands[0];
@@ -277,15 +277,15 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     ];
     $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
     $scope.promotiondata.itemSignage = [
-        {"name": "Cooler"},
-        {"name": "Aisle"}
+        {"name": "Aisle"},
+        {"name": "Cooler"}
     ];
     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
     // change made
     $scope.promotiondata.upc = [
-        {"name": "UPC"},
+        {"name": "GROUP"},
         {"name": "PLU"},
-        {"name": "GROUP"}
+        {"name": "UPC"}
     ];
     $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     for (var i = 0; i < 24; i++) {
@@ -367,6 +367,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
         query.columns = ["firstname"];
+        query.orders = {"firstname": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
@@ -792,6 +793,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var productCategories = {};
         var query = {"table": "product_categories__cstore"};
         query.columns = ["name"];
+        query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productCategoryData) {
@@ -864,11 +866,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         //change
         var query = {"table": "roles__cstore"};
         query.columns = ["name"];
+        query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (roleData) {
             $scope.userdata.roles = roleData.response.data;
-            $scope.userdata.selectedRole = $scope.userdata.roles[1];
+            $scope.userdata.selectedRole = $scope.userdata.roles[0];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -878,6 +881,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         //change
         var query = {"table": "storemanagers__cstore"};
         query.columns = ["storename"];
+        query.orders = {"storename": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
@@ -894,6 +898,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getTrainingCategories = function () {
         var query = {"table": "training_categories__cstore"};
         query.columns = ["name"];
+        query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryData) {
@@ -1179,6 +1184,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getProgramList = function () {
         var query = {"table": "program__cstore"};
         query.columns = ["name"];
+        query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
@@ -1307,7 +1313,6 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
     $scope.$on('test', function (ngRepeatFinishedEvent) {
         $('.bxslider').bxSlider({
             auto: true,
-            autoControls: true,
             autoHover: true,
             captions: true,
             pager: false
@@ -2490,10 +2495,10 @@ cstore.controller('userCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingUserData = false;
     $scope.venderSearch = [
+        {"value": "userid.firstname", "name": "Name"},
         {"value": "username", "name": "Email"},
-        {"value": "userid.firstname", "name": "Firstname"},
-        {"value": "storeid.storename", "name": "Store Name"},
-        {"value": "roleid.name", "name": "Role"}
+        {"value": "roleid.name", "name": "Role"},
+        {"value": "storeid.storename", "name": "Site Name"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.users = [];
@@ -3871,7 +3876,7 @@ cstore.controller('programList', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingProgramData = false;
     $scope.venderSearch = [
-        {"value": "name", "name": " Program Name"}
+        {"value": "name", "name": "Program Name"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.programs = [];

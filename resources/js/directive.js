@@ -912,7 +912,7 @@ cstore.directive('vendorSelect', ['$appService', function ($appService, $scope) 
 cstore.directive('productCategorySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="search_select" ng-model="productdata.selectedProductCategory" ng-options="productCategory.name for productCategory in productdata.productCategories"></select>'
+        template: '<select class="brand" ng-model="productdata.selectedProductCategory" ng-options="productCategory.name for productCategory in productdata.productCategories"></select>'
     }
 }]);
 
@@ -2844,12 +2844,12 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + users.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
-            '<span>FirstName</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'userid.firstname\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'userid.firstname\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'userid.firstname\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Email</span>' +
             '<span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'username\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'username\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Role</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'roleid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setOrder(\'roleid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>StoreName</span>' +
+            '<div class="sortDown" ng-click="setOrder(\'roleid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Site Name</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
             '</tr><tr ng-repeat="user in users"><td><input type="checkbox" ng-model="user.deleteStatus"></td><td>{{user.userid.firstname}}</td><td>{{user.username}}' +
@@ -2963,7 +2963,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Role*</div></td>' +
-            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Store Name*</div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Site Name*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
@@ -3869,10 +3869,10 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
             '<div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\',searchby.value,search.searchContent)"></div>	' +
             '</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Assign Store</th><th></th><th></th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
+            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id)" href>Assign</a></td>' +
-            '<td><a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
+            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id)" href>Assign</a>' +
+            '<a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -4300,15 +4300,15 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
 cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div><assign-store-popup></assign-store-popup><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"  ng-click="setPath(\'add-survey\')"><a href>Add</a></button>' +
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button"  ng-click="setPath(\'add-survey\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteSurvey()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + surveys.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Assign Store </th><th>Answered Surveys</th><th></th></tr><tr ng-repeat="survey in surveys"><td>' +
-            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td ><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id)" href>Assign</a></td><td ><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a></td>' +
-            '<td><a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
+            '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="survey in surveys"><td>' +
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id)" href>Assign</a><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a>' +
+            '<a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -4759,7 +4759,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
 cstore.directive('carouselPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<ul class="bxslider"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img title="{{carouselPromotion.promo_title}}" ng-src="{{carouselPromotion.imageUrl}}" height="225px" width="270px;"/></li></ul>',
+        template: '<ul class="bxslider" style="margin-top:6.5px"><li ng-repeat="carouselPromotion in carouselPromotions" on-finish-render="test"><img title="{{carouselPromotion.promo_title}}" ng-src="{{carouselPromotion.imageUrl}}" height="225px" width="270px;"/></li></ul>',
         compile: function () {
             return {
                 pre: function () {
