@@ -4178,7 +4178,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 return false;
                             }
 
-                            if (!$('#uploaddocfile').val()) {
+                            if (!$scope.trainingdata.uploadedimages || $scope.trainingdata.uploadedimages.length == 0) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
