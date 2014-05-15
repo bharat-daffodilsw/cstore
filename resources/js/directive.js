@@ -1163,9 +1163,9 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     $scope.showMultiImgFile = function (file, index) {
                         if (!$scope.trainingdata.uploadedimages[index]) {
                             $scope.trainingdata.uploadedimages[index] = {};
-                        }
-						if(!$scope.uploadedimages){
+                        }if(!$scope.uploadedimages ){
 							$scope.uploadedimages = [];
+						}if( !$scope.uploadedimages[index]){
 							$scope.uploadedimages[index] = {};
 						}
 						$scope.uploadedimages[index].filename = file[0].name;
