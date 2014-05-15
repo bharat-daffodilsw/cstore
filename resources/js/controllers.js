@@ -1302,7 +1302,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (carouselPromotionData) {
             $scope.loadingCarouselPromotionData = false;
-            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 270, 225);
+            $scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data, 270, 237);
             //$scope.carouselPromotions = $appService.setUrls(carouselPromotionData.response.data);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
