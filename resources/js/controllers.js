@@ -1867,7 +1867,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 
     $scope.venderSearch = [
 
-        {"value": "storename", "name": "Store Name"},
+        {"value": "storename", "name": "Site Name"},
         {"value": "shift", "name": "Manager Shift"},
         {"value": "programid.name", "name": "Program"},
         {"value": "loyalty_status", "name": "Loyalty Status"},
@@ -2061,7 +2061,6 @@ cstore.controller('countryCtrl', function ($scope, $appService) {
             countryData.response.data[0].deleteStatus = false;
             countryData.response.data[0].oldstatus = true;
             $scope.countries[index] = countryData.response.data[0];
-            console.log($scope.countries[index]);
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -2076,7 +2075,7 @@ cstore.controller('productCategoryCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingProductCategoryData = false;
     $scope.venderSearch = [
-        {"value": "name", "name": "Product Category"},
+        {"value": "name", "name": "POP Category"},
         {"value": "description", "name": "Description"}
     ];
     $scope.searchby = $scope.venderSearch[0];
@@ -2255,6 +2254,7 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         var countries = {};
         var query = {"table": "countries__cstore"};
         query.columns = ["name"];
+        query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
@@ -2430,6 +2430,7 @@ cstore.controller('cityCtrl', function ($scope, $appService) {
         var states = {};
         var query = {"table": "states__cstore"};
         query.columns = ["name"];
+        query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {

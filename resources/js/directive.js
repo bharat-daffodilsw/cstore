@@ -418,7 +418,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in promotions");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -1305,7 +1305,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Manager Shift<span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'program.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'program.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Loyalty Status</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Reward Type</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>' +
             'Email</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Contact</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
             '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.programid.name}}</td>' +
@@ -1478,7 +1478,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             for (var j = 0; j < $scope.storedata.loyalty_status.length; j++) {
                                 if ($scope.storedata.loyalty_status[j].name == store.loyalty_status) {
                                     $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[j];
-                                    console.log($scope.storedata.selectedLoyaltyStatus);
                                     break;
                                 }
                                 else {
@@ -1958,7 +1957,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             '</td><td><span ng-hide="country.editStatus">{{country.name}}</span><input ng-show="country.editStatus" class="edit_input" type="text" ng-model="country.name"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="country.editStatus = true" ng-hide="country.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,country._id)" ng-show="country.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewCountry()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href  ng-click="addNewCountry()">' +
             '+ Click Here To Add New Country</a></div></div><div class="loadingImage" ng-hide="!loadingCountryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2003,7 +2002,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2120,7 +2119,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '{{productCategory.description}}</span><input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.description"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="productCategory.editStatus = true" ng-hide="productCategory.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCategory._id)" ng-show="productCategory.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewProductCategory()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href  ng-click="addNewProductCategory()">' +
             '+ Click Here To Add New POP Category</a></div></div><div class="loadingImage" ng-hide="!loadingProductCategoryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2175,7 +2174,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2290,7 +2289,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
             '{{trainingCategory.description}}</span><input type="text" ng-show="trainingCategory.editStatus" ng-model="trainingCategory.description"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="trainingCategory.editStatus = true" ng-hide="trainingCategory.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,trainingCategory._id)" ng-show="trainingCategory.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewTrainingCategory()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewTrainingCategory()">' +
             '+ Click Here To Add New Training Category</a></div></div><div class="loadingImage" ng-hide="!loadingTrainingCategoryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2345,7 +2344,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in training session");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2447,8 +2446,15 @@ cstore.directive('countrySelect', ['$appService', function ($appService, $scope)
         template: '<select class="qty_select" ng-model="state.countryid" ng-options="country.name for country in countryList"></select>',
         compile: function () {
             return{
-                pre: function () {
-
+                pre: function ($scope) {
+                    if (!$scope.state.countryid) {
+                        for (var i = 0; i < $scope.countryList.length; i++) {
+                            if ($scope.countryList[i]._id == "531d3e9b8826fc304706a460") {
+                                $scope.state.countryid = $scope.countryList[i];
+                                break;
+                            }
+                        }
+                    }
                 }, post: function () {
 
                 }
@@ -2476,7 +2482,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewState()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewState()">' +
             '+ Click Here To Add New State</a></div></div><div class="loadingImage" ng-hide="!loadingStateData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2522,7 +2528,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2654,8 +2660,10 @@ cstore.directive('cityStateSelect', ['$appService', function ($appService, $scop
         template: '<select class="qty_select" ng-model="city.stateid" ng-options="state.name for state in stateList"></select>',
         compile: function () {
             return{
-                pre: function () {
-
+                pre: function ($scope) {
+                    if (!$scope.city.stateid) {
+                        $scope.city.stateid = $scope.stateList[0];
+                    }
                 }, post: function () {
 
                 }
@@ -2682,7 +2690,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '<span ng-hide="city.editStatus">{{city.stateid.name}}</span><city-state-select ng-show="city.editStatus"></city-state-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="city.editStatus=true;setCity(city)" ng-hide="city.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,city._id)" ng-show="city.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewCity()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewCity()">' +
             '+ Click Here To Add New City</a></div></div><div class="loadingImage" ng-hide="!loadingCityData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2728,7 +2736,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in vendor");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -3252,7 +3260,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><input class="date_time" id="start_date" type="text" ng-model="testdata.choose_date" jqdatepicker /><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
@@ -5145,7 +5153,7 @@ cstore.directive('trainingCategoryDetail', ['$appService', function ($appService
 cstore.directive('typeSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="productCode.type" ng-options="type for type in types"></select>',
+        template: '<select class="qty_select" ng-model="productCode.type" ng-options="type for type in types"></select>',
         compile: function () {
             return{
                 pre: function ($scope) {
@@ -5178,7 +5186,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
             '<span ng-hide="productCode.editStatus">{{productCode.type}}</span><type-select ng-show="productCode.editStatus"></type-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="productCode.editStatus=true;setProductCode(productCode)" ng-hide="productCode.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCode._id)" ng-show="productCode.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewProductCode()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewProductCode()">' +
             '+ Click Here To Add New Product Code</a></div></div><div class="loadingImage" ng-hide="!loadingProductCodeData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
