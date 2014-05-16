@@ -1287,7 +1287,6 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                             $scope.oFReader.onload = $scope.loadFile;
                             $scope.oFReader.readAsDataURL($scope.oFile);
                             $scope.oFile.fileExist = true;
-                            console.log("333333:::" + $scope.oFile.fileExist);
                         });
                     });
                 }
@@ -3063,9 +3062,18 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
-                            $('.popup').toggle("slide");
+                        }, function (jqxhr,err) {
+                            if (jqxhr.responseText && JSON.parse(jqxhr.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(jqxhr.responseText).response);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+                            else {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+
                         });
                     }
                 }
@@ -3327,16 +3335,13 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         var endArray = promotion["end_date"].split(" ");
                         var endMinArray = endArray[1].split(":");
                         $scope.promotiondata.end_date = endArray[0];
-                        console.log("enddate :: " + $scope.promotiondata.end_date);
                         var startArray = promotion["start_date"].split(" ");
                         var startMinArray = startArray[1].split(":");
                         $scope.promotiondata.start_date = startArray[0];
-                        console.log("startdate :: " + $scope.promotiondata.start_date);
                         if (promotion.end_date && $scope.promotiondata.hours) {
                             for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
                                 if ($scope.promotiondata.hours[j] == endMinArray[0]) {
                                     $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[j];
-                                    console.log("selected end hour:::" + $scope.promotiondata.selectedEndHour);
                                     break;
                                 }
                             }
@@ -3345,7 +3350,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
                                 if ($scope.promotiondata.hours[j] == startMinArray[0]) {
                                     $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[j];
-                                    console.log("selected Start hour:::" + $scope.promotiondata.selectedStartHour);
                                     break;
                                 }
                             }
@@ -3354,7 +3358,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
                                 if ($scope.promotiondata.minutes[j] == endMinArray[1]) {
                                     $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[j];
-                                    console.log("selected end minute:::" + $scope.promotiondata.selectedEndMinute);
                                     break;
                                 }
                             }
@@ -3363,7 +3366,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
                                 if ($scope.promotiondata.minutes[j] == startMinArray[1]) {
                                     $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[j];
-                                    console.log("selected Start minute:::" + $scope.promotiondata.selectedStartMinute);
                                     break;
                                 }
                             }
@@ -3377,14 +3379,10 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
                         $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
-                        // change made
                         $scope.promotiondata["codes"] = promotion.codes ? promotion.codes : [];
-                        //changes made by anuradha 0105 evening
-                        console.log(promotion.top_promo);
                         $scope.promotiondata["top_promo"] = promotion.top_promo ? promotion.top_promo : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
-                            //console.log("22222:::"+$scope.oFile.fileExist);
                         }
                         $scope.showFile(promotion.image, false);
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
@@ -3494,19 +3492,19 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 								switch(type){
 									case "UPC":
 										$scope.availableTags[0].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-										break;
+                                        break;
 									case "PLU":
 										$scope.availableTags[1].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-										break;
+                                        break;
 									case "GROUP":
 										$scope.availableTags[2].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-										break;
+                                        break;
 								}
 							}
 							$('#upc_grp_tags').tagit({"tagSource": $scope.availableTags[0], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
-							$('#plu_grp_tags').tagit({"tagSource": $scope.availableTags[1], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
-							$('#group_grp_tags').tagit({"tagSource": $scope.availableTags[2], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});							
-							$scope.changeUpc($scope.promotiondata.selectedUpc.name);
+                            $('#plu_grp_tags').tagit({"tagSource": $scope.availableTags[1], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                            $('#group_grp_tags').tagit({"tagSource": $scope.availableTags[2], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                            $scope.changeUpc($scope.promotiondata.selectedUpc.name);
 						}, function (jqxhr, error) {
 							$("#popupMessage").html(error);
 							$('.popup').toggle("slide");
