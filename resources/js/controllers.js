@@ -1077,7 +1077,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.loadingPopularProductData = false;
     $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
-        $scope.loadingPopularProductData = true;
         $scope.products = [];
         var productObj = {"name": "", "cost": {}, "quantity": ""};
         $scope.newShoppingCartProduct["userid"] = {"username": $scope.currentUser.data.username};
@@ -1098,10 +1097,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.newShoppingCartProduct];
         $appService.save(query, ASK, OSK, null, function (callBackData) {
-            $scope.loadingPopularProductData = false;
             if (callBackData.code == 200 && callBackData.status == "ok") {
-                $("#popupMessage").html("Product is added to cart");
-                $('.popup').toggle("slide");
+                //$("#popupMessage").html("Product is added to cart");
+                //$('.popup').toggle("slide");
+                window.location.href = "#!/shopping-cart";
                 $scope.cartProducts.length++;
             } else {
                 $("#popupMessage").html(callBackData.response);
@@ -1166,8 +1165,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     }
                 }
                 $scope.cartProducts.length--;
-                $("#popupMessage").html("Product is removed");
-                $('.popup').toggle("slide");
             } else {
                 $("#popupMessage").html(callBackData.response);
                 $('.popup').toggle("slide");

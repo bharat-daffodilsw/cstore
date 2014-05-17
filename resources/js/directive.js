@@ -108,7 +108,8 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="admin_menu pull-left"><ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
+        template: '<div class="admin_menu pull-left">' +
+            '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li ng-click="clearSurveyContent()">' +
@@ -5392,7 +5393,8 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<th>Qty</th>' +
             '<th>Price</th>' +
             '</tr>' +
-            '<tr ng-show="shoppingCartProducts.length" ng-repeat="cartProduct in shoppingCartProducts">' +
+            '<tr ng-hide="shoppingCartProducts.length > 0"><td></td><td><div class="item">No POP is added to cart</div></td><td></td><td></td><td></td></tr>' +
+            '<tr ng-show="shoppingCartProducts.length > 0" ng-repeat="cartProduct in shoppingCartProducts">' +
             '<td>{{$index+1}}</td>' +
             '<td>' +
             '<div class="item">' +
@@ -5405,7 +5407,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<td class="item_price">{{cartProduct.quantity*cartProduct.cost.amount | currency}}</td>' +
             '</tr>' +
             '</table>' +
-            '<div class="saved_last pull-right">'+
+            '<div class="saved_last pull-right" ng-show="shoppingCartProducts.length > 0">'+
             '<div class="fix_price pull-right">' +
             '<div class="saved_1 col-sm-7 col-md-7 pull-left">' +
             '<div class="fix_height">Subtotal :</div>' +
