@@ -3528,6 +3528,9 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 					}
 					$scope.changeUpc = function (type) {	
 						var i = "";
+						if(!$scope.fillnotset && $scope.fillnotset != "false"){
+							$scope.fillnotset = "true";
+						}
 						switch(type.toUpperCase()){
 							case "UPC":
 								$scope.showUpc = true;
@@ -3551,9 +3554,10 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 								i = 2;
 								break;
 						}
-						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId) {
+						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && $scope.fillnotset == "true") {
 							var fillCodes = $scope.promotiondata.codes;
 							$('#'+$scope.parentId).tagit('fill', fillCodes);
+							$scope.fillnotset = "false";
 						}
 					}
 					$scope.getAllAvailableTags();
