@@ -2059,6 +2059,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                             }
                             return el.editStatus == true;
                         });
+                        console.log(savedindexes);
                         for (var i = 0; i < countryList.length; i++) {
                             if (!countryList[i].name) {
                                 $("#popupMessage").html("Please enter country name");
@@ -6141,6 +6142,37 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
 
                                 //$("#popupMessage").html("Deleted");
                                 //$('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                    $scope.updatePopSoldCount = function (pop) {
+                        var popList = [{"_id": "", "soldcount":""}];
+                         popList = pop.filter(function (el) {
+                            if (el._id) {
+                                return el;
+                            }
+                        });
+                        for(var i =0; i<popList.length;i++){
+                            popList[i]={"_id":popList[i].popid,"soldcount":popList[i].quantity};
+                        }
+
+
+                        var query = {};
+                        query.table = "products__cstore";
+                        query.operations = popList;
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Updated");
+                                $('.popup').toggle("slide");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");

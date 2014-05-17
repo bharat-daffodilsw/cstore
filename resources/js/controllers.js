@@ -1023,13 +1023,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.oFile.fileExist = false;
     }
     $scope.clearTrainingSessionContent = function () {
-        $scope.trainingdata["title"] = "";
-        $scope.trainingdata["description"] = "";
-        $scope.trainingdata["video_url"] = "";
-        $scope.trainingdata["file"] = "";
-        $scope.trainingdata["uploadedimages"] = [];
-        $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
-
+            $scope.trainingdata["title"] = "";
+            $scope.trainingdata["description"] = "";
+            $scope.trainingdata["video_url"] = "";
+            $scope.trainingdata["file"] = "";
+            $scope.trainingdata["uploadedimages"] = [];
+            $scope.trainingdata["editImages"]=[];
+            $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
     }
     $scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
@@ -1075,7 +1075,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
         $scope.products = [];
-        var productObj = {"name": "", "cost": {}, "quantity": ""};
+        var productObj = {"name": "", "cost": {}, "quantity": "","popid":""};
         $scope.newShoppingCartProduct["userid"] = {"username": $scope.currentUser.data.username};
         //$scope.newShoppingCartProduct["sub_total"]={"amount":product.cost.amount*1,"type": {"currency": "usd"}};
         productObj.name = product.name;
@@ -1086,6 +1086,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             productObj.quantity = 1;
         }
         productObj.cost = {"amount": product.cost.amount, "type": {"currency": "usd"}};
+        productObj.popid =product._id;
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;
         //$scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};
