@@ -3527,7 +3527,7 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 					}
 					$scope.changeUpc = function (type) {	
 						var i = "";
-						if(!$scope.fillnotset && $scope.fillnotset != "false"{
+						if(!$scope.fillnotset && $scope.fillnotset != "false"){
 							$scope.fillnotset = "true";
 						}
 						switch(type.toUpperCase()){
