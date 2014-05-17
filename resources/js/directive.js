@@ -3057,7 +3057,13 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 $scope.clearUserContent();
                                 window.location.href = "#!/manage-users";
-                            } else {
+                            }
+                            else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+                            else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
 
