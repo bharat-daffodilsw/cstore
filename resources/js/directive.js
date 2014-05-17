@@ -3553,7 +3553,7 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 								i = 2;
 								break;
 						}
-						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && $scope.fillnotset) {
+						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && $scope.fillnotset == "true") {
 							var fillCodes = $scope.promotiondata.codes;
 							$('#'+$scope.parentId).tagit('fill', fillCodes);
 							$scope.fillnotset = "false";
