@@ -3527,7 +3527,9 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 					}
 					$scope.changeUpc = function (type) {	
 						var i = "";
-						var fillnotset = true;
+						if(!$scope.fillnotset && $scope.fillnotset != "false"{
+							$scope.fillnotset = "true";
+						}
 						switch(type.toUpperCase()){
 							case "UPC":
 								$scope.showUpc = true;
@@ -3551,10 +3553,10 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 								i = 2;
 								break;
 						}
-						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && fillnotset) {
+						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && $scope.fillnotset) {
 							var fillCodes = $scope.promotiondata.codes;
 							$('#'+$scope.parentId).tagit('fill', fillCodes);
-							fillnotset = false;
+							$scope.fillnotset = "false";
 						}
 					}
 					$scope.getAllAvailableTags();
