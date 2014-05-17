@@ -1022,6 +1022,15 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         // $scope.promotiondata.vendorsList = $scope.vendors[0];
         $scope.oFile.fileExist = false;
     }
+    $scope.clearTrainingSessionContent = function () {
+        $scope.trainingdata["title"] = "";
+        $scope.trainingdata["description"] = "";
+        $scope.trainingdata["video_url"] = "";
+        $scope.trainingdata["file"] = "";
+        $scope.trainingdata["uploadedimages"] = [];
+        $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
+
+    }
     $scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
         $scope.surveydata["description"] = "";
@@ -2769,15 +2778,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
 	
-    $scope.clearTrainingSessionContent = function () {
-        $scope.trainingdata["title"] = "";
-        $scope.trainingdata["description"] = "";
-        $scope.trainingdata["video_url"] = "";
-        $scope.trainingdata["file"] = "";
-        $scope.trainingdata["uploadedimages"] = [];
-        $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
 
-    }
     var trainingId = $routeParams.q;
     if (trainingId && trainingId != undefined && trainingId != "undefined") {
         $scope.trainingdata["trainingSessionId"] = trainingId;
