@@ -1074,9 +1074,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
     }
     $scope.getShoppingCartLength();
+    $scope.loadingPopularProductData = false;
     $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
-        $scope.loadingStatus = true;
+        $scope.loadingPopularProductData = true;
         $scope.products = [];
         var productObj = {"name": "", "cost": {}, "quantity": ""};
         $scope.newShoppingCartProduct["userid"] = {"username": $scope.currentUser.data.username};
@@ -1097,7 +1098,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.newShoppingCartProduct];
         $appService.save(query, ASK, OSK, null, function (callBackData) {
-            $scope.loadingStatus = false;
+            $scope.loadingPopularProductData = false;
             if (callBackData.code == 200 && callBackData.status == "ok") {
                 $("#popupMessage").html("Product is added to cart");
                 $('.popup').toggle("slide");
@@ -1143,7 +1144,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     $scope.removeFromCart = function (product) {
-        console.log(product);
         if(product){
         $scope.removeShoppingCartProduct = {};
         $scope.loadingStatus = true;

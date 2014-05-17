@@ -158,12 +158,10 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                     //console.log(hash.indexOf("search"));
                                     //console.log(hash.substring(0,searchIndex-1));
                                     var substr = hash.substring(0, searchIndex - 1);
-                                    console.log(substr);
                                     window.location.href = substr + "&search=" + $scope.searchContent;
                                     $scope.searchContent = "";
                                 }
                                 else {
-                                    console.log(hash);
                                     window.location.href = hash + "&search=" + $scope.searchContent;
                                     $scope.searchContent = "";
                                     //window.location.href = "/#!/?search=" + $scope.searchContent;
@@ -184,6 +182,12 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 //console.log(hash);
                                 //window.location.href = hash + "&search=" + $scope.searchContent;
                                 window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
+                                //$scope.searchContent="";
+                            }
+                            else if (hash.indexOf("?surveyid=") > 0) {
+                                //console.log(hash);
+                                //window.location.href = hash + "&search=" + $scope.searchContent;
+                                window.location.href = "#!/all-surveys?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
                             else if (hash.indexOf("#!/") >= 0 || hash == "#!/") {
@@ -207,7 +211,6 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                             }
                         }
                         else {
-                            console.log(hash);
                             if (hash.indexOf("search") > 0) {
                                 var searchIndex = hash.indexOf("search");
                                 var substr = hash.substring(0, searchIndex - 1);
@@ -1187,7 +1190,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     }
 
                     $scope.loadImgFile = function (evt) {
-                        if ((/\.(doc|docx|xls|pdf|ppt)$/i).test($scope.oFile.name)) {
+                        if ((/\.(doc|docx|xls|xlsx|pdf|ppt|pptx)$/i).test($scope.oFile.name)) {
                             var current_file = {};
                             $scope.uploadingimage = true;
                             current_file.name = $scope.oFile.name;
@@ -4694,7 +4697,7 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
         template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="setPath(\'surveys\')"><a href>Back</a></button>' +
             '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
-            '<div class="search_2 pull-left"><form ng-submit="searchSurveyStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
@@ -4705,7 +4708,12 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
-                post: function ($scope) {                    
+                post: function ($scope) {
+                    $scope.search = function () {
+                        $scope.preCursor = 0;
+                        $scope.currentCursor = 0;
+                        $scope.getSurveyStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
 					$scope.setQuesAns = function (store){
 						$scope.loadingStatus = true;					
 						var query = {};
@@ -4815,7 +4823,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left">{{promotion[0].description}}</div></div>' +
+            '<div class="details_product pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>'
     }
 }]);
