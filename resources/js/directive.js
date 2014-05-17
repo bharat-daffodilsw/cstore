@@ -2880,7 +2880,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<div class="sortDown" ng-click="setOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
             '</tr><tr ng-repeat="user in users"><td><input type="checkbox" ng-model="user.deleteStatus"></td><td>{{user.userid.firstname}}</td><td>{{user.username}}' +
             '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td>' +
-            '</tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingUserData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
