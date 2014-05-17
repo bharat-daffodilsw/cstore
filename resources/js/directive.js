@@ -1262,11 +1262,17 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                         $scope.readonlyrow.filenotexist = true;
                     }
                     $scope.loadFile = function (evt) {
-                        $scope.file = {};
-                        $scope.file.name = $scope.oFile.name;
-                        $scope.file.result = evt.target.result;
-                        $scope.oFile['data'] = evt.target.result;
-                        $scope.showUploadedFile($scope.file);
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test($scope.oFile.name)) {
+                            $scope.file = {};
+                            $scope.file.name = $scope.oFile.name;
+                            $scope.file.result = evt.target.result;
+                            $scope.oFile['data'] = evt.target.result;
+                            $scope.showUploadedFile($scope.file);
+                        }
+                        else {
+                            $("#popupMessage").html("You can upload image file only");
+                            $('.popup').toggle("slide");
+                        }
                     };
                     $scope.showUploadedFile = function (file) {
 
