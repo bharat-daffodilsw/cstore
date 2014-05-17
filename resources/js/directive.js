@@ -158,12 +158,10 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                     //console.log(hash.indexOf("search"));
                                     //console.log(hash.substring(0,searchIndex-1));
                                     var substr = hash.substring(0, searchIndex - 1);
-                                    console.log(substr);
                                     window.location.href = substr + "&search=" + $scope.searchContent;
                                     $scope.searchContent = "";
                                 }
                                 else {
-                                    console.log(hash);
                                     window.location.href = hash + "&search=" + $scope.searchContent;
                                     $scope.searchContent = "";
                                     //window.location.href = "/#!/?search=" + $scope.searchContent;
@@ -184,6 +182,12 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 //console.log(hash);
                                 //window.location.href = hash + "&search=" + $scope.searchContent;
                                 window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
+                                //$scope.searchContent="";
+                            }
+                            else if (hash.indexOf("?surveyid=") > 0) {
+                                //console.log(hash);
+                                //window.location.href = hash + "&search=" + $scope.searchContent;
+                                window.location.href = "#!/all-surveys?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
                             else if (hash.indexOf("#!/") >= 0 || hash == "#!/") {
@@ -207,7 +211,6 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                             }
                         }
                         else {
-                            console.log(hash);
                             if (hash.indexOf("search") > 0) {
                                 var searchIndex = hash.indexOf("search");
                                 var substr = hash.substring(0, searchIndex - 1);
@@ -418,7 +421,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in promotions");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -1187,7 +1190,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     }
 
                     $scope.loadImgFile = function (evt) {
-                        if ((/\.(doc|docx|xls|pdf|ppt)$/i).test($scope.oFile.name)) {
+                        if ((/\.(doc|docx|xls|xlsx|pdf|ppt|pptx)$/i).test($scope.oFile.name)) {
                             var current_file = {};
                             $scope.uploadingimage = true;
                             current_file.name = $scope.oFile.name;
@@ -1259,11 +1262,17 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                         $scope.readonlyrow.filenotexist = true;
                     }
                     $scope.loadFile = function (evt) {
-                        $scope.file = {};
-                        $scope.file.name = $scope.oFile.name;
-                        $scope.file.result = evt.target.result;
-                        $scope.oFile['data'] = evt.target.result;
-                        $scope.showUploadedFile($scope.file);
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test($scope.oFile.name)) {
+                            $scope.file = {};
+                            $scope.file.name = $scope.oFile.name;
+                            $scope.file.result = evt.target.result;
+                            $scope.oFile['data'] = evt.target.result;
+                            $scope.showUploadedFile($scope.file);
+                        }
+                        else {
+                            $("#popupMessage").html("You can upload image file only");
+                            $('.popup').toggle("slide");
+                        }
                     };
                     $scope.showUploadedFile = function (file) {
 
@@ -1287,7 +1296,6 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
                             $scope.oFReader.onload = $scope.loadFile;
                             $scope.oFReader.readAsDataURL($scope.oFile);
                             $scope.oFile.fileExist = true;
-                            console.log("333333:::" + $scope.oFile.fileExist);
                         });
                     });
                 }
@@ -1305,7 +1313,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
             '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Manager Shift<span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'program.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'program.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Loyalty Status</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Reward Type</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>' +
             'Email</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Contact</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
             '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.programid.name}}</td>' +
@@ -1478,7 +1486,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             for (var j = 0; j < $scope.storedata.loyalty_status.length; j++) {
                                 if ($scope.storedata.loyalty_status[j].name == store.loyalty_status) {
                                     $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[j];
-                                    console.log($scope.storedata.selectedLoyaltyStatus);
                                     break;
                                 }
                                 else {
@@ -1958,7 +1965,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
             '</td><td><span ng-hide="country.editStatus">{{country.name}}</span><input ng-show="country.editStatus" class="edit_input" type="text" ng-model="country.name"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="country.editStatus = true" ng-hide="country.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,country._id)" ng-show="country.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewCountry()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href  ng-click="addNewCountry()">' +
             '+ Click Here To Add New Country</a></div></div><div class="loadingImage" ng-hide="!loadingCountryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2003,7 +2010,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2120,7 +2127,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
             '{{productCategory.description}}</span><input type="text" ng-show="productCategory.editStatus" ng-model="productCategory.description"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="productCategory.editStatus = true" ng-hide="productCategory.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCategory._id)" ng-show="productCategory.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewProductCategory()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href  ng-click="addNewProductCategory()">' +
             '+ Click Here To Add New POP Category</a></div></div><div class="loadingImage" ng-hide="!loadingProductCategoryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2175,7 +2182,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2290,7 +2297,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
             '{{trainingCategory.description}}</span><input type="text" ng-show="trainingCategory.editStatus" ng-model="trainingCategory.description"></td>' +
             '<td style="cursor: pointer"><a class="edit_btn" ng-click="trainingCategory.editStatus = true" ng-hide="trainingCategory.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,trainingCategory._id)" ng-show="trainingCategory.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewTrainingCategory()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewTrainingCategory()">' +
             '+ Click Here To Add New Training Category</a></div></div><div class="loadingImage" ng-hide="!loadingTrainingCategoryData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2345,7 +2352,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in training session");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2447,8 +2454,15 @@ cstore.directive('countrySelect', ['$appService', function ($appService, $scope)
         template: '<select class="qty_select" ng-model="state.countryid" ng-options="country.name for country in countryList"></select>',
         compile: function () {
             return{
-                pre: function () {
-
+                pre: function ($scope) {
+                    if (!$scope.state.countryid) {
+                        for (var i = 0; i < $scope.countryList.length; i++) {
+                            if ($scope.countryList[i]._id == "531d3e9b8826fc304706a460") {
+                                $scope.state.countryid = $scope.countryList[i];
+                                break;
+                            }
+                        }
+                    }
                 }, post: function () {
 
                 }
@@ -2476,7 +2490,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
             '<span ng-hide="state.editStatus">{{state.countryid.name}}</span><country-select ng-show="state.editStatus"></country-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="state.editStatus=true;setState(state)" ng-hide="state.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,state._id)" ng-show="state.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewState()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewState()">' +
             '+ Click Here To Add New State</a></div></div><div class="loadingImage" ng-hide="!loadingStateData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2522,7 +2536,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in products");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2654,8 +2668,10 @@ cstore.directive('cityStateSelect', ['$appService', function ($appService, $scop
         template: '<select class="qty_select" ng-model="city.stateid" ng-options="state.name for state in stateList"></select>',
         compile: function () {
             return{
-                pre: function () {
-
+                pre: function ($scope) {
+                    if (!$scope.city.stateid) {
+                        $scope.city.stateid = $scope.stateList[0];
+                    }
                 }, post: function () {
 
                 }
@@ -2682,7 +2698,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
             '<span ng-hide="city.editStatus">{{city.stateid.name}}</span><city-state-select ng-show="city.editStatus"></city-state-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="city.editStatus=true;setCity(city)" ng-hide="city.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,city._id)" ng-show="city.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewCity()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewCity()">' +
             '+ Click Here To Add New City</a></div></div><div class="loadingImage" ng-hide="!loadingCityData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -2728,7 +2744,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                    $("#popupMessage").html("This record is referred in vendor");
+                                    $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -2870,7 +2886,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<div class="sortDown" ng-click="setOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
             '</tr><tr ng-repeat="user in users"><td><input type="checkbox" ng-model="user.deleteStatus"></td><td>{{user.userid.firstname}}</td><td>{{user.username}}' +
             '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td>' +
-            '</tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingUserData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3047,7 +3063,13 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 $scope.clearUserContent();
                                 window.location.href = "#!/manage-users";
-                            } else {
+                            }
+                            else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+                            else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
 
@@ -3055,9 +3077,18 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
-                            $('.popup').toggle("slide");
+                        }, function (jqxhr,err) {
+                            if (jqxhr.responseText && JSON.parse(jqxhr.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(jqxhr.responseText).response);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+                            else {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+
                         });
                     }
                 }
@@ -3252,7 +3283,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><input class="date_time" id="start_date" type="text" ng-model="testdata.choose_date" jqdatepicker /><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
@@ -3319,16 +3350,13 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         var endArray = promotion["end_date"].split(" ");
                         var endMinArray = endArray[1].split(":");
                         $scope.promotiondata.end_date = endArray[0];
-                        console.log("enddate :: " + $scope.promotiondata.end_date);
                         var startArray = promotion["start_date"].split(" ");
                         var startMinArray = startArray[1].split(":");
                         $scope.promotiondata.start_date = startArray[0];
-                        console.log("startdate :: " + $scope.promotiondata.start_date);
                         if (promotion.end_date && $scope.promotiondata.hours) {
                             for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
                                 if ($scope.promotiondata.hours[j] == endMinArray[0]) {
                                     $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[j];
-                                    console.log("selected end hour:::" + $scope.promotiondata.selectedEndHour);
                                     break;
                                 }
                             }
@@ -3337,7 +3365,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
                                 if ($scope.promotiondata.hours[j] == startMinArray[0]) {
                                     $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[j];
-                                    console.log("selected Start hour:::" + $scope.promotiondata.selectedStartHour);
                                     break;
                                 }
                             }
@@ -3346,7 +3373,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
                                 if ($scope.promotiondata.minutes[j] == endMinArray[1]) {
                                     $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[j];
-                                    console.log("selected end minute:::" + $scope.promotiondata.selectedEndMinute);
                                     break;
                                 }
                             }
@@ -3355,7 +3381,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
                                 if ($scope.promotiondata.minutes[j] == startMinArray[1]) {
                                     $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[j];
-                                    console.log("selected Start minute:::" + $scope.promotiondata.selectedStartMinute);
                                     break;
                                 }
                             }
@@ -3369,14 +3394,10 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["reward_value"] = promotion.reward_value ? promotion.reward_value : "";
                         $scope.promotiondata["sponsor"] = promotion.sponsor ? promotion.sponsor : "";
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
-                        // change made
                         $scope.promotiondata["codes"] = promotion.codes ? promotion.codes : [];
-                        //changes made by anuradha 0105 evening
-                        console.log(promotion.top_promo);
                         $scope.promotiondata["top_promo"] = promotion.top_promo ? promotion.top_promo : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
-                            //console.log("22222:::"+$scope.oFile.fileExist);
                         }
                         $scope.showFile(promotion.image, false);
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
@@ -3486,19 +3507,19 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
 								switch(type){
 									case "UPC":
 										$scope.availableTags[0].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-										break;
+                                        break;
 									case "PLU":
 										$scope.availableTags[1].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-										break;
+                                        break;
 									case "GROUP":
 										$scope.availableTags[2].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
-										break;
+                                        break;
 								}
 							}
 							$('#upc_grp_tags').tagit({"tagSource": $scope.availableTags[0], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
-							$('#plu_grp_tags').tagit({"tagSource": $scope.availableTags[1], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
-							$('#group_grp_tags').tagit({"tagSource": $scope.availableTags[2], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});							
-							$scope.changeUpc($scope.promotiondata.selectedUpc.name);
+                            $('#plu_grp_tags').tagit({"tagSource": $scope.availableTags[1], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                            $('#group_grp_tags').tagit({"tagSource": $scope.availableTags[2], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                            $scope.changeUpc($scope.promotiondata.selectedUpc.name);
 						}, function (jqxhr, error) {
 							$("#popupMessage").html(error);
 							$('.popup').toggle("slide");
@@ -4690,7 +4711,7 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
         template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="setPath(\'surveys\')"><a href>Back</a></button>' +
             '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
-            '<div class="search_2 pull-left"><form ng-submit="searchSurveyStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
@@ -4701,7 +4722,12 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
-                post: function ($scope) {                    
+                post: function ($scope) {
+                    $scope.search = function () {
+                        $scope.preCursor = 0;
+                        $scope.currentCursor = 0;
+                        $scope.getSurveyStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
 					$scope.setQuesAns = function (store){
 						$scope.loadingStatus = true;					
 						var query = {};
@@ -4811,7 +4837,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left">{{promotion[0].description}}</div></div>' +
+            '<div class="details_product pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>'
     }
 }]);
@@ -5147,7 +5173,7 @@ cstore.directive('trainingCategoryDetail', ['$appService', function ($appService
 cstore.directive('typeSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="productCode.type" ng-options="type for type in types"></select>',
+        template: '<select class="qty_select" ng-model="productCode.type" ng-options="type for type in types"></select>',
         compile: function () {
             return{
                 pre: function ($scope) {
@@ -5180,7 +5206,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
             '<span ng-hide="productCode.editStatus">{{productCode.type}}</span><type-select ng-show="productCode.editStatus"></type-select></td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="productCode.editStatus=true;setProductCode(productCode)" ng-hide="productCode.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCode._id)" ng-show="productCode.editStatus">Cancel</a></td></tr>' +
-            '</table><div ng-click="addNewProductCode()" class="add_new"><a href>' +
+            '</table><div class="add_new"><a href ng-click="addNewProductCode()">' +
             '+ Click Here To Add New Product Code</a></div></div><div class="loadingImage" ng-hide="!loadingProductCodeData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
