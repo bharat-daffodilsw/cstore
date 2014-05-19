@@ -6162,10 +6162,9 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             }
                         });
                         for(var i =0; i<popList.length;i++){
-                            popList[i]={"_id":popList[i].popid,"soldcount":popList[i].quantity};
+                            //popList[i]={"_id":popList[i].popid,"soldcount":popList[i].quantity};
+                            popList[i]={"_id":popList[i].popid,"$inc":{"soldcount":popList[i].quantity}};
                         }
-
-
                         var query = {};
                         query.table = "products__cstore";
                         query.operations = popList;
