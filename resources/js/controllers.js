@@ -336,7 +336,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.programdata = {};
     /*bharat change for location*/
     $scope.location = '';
-
+    $scope.allAssignedSurveys = [];
     $scope.getURLParam = function (strParamName) {
         var strReturn = "";
         var strHref = window.location.href;
@@ -3519,7 +3519,6 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
 /*************************Assigned Survey***********************************/
 cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $routeParams) {
     $scope.assignedSurveyData = {"loadingData": false, "available": false};
-    $scope.assignedSurveys = [];
     $scope.getAllAssignedSurveys = function (cursor, searchText) {
         if ($scope.assignedSurveyData.loadingData) {
             return false;
@@ -3530,6 +3529,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         query.filter["store_manager_id.status"] = "unanswered";
+        query.unwindcolumns={"store_manager_id":1};
         if (searchText && searchText != "") {
             query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
@@ -3539,21 +3539,21 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (assignedSurveyData) {
             var rawData = assignedSurveyData.response.data;
-            if ($scope.assignedSurveys.length) {
+            if ($scope.allAssignedSurveys.length) {
                 for (var i = 0; i < rawData.length; i++) {
                     $scope.assignedSurveys.push(rawData[i]);
                 }
             }
-            if (!$scope.assignedSurveys.length) {
-                $scope.assignedSurveys = rawData;
+            if (!$scope.allAssignedSurveys.length) {
+                $scope.allAssignedSurveys = rawData;
             }
             $scope.assignedSurveyData.loadingData = false;
             $scope.cursor = assignedSurveyData.response.cursor;
-            if ($scope.assignedSurveys.length) {
-                $scope.assignedSurveys.available = "true";
+            if ($scope.allAssignedSurveys.length) {
+                $scope.allAssignedSurveys.available = "true";
             }
             else {
-                $scope.assignedSurveys.available = "false";
+                $scope.allAssignedSurveys.available = "false";
             }
 
             if (!$scope.$$phase) {
@@ -3758,6 +3758,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyDetailData) {
             $scope.loadingSurveyDetailData = false;
             $scope.survey = surveyDetailData.response.data[0];
+            $scope.surveyAssignedStores=surveyDetailData.response.data[0].store_manager_id;
             if (surveyDetailData.response.data[0].survey_question) {
                 $scope.surveyQuestions = surveyDetailData.response.data[0].survey_question;
             }

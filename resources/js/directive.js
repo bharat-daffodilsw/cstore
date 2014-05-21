@@ -6073,7 +6073,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             $scope.billingdata["shipping_address"]["firstname"] = cart.shipping_address.firstname ? cart.shipping_address.firstname : "";
                             $scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
                             $scope.billingdata["shipping_address"]["address"] = cart.shipping_address.address ? cart.shipping_address.address : "";
-                            $scope.billingdata["shipping_address"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
+                            $scope.billingdata["shipping_addresss"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
                             $scope.billingdata["shipping_address"]["zipcode"] = cart.shipping_address.zipcode ? cart.shipping_address.zipcode : "";
                             $scope.billingdata["shipping_address"]["phone"] = cart.shipping_address.phone ? cart.shipping_address.phone : "";
                             $scope.billingdata["shipping_address"]["email"] = cart.shipping_address.email ? cart.shipping_address.email : "";
@@ -6215,7 +6215,7 @@ cstore.directive('allAssignedSurveys', ['$appService', function ($appService, $s
     return{
         restrict: 'E',
         template: '<div><div class="survey_all">' +
-            '<div class="survey_form pull-left" ng-repeat="assignedSurvey in assignedSurveys">' +
+            '<div class="survey_form pull-left" ng-repeat="assignedSurvey in allAssignedSurveys">' +
             '<div class="survey_dic pull-left">' +
             '<div class="survey_left pull-left">Title</div>' +
             '<div class="survey_right pull-right">{{assignedSurvey.title}}</div></div>' +
@@ -6338,7 +6338,12 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                             query.table = "surveys__cstore";
                             $scope.newSurveyStatus["_id"] = $scope.survey._id;
                             var storeArray = [];
-                            storeArray.push({"_id": $scope.survey.store_manager_id._id, "status": "answered"});
+                            for(var i=0;i<$scope.surveyAssignedStores.length;i++){
+                                if($scope.surveyAssignedStores[i]._id==$scope.currentUser.data.storeid) {
+                                    $scope.surveyAssignedStores[i].status="answered";
+                                }
+                                storeArray.push({"_id": $scope.surveyAssignedStores[i]._id, "status": $scope.surveyAssignedStores[i].status});
+                            }
                             $scope.newSurveyStatus.store_manager_id = {data: storeArray, "override": "true"};
                             query.operations = [$scope.newSurveyStatus];
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
@@ -6346,6 +6351,12 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Submitted");
                                     $('.popup').toggle("slide");
+                                    //for (var i = 0; i < $scope.allAssignedSurveys.length; i++) {
+                                    //    if ($scope.allAssignedSurveys[i]._id == $scope.survey._id) {
+                                    //        $scope.allAssignedSurveys.splice(i, 1);
+                                    //        i--;
+                                    //    }
+                                    //}
                                     $scope.clearSubmittedSurvey('all-surveys');
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
