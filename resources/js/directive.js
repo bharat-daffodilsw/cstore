@@ -297,7 +297,7 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="category pull-left"><div class="pop_products">Popular Signage <a href="#!/all-pops">( View all )</a>' +
+        template: '<div class="category pull-left" ng-show="popularProducts.length > 0"><div class="pop_products">Popular Signage <a href="#!/all-pops">( View all )</a>' +
             '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
 
 
@@ -313,7 +313,7 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
 cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
+        template: '<div ng-show="recentPromotions.length > 0"><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
@@ -325,7 +325,7 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
+        template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
             '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
@@ -4822,8 +4822,59 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left">{{promotion[0].promo_description}}</div></div>' +
-            '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>'
+            '<div class="details_product pull-left"><div class="short_details">{{promotion[0].promo_description}}</div>' +
+            '<div class="Qty"><div class="quantity_border">Opt/Out: <input type="checkbox" ng-model="booleanOpt"/> </div></div>' +
+            '<div class="add_to_btn pull-left"><a href="" ng-click="changeAssignedPromoStatus()">Opt/Out</a></div></div>' +
+            '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
+        compile:function(){
+            return {
+                pre:function(){},
+                post:function($scope){
+                    $scope.CSession = $appService.getSession();
+                    $scope.changeAssignedPromoStatus = function () {
+                        console.log($scope.booleanOpt);
+                        if ($scope.CSession) {
+                            var query = {};
+                            $scope.loadingPromotionDetailData = true;
+                            $scope.newPromoStatus = {};
+                            $scope.newPromoStatus["store_manager_id"] = {};
+                            query.table = "promotions__cstore";
+                            $scope.newPromoStatus["_id"] = $scope.promotion[0]._id;
+                            var promoStoreArray = [];
+                            for(var i=0;i<$scope.assignedStoreManagers.length;i++){
+                                if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
+                                    $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
+                                }
+                                promoStoreArray.push({"_id": $scope.assignedStoreManagers[i]._id, "opt": $scope.assignedStoreManagers[i].opt});
+                            }
+                            $scope.newPromoStatus.store_manager_id = {data: promoStoreArray, "override": "true"};
+                            query.operations = [$scope.newPromoStatus];
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                $scope.loadingPromotionDetailData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Status Updated");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while updating status");
+                                    $('.popup').toggle("slide");
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err.stack);
+                                $('.popup').toggle("slide");
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
+                }
+            }
+        }
     }
 }]);
 
@@ -6074,7 +6125,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         query.operations = [$scope.newOrder];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $scope.removeCart(cart);
+                                $scope.updatePopSoldCount(cart,cart.product);
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -6107,7 +6158,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                                         //}
                                     }
                                 }
-                                $scope.updatePopSoldCount(cart.product);
+                                $scope.setPathForOrder('payment');
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -6121,7 +6172,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                         });
                     }
-                    $scope.updatePopSoldCount = function (pop) {
+                    $scope.updatePopSoldCount = function (cart,pop) {
                         var popList = [
                             {"_id": "", "soldcount": ""}
                         ];
@@ -6139,7 +6190,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             $scope.loadingShoppingCartData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $scope.setPathForOrder('payment');
+                                $scope.removeCart(cart);
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");

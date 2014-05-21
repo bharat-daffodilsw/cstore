@@ -1243,6 +1243,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var query = {"table": "promotions__cstore"};
         query.columns = ["promo_title", "image", "start_date", "end_date"];
         query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.filter["start_date"] = {"$lte": currentTime};
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
@@ -3178,6 +3179,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         var query = {"table": "promotions__cstore"};
         query.columns = ["end_date", "start_date", "image", "promo_title"];
         query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.filter["start_date"] = {"$lte": currentTime};
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
@@ -3238,20 +3240,10 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
 
         var query = {"table": "promotions__cstore"};
         query.columns = [
-            {"expression": "end_date", "format": "MM/DD/YYYY"},
             "image",
-            "item_signage",
-            "offer_description",
-            "offer_title",
-            "offer_type",
             "promo_description",
             "promo_title",
-            "reward_value",
-            "sponsor",
-            {"expression": "start_date", "format": "MM/DD/YYYY"},
-            "threshold",
-            "upc",
-            "vendorid"
+            "store_manager_id"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
@@ -3261,6 +3253,15 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionDetailData) {
             $scope.loadingPromotionDetailData = false;
             $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
+            $scope.assignedStoreManagers=promotionDetailData.response.data[0].store_manager_id;
+            console.log($scope.assignedStoreManagers);
+            for(var i=0;i<$scope.assignedStoreManagers.length;i++){
+                if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
+                    $scope.booleanOpt = $scope.assignedStoreManagers[i].opt;
+                    $scope.storeManagerId=$scope.assignedStoreManagers[i]._id;
+                }
+            }
+            console.log($scope.booleanOpt);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
