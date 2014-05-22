@@ -3467,7 +3467,7 @@ cstore.directive('promoAssignStore', ['$appService', function ($appService, $sco
                             $scope.storeManager = [];
                         }
                         if (push) {
-                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id,"email": $scope.storesName[index].manager.email});
                         }
                     }
                     $scope.assignPromo = function () {
@@ -3481,7 +3481,7 @@ cstore.directive('promoAssignStore', ['$appService', function ($appService, $sco
                         operationArray._id = $scope.promoId;
                         var dataArr = [];
                         for (j = 0; j < $scope.storeManager.length; j++) {
-                            dataArr.push({"_id": $scope.storeManager[j]._id,"opt":true});
+                            dataArr.push({"_id": $scope.storeManager[j]._id,"opt":true,"email": $scope.storeManager[j].email});
                         }
                         operationArray.store_manager_id = {data: dataArr, "override": "true"};
                         query.operations = [operationArray];
@@ -4726,7 +4726,7 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                             $scope.storeManager = [];
                         }
                         if (push) {
-                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id,"email": $scope.storesName[index].manager.email});
                         }
                     }
                     $scope.assignSurveySession = function () {
@@ -4740,7 +4740,7 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                         operationArray._id = $scope.trainingSessionId;
                         var dataArr = [];
                         for (j = 0; j < $scope.storeManager.length; j++) {
-                            dataArr.push({"_id": $scope.storeManager[j]._id, "status": "unanswered"});
+                            dataArr.push({"_id": $scope.storeManager[j]._id, "status": "unanswered","email": $scope.storeManager[j].email});
                         }
                         operationArray.store_manager_id = {data: dataArr, "override": "true"};
                         query.operations = [operationArray];
