@@ -1,15 +1,14 @@
 cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div><div class="header"><div ng-class="{visible:!displayData.options}" id="cm" class="pull-left"> <img src="images/dropdown.png">' +
+        template: '<div><div class="header"><div class="cm pull-left">' +
             '</div><div class="dropdown pull-left"><div class="logo1 pull-left"><a href="/"><img src="/images/main_logo.png"/></a>' +
 
             '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
-
-            '<ul><li ng-show="displayData.options" class="active"><a href = "/#!/all-surveys">Survey</a></li><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
+            '<ul><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
-            '<drop-down ng-show="displayData.options"></drop-down><admin-menu ng-show="displayData.menu"></admin-menu></div>' +
+            '<admin-menu ng-show="displayData.menu"></admin-menu><store-menu ng-show="displayData.options"></store-menu></div>' +
             '<div class="popup" style="display:none;">' +
             '<div class="popup-manage">' +
             '<h2 class="h2-popup">Attention</h2>' +
@@ -46,7 +45,6 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
 //                        $(".location_popup").hide();
 //                    }
 //                    /*$scope.selectedLocation=function(){
-//                     //console.log($scope.asyncSelected);
 //                     $appService.delete_cookie("selectedLoc");
 //                     $scope.selectedLoc=$scope.asyncSelected;
 //                     var c_name = "selectedLoc";
@@ -82,7 +80,6 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
                         $(".location_popup").hide();
                     }
                     /*$scope.selectedLocation=function(){
-                     //console.log($scope.asyncSelected);
                      $appService.delete_cookie("selectedLoc");
                      $scope.selectedLoc=$scope.asyncSelected;
                      var c_name = "selectedLoc";
@@ -108,12 +105,13 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="admin_menu pull-left"><ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
+        template: '<div class="admin_menu pull-left">' +
+            '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li ng-click="clearSurveyContent()">' +
             '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
-            '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Programs</a></li>' +
+            '<li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Programs</a></li>' +
             '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
@@ -133,6 +131,30 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="admin_menu pull-left">' +
+            '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li><li><a href="#!/all-promos" active-link="active">Promos</a></li>' +
+            '<li><a href="#!/all-training-sessions" active-link="active">Training Sessions</a></li>' +
+            '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
+            '<li><a active-link="active" href="#!/orders">Orders</a></li></ul></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPathForStoreManager = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                },
+                post: function () {
+
+                }
+            }
+        }
+
+    }
+}]);
+
 cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -140,8 +162,8 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
             '<input type="text" placeholder="Search" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
             '<input type="submit" style="display:none"></form>' +
             '<div class="search_sign pull-left" ng-click="search()"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
-            ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
-            '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></a></div><div class="add_cart pull-right"ng-click="setPathForCart(\'shopping-cart\')"><div class="addcart_link pull-left"><a href>' +
+            ' <span class="where_i">I am in</span><span class="loction_img pull-left"><img src="images/location.png">' +
+            '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></div><div class="add_cart pull-right"ng-click="setPathForCart(\'shopping-cart\')"><div class="addcart_link pull-left"><a href>' +
             '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">({{cartProducts.length}})</div></div></div></div>',
         compile: function () {
             return {
@@ -155,8 +177,6 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                             if (hash.indexOf("?q=") > 0) {
                                 if (hash.indexOf("search") > 0) {
                                     var searchIndex = hash.indexOf("search");
-                                    //console.log(hash.indexOf("search"));
-                                    //console.log(hash.substring(0,searchIndex-1));
                                     var substr = hash.substring(0, searchIndex - 1);
                                     window.location.href = substr + "&search=" + $scope.searchContent;
                                     $scope.searchContent = "";
@@ -164,44 +184,31 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 else {
                                     window.location.href = hash + "&search=" + $scope.searchContent;
                                     $scope.searchContent = "";
-                                    //window.location.href = "/#!/?search=" + $scope.searchContent;
-                                    //window.location.href = hash+"?search="+$scope.searchContent;
                                 }
                             }
                             else if (hash.indexOf("?popid=") > 0) {
 
                                 window.location.href = "#!/all-pops?search=" + $scope.searchContent;
-                                //$scope.searchContent="";
                             }//changes made by anuradha 3004
                             else if (hash.indexOf("?promoid=") > 0) {
 
                                 window.location.href = "#!/all-promos?search=" + $scope.searchContent;
-                                //$scope.searchContent="";
                             }
                             else if (hash.indexOf("?sessionid=") > 0) {
-                                //console.log(hash);
-                                //window.location.href = hash + "&search=" + $scope.searchContent;
                                 window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
                             else if (hash.indexOf("?surveyid=") > 0) {
-                                //console.log(hash);
-                                //window.location.href = hash + "&search=" + $scope.searchContent;
                                 window.location.href = "#!/all-surveys?search=" + $scope.searchContent;
-                                //$scope.searchContent="";
                             }
                             else if (hash.indexOf("#!/") >= 0 || hash == "#!/") {
-                                //console.log(hash.indexOf("#!/"));
                                 if (hash.indexOf("search") > 0) {
                                     var searchIndex = hash.indexOf("search");
-                                    //console.log(hash.indexOf("search"));
-                                    //console.log(hash.substring(0,searchIndex-1));
                                     var substr = hash.substring(0, searchIndex - 1);
                                     window.location.href = "/" + substr + "?search=" + $scope.searchContent;
                                     $scope.searchContent = "";
                                 }
                                 else {
-                                    //window.location.href = "/#!/?search=" + $scope.searchContent;
                                     window.location.href = hash + "?search=" + $scope.searchContent;
                                     $scope.searchContent = "";
                                 }
@@ -215,7 +222,6 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 var searchIndex = hash.indexOf("search");
                                 var substr = hash.substring(0, searchIndex - 1);
                                 window.location.href = substr;
-                                //$scope.searchContent="";
                             }
                             else {
                                 window.location.href = hash;
@@ -257,7 +263,6 @@ cstore.directive('activeLink', ['$location', function (location) {
         link: function (scope, element, attrs, controller) {
             var clazz = attrs.activeLink;
             var path = attrs.href;
-            //console.log(click);
             path = path.substring(2); //hack because path does bot return including hashbang
             scope.location = location;
             scope.$watch('location.path()', function (newPath) {
@@ -291,7 +296,7 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="category pull-left"><div class="pop_products">Popular pops <a href="#!/all-pops">( View all )</a>' +
+        template: '<div class="category pull-left" ng-show="popularProducts.length > 0"><div class="pop_products">Popular Signage <a href="#!/all-pops">( View all )</a>' +
             '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
 
 
@@ -307,7 +312,7 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
 cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
+        template: '<div ng-show="recentPromotions.length > 0"><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
@@ -319,7 +324,7 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
+        template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
             '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
@@ -352,7 +357,6 @@ cstore.directive('productDetail', ['$appService', function ($appService, $scope)
         compile: function () {
             return {
                 pre: function ($scope) {
-                    //console.log($scope.qty);
                     $scope.qty = $scope.shoppingCartData.quantity[0];
                 }
             }
@@ -413,7 +417,6 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.vendors.length; i++) {
                                         if ($scope.vendors[i].deleteStatus) {
-                                            console.log("delete items" + i);
                                             $scope.vendors.splice(i, 1);
                                             i--;
                                         }
@@ -456,7 +459,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         //$scope.data["vendorCategory"]=vendor.category ;//? vendor.category :$scope.vendorCategories[0];
                         if (vendor.category) {
                             for (var j = 0; j < $scope.data.vendorCategories.length; j++) {
-								$scope.data.selectedVendorCategory = "";
+                                $scope.data.selectedVendorCategory = "";
                                 if ($scope.data.vendorCategories[j].name == vendor.category) {
                                     $scope.data.selectedVendorCategory = $scope.data.vendorCategories[j];
                                     break;
@@ -470,7 +473,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         if (vendor.country) {
                             vendor.state = (vendor.state) ? {"_id": vendor.state._id} : {"_id": false};
                             vendor.city = (vendor.city) ? {"_id": vendor.city._id} : {"_id": false};
-                            $scope.getEditCountries(vendor.country._id, vendor.state._id, vendor.city._id,$scope.data);
+                            $scope.getEditCountries(vendor.country._id, vendor.state._id, vendor.city._id, $scope.data);
                         }
                         window.location.href = "#!edit-vendor?q=" + vendor._id;
                     }
@@ -837,7 +840,6 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.products.length; i++) {
                                     if ($scope.products[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.products.splice(i, 1);
                                         i--;
                                     }
@@ -872,12 +874,9 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         //$scope.productdata["image"] = product.image;
                         if (product.image) {
                             $scope.oFile.fileExist = true;
-                            console.log("22222:::" + $scope.oFile.fileExist);
                         }
                         $scope.showFile(product.image, false);
                         //changed 28/04
-                        //$scope.showFile(product.image, true);
-                        //console.log($scope.productdata.image);
 
                         if (product.product_category._id) {
                             for (var j = 0; j < $scope.productdata.productCategories.length; j++) {
@@ -1033,7 +1032,6 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            //console.log("33333:::"+$scope.oFile.fileExist);
                             if (!$scope.oFile.fileExist) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
@@ -1097,7 +1095,6 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     };
 
                     $scope.saveFunction = function (query) {
-                        //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
@@ -1116,7 +1113,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            console.log(err.stack);
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
 
                         });
                     }
@@ -1142,8 +1140,8 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     $scope.albumArr.uploadedimg = [];
                 },
                 post: function ($scope, iElement) {
-					$scope.uploadFileChange = function (){
-						$scope.$apply(function () {
+                    $scope.uploadFileChange = function () {
+                        $scope.$apply(function () {
                             $scope.oFReader = new FileReader();
                             if (document.getElementById('uploadMultiImgfile').files.length === 0) {
                                 return;
@@ -1152,7 +1150,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                             $scope.oFReader.onload = $scope.loadImgFile;
                             $scope.oFReader.readAsDataURL($scope.oFile);
                         });
-					}
+                    }
                     $scope.removeImgFile = function (index) {
                         $scope.trainingdata.uploadedimages.splice(index, 1);
                         $scope.albumArr.uploadedimg.splice(index, 1);
@@ -1166,10 +1164,11 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                     $scope.showMultiImgFile = function (file, index) {
                         if (!$scope.trainingdata.uploadedimages[index]) {
                             $scope.trainingdata.uploadedimages[index] = {};
-                        }if(!$scope.trainingdata.uploadedimages ){
-							$scope.trainingdata.uploadedimages = [];
-						}
-						$scope.trainingdata.uploadedimages[index].filename = file[0].name;
+                        }
+                        if (!$scope.trainingdata.uploadedimages) {
+                            $scope.trainingdata.uploadedimages = [];
+                        }
+                        $scope.trainingdata.uploadedimages[index].filename = file[0].name;
                         $scope.trainingdata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0].key + "&ask=" + ASK + "&osk=" + OSK;
                         $scope.trainingdata.uploadedimages[index].image = file;
                         $scope.trainingdata.uploadedimages[index].default = true;
@@ -1200,7 +1199,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                             current_file.osk = OSK;
                             $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                 if (data.response && data.response.length > 0) {
-									$scope.showMultiImgFile(data.response, $scope.trainingdata.uploadedimages.length);
+                                    $scope.showMultiImgFile(data.response, $scope.trainingdata.uploadedimages.length);
                                 }
                             });
                         } else {
@@ -1209,17 +1208,17 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                         }
                     };
 
-                   /* iElement.bind('change', function () {
-                        $scope.$apply(function () {
-                            $scope.oFReader = new FileReader();
-                            if (document.getElementById('uploadMultiImgfile').files.length === 0) {
-                                return;
-                            }
-                            $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
-                            $scope.oFReader.onload = $scope.loadImgFile;
-                            $scope.oFReader.readAsDataURL($scope.oFile);
-                        });
-                    });*/
+                    /* iElement.bind('change', function () {
+                     $scope.$apply(function () {
+                     $scope.oFReader = new FileReader();
+                     if (document.getElementById('uploadMultiImgfile').files.length === 0) {
+                     return;
+                     }
+                     $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
+                     $scope.oFReader.onload = $scope.loadImgFile;
+                     $scope.oFReader.readAsDataURL($scope.oFile);
+                     });
+                     });*/
                 }
             }
         }
@@ -1347,7 +1346,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.storeManagers.length; i++) {
                                     if ($scope.storeManagers[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.storeManagers.splice(i, 1);
                                         i--;
                                     }
@@ -1376,8 +1374,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                     }
                     $scope.setStoreState = function (store) {
                         //$scope.storedata.pos_version.name = store.pos_version;
-                        //console.log("pos version name :::: "+ $scope.storedata.pos_version.name);
-                        //console.log(store.brands);
                         $scope.storedata["address"] = store.address ? store.address : "";
                         $scope.storedata["address2"] = store.address2 ? store.address2 : "";
                         $scope.storedata["pump_brand"] = store.pump_brand ? store.pump_brand : "";
@@ -1386,12 +1382,9 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                          //                            for(var i=0; i < store.brands.length;i++){
                          //                                $scope.storedata.brands[i] = {};
                          //                                $scope.storedata.brands[i] = store.brands[i];
-                         //                                console.log($scope.storedata.brands[i].name);
                          //                            }
                          for (var i = 0; i < $scope.brands.length; i++) {
                          for (var j = 0; j < store.brands.length; j++) {
-                         console.log(JSON.stringify($scope.brands[i]));
-                         console.log(JSON.stringify(store.brands[j]));
                          if (angular.equals($scope.brands[i].name, store.brands[j])) {
                          if (!$scope.storedata.brands)
                          $scope.storedata.brands = [];
@@ -1416,7 +1409,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["siteid"] = store.siteid ? store.siteid : "";
                         if (store.company_logo) {
                             $scope.oFile.fileExist = true;
-                            //console.log("22222:::"+$scope.oFile.fileExist);
                         }
                         $scope.showFile(store.company_logo, false);
                         $scope.storedata["manager"] = {};
@@ -1434,7 +1426,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         if (store.pos_type && $scope.storedata.posTypes) {
                             for (var j = 0; j < $scope.storedata.posTypes.length; j++) {
-								$scope.storedata.selectedPosType = "";
+                                $scope.storedata.selectedPosType = "";
                                 if ($scope.storedata.posTypes[j].name == store.pos_type) {
                                     $scope.storedata.selectedPosType = $scope.storedata.posTypes[j];
                                     break;
@@ -1447,7 +1439,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         if (store.reward_point && $scope.storedata.rewardTypes) {
                             for (var j = 0; j < $scope.storedata.rewardTypes.length; j++) {
-								$scope.storedata.selectedRewardType = "";
+                                $scope.storedata.selectedRewardType = "";
                                 if ($scope.storedata.rewardTypes[j].name == store.reward_point) {
                                     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[j];
                                     break;
@@ -1460,7 +1452,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         }
                         if (store.brands && $scope.storedata.brands) {
                             for (var j = 0; j < $scope.storedata.brands.length; j++) {
-								$scope.storedata.selectedBrand = "";
+                                $scope.storedata.selectedBrand = "";
                                 if ($scope.storedata.brands[j].name == store.brands) {
                                     $scope.storedata.selectedBrand = $scope.storedata.brands[j];
                                     break;
@@ -1496,7 +1488,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         if (store.countryid) {
                             store.stateid = (store.stateid) ? {"_id": store.stateid._id} : {"_id": false};
                             store.cityid = (store.cityid) ? {"_id": store.cityid._id} : {"_id": false};
-                            $scope.getEditCountries(store.countryid._id, store.stateid._id, store.cityid._id,$scope.storedata);
+                            $scope.getEditCountries(store.countryid._id, store.stateid._id, store.cityid._id, $scope.storedata);
                         }
                         if (store.programid) {
                             for (var j = 0; j < $scope.productdata.programs.length; j++) {
@@ -1619,7 +1611,6 @@ cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope)
         compile: function () {
             return{
                 pre: function ($scope) {
-                    //console.log(JSON.stringify($scope.storedata.loyalty_status));
                 }, post: function ($scope) {
                 }
             }
@@ -1877,8 +1868,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                             $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
                             $scope.newStore["manager"]["name"] = $scope.storedata.manager.name;
-                                query.operations = [$scope.newStore];
-                                $scope.saveFunction(query);
+                            query.operations = [$scope.newStore];
+                            $scope.saveFunction(query);
                         }
                         else {
                             $("#popupMessage").html("Please login first");
@@ -3050,7 +3041,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
                         }
                         $scope.newUser["username"] = $scope.userdata.username;
-                        if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id=='531d4aa0bd1515ea1a9bbaf6') {
+                        if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
                             $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
                         }
                         var query = {};
@@ -3077,7 +3068,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             if (!$scope.$$phase) {
                                 $scope.$apply();
                             }
-                        }, function (jqxhr,err) {
+                        }, function (jqxhr, err) {
                             if (jqxhr.responseText && JSON.parse(jqxhr.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(jqxhr.responseText).response);
                                 $('.popup').toggle("slide");
@@ -3290,7 +3281,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
             '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>' +
             '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
-            '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
+            '<td><a class="edit_btn" ng-click="setAssignedPromo(promotion._id)" href>Assign</a><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3301,6 +3292,9 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
                         $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }					
+                    $scope.setAssignedPromo = function (promotionid) {
+                        window.location.href = "#!/assign-promo?id=" + promotionid;
                     }
                     $scope.deletePromotionArray = [];
                     $scope.deletePromotion = function () {
@@ -3319,7 +3313,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.promotions.length; i++) {
                                     if ($scope.promotions[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.promotions.splice(i, 1);
                                         i--;
                                     }
@@ -3439,6 +3432,86 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
         }
     }
 }]);
+cstore.directive('promoAssignStore', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="assignPromo()"><a href>Save</a></button>' +
+            '<button type="button" ng-click="setPath(\'promotions\')"><a href>Back</a></button>' +
+            '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="searchPromoName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storename}}</td><td>{{store.programid.name}}</td><td>' +
+            '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
+            '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.getOperationData = function (index) {
+                        var push = true;
+                        if ($scope.storeManager && $scope.storeManager.length > 0) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+                                    $scope.storeManager.splice(j, 1);
+                                    push = false;
+                                    break;
+                                }
+                            }
+                        } else {
+                            $scope.storeManager = [];
+                        }
+                        if (push) {
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                        }
+                    }
+                    $scope.assignPromo = function () {
+                        if (!$scope.promoId) {
+                            return;
+                        }
+                        $scope.loadingStatus = true;
+                        var query = {"table": "promotions__cstore"};
+                        var operationArray = {};
+                        $scope.CSession = $appService.getSession();
+                        operationArray._id = $scope.promoId;
+                        var dataArr = [];
+                        for (j = 0; j < $scope.storeManager.length; j++) {
+                            dataArr.push({"_id": $scope.storeManager[j]._id,"opt":true});
+                        }
+                        operationArray.store_manager_id = {data: dataArr, "override": "true"};
+                        query.operations = [operationArray];
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingStatus = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html("some error while saving training session");
+                                $('.popup').toggle("slide");
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                    $scope.searchPromoName = function () {
+                        $scope.preCursor = 0;
+                        $scope.currentCursor = 0;
+                        $scope.getPromoStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                }
+            }
+        }
+    }
+}]);
 
 cstore.directive('itemSignageSelect', ['$appService', function ($appService, $scope) {
     return {
@@ -3447,7 +3520,6 @@ cstore.directive('itemSignageSelect', ['$appService', function ($appService, $sc
         compile: function () {
             return{
                 pre: function ($scope) {
-                    //console.log(JSON.stringify($scope.promotiondata.itemSignage));
                 }, post: function ($scope) {
                 }
             }
@@ -3494,72 +3566,72 @@ cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
         compile: function () {
             return{
                 pre: function () {
-                }, post: function ($scope) {				
-					$scope.getAllAvailableTags = function () {
-						var query = {"table": "product_codes__cstore"};
-						query.columns = ["description", "code","type"];
-						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-						var serviceUrl = "/rest/data";
-						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
-							$scope.availableTags = {0:[],1:[],2:[]};
-							for (var i = 0; i < productData.response.data.length; i++) {
-								var type = productData.response.data[i].type;
-								switch(type){
-									case "UPC":
-										$scope.availableTags[0].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+                }, post: function ($scope) {
+                    $scope.getAllAvailableTags = function () {
+                        var query = {"table": "product_codes__cstore"};
+                        query.columns = ["description", "code", "type"];
+                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                        var serviceUrl = "/rest/data";
+                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+                            $scope.availableTags = {0: [], 1: [], 2: []};
+                            for (var i = 0; i < productData.response.data.length; i++) {
+                                var type = productData.response.data[i].type;
+                                switch (type) {
+                                    case "UPC":
+                                        $scope.availableTags[0].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
                                         break;
-									case "PLU":
-										$scope.availableTags[1].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+                                    case "PLU":
+                                        $scope.availableTags[1].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
                                         break;
-									case "GROUP":
-										$scope.availableTags[2].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
+                                    case "GROUP":
+                                        $scope.availableTags[2].push(productData.response.data[i].description + " - " + productData.response.data[i].code);
                                         break;
-								}
-							}
-							$('#upc_grp_tags').tagit({"tagSource": $scope.availableTags[0], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                                }
+                            }
+                            $('#upc_grp_tags').tagit({"tagSource": $scope.availableTags[0], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
                             $('#plu_grp_tags').tagit({"tagSource": $scope.availableTags[1], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
                             $('#group_grp_tags').tagit({"tagSource": $scope.availableTags[2], "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
                             $scope.changeUpc($scope.promotiondata.selectedUpc.name);
-						}, function (jqxhr, error) {
-							$("#popupMessage").html(error);
-							$('.popup').toggle("slide");
-						})
-					}
-					$scope.changeUpc = function (type) {	
-						var i = "";
-						if(!$scope.fillnotset && $scope.fillnotset != "false"){
-							$scope.fillnotset = "true";
-						}
-						switch(type.toUpperCase()){
-							case "UPC":
-								$scope.showUpc = true;
-								$scope.showPlu = false;
-								$scope.showGroup = false;
-								$scope.parentId = "upc_grp_tags";
-								i = 0;
-								break;
-							case "PLU":
-								$scope.showPlu = true;
-								$scope.showUpc = false;
-								$scope.showGroup = false;
-								$scope.parentId = "plu_grp_tags";
-								i = 1;
-								break;
-							case "GROUP":
-								$scope.showGroup = true;
-								$scope.showUpc = false;
-								$scope.showPlu = false;
-								$scope.parentId = "group_grp_tags";
-								i = 2;
-								break;
-						}
-						if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && $scope.fillnotset == "true") {
-							var fillCodes = $scope.promotiondata.codes;
-							$('#'+$scope.parentId).tagit('fill', fillCodes);
-							$scope.fillnotset = "false";
-						}
-					}
-					$scope.getAllAvailableTags();
+                        }, function (jqxhr, error) {
+                            $("#popupMessage").html(error);
+                            $('.popup').toggle("slide");
+                        })
+                    }
+                    $scope.changeUpc = function (type) {
+                        var i = "";
+                        if (!$scope.fillnotset && $scope.fillnotset != "false") {
+                            $scope.fillnotset = "true";
+                        }
+                        switch (type.toUpperCase()) {
+                            case "UPC":
+                                $scope.showUpc = true;
+                                $scope.showPlu = false;
+                                $scope.showGroup = false;
+                                $scope.parentId = "upc_grp_tags";
+                                i = 0;
+                                break;
+                            case "PLU":
+                                $scope.showPlu = true;
+                                $scope.showUpc = false;
+                                $scope.showGroup = false;
+                                $scope.parentId = "plu_grp_tags";
+                                i = 1;
+                                break;
+                            case "GROUP":
+                                $scope.showGroup = true;
+                                $scope.showUpc = false;
+                                $scope.showPlu = false;
+                                $scope.parentId = "group_grp_tags";
+                                i = 2;
+                                break;
+                        }
+                        if ($scope.promotiondata && $scope.promotiondata.codes && $scope.promotiondata.codes.length > 0 && $scope.parentId && $scope.fillnotset == "true") {
+                            var fillCodes = $scope.promotiondata.codes;
+                            $('#' + $scope.parentId).tagit('fill', fillCodes);
+                            $scope.fillnotset = "false";
+                        }
+                    }
+                    $scope.getAllAvailableTags();
                 }
             }
         }
@@ -3683,7 +3755,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
-                            var tags = $scope.showTags($('#'+$scope.parentId).tagit("tags"));
+                            var tags = $scope.showTags($('#' + $scope.parentId).tagit("tags"));
                             if (!$scope.promotiondata.promo_title) {
                                 $("#popupMessage").html("Please enter promo title");
                                 $('.popup').toggle("slide");
@@ -3803,7 +3875,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         }
                     };
                     $scope.saveFunction = function (query) {
-                        //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
@@ -3826,7 +3897,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            console.log(err.stack);
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
 
                         });
                     }
@@ -3925,7 +3997,6 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                     }
                     $scope.showAssignPopup = function (session) {
                         $(".assign_popup").show();
-                        //console.log(session.title);
                         $scope.sessionTitle = session.title;
                         $scope.sessionId = session._id;
                     }
@@ -3951,7 +4022,6 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.trainingSessions.length; i++) {
                                     if ($scope.trainingSessions[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.trainingSessions.splice(i, 1);
                                         i--;
                                     }
@@ -3982,10 +4052,9 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         $scope.trainingdata["title"] = trainingSession.title ? trainingSession.title : "";
                         $scope.trainingdata["video_url"] = trainingSession.video_url ? trainingSession.video_url : "";
                         $scope.trainingdata["description"] = trainingSession.description ? trainingSession.description : "";
-                        $scope.showDocFile(trainingSession.file, false);
+                        //$scope.showDocFile(trainingSession.file, false);
                         //$scope.productdata["image"] = product.image;
                         //$scope.showFile(product.image, false);
-                        //console.log($scope.productdata.image);
 
                         if (trainingSession.training_category_id._id) {
                             for (var j = 0; j < $scope.trainingdata.trainingCategories.length; j++) {
@@ -3995,7 +4064,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                 }
                             }
                         }
-						$scope.trainingdata.editImages = trainingSession.file;						
+                        $scope.trainingdata.editImages = trainingSession.file;
                         if (trainingSession.file && trainingSession.file.length > 0) {
                             for (var k = 0; k < trainingSession.file.length; k++) {
                                 $scope.trainingdata.uploadedimages[k] = {"filename": trainingSession.file[k].name};
@@ -4006,8 +4075,6 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                     }
                     //changes made on 3004  by anu
                     $scope.setAssignedSessionState = function (session) {
-                        //$scope.survey["title"] = survey.title ? survey.title : "";
-                        //console.log(JSON.stringify(session));
                         $scope.session_title = session.title;
                         window.location.href = "#!/assigned-session-store?q=" + session._id;
                     }
@@ -4047,17 +4114,17 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                 post: function ($scope) {
                     $scope.getOperationData = function (index) {
                         var push = true;
-						if($scope.storeManager && $scope.storeManager.length > 0){
-							for (j = 0; j < $scope.storeManager.length; j++) {
-								if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
-									$scope.storeManager.splice(j, 1);
-									push = false;
-									break;
-								}
-							}
-						}else{
-							$scope.storeManager = [];
-						}
+                        if ($scope.storeManager && $scope.storeManager.length > 0) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+                                    $scope.storeManager.splice(j, 1);
+                                    push = false;
+                                    break;
+                                }
+                            }
+                        } else {
+                            $scope.storeManager = [];
+                        }
                         if (push) {
                             $scope.storeManager.push({"_id": $scope.storesName[index]._id});
                         }
@@ -4090,7 +4157,8 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                                 $('.popup').toggle("slide");
                             }
                         }, function (err) {
-                            console.log(err.stack);
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
                         });
                     }
                     $scope.searchStoreName = function () {
@@ -4261,8 +4329,8 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            console.log(err.stack);
-
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
                         });
                     }
                 }
@@ -4303,7 +4371,6 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
                     $scope.loadFile = function (evt) {
                         $scope.docfile = {};
                         $scope.docfile.name = $scope.docOFile.name;
-                        console.log(JSON.stringify(evt));
                         $scope.docfile.result = evt.target.result;
                         $scope.docOFile['data'] = evt.target.result;
                         $scope.showUploadedFile($scope.docfile);
@@ -4357,16 +4424,15 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-					$scope.setSurveyAssignedPath = function (sessionid) {
+                    $scope.setSurveyAssignedPath = function (sessionid) {
                         window.location.href = "#!/assign-survey-store?id=" + sessionid;
                     }
-					$scope.setSurveyAnsweredPath = function (sessionid) {
+                    $scope.setSurveyAnsweredPath = function (sessionid) {
                         window.location.href = "#!/answered-survey-store?id=" + sessionid;
                     }
                     //changes made 2904
                     $scope.showAssignPopup = function (survey) {
                         $(".assign_popup").show();
-                        console.log(survey.title);
                         $scope.surveyTitle = survey.title;
                         $scope.surveyId = survey._id;
                     }
@@ -4392,7 +4458,6 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.surveys.length; i++) {
                                     if ($scope.surveys[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.surveys.splice(i, 1);
                                         i--;
                                     }
@@ -4421,7 +4486,6 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.setAssignedSurveyState = function (survey) {
                         //$scope.survey["title"] = survey.title ? survey.title : "";
-                        console.log(JSON.stringify(survey));
                         window.location.href = "#!/assigned-survey-store?q=" + survey._id;
                     }
                     $scope.setSurveyState = function (survey) {
@@ -4613,8 +4677,8 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                                 }
                                 $scope.clearSurveyContent();
                             }, function (err) {
-                                console.log(err.stack);
-
+                                $("#popupMessage").html(err.stack);
+                                $('.popup').toggle("slide");
                             });
                         } else {
                             $("#popupMessage").html("Please login first");
@@ -4650,17 +4714,17 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                 post: function ($scope) {
                     $scope.getSurveyOperationData = function (index) {
                         var push = true;
-						if($scope.storeManager && $scope.storeManager.length > 0){
-							for (j = 0; j < $scope.storeManager.length; j++) {
-								if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
-									$scope.storeManager.splice(j, 1);
-									push = false;
-									break;
-								}
-							}
-						}else{
-							$scope.storeManager = [];
-						}
+                        if ($scope.storeManager && $scope.storeManager.length > 0) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+                                    $scope.storeManager.splice(j, 1);
+                                    push = false;
+                                    break;
+                                }
+                            }
+                        } else {
+                            $scope.storeManager = [];
+                        }
                         if (push) {
                             $scope.storeManager.push({"_id": $scope.storesName[index]._id});
                         }
@@ -4676,7 +4740,7 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                         operationArray._id = $scope.trainingSessionId;
                         var dataArr = [];
                         for (j = 0; j < $scope.storeManager.length; j++) {
-                            dataArr.push({"_id": $scope.storeManager[j]._id,"status":"unanswered"});
+                            dataArr.push({"_id": $scope.storeManager[j]._id, "status": "unanswered"});
                         }
                         operationArray.store_manager_id = {data: dataArr, "override": "true"};
                         query.operations = [operationArray];
@@ -4693,7 +4757,8 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
                                 $('.popup').toggle("slide");
                             }
                         }, function (err) {
-                            console.log(err.stack);
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
                         });
                     }
                     $scope.searchSurveyStoreName = function () {
@@ -4730,30 +4795,30 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
                         $scope.currentCursor = 0;
                         $scope.getSurveyStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
-					$scope.setQuesAns = function (store){
-						$scope.loadingStatus = true;					
-						var query = {};
-						query.table = "surveys__cstore";
-						query.columns = ["store_manager_id","survey_question"];
-						query.filter = {"_id":store.survey_id};
-						var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-						var serviceUrl = "/rest/data";
-						$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyResp) {
-							$scope.loadingStatus = false;
-							var surveyData = surveyResp.response.data[0].survey_question;
-							for(var i = 0; i < surveyData.length; i++){
-								$scope.answeredSurveys[i] = {"question" : surveyData[i].question};
-								if(store.answers[i] instanceof Object){
-									$scope.answeredSurveys[i].answer = store.answers[i];
-									$scope.answeredSurveys[i].is_array = true;
-								}else{
-									$scope.answeredSurveys[i].answer = store.answers[i];
-									$scope.answeredSurveys[i].is_array = false;
-								}
-							}
-							window.location.href = "#!/assigned-survey-response";
-						});
-					}	
+                    $scope.setQuesAns = function (store) {
+                        $scope.loadingStatus = true;
+                        var query = {};
+                        query.table = "surveys__cstore";
+                        query.columns = ["store_manager_id", "survey_question"];
+                        query.filter = {"_id": store.survey_id};
+                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                        var serviceUrl = "/rest/data";
+                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyResp) {
+                            $scope.loadingStatus = false;
+                            var surveyData = surveyResp.response.data[0].survey_question;
+                            for (var i = 0; i < surveyData.length; i++) {
+                                $scope.answeredSurveys[i] = {"question": surveyData[i].question};
+                                if (store.answers[i] instanceof Object) {
+                                    $scope.answeredSurveys[i].answer = store.answers[i];
+                                    $scope.answeredSurveys[i].is_array = true;
+                                } else {
+                                    $scope.answeredSurveys[i].answer = store.answers[i];
+                                    $scope.answeredSurveys[i].is_array = false;
+                                }
+                            }
+                            window.location.href = "#!/assigned-survey-response";
+                        });
+                    }
                 }
             }
         }
@@ -4775,7 +4840,7 @@ cstore.directive('assignedSurveyResponse', ['$appService', function ($appService
             '</div></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
-                post: function ($scope) {                    					
+                post: function ($scope) {
                 }
             }
         }
@@ -4839,8 +4904,58 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left">{{promotion[0].promo_description}}</div></div>' +
-            '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>'
+            '<div class="details_product pull-left"><div class="short_details">{{promotion[0].promo_description}}</div>' +
+            '<div class="Qty"><div class="quantity_border">Opt/Out: <input type="checkbox" ng-model="booleanOpt"/> </div></div>' +
+            '<div class="add_to_btn pull-left"><a href="" ng-click="changeAssignedPromoStatus()">Opt/Out</a></div></div>' +
+            '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
+        compile:function(){
+            return {
+                pre:function(){},
+                post:function($scope){
+                    $scope.CSession = $appService.getSession();
+                    $scope.changeAssignedPromoStatus = function () {
+                        console.log($scope.booleanOpt);
+                        if ($scope.CSession) {
+                            var query = {};
+                            $scope.loadingPromotionDetailData = true;
+                            $scope.newPromoStatus = {};
+                            $scope.newPromoStatus["store_manager_id"] = {};
+                            query.table = "promotions__cstore";
+                            $scope.newPromoStatus["_id"] = $scope.promotion[0]._id;
+                            var promoStoreArray = [];
+                            for(var i=0;i<$scope.assignedStoreManagers.length;i++){
+                                if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
+                                    $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
+                                }
+                                promoStoreArray.push({"_id": $scope.assignedStoreManagers[i]._id, "opt": $scope.assignedStoreManagers[i].opt});
+                            }
+                            $scope.newPromoStatus.store_manager_id = {data: promoStoreArray, "override": "true"};
+                            query.operations = [$scope.newPromoStatus];
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                $scope.loadingPromotionDetailData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    window.location.href="#!/all-promos";
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while updating status");
+                                    $('.popup').toggle("slide");
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err.stack);
+                                $('.popup').toggle("slide");
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
+                }
+            }
+        }
     }
 }]);
 
@@ -4864,10 +4979,7 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
                     $scope.newStoreSurvey = {};
                 },
                 post: function ($scope) {
-//                        console.log($scope.surveyTitle);
-//                        console.log($scope.trainingdata.assignedStore);
-//                        console.log($scope.surveyId);
-//
+
                     $scope.assignStoreSurvey = function () {
                         var query = {};
                         query.table = "storemanager_survey__cstore";
@@ -4941,7 +5053,6 @@ cstore.directive('assignedSurveyList', ['$appService', function ($appService, $s
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.assignedSurveys.length; i++) {
                                     if ($scope.assignedSurveys[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.assignedSurveys.splice(i, 1);
                                         i--;
                                     }
@@ -4997,9 +5108,6 @@ cstore.directive('assignStoreSessionPopup', ['$appService', function ($appServic
 
 
                     $scope.assignStoreSession = function () {
-//                        console.log($scope.sessionTitle);
-//                        console.log($scope.trainingdata.assignedStore);
-//                        console.log($scope.sessionId);
                         var query = {};
                         query.table = "storemanager_trainingsession__cstore";
                         $scope.newStoreSession["store_manager_id"] = {"storename": $scope.trainingdata.assignedStore.storename, "_id": $scope.trainingdata.assignedStore._id};
@@ -5072,7 +5180,6 @@ cstore.directive('assignedSessionList', ['$appService', function ($appService, $
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.assignedSessions.length; i++) {
                                     if ($scope.assignedSessions[i].deleteStatus) {
-                                        console.log("delete items" + i);
                                         $scope.assignedSessions.splice(i, 1);
                                         i--;
                                     }
@@ -5396,7 +5503,8 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<th>Qty</th>' +
             '<th>Price</th>' +
             '</tr>' +
-            '<tr ng-show="shoppingCartProducts.length" ng-repeat="cartProduct in shoppingCartProducts">' +
+            '<tr ng-hide="shoppingCartProducts.length > 0"><td></td><td><div class="item">No POP is added to cart</div></td><td></td><td></td><td></td></tr>' +
+            '<tr ng-show="shoppingCartProducts.length > 0" ng-repeat="cartProduct in shoppingCartProducts">' +
             '<td>{{$index+1}}</td>' +
             '<td>' +
             '<div class="item">' +
@@ -5409,7 +5517,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<td class="item_price">{{cartProduct.quantity*cartProduct.cost.amount | currency}}</td>' +
             '</tr>' +
             '</table>' +
-            '<div class="saved_last pull-right">'+
+            '<div class="saved_last pull-right" ng-show="shoppingCartProducts.length > 0">' +
             '<div class="fix_price pull-right">' +
             '<div class="saved_1 col-sm-7 col-md-7 pull-left">' +
             '<div class="fix_height">Subtotal :</div>' +
@@ -5447,13 +5555,12 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         return total;
                     }
                     $scope.updatedOrder = function (path) {
-                        //console.log(JSON.stringify($scope.shoppingCartProducts));
                         $scope.loadingShoppingCartData = true;
                         $scope.updateShoppingCartProduct = {};
                         $scope.updateShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
                         $scope.updateShoppingCartProduct["product"] = $scope.shoppingCartProducts;
                         $scope.updateShoppingCartProduct["sub_total"] = $scope.getTotal();
-                        $scope.updateShoppingCartProduct["total"]={"amount":$scope.updateShoppingCartProduct["sub_total"],"type":{"currency": "usd"}};
+                        $scope.updateShoppingCartProduct["total"] = {"amount": $scope.updateShoppingCartProduct["sub_total"], "type": {"currency": "usd"}};
                         $scope.updateShoppingCartProduct["__type__"] = "insertifnotexist";
                         var query = {};
                         query.table = "shopping_cart__cstore";
@@ -5584,7 +5691,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '</table>' +
             '<div class="shipping_info pull-left">' +
             '<input id="" name="" type="checkbox" value="1" ng-model="billingdata.same_shipping_address"> Shipping Information same as Billing Information </div>' +
-            '</div>'+
+            '</div>' +
             '<div class="saved_r_bar pull-right col-sm-7 col-md-7" ng-hide="billingdata.same_shipping_address">' +
             '<div class="saved_address">Shipping Information</div>' +
             '<shipping-address></shipping-address>' +
@@ -5617,7 +5724,6 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                 post: function ($scope) {
 
                     $scope.useSavedAddress = function (address) {
-                        //console.log(JSON.stringify(address));
                         $scope.billingdata["bill_address"]["firstname"] = address.manager.name ? address.manager.name : "";
                         $scope.billingdata["bill_address"]["address"] = address.address ? address.address : "";
                         $scope.billingdata["bill_address"]["address_2"] = address.address2 ? address.address2 : "";
@@ -5627,7 +5733,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         if (address.countryid) {
                             //address.stateid = (address.stateid) ? {"_id": address.stateid._id} : {"_id": false};
                             //address.cityid = (address.cityid) ? {"_id": address.cityid._id} : {"_id": false};
-                            $scope.getEditCountries(address.countryid._id, address.stateid._id, address.cityid._id,$scope.data);
+                            $scope.getEditCountries(address.countryid._id, address.stateid._id, address.cityid._id, $scope.data);
                         }
 
                     }
@@ -5681,7 +5787,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if(!$scope.billingdata.same_shipping_address){
+                        if (!$scope.billingdata.same_shipping_address) {
                             var shipping_email = $scope.billingdata.shipping_address.email;
                             if (!$scope.billingdata.shipping_address.firstname) {
                                 $("#popupMessage").html("Please enter shipping info firstname");
@@ -5735,7 +5841,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         $scope.newBillingAddress["shipping_address"] = {};
                         $scope.loadingSavedAddress = true;
                         $scope.newBillingAddress["userid"] = {"_id": $scope.currentUser.data.userid};
-                        $scope.newBillingAddress["same_shipping_address"]=$scope.billingdata.same_shipping_address;
+                        $scope.newBillingAddress["same_shipping_address"] = $scope.billingdata.same_shipping_address;
                         $scope.newBillingAddress["bill_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
                         $scope.newBillingAddress["bill_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
                         $scope.newBillingAddress["bill_address"]["address"] = $scope.billingdata.bill_address.address;
@@ -5772,7 +5878,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                                 $scope.newBillingAddress["shipping_address"]["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
                             }
                         }
-                        else{
+                        else {
                             $scope.newBillingAddress["shipping_address"]["firstname"] = $scope.billingdata.shipping_address.firstname;
                             $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.shipping_address.lastname;
                             $scope.newBillingAddress["shipping_address"]["address"] = $scope.billingdata.shipping_address.address;
@@ -5800,7 +5906,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 //$("#popupMessage").html("Billing Address is saved");
                                 //$('.popup').toggle("slide");
-                                    $scope.setPath('order-review');
+                                $scope.setPath('order-review');
 
                             } else {
                                 $("#popupMessage").html(callBackData.response);
@@ -5823,83 +5929,83 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
 cstore.directive('shippingAddress', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td>'+
-            '<div class="margin_top">First Name*</div>'+
-            '</td>'+
-            '<td>'+
-            '<div class="margin_top">Last Name*</div>'+
-            '</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.firstname"></td>'+
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.lastname"></td>'+
-            '</tr>'+
-            '</table>'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td>'+
-            '<div class="margin_top">Address*</div>'+
-            '</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address"> </textarea></td>'+
-            '</tr>'+
-            '</table>'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td>'+
-            '<div class="margin_top">Address 2</div>'+
-            '</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address_2"> </textarea></td>'+
-            '</tr>'+
-            '</table>'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td class="half_td"><div class="margin_top">Country*</div></td>'+
-            '<td class="half_td"><div class="margin_top">State*</div></td>'+
-            '</tr>'+
-            '<tr>'+
+        template: '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td>' +
+            '<div class="margin_top">First Name*</div>' +
+            '</td>' +
+            '<td>' +
+            '<div class="margin_top">Last Name*</div>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.firstname"></td>' +
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.lastname"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td>' +
+            '<div class="margin_top">Address*</div>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address"> </textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td>' +
+            '<div class="margin_top">Address 2</div>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="billingdata.shipping_address.address_2"> </textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Country*</div></td>' +
+            '<td class="half_td"><div class="margin_top">State*</div></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><store-country-select></store-country-select></td>' +
-            '<td class="half_td"><store-state-select></store-state-select></td>'+
-            '</tr>'+
-            '</table>'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td class="half_td"><div class="margin_top">City*</div></td class="half_td">'+
-            '<td class="half_td"><div class="margin_top">Zip Code*</div></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td class="half_td"><store-city-select></store-city-select></td>'+
-            '<td class="half_td"><input type="text" placeholder="" ng-model="billingdata.shipping_address.zipcode"></td>'+
-            '</tr>'+
-            '</table>'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td>'+
-            '<div class="margin_top">Phone*</div>'+
-            '</td>'+
-            '<td>'+
-            '<div class="margin_top">Extension</div>'+
-            '</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.phone"></td>'+
-            '<td><input type="text" placeholder=""ng-model="billingdata.shipping_address.ext"></td>'+
-            '</tr>'+
-            '</table>'+
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">'+
-            '<tr>'+
-            '<td>'+
-            '<div class="margin_top">Email*</div>'+
-            '</td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td class="text_area"><input type="text" placeholder=""ng-model="billingdata.shipping_address.email"></td>'+
-            '</tr>'+
+            '<td class="half_td"><store-state-select></store-state-select></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">City*</div></td class="half_td">' +
+            '<td class="half_td"><div class="margin_top">Zip Code*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><store-city-select></store-city-select></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="billingdata.shipping_address.zipcode"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td>' +
+            '<div class="margin_top">Phone*</div>' +
+            '</td>' +
+            '<td>' +
+            '<div class="margin_top">Extension</div>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.phone"></td>' +
+            '<td><input type="text" placeholder=""ng-model="billingdata.shipping_address.ext"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td>' +
+            '<div class="margin_top">Email*</div>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><input type="text" placeholder=""ng-model="billingdata.shipping_address.email"></td>' +
+            '</tr>' +
             '</table>',
         compile: function () {
             return {
@@ -5961,7 +6067,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click="setPaymentPath(cartData._id)"><a href="">Payment</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="saveOrder(cartData)"><a href="">Payment</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -6027,50 +6133,53 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post: function ($scope) {
-					$scope.setPaymentPath = function (paymentId){
-						window.location.href = "#!/payment?id=" + paymentId;
-					}
-                    $scope.setAddressState = function(cart){
-                        //console.log(JSON.stringify(cart));
-                        if(cart.bill_address){
-                        $scope.billingdata["bill_address"]["firstname"] = cart.bill_address.firstname ? cart.bill_address.firstname : "";
-                        $scope.billingdata["bill_address"]["lastname"] = cart.bill_address.lastname ? cart.bill_address.lastname : "";
-                        $scope.billingdata["bill_address"]["address"] = cart.bill_address.address ? cart.bill_address.address : "";
-                        $scope.billingdata["bill_address"]["address_2"] = cart.bill_address.address_2 ? cart.bill_address.address_2 : "";
-                        $scope.billingdata["bill_address"]["zipcode"] = cart.bill_address.zipcode ? cart.bill_address.zipcode : "";
-                        $scope.billingdata["bill_address"]["phone"] = cart.bill_address.phone ? cart.bill_address.phone : "";
-                        $scope.billingdata["bill_address"]["email"] = cart.bill_address.email ? cart.bill_address.email : "";
-                        if (cart.bill_address.country) {
-                            $scope.getEditCountries(cart.bill_address.country._id, cart.bill_address.state._id, cart.bill_address.city._id,$scope.data);
-                        }
+                    $scope.setPaymentPath = function (paymentId) {
+                        window.location.href = "#!/payment?id=" + paymentId;
+                    }
+                    $scope.setAddressState = function (cart) {
+                        if (cart.bill_address) {
+                            $scope.billingdata["bill_address"]["firstname"] = cart.bill_address.firstname ? cart.bill_address.firstname : "";
+                            $scope.billingdata["bill_address"]["lastname"] = cart.bill_address.lastname ? cart.bill_address.lastname : "";
+                            $scope.billingdata["bill_address"]["address"] = cart.bill_address.address ? cart.bill_address.address : "";
+                            $scope.billingdata["bill_address"]["address_2"] = cart.bill_address.address_2 ? cart.bill_address.address_2 : "";
+                            $scope.billingdata["bill_address"]["zipcode"] = cart.bill_address.zipcode ? cart.bill_address.zipcode : "";
+                            $scope.billingdata["bill_address"]["phone"] = cart.bill_address.phone ? cart.bill_address.phone : "";
+                            $scope.billingdata["bill_address"]["email"] = cart.bill_address.email ? cart.bill_address.email : "";
+                            if (cart.bill_address.country) {
+                                $scope.getEditCountries(cart.bill_address.country._id, cart.bill_address.state._id, cart.bill_address.city._id, $scope.data);
+                            }
                         }
                         $scope.billingdata["same_shipping_address"] = cart.same_shipping_address;
-                        if(!cart.same_shipping_address && cart.shipping_address){
+                        if (!cart.same_shipping_address && cart.shipping_address) {
                             $scope.billingdata["shipping_address"]["firstname"] = cart.shipping_address.firstname ? cart.shipping_address.firstname : "";
                             $scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
                             $scope.billingdata["shipping_address"]["address"] = cart.shipping_address.address ? cart.shipping_address.address : "";
-                            $scope.billingdata["shipping_address"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
+                            $scope.billingdata["shipping_addresss"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
                             $scope.billingdata["shipping_address"]["zipcode"] = cart.shipping_address.zipcode ? cart.shipping_address.zipcode : "";
                             $scope.billingdata["shipping_address"]["phone"] = cart.shipping_address.phone ? cart.shipping_address.phone : "";
                             $scope.billingdata["shipping_address"]["email"] = cart.shipping_address.email ? cart.shipping_address.email : "";
                             if (cart.shipping_address.country) {
-                                $scope.getEditCountries(cart.shipping_address.country._id, cart.shipping_address.state._id, cart.shipping_address.city._id,$scope.storedata);
+                                $scope.getEditCountries(cart.shipping_address.country._id, cart.shipping_address.state._id, cart.shipping_address.city._id, $scope.storedata);
                             }
                         }
                         $scope.setPathForOrder('billing-address?q=setBackData');
                     }
                     $scope.saveOrder = function (cart) {
-                        var order_date=new Date();
-                        console.log(order_date);
-                        $scope.loadingShoppingCartData=false;
+                        var order_date = new Date();
+                        $scope.loadingShoppingCartData = true;
                         $scope.newOrder = {};
                         $scope.newOrder["bill_address"] = {};
+                        $scope.newOrder["userid"] = {};
                         $scope.newOrder["shipping_address"] = {};
-                        $scope.newOrder["product"] = [{"name":"","cost":"","quantity":""}];
-                        $scope.newOrder["userid"] = cart.userid;
+                        $scope.newOrder["product"] = [
+                            {"name": "", "cost": "", "quantity": ""}
+                        ];
+                        $scope.newOrder["userid"] = {"_id":$scope.currentUser.data.userid,"username": $scope.currentUser.data.username};
+                        $scope.newOrder["storeid"] = {"_id":$scope.currentUser.data.storeid};
                         $scope.newOrder["sub_total"] = cart.sub_total;
-                        $scope.newOrder["total"]=cart.total;
-                        $scope.newOrder["order_date"]=order_date;
+                        $scope.newOrder["total"] = cart.total;
+                        $scope.newOrder["order_date"] = order_date;
+                        $scope.newOrder["status"] = "inProgress";
                         $scope.newOrder["bill_address"]["address"] = cart.bill_address.address;
                         $scope.newOrder["bill_address"]["address2"] = cart.bill_address.address_2;
                         $scope.newOrder["bill_address"]["city"] = cart.bill_address.city;
@@ -6097,37 +6206,34 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "orders__cstore";
                         query.operations = [$scope.newOrder];
-                        //console.log(JSON.stringify(query));
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                        if (callBackData.code == 200 && callBackData.status == "ok") {
-                            //$scope.removeCart(cart);
-                        //$("#popupMessage").html("Saved");
-                        //$('.popup').toggle("slide");
-                        } else {
-                        $("#popupMessage").html(callBackData.response);
-                        $('.popup').toggle("slide");
-                        }
-                        if (!$scope.$$phase) {
-                        $scope.$apply();
-                        }
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $scope.updatePopSoldCount(cart,cart.product);
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                                $scope.loadingShoppingCartData = false;
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
                         }, function (err) {
-                        $("#popupMessage").html(err);
-                        $('.popup').toggle("slide");
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
                     }
                     $scope.removeCart = function (cart) {
-                        console.log(JSON.stringify(cart.product.length));
                         $scope.removeShoppingCart = {};
-                        $scope.removeShoppingCart["_id"] =cart._id;
+                        $scope.removeShoppingCart["_id"] = cart._id;
                         $scope.removeShoppingCart["__type__"] = "delete";
                         var query = {};
                         query.table = "shopping_cart__cstore";
                         query.operations = [$scope.removeShoppingCart];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            $scope.loadingShoppingCartData=true;
+
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                if(cart.product.length >0){
-                                    $scope.cartProducts.length=$scope.cartProducts.length-cart.product.length;
+                                if (cart.product.length > 0) {
+                                    $scope.cartProducts.length = $scope.cartProducts.length - cart.product.length;
                                     for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                                         //if ($scope.shoppingCartProducts[i]._id == product._id) {
                                         $scope.shoppingCartProducts.splice(i, cart.product.length);
@@ -6135,10 +6241,40 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                                         //}
                                     }
                                 }
-                                 window.location.href = "#!/payment";
-
-                                //$("#popupMessage").html("Deleted");
-                                //$('.popup').toggle("slide");
+                                //$scope.setPathForOrder('payment');
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                                $scope.loadingShoppingCartData = false;
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                    $scope.updatePopSoldCount = function (cart,pop) {
+                        var popList = [
+                            {"_id": "", "soldcount": ""}
+                        ];
+                        popList = pop.filter(function (el) {
+                            if (el._id) {
+                                return el;
+                            }
+                        });
+                        for (var i = 0; i < popList.length; i++) {
+                            popList[i] = {"_id": popList[i].popid, "$inc": {"soldcount": popList[i].quantity}};
+                        }
+                        var query = {};
+                        query.table = "products__cstore";
+                        query.operations = popList;
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            $scope.loadingShoppingCartData = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $scope.removeCart(cart);
+                                console.log("Done");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -6162,18 +6298,18 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
 cstore.directive('allAssignedSurveys', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div><div class="survey_all">'+
-            '<div class="survey_form pull-left" ng-repeat="assignedSurvey in assignedSurveys">'+
-            '<div class="survey_dic pull-left">'+
-            '<div class="survey_left pull-left">Title</div>'+
-            '<div class="survey_right pull-right">{{assignedSurvey.title}}</div></div>'+
-            '<div class="survey_dic pull-left">'+
-            '<div class="survey_left pull-left">Description</div>'+
-            '<div class="survey_right pull-right">{{assignedSurvey.description}}</div></div>'+
-            '<div class="more_btn pull-right"><a href="#!/survey?surveyid={{assignedSurvey._id}}">More>></a></div>'+
+        template: '<div><div class="survey_all">' +
+            '<div class="survey_form pull-left" ng-repeat="assignedSurvey in allAssignedSurveys">' +
+            '<div class="survey_dic pull-left">' +
+            '<div class="survey_left pull-left">Title</div>' +
+            '<div class="survey_right pull-right">{{assignedSurvey.title}}</div></div>' +
+            '<div class="survey_dic pull-left">' +
+            '<div class="survey_left pull-left">Description</div>' +
+            '<div class="survey_right pull-right">{{assignedSurvey.description}}</div></div>' +
+            '<div class="more_btn pull-right"><a href="#!/survey?surveyid={{assignedSurvey._id}}">More>></a></div>' +
             '</div>' +
             '<div id="scrollDiv"></div>' +
-            '<div class="loadingImage" ng-hide="!assignedSurveyData.loadingData"><img src="images/loading.gif"></div>'+
+            '<div class="loadingImage" ng-hide="!assignedSurveyData.loadingData"><img src="images/loading.gif"></div>' +
             '</div></div>',
         compile: function () {
             return {
@@ -6188,18 +6324,18 @@ cstore.directive('allAssignedSurveys', ['$appService', function ($appService, $s
 cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="survey_all">'+
-            '<div class="survey_dic pull-left">'+
-            '<div class="survey_left pull-left">Title</div>'+
-            '<div class="survey_right pull-right">{{survey.title}}</div></div>'+
-            '<div class="survey_dic pull-left">'+
-            '<div class="survey_left pull-left">Description</div>'+
-            '<div class="survey_right pull-right">{{survey.description}}</div></div>'+
-            '<div class="clear"></div>'+
-            '<div class="survey_form pull-left">'+
-            '<div class="survey_title">Please complete the following Questions regarding your experiences with us.</div>'+
-            '<div class="survey_dic pull-left" ng-repeat="surveyQuestion in surveyQuestions">'+
-            '<div class="survey_que pull-left">{{surveyQuestion.question}}</div>'+
+        template: '<div class="survey_all">' +
+            '<div class="survey_dic pull-left">' +
+            '<div class="survey_left pull-left">Title</div>' +
+            '<div class="survey_right pull-right">{{survey.title}}</div></div>' +
+            '<div class="survey_dic pull-left">' +
+            '<div class="survey_left pull-left">Description</div>' +
+            '<div class="survey_right pull-right">{{survey.description}}</div></div>' +
+            '<div class="clear"></div>' +
+            '<div class="survey_form pull-left">' +
+            '<div class="survey_title">Please complete the following Questions regarding your experiences with us.</div>' +
+            '<div class="survey_dic pull-left" ng-repeat="surveyQuestion in surveyQuestions">' +
+            '<div class="survey_que pull-left">{{surveyQuestion.question}}</div>' +
             '<div class="survey_ans pull-right">' +
             '<form action ng-if="surveyQuestion.survey_type==\'radio\'">' +
             '<div ng-repeat="option in surveyQuestion.options">' +
@@ -6208,78 +6344,76 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
             '<div ng-repeat="option in surveyQuestion.options">' +
             '<input type="checkbox" value="{{option.optionVal}}" ng-model="option.optionStatus"/> {{option.optionVal}}</div></form>' +
             '<textarea ng-if="surveyQuestion.survey_type==\'subjective\'" ng-model="surveyQuestion.answer" ></textarea></div>' +
-            '</div>'+
-            '<div class="add_delete pull-right"><div class="add_btn pull-right"><button type="button" ng-click="clearSubmittedSurvey(\'all-surveys\')"><a href="">Cancel</a></button></div><div class="delete_btn pull-right">'+
-            '<button type="button" ng-click="submitSurvey()"><a href="">Submit</a></button></div></div>'+
             '</div>' +
-            '<div class="loadingImage" ng-hide="!loadingSurveyDetailData"><img src="images/loading.gif"></div>'+
+            '<div class="add_delete pull-right"><div class="add_btn pull-right"><button type="button" ng-click="clearSubmittedSurvey(\'all-surveys\')"><a href="">Cancel</a></button></div><div class="delete_btn pull-right">' +
+            '<button type="button" ng-click="submitSurvey()"><a href="">Submit</a></button></div></div>' +
+            '</div>' +
+            '<div class="loadingImage" ng-hide="!loadingSurveyDetailData"><img src="images/loading.gif"></div>' +
             '</div>',
         compile: function () {
             return {
                 pre: function ($scope) {
 
                 },
-                post:function($scope){
+                post: function ($scope) {
                     $scope.CSession = $appService.getSession();
-                        $scope.submitSurvey = function () {
-                            if ($scope.CSession) {
-                                //$scope.loadingSurveyDetailData = true;
-                                var query = {};
-                                $scope.newSurveyAnswer = {};
-                                $scope.newSurveyAnswer["answers"]={};
-                                query.table = "answered_survey__cstore";
-                                $scope.newSurveyAnswer["survey_id"] = {"_id":$scope.survey._id};
-                                $scope.newSurveyAnswer["store_id"] = {"_id":$scope.currentUser.data.storeid};
+                    $scope.submitSurvey = function () {
+                        if ($scope.CSession) {
+                            //$scope.loadingSurveyDetailData = true;
+                            var query = {};
+                            $scope.newSurveyAnswer = {};
+                            $scope.newSurveyAnswer["answers"] = {};
+                            query.table = "answered_survey__cstore";
+                            $scope.newSurveyAnswer["survey_id"] = {"_id": $scope.survey._id};
+                            $scope.newSurveyAnswer["store_id"] = {"_id": $scope.currentUser.data.storeid};
 
-                                for (i = 0; i < $scope.surveyQuestions.length; i++){
-                                    if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="radio") {
-                                        //for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
+                            for (i = 0; i < $scope.surveyQuestions.length; i++) {
+                                if ($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type == "radio") {
+                                    //for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
 
-                                        $scope.newSurveyAnswer["answers"][i]=$scope.surveyQuestions[i].radioAns;
-                                        console.log($scope.surveyQuestions[i].radioAns);
-                                        //}
-                                    }
-                                    else if($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type=="checkbox") {
-                                        var temp=[];
-                                        for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
-                                            if($scope.surveyQuestions[i].options[j].optionStatus){
-                                                temp.push($scope.surveyQuestions[i].options[j].optionVal);
-
-                                                console.log($scope.surveyQuestions[i].options[j].optionVal);
-                                            }
-                                        }
-                                        $scope.newSurveyAnswer["answers"][i]=temp;
-                                    }
-                                    else {
-                                        console.log($scope.surveyQuestions[i].answer);
-                                        $scope.newSurveyAnswer["answers"][i]=$scope.surveyQuestions[i].answer;
-                                    }
+                                    $scope.newSurveyAnswer["answers"][i] = $scope.surveyQuestions[i].radioAns;
+                                    //}
                                 }
-                                query.operations = [$scope.newSurveyAnswer];
-                                $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                                    //$scope.loadingSurveyDetailData = false;
-                                    if (callBackData.code == 200 && callBackData.status == "ok") {
-                                        $scope.changeStatusOfSurvey();
-                                        //$("#popupMessage").html("Submitted");
-                                        //$('.popup').toggle("slide");
-                                        //$scope.clearSubmittedSurvey('all-surveys');
-                                    } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                        $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                        $('.popup').toggle("slide");
+                                else if ($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type == "checkbox") {
+                                    var temp = [];
+                                    for (j = 0; j < $scope.surveyQuestions[i].options.length; j++) {
+                                        if ($scope.surveyQuestions[i].options[j].optionStatus) {
+                                            temp.push($scope.surveyQuestions[i].options[j].optionVal);
+
+                                        }
                                     }
-                                    else {
-                                        $("#popupMessage").html("some error while submitting survey");
-                                        $('.popup').toggle("slide");
-                                    }
-                                }, function (err) {
-                                    console.log(err.stack);
-                                });
+                                    $scope.newSurveyAnswer["answers"][i] = temp;
+                                }
+                                else {
+                                    $scope.newSurveyAnswer["answers"][i] = $scope.surveyQuestions[i].answer;
+                                }
                             }
-                            else {
-                                $("#popupMessage").html("Please login first");
+                            query.operations = [$scope.newSurveyAnswer];
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                //$scope.loadingSurveyDetailData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $scope.changeStatusOfSurvey();
+                                    //$("#popupMessage").html("Submitted");
+                                    //$('.popup').toggle("slide");
+                                    //$scope.clearSubmittedSurvey('all-surveys');
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while submitting survey");
+                                    $('.popup').toggle("slide");
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err.stack);
                                 $('.popup').toggle("slide");
-                            }
+                            });
                         }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
                     $scope.changeStatusOfSurvey = function () {
                         if ($scope.CSession) {
                             var query = {};
@@ -6287,15 +6421,26 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                             $scope.newSurveyStatus["store_manager_id"] = {};
                             query.table = "surveys__cstore";
                             $scope.newSurveyStatus["_id"] = $scope.survey._id;
-                            var storeArray=[];
-                            storeArray.push({"_id": $scope.survey.store_manager_id._id,"status":"answered"});
-                            $scope.newSurveyStatus.store_manager_id={data: storeArray, "override": "true"};
+                            var storeArray = [];
+                            for(var i=0;i<$scope.surveyAssignedStores.length;i++){
+                                if($scope.surveyAssignedStores[i]._id==$scope.currentUser.data.storeid) {
+                                    $scope.surveyAssignedStores[i].status="answered";
+                                }
+                                storeArray.push({"_id": $scope.surveyAssignedStores[i]._id, "status": $scope.surveyAssignedStores[i].status});
+                            }
+                            $scope.newSurveyStatus.store_manager_id = {data: storeArray, "override": "true"};
                             query.operations = [$scope.newSurveyStatus];
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                                 $scope.loadingSurveyDetailData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Submitted");
                                     $('.popup').toggle("slide");
+                                    //for (var i = 0; i < $scope.allAssignedSurveys.length; i++) {
+                                    //    if ($scope.allAssignedSurveys[i]._id == $scope.survey._id) {
+                                    //        $scope.allAssignedSurveys.splice(i, 1);
+                                    //        i--;
+                                    //    }
+                                    //}
                                     $scope.clearSubmittedSurvey('all-surveys');
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -6306,7 +6451,8 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                     $('.popup').toggle("slide");
                                 }
                             }, function (err) {
-                                console.log(err.stack);
+                                $("#popupMessage").html(err.stack);
+                                $('.popup').toggle("slide");
                             });
                         }
                         else {
@@ -6314,10 +6460,10 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                             $('.popup').toggle("slide");
                         }
                     }
-                    }
                 }
             }
         }
+    }
 }]);
 
 cstore.directive('payment', ['$appService', function ($appService, $scope) {
@@ -6437,42 +6583,46 @@ cstore.directive('payment', ['$appService', function ($appService, $scope) {
                 pre: function ($scope) {
                 },
                 post: function ($scope) {
-                    $scope.send_payment = function (){
+                    $scope.send_payment = function () {
                         var payment_details = {
                             "intent": "sale",
                             "payer": {
                                 "payment_method": "credit_card",
-                                "funding_instruments": [{
-                                    "credit_card": {
-                                        "type": "visa",
-                                        "number": "4417119669820331",
-                                        "expire_month": "11",
-                                        "expire_year": "2018",
-                                        "cvv2": "123",
-                                        "first_name": "Joe",
-                                        "last_name": "Shopper",
-                                        "billing_address": {
-                                            "line1": "52 N Main ST",
-                                            "city": "Johnstown",
-                                            "state": "OH",
-                                            "postal_code": "43210",
-                                            "country_code": "US"
+                                "funding_instruments": [
+                                    {
+                                        "credit_card": {
+                                            "type": "visa",
+                                            "number": "4417119669820331",
+                                            "expire_month": "11",
+                                            "expire_year": "2018",
+                                            "cvv2": "123",
+                                            "first_name": "Joe",
+                                            "last_name": "Shopper",
+                                            "billing_address": {
+                                                "line1": "52 N Main ST",
+                                                "city": "Johnstown",
+                                                "state": "OH",
+                                                "postal_code": "43210",
+                                                "country_code": "US"
+                                            }
                                         }
                                     }
-                                }]
+                                ]
                             },
-                            "transactions": [{
-                                "amount": {
-                                    "total": "100",
-                                    "currency": "USD",
-                                    "details": {
-                                        "subtotal": "100",
-                                        "tax": "0.00",
-                                        "shipping": "0.00"}},
-                                "description": "This is the payment transaction description." }]};
+                            "transactions": [
+                                {
+                                    "amount": {
+                                        "total": "100",
+                                        "currency": "USD",
+                                        "details": {
+                                            "subtotal": "100",
+                                            "tax": "0.00",
+                                            "shipping": "0.00"}},
+                                    "description": "This is the payment transaction description." }
+                            ]};
 
-                        paypal_sdk.payment.create(payment_details,config_options, function(error, payment){
-                            if(error){
+                        paypal_sdk.payment.create(payment_details, config_options, function (error, payment) {
+                            if (error) {
                                 console.error(error);
                             } else {
                                 console.error(payment);
@@ -6622,7 +6772,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            //console.log("33333:::"+$scope.oFile.fileExist);
                             if (!$scope.oFile.fileExist) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
@@ -6679,7 +6828,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                     };
 
                     $scope.saveFunction = function (query) {
-                        //console.log(query);
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             $scope.loadingAddProgramData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
@@ -6698,8 +6846,8 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            console.log(err.stack);
-
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
                         });
                     }
                 }
@@ -6708,3 +6856,152 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+/*********************************Order View**************************************/
+cstore.directive('orderList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left">' +
+            '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+            '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'userid.storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'userid.storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '' +
+            '<th>Total<span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'total\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'total\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Order Date</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'order_date\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="sortOrder(\'order_date\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Status</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'status\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th></th></tr><tr ng-repeat="order in orders"><td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Quantity</td></tr>' +
+            '<tr ng-repeat="pop in order.product | limitTo:3"><td class="ordered_pop">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+            '{{order.storeid.storename}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
+            '<td><a class="edit_btn" ng-click="setPath(order._id)" href>View Detail</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (orderid) {
+                        window.location.href = "#!/order-detail?orderid=" + orderid;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="table_4 pull-left">' +
+            '<div class="store_program pull-left" ng-show="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'" ><div>Store Manager Name :{{savedAddressData.manager.name}}</div> <div>Program Name : {{savedAddressData.programid.name}}</div>' +
+            '</div>' +
+            '<div class="table_5 pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<th></th>' +
+            '<th>Item</th>' +
+            '<th>Item Price</th>' +
+            '<th>Qty</th>' +
+            '<th>Price</th>' +
+            '</tr>' +
+            '<tr ng-repeat="orderedProduct in orderedProducts">' +
+            '<td>{{$index+1}}</td>' +
+            '<td>' +
+            '<div class="item">' +
+            '<div class="item_name">{{orderedProduct.name}}</div>' +
+            '</div>' +
+            '</td>' +
+            '<td>{{orderedProduct.cost.amount | currency}}</td>' +
+            '<td class="qty_1">{{orderedProduct.quantity}}</td>' +
+            '<td>{{orderedProduct.quantity*orderedProduct.cost.amount | currency}}</td>' +
+            '</tr>' +
+            '</table>' +
+            '<div class="table-bordered">' +
+            '<div class="saved_l_bar pull-right">' +
+            '<div class="fix_address pull-right">' +
+            '<div class="saved_address">Amount Detail :</div>' +
+            '<div class="saved_1 col-sm-7 col-md-7 pull-left">' +
+            '<div class="fix_height">Subtotal :</div>' +
+            '<div class="fix_height">Shipping Charge :</div>' +
+            '<div class="fix_height margin_top total_amount">Total :</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
+            '<div class="fix_height text-right">{{orderData.sub_total | currency}}</div>' +
+            '<div class="fix_height text-right">Free</div>' +
+            '<div class="fix_height margin_top text-right total_amount">{{orderData.total.amount | currency}}</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="s_bar pull-right">' +
+            '<div class="saved_l_bar pull-right">' +
+            '<div class="fix_address pull-right">' +
+            '<div class="saved_address" >Billing Address</div>' +
+            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div class="fix_height">Name</div>' +
+            '<div class="address fix_height">Address</div>' +
+            '<div class="fix_height">City</div>' +
+            '<div class="fix_height">State</div>' +
+            '<div class="fix_height">Postal Code</div>' +
+            '<div class="fix_height">Phone No:</div>' +
+            '<div class="fix_height">Extension</div>' +
+            '<div class="fix_height">Email:</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="fix_height">{{savedOrderBillingAddress.firstname}} {{savedOrderBillingAddress.lastname}}</div>' +
+            '<div class="address fix_height">{{savedOrderBillingAddress.address}}</div>' +
+            '<div class="fix_height">{{savedOrderBillingAddress.city.name}}</div>' +
+            '<div class="fix_height">{{savedOrderBillingAddress.state.name}}</div>' +
+            '<div class="fix_height">{{savedOrderBillingAddress.zipcode}}</div>' +
+            '<div class="fix_height">{{savedOrderBillingAddress.phone}}</div>' +
+            '<div class="fix_height">{{savedOrderBillingAddress.ext}}</div>' +
+            '<div class="fix_height">{{savedOrderBillingAddress.email}}</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="saved_l_bar pull-right">' +
+            '<div class="fix_address pull-right">' +
+            '<div class="saved_address" >Shipping Address</div>' +
+            '<div class="saved_1 col-sm-5 colmd-5 pull-left">' +
+            '<div class="fix_height">Name</div>' +
+            '<div class="address fix_height">Address</div>' +
+            '<div class="fix_height">City</div>' +
+            '<div class="fix_height">State</div>' +
+            '<div class="fix_height">Postal Code</div>' +
+            '<div class="fix_height">Phone No:</div>' +
+            '<div class="fix_height">Extension</div>' +
+            '<div class="fix_height">Email:</div>' +
+            '</div>' +
+            '<div class="saved_1 col-sm-7 colmd-7 pull-left">' +
+            '<div class="fix_height">{{savedOrderShippingAddress.firstname}} {{savedOrderShippingAddress.lastname}}</div>' +
+            '<div class="address fix_height">{{savedOrderShippingAddress.address}}</div>' +
+            '<div class="fix_height">{{savedOrderShippingAddress.city.name}}</div>' +
+            '<div class="fix_height">{{savedOrderShippingAddress.state.name}}</div>' +
+            '<div class="fix_height">{{savedOrderShippingAddress.zipcode}}</div>' +
+            '<div class="fix_height">{{savedOrderShippingAddress.phone}}</div>' +
+            '<div class="fix_height">{{savedOrderShippingAddress.ext}}</div>' +
+            '<div class="fix_height">{{savedOrderShippingAddress.email}}</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                },
+                post: function ($scope) {
+                }
+
+            }
+        }
+    }
+}]);
