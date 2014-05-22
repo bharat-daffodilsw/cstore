@@ -4852,8 +4852,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                                 $scope.loadingPromotionDetailData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
-                                    $("#popupMessage").html("Status Updated");
-                                    $('.popup').toggle("slide");
+                                    window.location.href="#!/all-promos";
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
