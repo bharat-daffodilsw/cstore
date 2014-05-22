@@ -3948,11 +3948,11 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
         $scope.loadingOrderData = true;
 
         var query = {"table": "orders__cstore"};
-        query.columns = ["userid", "userid.storeid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm"}];
+        query.columns = ["userid", "storeid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
-                query.filter["userid.storeid._id"] = $scope.currentUser["data"]["storeid"];
+                query.filter["storeid._id"] = $scope.currentUser["data"]["storeid"];
             }
         }
         if (column && searchText && column != "" && searchText != "") {
@@ -4001,7 +4001,7 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         }
         $scope.loadingStatus = true;
         var query = {"table": "orders__cstore"};
-        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address", "same_shipping_address"];
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid","storeid","bill_address", "shipping_address"];
         query.filter = {};
         query.filter["_id"] = $routeParams.orderid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -4012,11 +4012,11 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
                 $scope.orderedProducts = cartData.response.data[0].product;
                 $scope.savedOrderBillingAddress = cartData.response.data[0].bill_address;
                 $scope.savedOrderShippingAddress = cartData.response.data[0].shipping_address;
-                if (cartData.response.data[0].userid.storeid) {
+                if (cartData.response.data[0].storeid) {
                     var storequery = {"table": "storemanagers__cstore"};
                     storequery.columns = ["programid", "manager.name"];
                     storequery.filter = {};
-                    storequery.filter["_id"] = cartData.response.data[0].userid.storeid._id;
+                    storequery.filter["_id"] = cartData.response.data[0].storeid._id;
                     var queryParams = {query: JSON.stringify(storequery), "ask": ASK, "osk": OSK};
                     var serviceUrl = "/rest/data";
                     $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (savedAddressData) {

@@ -163,8 +163,8 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
             '<input type="text" placeholder="Search" name="search_theme_form"id="edit-search-theme-form-1" ng-model="searchContent" size="15"  title="Enter the terms you wish to search for." class="search">' +
             '<input type="submit" style="display:none"></form>' +
             '<div class="search_sign pull-left" ng-click="search()"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
-            ' <span class="where_i">I am in</span><a href><span class="loction_img pull-left"><img src="images/location.png">' +
-            '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></a></div><div class="add_cart pull-right"ng-click="setPathForCart(\'shopping-cart\')"><div class="addcart_link pull-left"><a href>' +
+            ' <span class="where_i">I am in</span><span class="loction_img pull-left"><img src="images/location.png">' +
+            '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></div><div class="add_cart pull-right"ng-click="setPathForCart(\'shopping-cart\')"><div class="addcart_link pull-left"><a href>' +
             '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">({{cartProducts.length}})</div></div></div></div>',
         compile: function () {
             return {
@@ -5986,7 +5986,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click=""><a href="">Payment</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="saveOrder(cartData)"><a href="">Payment</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -6088,11 +6088,13 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         $scope.loadingShoppingCartData = true;
                         $scope.newOrder = {};
                         $scope.newOrder["bill_address"] = {};
+                        $scope.newOrder["userid"] = {};
                         $scope.newOrder["shipping_address"] = {};
                         $scope.newOrder["product"] = [
                             {"name": "", "cost": "", "quantity": ""}
                         ];
-                        $scope.newOrder["userid"] = {"_id":cart.userid._id,"username":cart.userid.username,"storeid._id":$scope.currentUser.data.storeid};
+                        $scope.newOrder["userid"] = {"_id":$scope.currentUser.data.userid,"username": $scope.currentUser.data.username};
+                        $scope.newOrder["storeid"] = {"_id":$scope.currentUser.data.storeid};
                         $scope.newOrder["sub_total"] = cart.sub_total;
                         $scope.newOrder["total"] = cart.total;
                         $scope.newOrder["order_date"] = order_date;
@@ -6158,7 +6160,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                                         //}
                                     }
                                 }
-                                $scope.setPathForOrder('payment');
+                                //$scope.setPathForOrder('payment');
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -6191,6 +6193,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             $scope.loadingShoppingCartData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.removeCart(cart);
+                                console.log("Done");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -6789,7 +6792,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
             '<div class="sortDown" ng-click="sortOrder(\'order_date\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Status</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'status\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th></th></tr><tr ng-repeat="order in orders"><td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Quantity</td></tr>' +
             '<tr ng-repeat="pop in order.product | limitTo:3"><td class="ordered_pop">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-            '{{order.userid.storeid.storename}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
+            '{{order.storeid.storename}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
             '<td><a class="edit_btn" ng-click="setPath(order._id)" href>View Detail</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
