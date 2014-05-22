@@ -2961,7 +2961,7 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename"];
+        query.columns = [ "_id", "storename","manager.email"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -3051,7 +3051,7 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename","programid"];
+        query.columns = [ "_id", "storename","programid","manager.email"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
