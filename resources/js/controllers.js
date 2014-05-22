@@ -1125,6 +1125,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.shoppingCartProducts = cartData.response.data[0].product;
                 $scope.savedBillingAddress = cartData.response.data[0].bill_address;
                 $scope.savedShippingAddress = cartData.response.data[0].shipping_address;
+                $scope.shipping_charges = (cartData.response.data[0].shipping_charges && cartData.response.data[0].shipping_charges.amount) ? cartData.shipping_charges.amount : "Free";
                 for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                     $scope.shoppingCartProducts[i].total = $scope.shoppingCartProducts[i].quantity * $scope.shoppingCartProducts[i].cost.amount;
                     $scope.grandTotal += $scope.shoppingCartProducts[i].total;
@@ -3254,14 +3255,12 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             $scope.loadingPromotionDetailData = false;
             $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
             $scope.assignedStoreManagers=promotionDetailData.response.data[0].store_manager_id;
-            console.log($scope.assignedStoreManagers);
             for(var i=0;i<$scope.assignedStoreManagers.length;i++){
                 if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
                     $scope.booleanOpt = $scope.assignedStoreManagers[i].opt;
                     $scope.storeManagerId=$scope.assignedStoreManagers[i]._id;
                 }
             }
-            console.log($scope.booleanOpt);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -3927,7 +3926,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
             $scope.venderSearch = [
                 {"value": "status", "name": "Status"},
-                {"value": "userid.storeid.storename", "name": "Site Name"}
+                {"value": "storeid.storename", "name": "Site Name"}
             ];
         }
     }
@@ -4012,6 +4011,7 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
                 $scope.orderedProducts = cartData.response.data[0].product;
                 $scope.savedOrderBillingAddress = cartData.response.data[0].bill_address;
                 $scope.savedOrderShippingAddress = cartData.response.data[0].shipping_address;
+                $scope.ordered_shipping_charges = (cartData.response.data[0].shipping_charges && cartData.response.data[0].shipping_charges.amount) ? cartData.shipping_charges.amount : "Free";
                 if (cartData.response.data[0].storeid) {
                     var storequery = {"table": "storemanagers__cstore"};
                     storequery.columns = ["programid", "manager.name"];

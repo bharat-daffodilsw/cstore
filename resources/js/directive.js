@@ -4832,7 +4832,6 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
                     $scope.changeAssignedPromoStatus = function () {
-                        console.log($scope.booleanOpt);
                         if ($scope.CSession) {
                             var query = {};
                             $scope.loadingPromotionDetailData = true;
@@ -5444,7 +5443,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '</div>' +
             '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
             '<div class="fix_height text-right">{{getTotal() | currency}}</div>' +
-            '<div class="fix_height text-right">Free</div>' +
+            '<div class="fix_height text-right">{{shipping_charges}}</div>' +
             '<div class="fix_height margin_top text-right total_amount">{{getTotal() | currency}}</div>' +
             '</div>' +
             '</div>' +
@@ -5978,7 +5977,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
             '<div class="fix_height text-right">{{cartData.sub_total | currency}}</div>' +
-            '<div class="fix_height text-right">Free</div>' +
+            '<div class="fix_height text-right">{{shipping_charges}}</div>' +
             '<div class="fix_height margin_top text-right total_amount">{{cartData.total.amount | currency}}</div>' +
             '</div>' +
             '</div>' +
@@ -6851,7 +6850,7 @@ cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="saved_1 col-sm-5 col-md-5 pull-left">' +
             '<div class="fix_height text-right">{{orderData.sub_total | currency}}</div>' +
-            '<div class="fix_height text-right">Free</div>' +
+            '<div class="fix_height text-right">{{ordered_shipping_charges}}</div>' +
             '<div class="fix_height margin_top text-right total_amount">{{orderData.total.amount | currency}}</div>' +
             '</div>' +
             '</div>' +
