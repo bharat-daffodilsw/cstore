@@ -182,6 +182,9 @@ cstore.config(
             }).when('/order-detail', {
                 templateUrl: '../order-detail',
                 controller: 'orderDetailCtrl'
+            }).when('/assign-promo', {
+                templateUrl: '../assign-promo',
+                controller: 'assignPromoCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -2938,8 +2941,6 @@ cstore.controller('addSurveyCtrl', function ($scope, $appService) {
      } */
 });
 
-//changes made by Anuradha
-
 /************************************ Assign Survey *****************************************************/
 cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
@@ -3028,6 +3029,96 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
     }
     $scope.getLess = function (column, searchText) {
         $scope.getSurveyStoresName(0, 10, column, searchText);
+    }
+});/************************************ Assign Promo *****************************************************/
+cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams) {
+    $scope.preCursor = 0
+    $scope.currentCursor = 0;
+    $scope.venderSearch = [
+        {"value": "storename", "name": "Store Name"},
+        {"value": "programid.name", "name": "Program"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.getPromoStoresName = function (direction, limit, column, searchText) {
+        if ($scope.loadingStatus) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.preCursor = $scope.currentCursor;
+        } else {
+            $scope.preCursor = $scope.preCursor - limit;
+            $scope.currentCursor = $scope.preCursor;
+        }
+        $scope.loadingStatus = true;
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = [ "_id", "storename","programid"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        } else {
+            query.orders["storename"] = "asc";
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.currentCursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+            if (storeData.response.data && storeData.response.data.length > 0) {
+                $scope.storesName = storeData.response.data;
+                $scope.currentCursor = storeData.response.cursor;
+                $scope.promoId = $routeParams.id;
+                if (!$scope.promoId) {
+                    return;
+                }
+                var query = {"table": "promotions__cstore"};
+                query.columns = ["store_manager_id"];
+                query.filter = {"_id": $scope.promoId};
+                query.orders = {"storename": "asc"};
+                var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeSurveyData) {
+                    $scope.loadingStatus = false;
+                    if (storeSurveyData.response.data && storeSurveyData.response.data.length > 0 && storeSurveyData.response.data[0].store_manager_id && storeSurveyData.response.data[0].store_manager_id.length) {
+                        $scope.storeManager = storeSurveyData.response.data[0].store_manager_id;
+                        for (i = 0; i < $scope.storesName.length; i++) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[i]._id == $scope.storeManager[j]._id) {
+                                    $scope.storesName[i].assigned = true;
+                                }
+                            }
+                            if (!$scope.storesName[i].assigned) {
+                                $scope.storesName[i].assigned = false;
+                            }
+                        }
+                    }
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            } else {
+                $scope.loadingStatus = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        });
+    }
+    $scope.getPromoStoresName(1, 10);
+    $scope.setPromoStoreNameOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getPromoStoresName(1, 10, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getPromoStoresName(1, 10, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getPromoStoresName(0, 10, column, searchText);
     }
 });
 
@@ -3284,6 +3375,7 @@ cstore.controller('assignedSessionCtrl', function ($scope, $appService, $routePa
         if ($scope.loadingAssignedSessionData) {
             return false;
         }
+		
         if (direction == 1) {
             $scope.show.preCursor = $scope.show.currentCursor;
         } else {

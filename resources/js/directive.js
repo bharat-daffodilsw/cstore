@@ -6,7 +6,6 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
 
             '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
             '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
-
             '<ul><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
             '<admin-menu ng-show="displayData.menu"></admin-menu><store-menu ng-show="displayData.options"></store-menu></div>' +
@@ -3282,7 +3281,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
             '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>' +
             '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
-            '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
+            '<td><a class="edit_btn" ng-click="setAssignedPromo(promotion._id)" href>Assign</a><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3293,6 +3292,9 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
                         $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }					
+                    $scope.setAssignedPromo = function (promotionid) {
+                        window.location.href = "#!/assign-promo?id=" + promotionid;
                     }
                     $scope.deletePromotionArray = [];
                     $scope.deletePromotion = function () {
@@ -3424,6 +3426,86 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             }
                         }
                         window.location.href = "#!edit-promotion?q=" + promotion._id;
+                    }
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('promoAssignStore', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="assignPromo()"><a href>Save</a></button>' +
+            '<button type="button" ng-click="setPath(\'promotions\')"><a href>Back</a></button>' +
+            '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="searchPromoName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Store Name</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storename}}</td><td>{{store.programid.name}}</td><td>' +
+            '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
+            '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.getOperationData = function (index) {
+                        var push = true;
+                        if ($scope.storeManager && $scope.storeManager.length > 0) {
+                            for (j = 0; j < $scope.storeManager.length; j++) {
+                                if ($scope.storesName[index]._id == $scope.storeManager[j]._id) {
+                                    $scope.storeManager.splice(j, 1);
+                                    push = false;
+                                    break;
+                                }
+                            }
+                        } else {
+                            $scope.storeManager = [];
+                        }
+                        if (push) {
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                        }
+                    }
+                    $scope.assignPromo = function () {
+                        if (!$scope.promoId) {
+                            return;
+                        }
+                        $scope.loadingStatus = true;
+                        var query = {"table": "promotions__cstore"};
+                        var operationArray = {};
+                        $scope.CSession = $appService.getSession();
+                        operationArray._id = $scope.promoId;
+                        var dataArr = [];
+                        for (j = 0; j < $scope.storeManager.length; j++) {
+                            dataArr.push({"_id": $scope.storeManager[j]._id,"opt":true});
+                        }
+                        operationArray.store_manager_id = {data: dataArr, "override": "true"};
+                        query.operations = [operationArray];
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingStatus = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html("some error while saving training session");
+                                $('.popup').toggle("slide");
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                    $scope.searchPromoName = function () {
+                        $scope.preCursor = 0;
+                        $scope.currentCursor = 0;
+                        $scope.getPromoStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                 }
             }
