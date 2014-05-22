@@ -4126,7 +4126,7 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                             $scope.storeManager = [];
                         }
                         if (push) {
-                            $scope.storeManager.push({"_id": $scope.storesName[index]._id});
+                            $scope.storeManager.push({"_id": $scope.storesName[index]._id,"email": $scope.storesName[index].manager.email});
                         }
                     }
                     $scope.assignTrainingSession = function () {
@@ -4140,7 +4140,7 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
                         operationArray._id = $scope.trainingSessionId;
                         var dataArr = [];
                         for (j = 0; j < $scope.storeManager.length; j++) {
-                            dataArr.push({"_id": $scope.storeManager[j]._id});
+                            dataArr.push({"_id": $scope.storeManager[j]._id,"email": $scope.storeManager[j].email});
                         }
                         operationArray.store_manager_id = {data: dataArr, "override": "true"};
                         query.operations = [operationArray];

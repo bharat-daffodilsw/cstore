@@ -184,7 +184,7 @@ cstore.config(
                 controller: 'orderDetailCtrl'
             }).when('/assign-promo', {
                 templateUrl: '../assign-promo',
-                controller: 'assignPromoCtrl'
+                controller: 'assignPromoCtrl'	
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -2794,7 +2794,7 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename"];
+        query.columns = [ "_id", "storename","manager.email"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
