@@ -106,12 +106,12 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="admin_menu pull-left">' +
-            '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
+            '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Program</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li ng-click="clearSurveyContent()">' +
-            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
-            '<li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Programs</a></li>' +
+            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
+            '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
             '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
             '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
@@ -6178,7 +6178,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         $scope.newOrder["sub_total"] = cart.sub_total;
                         $scope.newOrder["total"] = cart.total;
                         $scope.newOrder["order_date"] = order_date;
-                        $scope.newOrder["status"] = "inProgress";
+                        $scope.newOrder["status"] = "In Progress";
                         $scope.newOrder["bill_address"]["address"] = cart.bill_address.address;
                         $scope.newOrder["bill_address"]["address2"] = cart.bill_address.address_2;
                         $scope.newOrder["bill_address"]["city"] = cart.bill_address.city;
@@ -6856,6 +6856,28 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
 }]);
 
 /*********************************Order View**************************************/
+cstore.directive('orderStatusSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="status_select" ng-model="order.status" ng-options="status for status in status"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+                    /*for (var i = 0; i < $scope.orderStatus.length; i++) {
+                        if ($scope.orderStatus[i] == $scope.order.status) {
+                            $scope.orders[i].status = $scope.orderStatus[i];
+                            break;
+                        }
+                    } */
+                    //console.log($scope.order.status);
+                    //$scope.xyz=$scope.order.status;
+                }, post: function ($scope) {
+
+                }
+            }
+        }
+    }
+}]);
 cstore.directive('orderList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -6866,14 +6888,17 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
-            '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'userid.storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'userid.storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '' +
+            '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Program </span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'storeid.programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'storeid.programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Total<span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'total\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'total\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Order Date</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'order_date\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="sortOrder(\'order_date\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th><span>Status</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'status\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th></th></tr><tr ng-repeat="order in orders"><td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Quantity</td></tr>' +
-            '<tr ng-repeat="pop in order.product | limitTo:3"><td class="ordered_pop">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-            '{{order.storeid.storename}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
-            '<td><a class="edit_btn" ng-click="setPath(order._id)" href>View Detail</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
+            '<th><span>Status</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="sortOrder(\'status\',\'desc\',searchby.value,search.searchContent)"></div></span></th><th></th></tr><tr ng-repeat="order in orders">' +
+            '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
+            '<tr ng-repeat="pop in order.product | limitTo:3"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+            '{{order.storeid.storename}}</td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td><span ng-if="currentUser.data.roleid == \'531d4aa0bd1515ea1a9bbaf6\'">{{order.status}}</span><order-status-select ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"></order-status-select></td>' +
+            '<td><a class="edit_btn" ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'" ng-click="updateStatusOfOrder(order)" href>Change Status</a><a class="edit_btn" ng-click="setPath(order._id)" href>View Detail</a></td></tr></table>' +
+            '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -6885,9 +6910,38 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                         $scope.show.currentCursor = 0;
                         $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
+                    $scope.updateStatusOfOrder = function (order) {
+                        $scope.loadingOrderData = true;
+                        $scope.updateOrderStatus = {};
+                        $scope.updateOrderStatus["_id"] =order._id;
+                        $scope.updateOrderStatus["status"] = order.status;
+                        var query = {};
+                        query.table = "orders__cstore";
+                        query.operations = [$scope.updateOrderStatus];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            $scope.loadingOrderData=false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                //$scope.getAllOrders(1, 10);
+                                $("#popupMessage").html("Update Order Status");
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+                    }
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
+                },
+                post:function($scope){
+
                 }
             }
         }
@@ -6898,7 +6952,10 @@ cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="table_4 pull-left">' +
-            '<div class="store_program pull-left" ng-show="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'" ><div>Store Manager Name :{{savedAddressData.manager.name}}</div> <div>Program Name : {{savedAddressData.programid.name}}</div>' +
+            '<div class="store_program pull-left" ng-show="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'" >' +
+            '<div><b>Site Name</b> :{{orderData.storeid.storename}}</div>' +
+            '<div><b>Manager Name</b> :{{savedAddressData.manager.name}}</div>' +
+            '<div><b>Program Name</b> : {{savedAddressData.programid.name}}</div>' +
             '</div>' +
             '<div class="table_5 pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +

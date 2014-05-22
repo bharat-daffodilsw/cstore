@@ -4009,6 +4009,7 @@ cstore.controller('addProgramCtrl', function ($scope, $appService, $routeParams)
 cstore.controller('orderListCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingOrderData = false;
+    $scope.status=["In Progress","Cancelled","Delivered"];
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             $scope.venderSearch = [
@@ -4017,8 +4018,8 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
             $scope.venderSearch = [
-                {"value": "status", "name": "Status"},
-                {"value": "storeid.storename", "name": "Site Name"}
+                {"value": "storeid.storename", "name": "Site Name"},
+                {"value": "status", "name": "Status"}
             ];
         }
     }
@@ -4039,7 +4040,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
         $scope.loadingOrderData = true;
 
         var query = {"table": "orders__cstore"};
-        query.columns = ["userid", "storeid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm"}];
+        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
