@@ -3129,8 +3129,8 @@ cstore.controller('answeredStoreCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Site Name"},
-        {"value": "programid.name", "name": "Program"}
+        {"value": "store_id.storename", "name": "Site Name"},
+        {"value": "store_id.programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
