@@ -2780,8 +2780,8 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Site Name"},
-        {"value": "programid.name", "name": "Program"}
+        {"value": "storeid.storename", "name": "Store Name"},
+        {"value": "storeid.programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getStoresName = function (direction, limit, column, searchText) {
@@ -2795,12 +2795,13 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
             $scope.currentCursor = $scope.preCursor;
         }
         $scope.loadingStatus = true;
-        var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename","manager.email","programid"];
+        var query = {"table": "user_profiles__cstore"};
+        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
+		query.filter.roleid = STOREMANAGER;
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -2831,7 +2832,7 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
                         $scope.storeManager = storeTrainingData.response.data[0].store_manager_id;
                         for (i = 0; i < $scope.storesName.length; i++) {
                             for (j = 0; j < $scope.storeManager.length; j++) {
-                                if ($scope.storesName[i]._id == $scope.storeManager[j]._id) {
+                                if ($scope.storesName[i].storeid._id == $scope.storeManager[j]._id) {
                                     $scope.storesName[i].assigned = true;
                                 }
                             }
@@ -2947,8 +2948,8 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Site Name"},
-        {"value": "programid.name", "name": "Program"}
+        {"value": "storeid.storename", "name": "Store Name"},
+        {"value": "storeid.programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
@@ -2962,12 +2963,13 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
             $scope.currentCursor = $scope.preCursor;
         }
         $scope.loadingStatus = true;
-        var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename","manager.email","programid"];
+        var query = {"table": "user_profiles__cstore"};
+        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
+		query.filter.roleid = STOREMANAGER;
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -2998,10 +3000,10 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
                         $scope.storeManager = storeSurveyData.response.data[0].store_manager_id;
                         for (i = 0; i < $scope.storesName.length; i++) {
                             for (j = 0; j < $scope.storeManager.length; j++) {
-                                if ($scope.storesName[i]._id == $scope.storeManager[j]._id) {
+                                if ($scope.storesName[i].storeid._id == $scope.storeManager[j]._id) {
                                     $scope.storesName[i].assigned = true;
                                 }
-                            }
+                            } 
                             if (!$scope.storesName[i].assigned) {
                                 $scope.storesName[i].assigned = false;
                             }
@@ -3037,8 +3039,8 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Site Name"},
-        {"value": "programid.name", "name": "Program"}
+        {"value": "storeid.storename", "name": "Store Name"},
+        {"value": "storeid.programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getPromoStoresName = function (direction, limit, column, searchText) {
@@ -3052,12 +3054,13 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
             $scope.currentCursor = $scope.preCursor;
         }
         $scope.loadingStatus = true;
-        var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename","programid","manager.email"];
+        var query = {"table": "user_profiles__cstore"};
+        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
+		query.filter.roleid = STOREMANAGER;
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -3088,7 +3091,7 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
                         $scope.storeManager = storeSurveyData.response.data[0].store_manager_id;
                         for (i = 0; i < $scope.storesName.length; i++) {
                             for (j = 0; j < $scope.storeManager.length; j++) {
-                                if ($scope.storesName[i]._id == $scope.storeManager[j]._id) {
+                                if ($scope.storesName[i].storeid._id == $scope.storeManager[j]._id) {
                                     $scope.storesName[i].assigned = true;
                                 }
                             }
@@ -3129,8 +3132,10 @@ cstore.controller('answeredStoreCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
+
         {"value": "store_id.storename", "name": "Site Name"},
         {"value": "store_id.programid.name", "name": "Program"}
+
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
