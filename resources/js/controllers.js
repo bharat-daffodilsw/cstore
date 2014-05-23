@@ -2780,7 +2780,8 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Store Name"}
+        {"value": "storename", "name": "Site Name"},
+        {"value": "programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getStoresName = function (direction, limit, column, searchText) {
@@ -2795,7 +2796,7 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename","manager.email"];
+        query.columns = [ "_id", "storename","manager.email","programid"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -2946,7 +2947,8 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Store Name"}
+        {"value": "storename", "name": "Site Name"},
+        {"value": "programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
@@ -2961,7 +2963,7 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "storemanagers__cstore"};
-        query.columns = [ "_id", "storename","manager.email"];
+        query.columns = [ "_id", "storename","manager.email","programid"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -3035,7 +3037,7 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Store Name"},
+        {"value": "storename", "name": "Site Name"},
         {"value": "programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
@@ -3127,7 +3129,8 @@ cstore.controller('answeredStoreCtrl', function ($scope, $appService) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
-        {"value": "storename", "name": "Store Name"}
+        {"value": "storename", "name": "Site Name"},
+        {"value": "programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.getSurveyStoresName = function (direction, limit, column, searchText) {
@@ -3142,7 +3145,7 @@ cstore.controller('answeredStoreCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "answered_survey__cstore"};
-        query.columns = [ "_id", "store_id", "survey_id", "answers"];
+        query.columns = [ "_id", "store_id", "survey_id", "answers","store_id.programid"];
         query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {"store_id.storename": {"$regex": "(" + searchText + ")", "$options": "-i"}};
