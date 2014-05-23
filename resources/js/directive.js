@@ -3444,9 +3444,9 @@ cstore.directive('promoAssignStore', ['$appService', function ($appService, $sco
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storeid.programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storeid.programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storeid.storename}}</td><td>{{store.storeid.programid.name}}</td><td>' +
             '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
@@ -4104,10 +4104,10 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setStoreNameOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storeid.programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storeid.programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storeid.storename}}</td><td>{{store.storeid.programid.name}}</td><td>' +
             '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
@@ -4706,10 +4706,10 @@ cstore.directive('surveyAssignStore', ['$appService', function ($appService, $sc
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{preCursor}}-{{preCursor + storesName.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setStoreNameOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setStoreNameOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'storeid.programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreNameOrder(\'storeid.programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storeid.storename}}</td><td>{{store.storeid.programid.name}}</td><td>' +
             '<input type="checkbox" ng-model="store.assigned" ng-click="getSurveyOperationData($index)"></td>' +
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
