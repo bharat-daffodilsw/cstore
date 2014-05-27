@@ -1074,7 +1074,9 @@ table td input {
 .popup {
     color: #000;
 }
-
+.popup2 {
+    color: #000;
+}
 .store_manager .qty_select {
     margin-left: 20px;
 }
@@ -1357,6 +1359,9 @@ span.sortWrap {
     text-align: center;
     margin-top: 10px;
 }
+
+.card-ok{width: 50%;
+    float: left;}
 
 .alert-ok {
     width: 100px;

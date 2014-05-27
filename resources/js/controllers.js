@@ -140,7 +140,7 @@ cstore.config(
             }).when('/training-session', {
                 templateUrl: '../sessiondetail',
                 controller: 'sessionDetailCtrl'
-            }).when('/all-training-sessions', {
+            }).when('/all-trainings', {
                 templateUrl: '../all-training-sessions',
                 controller: 'allTrainingSessionsCtrl'
             }).when('/session-category', {
@@ -1070,6 +1070,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
     }
     $scope.getShoppingCartLength();
+    $scope.addCart={"pop":{},"quantity":""};
     $scope.loadingPopularProductData = false;
     $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
@@ -1110,6 +1111,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $("#popupMessage").html(err);
             $('.popup').toggle("slide");
         });
+    }
+    $scope.showCartPopup=function(product,quantity){
+        $("#popupMessage2").html("Please confirm Add to Card on this item");
+        $('.popup2').toggle("slide");
+        $scope.addCart.pop=product;
+        $scope.addCart.quantity=quantity;
     }
     //shopping Cart Functions
     $scope.shoppingCartProducts = {"total": "", "grandTotal": ""};

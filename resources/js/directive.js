@@ -109,7 +109,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Program</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
-            '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training Session</a></li><li ng-click="clearSurveyContent()">' +
+            '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training</a></li><li ng-click="clearSurveyContent()">' +
             '<a href="#!/surveys" active-link="active">Survey</a></li><li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
             '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
@@ -134,9 +134,9 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
 cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="admin_menu pull-left">' +
+        template: '<add-to-cart-pop-up></add-to-cart-pop-up><div class="admin_menu pull-left">' +
             '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li><li><a href="#!/all-promos" active-link="active">Promos</a></li>' +
-            '<li><a href="#!/all-training-sessions" active-link="active">Training Sessions</a></li>' +
+            '<li><a href="#!/all-trainings" active-link="active">Training</a></li>' +
             '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
             '<li><a active-link="active" href="#!/orders">Orders</a></li></ul></div>',
         compile: function () {
@@ -195,7 +195,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 window.location.href = "#!/all-promos?search=" + $scope.searchContent;
                             }
                             else if (hash.indexOf("?sessionid=") > 0) {
-                                window.location.href = "#!/all-training-sessions?search=" + $scope.searchContent;
+                                window.location.href = "#!/all-trainings?search=" + $scope.searchContent;
                                 //$scope.searchContent="";
                             }
                             else if (hash.indexOf("?surveyid=") > 0) {
@@ -293,6 +293,37 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('addToCartPopUp', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="popup2" style="display:none;">' +
+            '<div class="popup-manage">' +
+            '<h2 class="h2-popup">Attention</h2>' +
+            '<form method="" class="ng-pristine ng-valid">' +
+            '<p class="alert-p" id="popupMessage2"></p>' +
+            '<p class="role-change card-ok"><input type="button" value="OK" class="alert-ok" ng-click="okCartPopup(product,quantity)"></p>' +
+            '<p class="role-change card-ok"><input type="button" value="Cancel" class="alert-ok" ng-click="cancelCartPopup()"></p>' +
+            '</form>' +
+            '</div>' +
+            '</div>' ,
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.cancelCartPopup = function () {
+                        $('.popup2').toggle("slide");
+                    }
+                    $scope.okCartPopup = function () {
+                        console.log($scope.addCart.pop);
+                        console.log($scope.addCart.quantity);
+                        $('.popup2').toggle("slide");
+                        $scope.addToCart($scope.addCart.pop,$scope.addCart.quantity);
+                    }
+                }
+            }
+        }
+    }
+}]);
+
 cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -305,7 +336,14 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
             '</a></div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href=>{{product.cost.amount | currency}}</a></div>' +
 
-            '<div class="add_to_cart" ng-click="addToCart(product,null)"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>'
+            '<div class="add_to_cart" ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+
+                }
+            }
+        }
     }
 }]);
 //changes by anu 2804
@@ -324,7 +362,7 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-training-sessions">( View all )</a>' +
+        template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-trainings">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
             '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
@@ -339,7 +377,7 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
             '<div class="products_img"><a href="#!/pop?popid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/pop?popid={{childproduct._id}}">' +
             '{{childproduct.name}}</a></div><div class="product_details">' +
             '{{childproduct.short_description}}</div><div class="price">' +
-            '<a href>{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"ng-click="addToCart(childproduct,null)"><a href>Add To Cart</a></div></div>' +
+            '<a href>{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"ng-click="showCartPopup(childproduct,null)"><a href>Add To Cart</a></div></div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAllProductData"><img src="images/loading.gif"></div>'
     }
 }]);
@@ -352,7 +390,7 @@ cstore.directive('productDetail', ['$appService', function ($appService, $scope)
             '<div class="details_product pull-left"><div class="short_details">{{product[0].short_description}}</div><div class="Qty"><div class="quantity_border">Quantity : ' +
             '<select class="qty_select_1" ng-model="qty" ng-options="quantity for quantity in shoppingCartData.quantity">' +
             '</select></div><div class="final_price">Price : <b>{{product[0].cost.amount | currency}}</b></div><div class="add_to_btn pull-left">' +
-            '<a href ng-click="addToCart(product[0],qty)">ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>' +
+            '<a href ng-click="showCartPopup(product[0],qty)">ADD TO CART</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{product[0].description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingProductDetailData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -781,7 +819,7 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
             '<div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in products"><div class="products_img"><a href="#!/pop?popid={{product._id}}">' +
             '<img src="{{product.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
-            '<div class="price"><a href>{{product.cost.amount | currency}}</a></div><div class="add_to_cart" ng-click="addToCart(product,null)"><a href>' +
+            '<div class="price"><a href>{{product.cost.amount | currency}}</a></div><div class="add_to_cart" ng-click="showCartPopup(product,null)"><a href>' +
             'Add To Cart</a></div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -4858,7 +4896,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
         restrict: 'E',
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions</div>' +
             '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
-            '<img src="{{promotion.imageUrl}}"/></a>' +
+            '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
             '' +
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
@@ -5222,7 +5260,7 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
         restrict: "E",
         template: '<div><div class="m_bar pull-left">' +
             '<div class="category pull-left">' +
-            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-training-sessions">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_category_id._id}}">{{session[0].training_category_id.name}}</a> > {{session[0].title}}</div>' +
+            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-trainings">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_category_id._id}}">{{session[0].training_category_id.name}}</a> > {{session[0].title}}</div>' +
             '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
             '<div class="pdf_img">' +
             '<a href={{videoUrl}} target="_blank"><img title="{{videoUrl}}" src="images/Photo-Video-Start-icon.png"></a>' +
@@ -5539,14 +5577,14 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<button type="button"><a href>Checkout</a></button>' +
             '</div>' +
             '<div class="delete_btn pull-right">' +
-            '<button type="button"><a href="/">Continue Shopping</a></button>' +
+            '<button type="button" ng-click="continueShoppingPath()"><a href>Continue Shopping</a></button>' +
             '</div></div></div></div>' +
             '<div class="loadingImage" ng-hide="!loadingShoppingCartData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.setPathForBill = function (path) {
-                        window.location.href = "#!/" + path;
+                    $scope.continueShoppingPath = function () {
+                        window.location.href = "#!/";
                     }
                 },
                 post: function ($scope) {
@@ -6137,6 +6175,100 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post: function ($scope) {
+                    $scope.checkoutParameters = {};
+                   function checkoutParameters(serviceName, merchantID, options) {
+                        this.serviceName = serviceName;
+                        this.merchantID = merchantID;
+                        this.options = options;
+                    }
+                    $scope.addCheckoutParameters = function (serviceName, merchantID, options) {
+
+                        // check parameters
+                        if (serviceName != "PayPal" && serviceName != "Google") {
+                            throw "serviceName must be 'PayPal' or 'Google'.";
+                        }
+                        if (merchantID == null) {
+                            throw "A merchantID is required in order to checkout.";
+                        }
+
+                        // save parameters
+                        $scope.checkoutParameters[serviceName] = new checkoutParameters(serviceName, merchantID, options);
+                    }
+                    $scope.addCheckoutParameters("PayPal", "bernardo.castilho-facilitator@gmail.com");
+                    $scope.checkout = function (serviceName, clearCart) {
+
+                        // select serviceName if we have to
+                        if (serviceName == null) {
+                            var p = $scope.checkoutParameters[Object.keys($scope.checkoutParameters)[0]];
+                            serviceName = p.serviceName;
+                        }
+
+                        // sanity
+                        if (serviceName == null) {
+                            throw "Use the 'addCheckoutParameters' method to define at least one checkout service.";
+                        }
+
+                        // go to work
+                        var parms = $scope.checkoutParameters[serviceName];
+                        if (parms == null) {
+                            throw "Cannot get checkout parameters for '" + serviceName + "'.";
+                        }
+                        switch (parms.serviceName) {
+                            case "PayPal":
+                                $scope.checkoutPayPal(parms, clearCart);
+                                break;
+                            case "Google":
+                                this.checkoutGoogle(parms, clearCart);
+                                break;
+                            default:
+                                throw "Unknown checkout service: " + parms.serviceName;
+                        }
+                    }
+                    $scope.checkoutPayPal = function (parms, clearCart) {
+
+                        // global data
+                        var data = {
+                            cmd: "_cart",
+                            business: parms.merchantID,
+                            upload: "1",
+                            rm: "2",
+                            charset: "utf-8"
+                        };
+
+                        // item data
+                        for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                            var item = $scope.shoppingCartProducts[i];
+                            var ctr = i + 1;
+                            //data["item_number_" + ctr] = item.sku;
+                            data["item_name_" + ctr] = item.name;
+                            data["quantity_" + ctr] = item.quantity;
+                            data["amount_" + ctr] = item.cost.amount;
+                        }
+
+                        // build form
+                        var form = $('<form/></form>');
+                        form.attr("action", "https://www.paypal.com/cgi-bin/webscr");
+                        form.attr("method", "POST");
+                        form.attr("style", "display:none;");
+                        $scope.addFormFields(form, data);
+                        $scope.addFormFields(form, parms.options);
+                        $("body").append(form);
+
+                        // submit form
+                        this.clearCart = clearCart == null || clearCart;
+                        form.submit();
+                        form.remove();
+                    }
+                    $scope.addFormFields = function (form, data) {
+                        if (data != null) {
+                            $.each(data, function (name, value) {
+                                if (value != null) {
+                                    var input = $("<input></input>").attr("type", "hidden").attr("name", name).val(value);
+                                    form.append(input);
+                                }
+                            });
+                        }
+                    }
                     $scope.setPaymentPath = function (paymentId) {
                         window.location.href = "#!/payment?id=" + paymentId;
                     }
@@ -6624,7 +6756,18 @@ cstore.directive('payment', ['$appService', function ($appService, $scope) {
                                             "shipping": "0.00"}},
                                     "description": "This is the payment transaction description." }
                             ]};
-
+                        var config_options = {
+                            'mode': 'sandbox',
+                            'schema': 'https',
+                            'host': 'api.sandbox.paypal.com',
+                            'port': '',
+                            'openid_connect_schema': 'https',
+                            'openid_connect_host': 'api.sandbox.paypal.com',
+                            'openid_connect_port': '',
+                            'authorize_url': 'https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize',
+                            'logout_url': 'https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/endsession',
+                            'headers': {}
+                        };
                         paypal_sdk.payment.create(payment_details, config_options, function (error, payment) {
                             if (error) {
                                 console.error(error);
