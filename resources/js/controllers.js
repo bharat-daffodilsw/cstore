@@ -159,12 +159,12 @@ cstore.config(
                 templateUrl: '../order-review',
                 controller: 'orderReviewCtrl'
             }).when('/all-surveys', {
-                templateUrl: '../all-surveys',
-                controller: 'allAssignedSurveysCtrl'
-            }).when('/survey', {
                 templateUrl: '../surveydetail',
                 controller: 'surveyDetailCtrl'
-            }).when('/payment', {
+            })/*.when('/survey', {
+                templateUrl: '../surveydetail',
+                controller: 'surveyDetailCtrl'
+            })*/.when('/payment', {
                 templateUrl: '../payment',
                 controller: 'paymentCtrl'
             }).when('/programs', {
@@ -3894,6 +3894,7 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService) {
 cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     $scope.getSurveyDetail = function (searchText) {
+
         $scope.surveyQuestions = [
             {"options": [
                 {"optionVal": "", "optionStatus": false}
@@ -3903,7 +3904,10 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         var query = {"table": "surveys__cstore"};
         query.columns = ["description", "title", "survey_question", "store_manager_id"];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.surveyid};
+        query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
+        query.filter["store_manager_id.status"] = "unanswered";
+        query.unwindcolumns={"store_manager_id":1};
+        //query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.surveyid};
         //if (searchText && searchText != "") {
         //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         //}
@@ -3912,27 +3916,32 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyDetailData) {
             $scope.loadingSurveyDetailData = false;
-            $scope.survey = surveyDetailData.response.data[0];
-            $scope.surveyAssignedStores=surveyDetailData.response.data[0].store_manager_id;
-            if (surveyDetailData.response.data[0].survey_question) {
-                $scope.surveyQuestions = surveyDetailData.response.data[0].survey_question;
-            }
-            if ($scope.surveyQuestions.length > 0) {
-                for (var i = 0; i < $scope.surveyQuestions.length; i++) {
-                    if ($scope.surveyQuestions[i].options) {
-                        //$scope.surveyQuestions[i].optionArray = $scope.surveyQuestions[i].options;
-                        for (var j = 0; j < $scope.surveyQuestions[i].options.length; j++) {
+            $scope.surveys = surveyDetailData.response.data;
+            for(var i=0; i < $scope.surveys.length; i++){
+                $scope.surveys[i].surveyAssignedStores=surveyDetailData.response.data[i].store_manager_id;
+                console.log(JSON.stringify($scope.surveys[i].surveyAssignedStores));
+                $scope.surveys[i].surveyQuestions=surveyDetailData.response.data[i].survey_question;
+                if ($scope.surveys[i].surveyQuestions.length > 0) {
+                    for (var k = 0; k < $scope.surveys[i].surveyQuestions.length; k++) {
+                        if ($scope.surveys[i].surveyQuestions[k].options) {
+                            //$scope.surveyQuestions[i].optionArray = $scope.surveyQuestions[i].options;
+                            for (var j = 0; j < $scope.surveys[i].surveyQuestions[k].options.length; j++) {
 
-                            if ($scope.surveyQuestions[i].options.length) {
-                                $scope.surveyQuestions[i].options[j] = {"optionVal": $scope.surveyQuestions[i].options[j], "optionStatus": false};
+                                if ($scope.surveys[i].surveyQuestions[k].options.length) {
+                                    $scope.surveys[i].surveyQuestions[k].options[j] = {"optionVal": $scope.surveys[i].surveyQuestions[k].options[j], "optionStatus": false};
+                                }
+
                             }
 
                         }
 
                     }
-
                 }
             }
+            //if (surveyDetailData.response.data[0].survey_question) {
+            //    $scope.surveyQuestions = surveyDetailData.response.data[0].survey_question;
+            //}
+
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -3942,24 +3951,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         }
     }
     $scope.getSurveyDetail();
-    $scope.clearSubmittedSurvey = function (path) {
-        for (i = 0; i < $scope.surveyQuestions.length; i++) {
-            if ($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type == "radio") {
 
-                $scope.surveyQuestions[i].radioAns = false;
-
-            }
-            else if ($scope.surveyQuestions[i].options && $scope.surveyQuestions[i].survey_type == "checkbox") {
-                for (j = 0; j < $scope.surveyQuestions[i].options.length; j++) {
-                    $scope.surveyQuestions[i].options[j].optionStatus = false;
-                }
-            }
-            else {
-                $scope.surveyQuestions[i].answer = "";
-            }
-        }
-        window.location.href = "#!/" + path;
-    }
 });
 
 cstore.controller('paymentCtrl', function ($scope, $appService) {

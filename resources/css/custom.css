@@ -1262,7 +1262,7 @@ table td input {
 .sortUp {
     position: absolute;
     top: 3px;
-    left: 10px;
+    left: 0px;
     right: 0;
     margin-left: auto;
     margin-right: auto;
@@ -1277,7 +1277,7 @@ table td input {
 .sortDown {
     position: absolute;
     top: 13px;
-    left: 10px;
+    left: 0px;
     right: 0;
     margin-left: auto;
     margin-right: auto;
@@ -1903,10 +1903,7 @@ div.cart-container {
 }
 
 .survey_form {
-    border-bottom: 1px solid #CCC;
     border-top: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    border-left: 1px solid #CCC;
     margin-bottom: 5px;
     width: 100%;
 }
@@ -1917,8 +1914,14 @@ div.cart-container {
 }
 
 .survey_all {
-    width: 80%;
+    width: 100%;
     margin: auto;
+    float: left;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+    border-left: 1px solid #CCC;
 }
 
 .more_btn {
