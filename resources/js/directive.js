@@ -6627,7 +6627,7 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                     $scope.CSession = $appService.getSession();
                     $scope.submitSurvey = function (survey) {
                         if ($scope.CSession) {
-                            //$scope.loadingSurveyDetailData = true;
+                            $scope.loadingSurveyDetailData = true;
                             var query = {};
                             $scope.newSurveyAnswer = {};
                             $scope.newSurveyAnswer["answers"] = {};
@@ -6663,25 +6663,28 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                             query.operations = [$scope.newSurveyAnswer];
                             console.log(JSON.stringify(query));
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                                //$scope.loadingSurveyDetailData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $scope.changeStatusOfSurvey(survey);
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                     $('.popup').toggle("slide");
+                                    $scope.loadingSurveyDetailData = false;
                                 }
                                 else {
                                     $("#popupMessage").html("some error while submitting survey");
                                     $('.popup').toggle("slide");
+                                    $scope.loadingSurveyDetailData = false;
                                 }
                             }, function (err) {
                                 $("#popupMessage").html(err.stack);
                                 $('.popup').toggle("slide");
+                                $scope.loadingSurveyDetailData = false;
                             });
                         }
                         else {
                             $("#popupMessage").html("Please login first");
                             $('.popup').toggle("slide");
+                            $scope.loadingSurveyDetailData = false;
                         }
                     }
                     $scope.changeStatusOfSurvey = function (survey) {
