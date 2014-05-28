@@ -25,6 +25,8 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
                     $scope.cancelAlertPopup = function () {
                         $('.popup').toggle("slide");
                     }
+                    var hash = window.location.hash;
+                    console.log(hash);
                 }
             }
         }
@@ -109,8 +111,8 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Program</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
-            '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/training-sessions">Training</a></li><li ng-click="clearSurveyContent()">' +
-            '<a href="#!/surveys" active-link="active">Survey</a></li><li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
+            '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li><li ng-click="clearSurveyContent()">' +
+            '<a href="#!/surveys" active-link="active">Surveys</a></li><li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
             '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
@@ -372,20 +374,27 @@ cstore.directive('assignedTrainingSessions', ['$appService', function ($appServi
 cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left" ng-repeat="product in products" ng-show="product.categoryWiseData.length">' +
-            '<div class="pop_products">{{product.name}} <a href="#!/pop-category?q={{product._id}}">( View all )</a></div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="childproduct in product.categoryWiseData">' +
-            '<div class="products_img"><a href="#!/pop?popid={{childproduct._id}}"><img ng-src="{{childproduct.imageUrl}}"></a></div><div class="name"><a href="#!/pop?popid={{childproduct._id}}">' +
-            '{{childproduct.name}}</a></div><div class="product_details">' +
-            '{{childproduct.short_description}}</div><div class="price">' +
-            '<a href>{{childproduct.cost.amount | currency}}</a></div><div class="add_to_cart"ng-click="showCartPopup(childproduct,null)"><a href>Add To Cart</a></div></div>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAllProductData"><img src="images/loading.gif"></div>'
+        template: '<div class="m_bar pull-left"><div class="category pull-left">' +
+            '<div class="pop_products">All POP </div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in allproducts" ng-show="allproducts.length">' +
+            '<div class="products_img"><a href="#!/pop?popid={{product._id}}"><img ng-src="{{product.imageUrl}}"></a></div><div class="name"><a href="#!/pop?popid={{product._id}}">' +
+            '{{product.name}}</a></div><div class="product_details">' +
+            '{{product.short_description}}</div><div class="price">' +
+            '<a href>{{product.cost.amount | currency}}</a></div><div class="add_to_cart"ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div>' +
+            '</div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!allProductData.loadingData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.getInitialProductData(0);
+                }
+            }
+        }
     }
 }]);
 
 cstore.directive('productDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-pops">POP Store</a> > <a href="#!/pop-category?q={{product[0].product_category._id}}">{{product[0].product_category.name}}</a> > {{product[0].name}}</div><div class="img_product pull-left">' +
+        template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-pops">POP Store</a> > {{product[0].product_category.name}} > {{product[0].name}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{product[0].imageUrl}}" /></div>' +
             '<div class="details_product pull-left"><div class="short_details">{{product[0].short_description}}</div><div class="Qty"><div class="quantity_border">Quantity : ' +
             '<select class="qty_select_1" ng-model="qty" ng-options="quantity for quantity in shoppingCartData.quantity">' +
@@ -421,10 +430,12 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'state.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'state.name\',\'desc\',searchby.value,search.searchContent)"></div></span>	</th><th><span>Email</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'email\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setOrder(\'email\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Contact No.</span>' +
+            '<div class="sortDown" ng-click="setOrder(\'email\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>' +
+            '<span>Program</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Contact No.</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'contact\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setOrder(\'contact\',\'desc\',searchby.value,search.searchContent)"></div></span>	</th><th></th>' +
             '</tr><tr ng-repeat="vendor in vendors"><td><input type="checkbox" ng-model="vendor.deleteStatus"></td><td>{{vendor.firstname}} {{vendor.lastname}}</td><td>{{vendor.address}}' +
-            '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
+            '</td><td>{{vendor.city.name}}</td><td>{{vendor.state.name}}</td><td>{{vendor.email}}</td><td>{{vendor.programid.name}}</td><td>{{vendor.contact}}</td><td style="cursor: pointer">' +
             '<a class="edit_btn" ng-click="setUserState(vendor)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingVenderData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -512,6 +523,14 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                             vendor.state = (vendor.state) ? {"_id": vendor.state._id} : {"_id": false};
                             vendor.city = (vendor.city) ? {"_id": vendor.city._id} : {"_id": false};
                             $scope.getEditCountries(vendor.country._id, vendor.state._id, vendor.city._id, $scope.data);
+                        }
+                        if (vendor.programid) {
+                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
+                                if ($scope.productdata.programs[j]._id == vendor.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
+                                    break;
+                                }
+                            }
                         }
                         window.location.href = "#!edit-vendor?q=" + vendor._id;
                     }
@@ -612,10 +631,12 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Email*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Email*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="city"><input type="email" ng-model="data.email"></td>' +
+            '<td class="half_td"><input type="email" ng-model="data.email"></td>' +
+            '<td class="half_td"><program-select></program-select></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -779,6 +800,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["postalcode"] = $scope.data.postalCode;
                         $scope.newVendor["contact"] = $scope.data.contact;
                         $scope.newVendor["email"] = $scope.data.email;
+                        $scope.newVendor["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
                         var query = {};
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
@@ -1345,16 +1367,119 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
 cstore.directive('storeManagerList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-site-info\')"><a href="">Add</a>' +
-            '</button></div><div class="delete_btn pull-left"><button type="button" ng-click="deleteStoreManagers()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
-            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="prv_btn pull-right" ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" ><a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">' +
-            '{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div><div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table_3 pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th><span>Manager Shift<span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'program.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'program.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Loyalty Status</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Reward Type</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>' +
-            'Email</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Contact</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th></th></tr><tr ng-repeat="storeManager in storeManagers"><td>' +
-            '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.storename}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.programid.name}}</td>' +
-            '<td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td><td>{{storeManager.email}}</td><td>{{storeManager.contact}}</td>' +
+        template: '<div class="add_delete pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button type="button" ng-click="setPath(\'add-site-info\')"><a href="">Add</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="deleteStoreManagers()"><a href>Delete</a></button>' +
+            '</div>' +
+            '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="search()">' +
+            '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div>' +
+            '<input type="submit" style="display:none;"></form>' +
+            '</div>' +
+            '<div class="prv_btn pull-right" ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" >' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a>' +
+            '</div>' +
+            '<div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + storeManagers.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)">' +
+            '<a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="table_3 pull-left site_info">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<th></th>' +
+            '<th><span>Site Id</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'siteid\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'siteid\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Site Name</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Program</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Manager Name</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.name\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Manager Shift<span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Site Phone</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Manager Phone</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.contact\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.contact\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Email</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Manager Email</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.email\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.email\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Address</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'address\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'address\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Country</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'countryid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'countryid.name\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>State</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'stateid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'stateid.name\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>City</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'cityid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'cityid.name\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Postal Code</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'postalcode\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'postalcode\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>POS Type</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_type\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pos_type\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>POS Version</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_version\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pos_version\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Loyalty Status</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Reward Type</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Brand</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'brands\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'brands\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>' +
+            '<th><span>Pump Brand</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_brand\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pump_brand\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th><span>Pump Model</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_model\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pump_model\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
+            '<th></th>' +
+            '</tr><tr ng-repeat="storeManager in storeManagers"><td>' +
+            '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.siteid}}</td><td>{{storeManager.storename}}</td><td>{{storeManager.programid.name}}</td><td>{{storeManager.manager.name}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.contact}}</td>' +
+            '<td>{{storeManager.manager.contact}}</td><td>{{storeManager.email}}</td><td>{{storeManager.manager.email}}</td><td>{{storeManager.address}}</td><td>{{storeManager.countryid.name}}</td>' +
+            '<td>{{storeManager.stateid.name}}</td><td>{{storeManager.cityid.name}}</td><td>{{storeManager.postalcode}}</td><td>{{storeManager.pos_type}}</td><td>{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td>'+
+            '<td>{{storeManager.brands}}</td><td>{{storeManager.pump_brand}}</td><td>{{storeManager.pump_model}}</td>' +
             '<td><a class="edit_btn" ng-click="setStoreState(storeManager)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingStoreData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -4135,7 +4260,7 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
         restrict: 'E',
         template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="assignTrainingSession()"><a href>Save</a></button>' +
-            '<button type="button" ng-click="setPath(\'training-sessions\')"><a href>Back</a></button>' +
+            '<button type="button" ng-click="setPath(\'trainings\')"><a href>Back</a></button>' +
             '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="searchStoreName()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="currentCursor" class="prv_btn pull-right">' +
@@ -4266,7 +4391,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="setPathforSession(\'training-sessions\')"><a href="">Close</a></button>' +
+            '<button type="button" ng-click="setPathforSession(\'trainings\')"><a href="">Close</a></button>' +
             '</div></div></td></tr>' +
             '</tbody></table>' +
             '<div class="loadingImage" ng-hide="!loadingAddTrainingdata"><img src="images/loading.gif"></div>' +
@@ -4356,7 +4481,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
-                                $scope.setPathforSession("training-sessions");
+                                $scope.setPathforSession("trainings");
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
@@ -5260,7 +5385,7 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
         restrict: "E",
         template: '<div><div class="m_bar pull-left">' +
             '<div class="category pull-left">' +
-            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-trainings">All Training Sessions</a> > <a href="#!/session-category?q={{session[0].training_category_id._id}}">{{session[0].training_category_id.name}}</a> > {{session[0].title}}</div>' +
+            '<div class="pop_products"><a href="/">Home</a> > <a href="#!/all-trainings">All Training Sessions</a> > {{session[0].training_category_id.name}} > {{session[0].title}}</div>' +
             '<div class="training pull-left" ng-repeat="videoUrl in videoUrls">' +
             '<div class="pdf_img">' +
             '<a href={{videoUrl}} target="_blank"><img title="{{videoUrl}}" src="images/Photo-Video-Start-icon.png"></a>' +
@@ -5295,12 +5420,19 @@ cstore.directive('sessionDetail', ['$appService', function ($appService, $scope)
 cstore.directive('allTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left" ng-repeat="sessionCategory in sessionCategories" ng-show="sessionCategory.trainingCategoryWiseData.length">' +
-            '<div class="pop_products">{{sessionCategory.name}} <a href="#!/session-category?q={{sessionCategory._id}}">( View all )</a></div>' +
-            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="childSession in sessionCategory.trainingCategoryWiseData">' +
+        template: '<div class="m_bar pull-left"><div class="category pull-left">' +
+            '<div class="pop_products">All Trainings </div>' +
+            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="childSession in allTrainings">' +
             '<div class="name"><a href="#!/training-session?sessionid={{childSession._id}}">{{childSession.title}}</a></div>' +
             '<div class="short_product_details">{{childSession.description}}</div></div>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAllTrainingData"><img src="images/loading.gif"></div>'
+            '</div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!allTrainingData.loadingData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.getInitialTrainingData(0);
+                }
+            }
+        }
     }
 }]);
 

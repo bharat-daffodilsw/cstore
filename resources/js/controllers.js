@@ -95,7 +95,7 @@ cstore.config(
                 templateUrl: '../add-promotion',
                 controller: 'addPromotionCtrl'
             })
-            .when('/training-sessions', {
+            .when('/trainings', {
                 templateUrl: '../training-sessions',
                 controller: 'trainingSessionCtrl'
             }).when('/add-training-session', {
@@ -764,6 +764,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
         $scope.getStatesNew($scope.data, false);
         $scope.getCitiesNew($scope.data, false);
+        $scope.productdata.selectedProgram = $scope.productdata.programs[0];
     }
     $scope.logOut = function () {
         $appService.deleteAllCookie();
@@ -1375,44 +1376,61 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
 });
 
 cstore.controller('allCategory', function ($scope, $appService, $routeParams) {
+    $scope.allProductData = {"loadingData": false, "available": false};
 
-    $scope.getProductList = function (searchText) {
-        $scope.loadingAllProductData = true;
-
-        var query = {"table": "product_categories__cstore"};
-
-        query.columns = ["name"];
-
+    $scope.allproducts = [];
+    $scope.getProductList = function (cursor, searchText) {
+        if ($scope.allProductData.loadingData) {
+            return false;
+        }
+        $scope.allProductData.loadingData = true;
+        var query = {"table": "products__cstore"};
+        query.columns = ["name", "image", "short_description", "cost","product_category"];
+        query.filter = {};
+        query.filter["programid._id"] = $scope.currentUser.data.programid;
 
         if (searchText && searchText != "") {
-            query.childs = [
-                {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"name": {"$regex": "(" + searchText + ")", "$options": "-i"}, "programid._id": $scope.currentUser.data.programid}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
-            ]
+            query.filter["name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        else {
-            query.childs = [
-                {"alias": "categoryWiseData", "query": {"table": "products__cstore", "columns": ["name", "image", "short_description", "cost"], "max_rows": 4, "filter": {"programid._id": $scope.currentUser.data.programid}, "orders": {"__createdon": "desc"}}, "relatedcolumn": "product_category", "parentcolumn": "_id"}
-            ];
-        }
+        query.orders = {"product_category.name": "asc"};
+        query.max_rows = 8;
+        query.cursor = cursor;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
-            $scope.loadingAllProductData = false;
-            var rawData = productData.response.data;
-            for (var i = 0; i < rawData.length; i++) {
-                if (rawData[i] && rawData[i]["categoryWiseData"] && rawData[i]["categoryWiseData"].length) {
-
-                    rawData[i]["categoryWiseData"] = $appService.setUrls(rawData[i]["categoryWiseData"], 291, 196);
+            var rawProductData = $appService.setUrls(productData.response.data, 291, 196);
+            if ($scope.allproducts.length) {
+                for (var i = 0; i < rawProductData.length; i++) {
+                    $scope.allproducts.push(rawProductData[i]);
                 }
             }
-            $scope.products = rawData;
+            if (!$scope.allproducts.length) {
+                $scope.allproducts = rawProductData;
+
+            }
+            $scope.allProductData.loadingData = false;
+            $scope.cursor = productData.response.cursor;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getProductList($scope.cursor, $routeParams.search);
+                        }
+                    }
+                }
+            });
 
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
-    $scope.getProductList($routeParams.search);
+    $scope.getInitialProductData = function (cursor) {
+        $scope.getProductList(cursor, $routeParams.search);
+    };
 });
 
 cstore.controller('productDetailCtrl', function ($scope, $appService, $routeParams) {
@@ -1685,6 +1703,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         {"value": "city.name", "name": "City"},
         {"value": "state.name", "name": "State"},
         {"value": "email", "name": "Email"},
+        {"value": "programid.name", "name": "Program"},
         {"value": "contact", "name": "Contact"}
     ];
     $scope.searchby = $scope.venderSearch[0];
@@ -1703,7 +1722,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.loadingVenderData = true;
 
         var query = {"table": "vendors__cstore"};
-        query.columns = ["address2", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+        query.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -1745,6 +1764,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.getAllVendors(0, 10, column, searchText);
     }
     $scope.getEditCountries(null, null, null, $scope.data);
+    $scope.getProgramList();
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -1858,15 +1878,27 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
     $scope.loadingStoreData = false;
 
     $scope.venderSearch = [
-
+        {"value": "siteid", "name": "Site Id"},
         {"value": "storename", "name": "Site Name"},
-        {"value": "shift", "name": "Manager Shift"},
         {"value": "programid.name", "name": "Program"},
+        {"value": "manager.name", "name": "Manager Name"},
+        {"value": "shift", "name": "Manager Shift"},
+        {"value": "contact", "name": "Site Phone"},
+        {"value": "manager.contact", "name": "Manager Phone"},
+        {"value": "email", "name": "Email"},
+        {"value": "manager.email", "name": "Manager Email"},
+        {"value": "address", "name": "Address"},
+        {"value": "countryid.name", "name": "Country"},
+        {"value": "stateid.name", "name": "State"},
+        {"value": "cityid.name", "name": "City"},
+        {"value": "postalcode", "name": "Postal Code"},
+        {"value": "pos_type", "name": "POS Type"},
+        {"value": "pos_version", "name": "POS Version"},
         {"value": "loyalty_status", "name": "Loyalty Status"},
         {"value": "reward_point", "name": "Reward Type"},
-        {"value": "email", "name": "Email"},
-        {"value": "contact", "name": "Contact"}
-
+        {"value": "brands", "name": "Brand"},
+        {"value": "pump_brand", "name": "Pump Brand"},
+        {"value": "pump_model", "name": "Pump Model"},
     ];
 
     $scope.searchby = $scope.venderSearch[0];
@@ -3507,43 +3539,60 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
 /*******************************All Training Sessions*********************************/
 cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.getTrainingList = function (searchText) {
-        $scope.loadingAllTrainingData = true;
+    $scope.allTrainingData = {"loadingData": false, "available": false};
 
-        var query = {"table": "training_categories__cstore"};
-
-        query.columns = ["name"];
-
-
+    $scope.allTrainings = [];
+    $scope.getTrainingList = function (cursor, searchText) {
+        if ($scope.allTrainingData.loadingData) {
+            return false;
+        }
+        $scope.allTrainingData.loadingData = true;
+        var query = {"table": "training_session__cstore"};
+        query.columns = ["store_manager_id", "title", "description"];
+        query.filter = {};
+        query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         if (searchText && searchText != "") {
-            query.childs = [
-                {"alias": "trainingCategoryWiseData", "query": {"table": "training_session__cstore", "columns": ["store_manager_id", "title", "description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid, "title": {"$regex": "(" + searchText + ")", "$options": "-i"}}}, "relatedcolumn": "training_category_id", "parentcolumn": "_id"}
-            ]
+            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        else {
-            query.childs = [
-                {"alias": "trainingCategoryWiseData", "query": {"table": "training_session__cstore", "columns": ["store_manager_id", "title", "description"], "max_rows": 4, "orders": {"__createdon": "desc"}, "filter": {"store_manager_id._id": $scope.currentUser.data.storeid}}, "relatedcolumn": "training_category_id", "parentcolumn": "_id"}
-            ];
-        }
+        query.orders = {"training_category.name": "asc"};
+        query.max_rows = 8;
+        query.cursor = cursor;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingData) {
-            $scope.loadingAllTrainingData = false;
-            var rawData = trainingData.response.data;
-            for (var i = 0; i < rawData.length; i++) {
-                if (rawData[i] && rawData[i]["trainingCategoryWiseData"] && rawData[i]["trainingCategoryWiseData"].length) {
-
-                    rawData[i]["trainingCategoryWiseData"] = rawData[i]["trainingCategoryWiseData"];
+            var rawTrainingData = trainingData.response.data;
+            if ($scope.allTrainings.length) {
+                for (var i = 0; i < rawTrainingData.length; i++) {
+                    $scope.allTrainings.push(rawTrainingData[i]);
                 }
             }
-            $scope.sessionCategories = rawData;
+            if (!$scope.allTrainings.length) {
+                $scope.allTrainings = rawTrainingData;
+
+            }
+            $scope.allTrainingData.loadingData = false;
+            $scope.cursor = trainingData.response.cursor;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getTrainingList($scope.cursor, $routeParams.search);
+                        }
+                    }
+                }
+            });
 
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
-    $scope.getTrainingList($routeParams.search);
+    $scope.getInitialTrainingData = function (cursor) {
+        $scope.getTrainingList(cursor, $routeParams.search);
+    };
 });
 
 /***************************** Training Category Detail**************************************/
@@ -3631,7 +3680,7 @@ cstore.controller('allAssignedSurveysCtrl', function ($scope, $appService, $rout
         }
         $scope.assignedSurveyData.loadingData = true;
         var query = {"table": "surveys__cstore"};
-        query.columns = ["store_manager_id", "title", "description"];
+        query.columns = ["store_manager_id", "title", "description","survey_question"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         query.filter["store_manager_id.status"] = "unanswered";

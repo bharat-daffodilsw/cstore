@@ -623,7 +623,8 @@ a:hover {
 .table_3 {
     text-align: center;
     margin-top: 10px;
-    width: 100%;
+    /*width: 100%; */
+    min-width: 100%;
     font-size: 14px;
     border-bottom: 1px solid #CCC;
     border-top: 1px solid #CCC;
@@ -673,8 +674,10 @@ tr {
     border-bottom: 1px solid #CCC;
     padding: 10px 0;
     padding-right: 5px;
-    min-width: 25px;
-    max-width: 40px;
+    min-width: 50px;
+    max-width: 50px;
+    /*min-width: 25px;
+    max-width: 40px; */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -789,7 +792,7 @@ tr {
 
 .margin_top {
     margin-top: 10px;
-    color: #999;
+    color: #000000;
 }
 
 .l_bar {
@@ -1108,7 +1111,7 @@ table td input {
 
 .search_by {
     width: 250px;
-    color: #999;
+    color: #000;
     margin-top: 4px;
     text-align: center;
 }
@@ -1557,7 +1560,7 @@ span.btn:hover {
 }
 
 .ques_index {
-    color: #999;
+    color: #000;
 }
 
 .half_td {
@@ -1968,4 +1971,8 @@ div.cart-container {
 .status_select{
     padding: 5px;
     width: 111px;
+}
+.site_info {
+    max-width:1000px;
+    overflow: auto;
 }
