@@ -185,6 +185,11 @@ cstore.config(
             }).when('/assign-promo', {
                 templateUrl: '../assign-promo',
                 controller: 'assignPromoCtrl'	
+            }).when('/contact-us',{
+                templateUrl:'../contact-us',
+                controller:'contactPageCtrl'
+            }).when('/terms-conditions',{
+                templateUrl:'../terms-privacy'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -4185,4 +4190,23 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         })
     }
     $scope.getOrderDetail();
+});
+
+cstore.controller('contactPageCtrl', function ($scope, $appService) {
+    $scope.contact={};
+    $appService.auth();
+    $scope.getEditCountries(null, null, null, $scope.data);
+    $scope.loadingAddContactData = false;
+    $scope.clearContactContent = function () {
+        $scope.contact.name = "";
+        $scope.contact.company_name = "";
+        $scope.contact.email = "";
+        $scope.contact.siteid = "";
+        $scope.contact.address = "";
+        $scope.contact.zipcode = "";
+        $scope.contact.phone = "";
+        $scope.contact.extension = "";
+        $scope.contact.notes = "";
+        $scope.getEditCountries(null, null, null,$scope.data);
+    }
 });

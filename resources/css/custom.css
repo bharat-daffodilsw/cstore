@@ -330,6 +330,7 @@ a:hover {
     width: 25%;
     color: #FFF;
     margin-top: 20px;
+    cursor: pointer;
 }
 
 .footer_4 {
@@ -1978,4 +1979,17 @@ div.cart-container {
 .site_info {
     max-width:1000px;
     overflow: auto;
+}
+.notes textarea {
+    width: 97.5% !important;
+    height: 90px;
+}
+.submit_reset{
+margin: 10px 10px 10px 9px;
+width: 100%;  }
+.submit_reset button {
+    background-color: #b88a3f;
+    font-size: 16px;
+    outline: 0px;
+    padding: 5px 25px;
 }

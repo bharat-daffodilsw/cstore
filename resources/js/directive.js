@@ -280,13 +280,15 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="footer pull-left"><div class="footer_3 pull-left">' +
-            ' Copyright </div><div class="footer_3 pull-left"> Terms Privacy </div>' +
-            '<div class="footer_3 pull-left"> Contact us </div>' +
+            ' Copyright &copy; </div><div class="footer_3 pull-left" ng-click="setFooterPath(\'terms-conditions\')"> Terms & Condition </div>' +
+            '<div class="footer_3 pull-left" ng-click="setFooterPath(\'contact-us\')"> Contact us </div>' +
             '<div class="footer_4 pull-left"><img src="images/logo.jpg"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
-
+                    $scope.setFooterPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
                 }
             }
         }
@@ -7362,6 +7364,208 @@ cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                 }
 
+            }
+        }
+    }
+}]);
+
+cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="table_4 pull-left">' +
+            '<div class="saved_r_bar col-sm-7 col-md-7">' +
+            '<div class="saved_address">Contact Us</div>' +
+            '<table width="100%" border="0" cellspac1ing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Name*</div></td>' +
+            '<td><div class="margin_top">Company Name*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><input type="text" placeholder="" ng-model="contact.name"></td>' +
+            '<td><input type="text" placeholder="" ng-model="contact.company_name"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">Email*</div></td>' +
+            '<td><div class="margin_top"># of Stores*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><input type="text" placeholder="" ng-model="contact.email"></td>' +
+            '<td><input type="text" placeholder="" ng-model="contact.siteid"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Address</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="contact.address"></textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Country*</div></td>' +
+            '<td class="half_td"><div class="margin_top">State*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
+            '<td class="half_td"><state-select></state-select></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">City*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Zip Code*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><city-select></city-select></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.zipcode"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Phone*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Extension</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="contact.phone"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="contact.extension"></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Notes*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="notes"><textarea ng-model="contact.notes"></textarea></td>' +
+            '</tr>' +
+            '</table>' +
+            '</div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td>' +
+            '<div class="submit_reset right_btn pull-left">' +
+            '<div class="add_btn pull-left">' +
+            '<button type="button" ng-click="submitContact()"><a href>Submit</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="clearContactContent()"><a href>Reset</a></button>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '</tr>' +
+            '</table>' +
+            '<div class="loadingImage" ng-hide="!loadingAddContactData"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.submitContact = function () {
+                        $scope.CSession = $appService.getSession();
+                        if ($scope.CSession) {
+                            $scope.newContact = {};
+                            var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                            var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                            var email = $scope.contact.email;
+                            if (!$scope.contact.name) {
+                                $("#popupMessage").html("Please enter name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.contact.company_name) {
+                                $("#popupMessage").html("Please enter company name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!email || regEmail.test(email) == false) {
+                                $("#popupMessage").html("Please enter a valid email id");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.contact.siteid) {
+                                $("#popupMessage").html("Please enter # of store");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.data.selectedCountry) {
+                                $("#popupMessage").html("Please select country first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.data.selectedState) {
+                                $("#popupMessage").html("Please select state first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.data.selectedCity) {
+                                $("#popupMessage").html("Please select city first");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.contact.zipcode || !regNumberOnly.test($scope.contact.zipcode)) {
+                                $("#popupMessage").html("Please enter correct zipcode");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.contact.phone || !regNumberOnly.test($scope.contact.phone)) {
+                                $("#popupMessage").html("Please enter correct contact");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.contact.notes) {
+                                $("#popupMessage").html("Please enter notes");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            $scope.loadingAddContactData = true;
+                            $scope.newContact["name"] = $scope.contact.name;
+                            $scope.newContact["company_name"] = $scope.contact.company_name;
+                            $scope.newContact["email"] = $scope.contact.email;
+                            $scope.newContact["siteid"] = $scope.contact.siteid;
+                            $scope.newContact["address"] = $scope.contact.address;
+                            $scope.newContact["zipcode"] = $scope.contact.zipcode;
+                            $scope.newContact["phone"] = $scope.contact.phone;
+                            $scope.newContact["extension"] = $scope.contact.extension;
+                            $scope.newContact["notes"] = $scope.contact.notes;
+                            if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
+                                $scope.newContact["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
+                            }
+                            if ($scope.data.selectedCity && $scope.data.selectedCity != null && $scope.data.selectedCity != undefined && $scope.data.selectedCity != "undefined" && $scope.data.selectedCity != "null") {
+                                $scope.newContact["city"] = {"_id": $scope.data.selectedCity._id, "name": $scope.data.selectedCity.name}
+                            }
+                            if ($scope.data.selectedState && $scope.data.selectedState != null && $scope.data.selectedState != undefined && $scope.data.selectedState != "undefined" && $scope.data.selectedState != "null") {
+                                $scope.newContact["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
+                            }
+                            var query = {};
+                            query.table = "contact__cstore";
+                            query.operations = [$scope.newContact];
+                            $appService.save(query, ASK, OSK,$scope.CSession["usk"], function (callBackData) {
+                                $scope.loadingAddContactData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                    $("#popupMessage").html("Submitted");
+                                    $('.popup').toggle("slide");
+                                    $scope.clearContactContent();
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while submitting form");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
+                }
             }
         }
     }
