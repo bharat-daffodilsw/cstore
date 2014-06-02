@@ -7493,7 +7493,7 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><div class="margin_top">State*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.email"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.country"></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="contact.state"></td>' +
             '</tr>' +
             '</table>' +
@@ -7572,18 +7572,18 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.data.selectedCountry) {
-                                $("#popupMessage").html("Please select country first");
+                            if (!$scope.contact.country) {
+                                $("#popupMessage").html("Please enter country first");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.data.selectedState) {
-                                $("#popupMessage").html("Please select state first");
+                            if (!$scope.contact.state) {
+                                $("#popupMessage").html("Please enter state first");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.data.selectedCity) {
-                                $("#popupMessage").html("Please select city first");
+                            if (!$scope.contact.city) {
+                                $("#popupMessage").html("Please enter city first");
                                 $('.popup').toggle("slide");
                                 return false;
                             }

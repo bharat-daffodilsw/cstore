@@ -4242,6 +4242,9 @@ cstore.controller('contactPageCtrl', function ($scope, $appService) {
         $scope.contact.phone = "";
         $scope.contact.extension = "";
         $scope.contact.notes = "";
+        $scope.contact.country = "";
+        $scope.contact.state = "";
+        $scope.contact.city = "";
         //$scope.getEditCountries(null, null, null,$scope.data);
     }
 });
