@@ -4135,6 +4135,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
             $scope.loadingOrderData = false;
             $scope.show.currentCursor = orderData.response.cursor;
             $scope.orders = orderData.response.data;
+            $scope.getArray=[{a: 1, b:2}, {a:3, b:4}];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
