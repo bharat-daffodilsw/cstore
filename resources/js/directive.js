@@ -110,7 +110,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li><li ng-click="clearSurveyContent()">' +
-            '<a href="#!/surveys" active-link="active">Surveys</a></li><li id="orders"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
+            '<a href="#!/surveys" active-link="active">Surveys</a></li><li id="orders" ng-click="clearOrderContent()"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
             '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
@@ -138,7 +138,7 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
             '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li><li><a href="#!/all-promos" active-link="active">Promos</a></li>' +
             '<li><a href="#!/all-trainings" active-link="active">Training</a></li>' +
             '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
-            '<li><a active-link="active" href="#!/orders">Orders</a></li></ul></div>',
+            '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li></ul></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -7239,6 +7239,11 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                         var query = {"table": "orders__cstore"};
                         query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
                         query.filter = {};
+                        if ($scope.currentUser["data"]) {
+                            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+                                query.filter["storeid._id"] = $scope.currentUser["data"]["storeid"];
+                            }
+                        }
                         if ($scope.orderFilterData.start_date && $scope.orderFilterData.start_date != "" && $scope.orderFilterData.end_date && $scope.orderFilterData.end_date != "") {
                             query.filter["order_date"] = {"$gte":$scope.orderFilterData.start_date,"$lte": $scope.orderFilterData.end_date};
                         }
@@ -7249,6 +7254,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                             $scope.loadingOrderData = false;
                             $scope.download.orders = orderData.response.data;
                             window.location.href = "#!/print-preview";
+                            $scope.clearOrderContent();
                         }, function (jqxhr, error) {
                             $("#popupMessage").html(error);
                             $('.popup').toggle("slide");
@@ -7295,7 +7301,10 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
 cstore.directive('printPreviewOrders', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><input type="button" ng-click="exportData(\'testTable\')" value="Export to Excel"><input type="button" ng-click="printDiv(\'printableOrders\')" value="Print"></div><div id="printableOrders" class="table pull-left">' +
+        template: '<div class="add_delete pull-left"><button ng-click="exportFunction()">Export</button>' +
+            '<button ng-click="printDiv(\'printableOrders\')">Print</button>' +
+            '' +
+            '</div><div id="printableOrders" class="table pull-left">' +
             '<table id="testTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
             '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span></th>' +
             '<th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Program </span></th>' +
@@ -7303,7 +7312,7 @@ cstore.directive('printPreviewOrders', ['$appService', function ($appService, $s
             '<th><span>Status</span></th></tr><tr ng-repeat="order in download.orders">' +
             '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
             '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-            '{{order.storeid.storename}}</td><td>' +
+            '{{order.storeid.storename}}</td><td  ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
             '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
             '</tr></table>' +
             '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
@@ -7323,7 +7332,7 @@ cstore.directive('printPreviewOrders', ['$appService', function ($appService, $s
                         var originalContents = document.body.innerHTML;
                         var popupWin = window.open('', '_blank', 'width=300,height=300');
                         popupWin.document.open()
-                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="custom.css" /></head><body onload="window.print()">' + printContents + '</html>');
+                        popupWin.document.write('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><link rel="stylesheet" type="text/css" href="custom.css" /></head><body onload="window.print()"><table>' + printContents + '</table></body></html>');
                         popupWin.document.close();
                     }
                 }

@@ -1058,6 +1058,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.readonlyrow.fileurl = "";
         $scope.oFile.fileExist = false;
     }
+    $scope.clearOrderContent = function () {
+        $scope.orderFilterData.start_date = "";
+        $scope.orderFilterData.end_date="";
+    }
     //changes 0605
     $scope.getShoppingCartLength = function () {
         if ($scope.currentUser.data.roleid == STOREMANAGER) {
