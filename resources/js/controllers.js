@@ -200,6 +200,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
+    $scope.orderFilterData={"start_date":"","end_date":""};
     //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
@@ -2620,12 +2621,14 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         {"value": "promo_title", "name": "Promo Title"},
         {"value": "offer_title", "name": "Offer Title"},
         {"value": "offer_type", "name": "Offer Type"},
-        {"value": "item_signage", "name": "Item Signage"}
+        {"value": "item_signage", "name": "Item Signage"},
+        {"value": "start_date", "name": "Start Date"},
+        {"value": "end_date", "name": "End Date"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.promotions = [];
     $appService.auth();
-    $scope.getAllPromotions = function (direction, limit, column, searchText) {
+    $scope.getAllPromotions = function (direction, limit, column, searchText,filterDate) {
         if ($scope.loadingPromotionData) {
             return false;
         }
@@ -2657,9 +2660,13 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "top_promo",
             "codes"
         ];
+        query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (filterDate && filterDate != "") {
+            query.filter["start_date"] ={"$lte": new Date(filterDate)};
+            query.filter["end_date"] = {"$gte": new Date(filterDate)};
         }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
@@ -2685,17 +2692,17 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllPromotions(1, 10);
-    $scope.setPromotionOrder = function (sortingCol, sortingType, column, searchText) {
+    $scope.setPromotionOrder = function (sortingCol, sortingType, column, searchText,filterDate) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllPromotions(1, 10, column, searchText);
+        $scope.getAllPromotions(1, 10, column, searchText,filterDate);
     }
-    $scope.getMore = function (column, searchText) {
-        $scope.getAllPromotions(1, 10, column, searchText);
+    $scope.getMore = function (column, searchText,filterDate) {
+        $scope.getAllPromotions(1, 10, column, searchText,filterDate);
     }
-    $scope.getLess = function (column, searchText) {
-        $scope.getAllPromotions(0, 10, column, searchText);
+    $scope.getLess = function (column, searchText,filterDate) {
+        $scope.getAllPromotions(0, 10, column, searchText,filterDate);
     }
 });
 
@@ -4087,7 +4094,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
     $scope.searchby = $scope.venderSearch[0];
     $scope.orders = {};
     $appService.auth();
-    $scope.getAllOrders = function (direction, limit, column, searchText) {
+    $scope.getAllOrders = function (direction, limit, column, searchText,orderStartDate,orderEndDate) {
         if ($scope.loadingOrderData) {
             return false;
         }
@@ -4111,6 +4118,9 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
+        if (orderStartDate && orderStartDate != "" && orderEndDate && orderEndDate != "") {
+            query.filter["order_date"] = {"$gte":orderStartDate,"$lte": orderEndDate};
+        }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -4131,17 +4141,17 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllOrders(1, 10);
-    $scope.sortOrder = function (sortingCol, sortingType, column, searchText) {
+    $scope.sortOrder = function (sortingCol, sortingType, column, searchText,orderStartDate,orderEndDate) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllOrders(1, 10, column, searchText);
+        $scope.getAllOrders(1, 10, column, searchText,orderStartDate,orderEndDate);
     }
-    $scope.getMore = function (column, searchText) {
-        $scope.getAllOrders(1, 10, column, searchText);
+    $scope.getMore = function (column, searchText,orderStartDate,orderEndDate) {
+        $scope.getAllOrders(1, 10, column, searchText,orderStartDate,orderEndDate);
     }
-    $scope.getLess = function (column, searchText) {
-        $scope.getAllOrders(0, 10, column, searchText);
+    $scope.getLess = function (column, searchText,orderStartDate,orderEndDate) {
+        $scope.getAllOrders(0, 10, column, searchText,orderStartDate,orderEndDate);
     }
 });
 /**************************Order Detail*******************************/
