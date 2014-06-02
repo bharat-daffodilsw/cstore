@@ -4228,8 +4228,9 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
 
 cstore.controller('contactPageCtrl', function ($scope, $appService) {
     $scope.contact={};
-    $appService.auth();
-    $scope.getEditCountries(null, null, null, $scope.data);
+    //$appService.auth();
+   // if($scope.displayData["loggedIn"] = true){
+    //$scope.getEditCountries(null, null, null, $scope.data);
     $scope.loadingAddContactData = false;
     $scope.clearContactContent = function () {
         $scope.contact.name = "";
@@ -4241,6 +4242,6 @@ cstore.controller('contactPageCtrl', function ($scope, $appService) {
         $scope.contact.phone = "";
         $scope.contact.extension = "";
         $scope.contact.notes = "";
-        $scope.getEditCountries(null, null, null,$scope.data);
+        //$scope.getEditCountries(null, null, null,$scope.data);
     }
 });

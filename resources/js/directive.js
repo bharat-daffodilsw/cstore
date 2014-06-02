@@ -7493,8 +7493,8 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><div class="margin_top">State*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><vendor-country-select></vendor-country-select></td>' +
-            '<td class="half_td"><state-select></state-select></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.email"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.state"></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -7503,7 +7503,7 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><div class="margin_top">Zip Code*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><city-select></city-select></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.city"></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="contact.zipcode"></td>' +
             '</tr>' +
             '</table>' +
@@ -7547,7 +7547,7 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.submitContact = function () {
                         $scope.CSession = $appService.getSession();
-                        if ($scope.CSession) {
+                        //if ($scope.CSession) {
                             $scope.newContact = {};
                             var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                             var regNumberOnly = /^[+]?\d[0-9\-]*$/;
@@ -7612,19 +7612,22 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                             $scope.newContact["phone"] = $scope.contact.phone;
                             $scope.newContact["extension"] = $scope.contact.extension;
                             $scope.newContact["notes"] = $scope.contact.notes;
-                            if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
-                                $scope.newContact["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
-                            }
-                            if ($scope.data.selectedCity && $scope.data.selectedCity != null && $scope.data.selectedCity != undefined && $scope.data.selectedCity != "undefined" && $scope.data.selectedCity != "null") {
-                                $scope.newContact["city"] = {"_id": $scope.data.selectedCity._id, "name": $scope.data.selectedCity.name}
-                            }
-                            if ($scope.data.selectedState && $scope.data.selectedState != null && $scope.data.selectedState != undefined && $scope.data.selectedState != "undefined" && $scope.data.selectedState != "null") {
-                                $scope.newContact["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
-                            }
+                            $scope.newContact["country"] = $scope.contact.country;
+                            $scope.newContact["state"] = $scope.contact.state;
+                            $scope.newContact["city"] = $scope.contact.city;
+                            //if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
+                            //    $scope.newContact["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
+                            //}
+                            //if ($scope.data.selectedCity && $scope.data.selectedCity != null && $scope.data.selectedCity != undefined && $scope.data.selectedCity != "undefined" && $scope.data.selectedCity != "null") {
+                            //    $scope.newContact["city"] = {"_id": $scope.data.selectedCity._id, "name": $scope.data.selectedCity.name}
+                            //}
+                            //if ($scope.data.selectedState && $scope.data.selectedState != null && $scope.data.selectedState != undefined && $scope.data.selectedState != "undefined" && $scope.data.selectedState != "null") {
+                            //    $scope.newContact["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
+                            //}
                             var query = {};
                             query.table = "contact__cstore";
                             query.operations = [$scope.newContact];
-                            $appService.save(query, ASK, OSK,$scope.CSession["usk"], function (callBackData) {
+                            $appService.save(query, ASK, OSK,null, function (callBackData) {
                                 $scope.loadingAddContactData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Submitted");
@@ -7645,11 +7648,11 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
-                        }
-                        else {
-                            $("#popupMessage").html("Please login first");
-                            $('.popup').toggle("slide");
-                        }
+                        //}
+                        //else {
+                        //    $("#popupMessage").html("Please login first");
+                        //    $('.popup').toggle("slide");
+                        //}
                     }
                 }
             }
