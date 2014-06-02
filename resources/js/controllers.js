@@ -190,6 +190,9 @@ cstore.config(
                 controller:'contactPageCtrl'
             }).when('/terms-conditions',{
                 templateUrl:'../terms-privacy'
+            }).when('/print-preview',{
+                templateUrl:'../print-preview',
+                controller:'printPreviewOrderCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -201,7 +204,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
     $scope.orderFilterData={"start_date":"","end_date":""};
-    //$scope.selectedLoc = $scope.asyncSelected ? $scope.asyncSelected : "United States";
+    $scope.download={"orders":[]};
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
     $scope.file = {};
@@ -4135,7 +4138,6 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
             $scope.loadingOrderData = false;
             $scope.show.currentCursor = orderData.response.cursor;
             $scope.orders = orderData.response.data;
-            $scope.getArray=[{a: 1, b:2}, {a:3, b:4}];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -4154,6 +4156,23 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText,orderStartDate,orderEndDate) {
         $scope.getAllOrders(0, 10, column, searchText,orderStartDate,orderEndDate);
     }
+});
+
+cstore.controller('printPreviewOrderCtrl', function ($scope, $appService) {
+    $scope.exportFunction=function(){
+       tableToExcel('testTable', 'Order List Table');
+    }
+    var tableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+        return function(table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
 });
 /**************************Order Detail*******************************/
 cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams) {

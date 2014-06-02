@@ -1024,7 +1024,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
+            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
             '<td class="product_image half_td"><program-select></program-select></td>' +
             '</tr>' +
             '<tr>' +
@@ -7201,7 +7201,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="printPreview()">Print Preview</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -7231,9 +7231,28 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
                         $scope.getAllOrders(1, 10, null, null,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
+
                     }
-                    $scope.exportFile = function () {
-                        window.location.href = BAAS_SERVER + "/export?ask=" + ASK + "&osk=" + OSK;
+                    $scope.printPreview=function(){
+                        console.log($scope.orderFilterData.start_date+ "hdgvchjgdhsjhbnbx"+$scope.orderFilterData.end_date);
+
+                        var query = {"table": "orders__cstore"};
+                        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+                        query.filter = {};
+                        if ($scope.orderFilterData.start_date && $scope.orderFilterData.start_date != "" && $scope.orderFilterData.end_date && $scope.orderFilterData.end_date != "") {
+                            query.filter["order_date"] = {"$gte":$scope.orderFilterData.start_date,"$lte": $scope.orderFilterData.end_date};
+                        }
+                        var timeZone = new Date().getTimezoneOffset();
+                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
+                        var serviceUrl = "/rest/data";
+                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (orderData) {
+                            $scope.loadingOrderData = false;
+                            $scope.download.orders = orderData.response.data;
+                            window.location.href = "#!/print-preview";
+                        }, function (jqxhr, error) {
+                            $("#popupMessage").html(error);
+                            $('.popup').toggle("slide");
+                        })
                     }
                     $scope.updateStatusOfOrder = function (order) {
                         $scope.loadingOrderData = true;
@@ -7267,6 +7286,46 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                 },
                 post:function($scope){
 
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('printPreviewOrders', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left"><input type="button" ng-click="exportData(\'testTable\')" value="Export to Excel"><input type="button" ng-click="printDiv(\'printableOrders\')" value="Print"></div><div id="printableOrders" class="table pull-left">' +
+            '<table id="testTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+            '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span></th>' +
+            '<th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Program </span></th>' +
+            '<th>Total</th><th><span>Order Date</span></th>' +
+            '<th><span>Status</span></th></tr><tr ng-repeat="order in download.orders">' +
+            '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
+            '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+            '{{order.storeid.storename}}</td><td>' +
+            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
+            '</tr></table>' +
+            '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                },
+                post:function($scope){
+                    $scope.exportData = function (divId) {
+                        var blob = new Blob([document.getElementById(divId).innerHTML], {
+                            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"
+                        });
+                        saveAs(blob, "Report.xls");
+                    };
+                    $scope.printDiv = function(divName) {
+                        var printContents = document.getElementById(divName).innerHTML;
+                        var originalContents = document.body.innerHTML;
+                        var popupWin = window.open('', '_blank', 'width=300,height=300');
+                        popupWin.document.open()
+                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="custom.css" /></head><body onload="window.print()">' + printContents + '</html>');
+                        popupWin.document.close();
+                    }
                 }
             }
         }
