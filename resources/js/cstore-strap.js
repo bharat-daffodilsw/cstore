@@ -50,8 +50,27 @@ appStrapServices.factory('$appService', [
                 callBack(callBackData);
             });
         }
+        $appService.sendNotification = function (data, ask, osk, usk, callBack) {
+            if (!ask) {
+                throw "No ask found for saving";
+            }
+            // return;
+            var params;
+            if (usk) {
 
+                params = {"mailContent":data, "ask":ask, "osk":osk, "usk":usk};
+            }
+            else {
+                params = {"mailContent":data, "ask":ask, "osk":osk};
 
+            }
+            var that = this;
+
+            var url = BAAS_SERVER + "/mail";
+            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+                callBack(callBackData);
+            });
+        }
         $appService.delete_cookie = function (name) {
             document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         };

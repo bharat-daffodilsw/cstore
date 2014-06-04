@@ -7656,7 +7656,7 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
             '</tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
-            '<button type="button" ng-click="sendNotification()"><a href>Send Notification</a></button>' +
+            '<button type="button" ng-click="sendMailNotification()"><a href>Send Notification</a></button>' +
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setClosePath(\'promotions\')"><a href>Close</a></button>' +
             '</div></div></td></tr>' +
@@ -7677,7 +7677,7 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
                             $scope.availableUserTags = [];
                             for (var i = 0; i < userData.response.data.length; i++) {
-                                        $scope.availableUserTags.push(userData.response.data[i].username);
+                                $scope.availableUserTags.push(userData.response.data[i].username);
                             }
                             $('#user_tags').tagit({"tagSource": $scope.availableUserTags, "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
                         }, function (jqxhr, error) {
@@ -7686,17 +7686,40 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                         })
                     }
                     $scope.getAllAvailableUsers();
-                    $scope.sendNotification=function(){
+                    $scope.sendMailNotification=function(){
                         $scope.userNotification=[];
                         $scope.userNotification = $scope.showTags($("#user_tags").tagit("tags"));
                         console.log($scope.userNotification);
-
+                        $scope.currentSession = $appService.getSession();
                         if (!$scope.userNotification || ($scope.userNotification.length == 0)) {
                             $("#popupMessage").html("Please specify atleast one username");
                             $('.popup').toggle("slide");
                             return false;
                         }
+                        var mailContent= {}
+                        mailContent["to"] = $scope.userNotification;
+                        mailContent["subject"] = "Promo Notification";
+                        mailContent["html"]="<div>Hello<br/>New promos have been uploaded.You can it in your portal.</div><div>Thank You</div>";
 
+
+                        $appService.sendNotification(mailContent, ASK, OSK, $scope.currentSession["usk"], function (callBackData) {
+                            console.log(JSON.stringify(callBackData));
+                            $scope.loadingStatus = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Notification Sent");
+                                $('.popup').toggle("slide");
+                                $scope.setClosePath('promotions');
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html("some error while sending Notification");
+                                $('.popup').toggle("slide");
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
+                        });
                     }
                 }
             }
