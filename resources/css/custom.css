@@ -1262,7 +1262,7 @@ table td input {
 
 .sortUp {
     position: absolute;
-    top: 3px;
+    top: 0px;
     left: 0px;
     right: 0;
     margin-left: auto;
@@ -1277,7 +1277,7 @@ table td input {
 
 .sortDown {
     position: absolute;
-    top: 13px;
+    top: 16px;
     left: 0px;
     right: 0;
     margin-left: auto;
@@ -1498,7 +1498,7 @@ span.sortWrap {
     border-top: 1px solid #CCC;
     border-right: 1px solid #CCC;
     border-left: 1px solid #CCC;
-    width: 95%;
+    width: 97.5%;
     padding: 5px 10px 0 20px;
     margin-bottom: 10px;
 }
@@ -1508,7 +1508,8 @@ span.sortWrap {
 }
 
 .description_1 {
-    width: 98% !important;
+    width: 97.5% !important;
+    height: 100px;
 }
 
 .no {
@@ -2008,3 +2009,8 @@ width: 100%;  }
     margin-top: 4px;
 }
 
+.master_checkbox {
+    width: 25px;
+    height: 15px;
+    margin-right: 10px;
+}

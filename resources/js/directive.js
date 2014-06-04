@@ -280,7 +280,7 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="footer pull-left"><div class="footer_3 pull-left">' +
-            ' Copyright &copy; </div><div class="footer_3 pull-left" ng-click="setFooterPath(\'terms-conditions\')"> Terms & Condition </div>' +
+            ' Copyright &copy; EC Loyalty Corporation 2014 <br> All Rights Reserved  </div><div class="footer_3 pull-left" ng-click="setFooterPath(\'terms-conditions\')"> Terms & Condition </div>' +
             '<div class="footer_3 pull-left" ng-click="setFooterPath(\'contact-us\')"> Contact us </div>' +
             '<div class="footer_4 pull-left"><img src="images/logo.jpg"></div></div>',
         compile: function () {
@@ -3435,7 +3435,9 @@ cstore.directive('resetpassword', ['$appService', function ($appService, $scope)
 cstore.directive('promotionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
+        template: '<div class="add_delete pull-left">'+
+        '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'promo-notification\')"><a href>Notification</a></button></div>'+
+            '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
             '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()"><input id="filter_date" type="text" placeholder="Date" ng-model="promotiondata.filter_date" jqdatepicker /><span class="search_sign_3 pull-left"><a ng-click="filterByDate()"><img style="cursor: pointer width:30px;" src="images/Search.png"></a></span><input type="submit" style="display:none;"></form></div>'+
@@ -3443,10 +3445,12 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,promotiondata.filter_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
-            '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th><th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
-            '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>' +
+            '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
+            '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>{{promotion.programid.name}}</td><td>' +
             '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
-            '<td><a class="edit_btn" ng-click="setAssignedPromo(promotion._id)" href>Assign</a><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
+            '<td><a class="edit_btn" ng-click="setAssignedPromo(promotion._id,promotion.programid._id)" href>Assign</a><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3464,8 +3468,8 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.show.currentCursor = 0;
                         $scope.getAllPromotions(1, 10, null, null,$scope.promotiondata.filter_date);
                     }
-                    $scope.setAssignedPromo = function (promotionid) {
-                        window.location.href = "#!/assign-promo?id=" + promotionid;
+                    $scope.setAssignedPromo = function (promotionid,programid) {
+                        window.location.href = "#!/assign-promo?id=" + promotionid + "&programid=" + programid;
                     }
                     $scope.deletePromotionArray = [];
                     $scope.deletePromotion = function () {
@@ -3596,6 +3600,14 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 }
                             }
                         }
+                        if (promotion.programid) {
+                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
+                                if ($scope.productdata.programs[j]._id == promotion.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
+                                    break;
+                                }
+                            }
+                        }
                         window.location.href = "#!edit-promotion?q=" + promotion._id;
                     }
                 }
@@ -3665,7 +3677,7 @@ cstore.directive('promoAssignStore', ['$appService', function ($appService, $sco
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
                             } else {
-                                $("#popupMessage").html("some error while saving training session");
+                                $("#popupMessage").html("some error while assigning promotion");
                                 $('.popup').toggle("slide");
                             }
                         }, function (err) {
@@ -3898,8 +3910,14 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo" style="width:auto"/></div>' +
+            '<td><div class="margin_top">Program</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><program-select></program-select></td>' +
+            '<td class="half_td"><div>Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo" style="width:auto"/></div>' +
             '</td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
@@ -3985,7 +4003,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 return false;
                             }
 
-                            $scope.loadingStatus = true;
+                            $scope.loadingAddPromotionData = true;
 
                             var query = {};
                             query.table = "promotions__cstore";
@@ -4011,6 +4029,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
                             $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};
+                            $scope.newPromotion["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];
@@ -4024,7 +4043,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 current_file.ask = ASK;
                                 current_file.osk = OSK;
                                 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    $scope.loadingStatus = false;
+                                    $scope.loadingAddPromotionData = false;
                                     if (data.response) {
                                         $scope.newPromotion["image"] = data.response;
                                         query.operations = [$scope.newPromotion];
@@ -4143,19 +4162,21 @@ cstore.directive('googlePlaces', function () {
 cstore.directive('trainingSessionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div><assign-store-session-popup></assign-store-session-popup><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-training-session\')"><a href>Add</a></button>' +
+        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-training-session\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteTrainingSession()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + trainingSessions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setTrainingSessionOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Training Category<span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setTrainingSessionOrder(\'training_category_id.name\',\'desc\',searchby.value,search.searchContent)"></div>	' +
             '</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
-            '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id)" href>Assign</a>' +
+            '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.programid.name}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
+            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id,trainingSession.programid._id)" href>Assign</a>' +
             '<a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
@@ -4163,8 +4184,8 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.setAssignedPath = function (sessionid) {
-                        window.location.href = "#!/assign-store?id=" + sessionid;
+                    $scope.setAssignedPath = function (sessionid,programid) {
+                        window.location.href = "#!/assign-store?id=" + sessionid + "&programid=" + programid;
                     }
                     $scope.showAssignPopup = function (session) {
                         $(".assign_popup").show();
@@ -4240,6 +4261,14 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             for (var k = 0; k < trainingSession.file.length; k++) {
                                 $scope.trainingdata.uploadedimages[k] = {"filename": trainingSession.file[k].name};
                                 $scope.trainingdata.uploadedimages[k].fileurl = BAAS_SERVER + "/file/download?filekey=" + trainingSession.file[k].key + "&ask=" + ASK + "&osk=" + OSK;
+                            }
+                        }
+                        if (trainingSession.programid) {
+                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
+                                if ($scope.productdata.programs[j]._id == trainingSession.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
+                                    break;
+                                }
                             }
                         }
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
@@ -4387,6 +4416,8 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '</ul>' +
             '</td>' +
             '</tr>' +
+            '<tr><td class="half_td"><div class="margin_top">Program*</div></td></tr>' +
+            '<tr><td class="half_td"><program-select></program-select></td></tr>'+
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
             '<ul class="uploadList">' +
@@ -4464,6 +4495,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
+                            $scope.newSession["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
                             if ($scope.trainingdata.uploadedimages && $scope.trainingdata.uploadedimages.length == 0) {
                                 query.operations = [$scope.newSession];
                                 $scope.saveFunction(query);
@@ -4588,8 +4620,9 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + surveys.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="survey in surveys"><td>' +
-            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.description}}</td><td><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id)" href>Assign</a><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a>' +
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.programid.name}}</td><td>{{survey.description}}</td><td><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id,survey.programid._id)" href>Assign</a><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a>' +
             '<a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
@@ -4597,8 +4630,8 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.setSurveyAssignedPath = function (sessionid) {
-                        window.location.href = "#!/assign-survey-store?id=" + sessionid;
+                    $scope.setSurveyAssignedPath = function (sessionid,programid) {
+                        window.location.href = "#!/assign-survey-store?id=" + sessionid + "&programid="+programid;
                     }
                     $scope.setSurveyAnsweredPath = function (sessionid) {
                         window.location.href = "#!/answered-survey-store?id=" + sessionid;
@@ -4686,6 +4719,14 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                                 }
                             }
                         }
+                        if (survey.programid) {
+                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
+                                if ($scope.productdata.programs[j]._id == survey.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
+                                    break;
+                                }
+                            }
+                        }
                         window.location.href = "#!/edit-survey?q=" + survey._id;
                     }
                 }
@@ -4700,10 +4741,16 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
         replace: 'true',
         template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
-            '<tr><td><div class="margin_top">Title*</div></td></tr>' +
-            '<tr><td class="full"><input type="text" placeholder="" ng-model="surveydata.title"></td></tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Title*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="surveydata.title"></td>' +
+            '<td class="half_td"><program-select></program-select></td>' +
+            '</tr>' +
             '<tr><td><div class="margin_top">Description*</div></td></tr>' +
-            '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description"></textarea></td></tr>' +
+            '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description_1"></textarea></td></tr>' +
             '</tbody></table></div>' +
             '<h2 class="sub-head-border">' +
             '<span class="small-txt">Choose the type and add as many questions as you need.</span>  ' +
@@ -4806,6 +4853,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                             }
                             newSession["title"] = $scope.surveydata.title;
                             newSession["description"] = $scope.surveydata.description;
+                            newSession["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
                             newSession["survey_question"] = [];
                             for (i = 0; i < $scope.questions.length; i++) {
                                 if (!$scope.questions[i].question) {
@@ -7201,7 +7249,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="printPreview()">Print Preview</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="printPreview()">Preview</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -7254,6 +7302,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                             $scope.loadingOrderData = false;
                             $scope.download.orders = orderData.response.data;
                             window.location.href = "#!/print-preview";
+                            $scope.exportFunction();
                             $scope.clearOrderContent();
                         }, function (jqxhr, error) {
                             $("#popupMessage").html(error);
@@ -7463,66 +7512,32 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
             '<div class="saved_address">Contact Us</div>' +
             '<table width="100%" border="0" cellspac1ing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">Name*</div></td>' +
-            '<td><div class="margin_top">Company Name*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Name*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><input type="text" placeholder="" ng-model="contact.name"></td>' +
-            '<td><input type="text" placeholder="" ng-model="contact.company_name"></td>' +
+            '<td class="half_td pull-left"><input type="text" placeholder="" ng-model="contact.name"></td>' +
+            '<td class="half_td pull-left"><input type="text" placeholder="" ng-model="contact.program"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="margin_top">Email*</div></td>' +
-            '<td><div class="margin_top"># of Stores*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Site Name*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Phone*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><input type="text" placeholder="" ng-model="contact.email"></td>' +
-            '<td><input type="text" placeholder="" ng-model="contact.siteid"></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td><div class="margin_top">Address</div></td>' +
+            '<td class="half_td pull-left"><input type="text" placeholder="" ng-model="contact.sitename"></td>' +
+            '<td class="half_td pull-left"><input type="text" placeholder="" ng-model="contact.phone"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="text_area"><textarea ng-model="contact.address"></textarea></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Country*</div></td>' +
-            '<td class="half_td"><div class="margin_top">State*</div></td>' +
+            '<td class="full"><div class="margin_top">Email*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.country"></td>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.state"></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">City*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Zip Code*</div></td>' +
+            '<td class="full"><input type="text" placeholder="" ng-model="contact.email"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.city"></td>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="contact.zipcode"></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Phone*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Extension</div></td>' +
+            '<td><div class="margin_top">Comments</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder=""ng-model="contact.phone"></td>' +
-            '<td class="half_td"><input type="text" placeholder=""ng-model="contact.extension"></td>' +
-            '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
-            '<tr>' +
-            '<td><div class="margin_top">Notes*</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="notes"><textarea ng-model="contact.notes"></textarea></td>' +
+            '<td class="notes"><textarea ng-model="contact.comment_box"></textarea></td>' +
             '</tr>' +
             '</table>' +
             '</div>' +
@@ -7557,38 +7572,13 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.contact.company_name) {
-                                $("#popupMessage").html("Please enter company name");
+                            if (!$scope.contact.program) {
+                                $("#popupMessage").html("Please enter program name");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!email || regEmail.test(email) == false) {
-                                $("#popupMessage").html("Please enter a valid email id");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.contact.siteid) {
-                                $("#popupMessage").html("Please enter # of store");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.contact.country) {
-                                $("#popupMessage").html("Please enter country first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.contact.state) {
-                                $("#popupMessage").html("Please enter state first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.contact.city) {
-                                $("#popupMessage").html("Please enter city first");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
-                            if (!$scope.contact.zipcode || !regNumberOnly.test($scope.contact.zipcode)) {
-                                $("#popupMessage").html("Please enter correct zipcode");
+                            if (!$scope.contact.sitename) {
+                                $("#popupMessage").html("Please enter site name");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -7597,33 +7587,18 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.contact.notes) {
-                                $("#popupMessage").html("Please enter notes");
+                            if (!email || regEmail.test(email) == false) {
+                                $("#popupMessage").html("Please enter a valid email");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
                             $scope.loadingAddContactData = true;
                             $scope.newContact["name"] = $scope.contact.name;
-                            $scope.newContact["company_name"] = $scope.contact.company_name;
+                            $scope.newContact["program"] = $scope.contact.program;
                             $scope.newContact["email"] = $scope.contact.email;
-                            $scope.newContact["siteid"] = $scope.contact.siteid;
-                            $scope.newContact["address"] = $scope.contact.address;
-                            $scope.newContact["zipcode"] = $scope.contact.zipcode;
+                            $scope.newContact["sitename"] = $scope.contact.sitename;
                             $scope.newContact["phone"] = $scope.contact.phone;
-                            $scope.newContact["extension"] = $scope.contact.extension;
-                            $scope.newContact["notes"] = $scope.contact.notes;
-                            $scope.newContact["country"] = $scope.contact.country;
-                            $scope.newContact["state"] = $scope.contact.state;
-                            $scope.newContact["city"] = $scope.contact.city;
-                            //if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
-                            //    $scope.newContact["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}
-                            //}
-                            //if ($scope.data.selectedCity && $scope.data.selectedCity != null && $scope.data.selectedCity != undefined && $scope.data.selectedCity != "undefined" && $scope.data.selectedCity != "null") {
-                            //    $scope.newContact["city"] = {"_id": $scope.data.selectedCity._id, "name": $scope.data.selectedCity.name}
-                            //}
-                            //if ($scope.data.selectedState && $scope.data.selectedState != null && $scope.data.selectedState != undefined && $scope.data.selectedState != "undefined" && $scope.data.selectedState != "null") {
-                            //    $scope.newContact["state"] = {"_id": $scope.data.selectedState._id, "name": $scope.data.selectedState.name}
-                            //}
+                            $scope.newContact["comment_box"] = $scope.contact.comment_box;
                             var query = {};
                             query.table = "contact__cstore";
                             query.operations = [$scope.newContact];
@@ -7653,6 +7628,75 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                         //    $("#popupMessage").html("Please login first");
                         //    $('.popup').toggle("slide");
                         //}
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('promoNotification', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template:'<div class="table_1 pull-left">' +
+            '<div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr>' +
+            '<td><div class="margin_top">Users*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>' +
+            '<ul id="user_tags" data-name="user_tags" class="tagit ui-sortable">' +
+            '<li class="tagit-new">' +
+            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li>' +
+            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
+            '</ul>' +
+            '</ul>' +
+            '</td>' +
+            '</tr>' +
+            '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="sendNotification()"><a href>Send Notification</a></button>' +
+            '</div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setClosePath(\'promotions\')"><a href>Close</a></button>' +
+            '</div></div></td></tr>' +
+            '</tbody></table>' +
+            '<div class="loadingImage" ng-hide="!loadingSendNotification"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.setClosePath=function(path){
+                        window.location.href="#!/"+ path;
+                    }
+                    $scope.getAllAvailableUsers = function () {
+                        var query = {"table": "user_profiles__cstore"};
+                        query.columns = ["username"];
+                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                        var serviceUrl = "/rest/data";
+                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
+                            $scope.availableUserTags = [];
+                            for (var i = 0; i < userData.response.data.length; i++) {
+                                        $scope.availableUserTags.push(userData.response.data[i].username);
+                            }
+                            $('#user_tags').tagit({"tagSource": $scope.availableUserTags, "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
+                        }, function (jqxhr, error) {
+                            $("#popupMessage").html(error);
+                            $('.popup').toggle("slide");
+                        })
+                    }
+                    $scope.getAllAvailableUsers();
+                    $scope.sendNotification=function(){
+                        $scope.userNotification=[];
+                        $scope.userNotification = $scope.showTags($("#user_tags").tagit("tags"));
+                        console.log($scope.userNotification);
+
+                        if (!$scope.userNotification || ($scope.userNotification.length == 0)) {
+                            $("#popupMessage").html("Please specify atleast one username");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+
                     }
                 }
             }

@@ -193,6 +193,9 @@ cstore.config(
             }).when('/print-preview',{
                 templateUrl:'../print-preview',
                 controller:'printPreviewOrderCtrl'
+            }).when('/promo-notification',{
+                templateUrl:'../promo-notification',
+                controller:'promoNotificationCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -1027,10 +1030,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
         $scope.promotiondata.codes = [];
-        //changes made by anuradha 0105 evening
         $scope.promotiondata["top_promo"] = false;
-        // $scope.promotiondata.vendorsList = $scope.vendors[0];
         $scope.oFile.fileExist = false;
+        $scope.productdata.selectedProgram = $scope.productdata.programs[0];
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
@@ -1040,10 +1042,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.trainingdata["uploadedimages"] = [];
         $scope.trainingdata["editImages"] = [];
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
+        $scope.productdata.selectedProgram = $scope.productdata.programs[0];
     }
     $scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
         $scope.surveydata["description"] = "";
+        $scope.productdata.selectedProgram = $scope.productdata.programs[0];
         $scope.questions = [
             {"optionArr": [], "question": "", "type": $scope.listType[0], "addOption": true}
         ];
@@ -1061,6 +1065,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
         $scope.orderFilterData.end_date="";
+    }
+    $scope.clearPromotionNotificationContent = function () {
+
     }
     //changes 0605
     $scope.getShoppingCartLength = function () {
@@ -2627,6 +2634,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
     $scope.venderSearch = [
         {"value": "promo_title", "name": "Promo Title"},
         {"value": "offer_title", "name": "Offer Title"},
+        {"value": "programid.name", "name": "Program"},
         {"value": "offer_type", "name": "Offer Type"},
         {"value": "item_signage", "name": "Item Signage"},
         {"value": "start_date", "name": "Start Date"},
@@ -2665,7 +2673,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "upc",
             "vendorid",
             "top_promo",
-            "codes"
+            "codes",
+            "programid"
         ];
         query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
@@ -2711,6 +2720,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText,filterDate) {
         $scope.getAllPromotions(0, 10, column, searchText,filterDate);
     }
+    $scope.getProgramList();
 });
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
@@ -2758,6 +2768,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
     $scope.loadingTrainingSessionData = false;
     $scope.venderSearch = [
         {"value": "title", "name": "Title"},
+        {"value": "programid.name", "name": "Program"},
         {"value": "training_category_id.name", "name": "Training Category"},
         {"value": "video_url", "name": "Video Url"}
     ];
@@ -2777,7 +2788,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
 
         $scope.loadingTrainingSessionData = true;
         var query = {"table": "training_session__cstore"};
-        query.columns = ["title", "description", "file", "training_category_id", "video_url"];
+        query.columns = ["title", "description", "file", "training_category_id", "video_url","programid"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -2817,8 +2828,8 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllTrainingSessions(0, 10, column, searchText);
     }
-    //changes made by anuradha 0n 30-04
     $scope.getStores();
+    $scope.getProgramList();
 });
 
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
@@ -2834,7 +2845,7 @@ cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $rout
     }
 })
 /************************************ Assign Training Session *****************************************************/
-cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
+cstore.controller('assignTrainingCtrl', function ($scope, $appService,$routeParams) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
@@ -2860,6 +2871,7 @@ cstore.controller('assignTrainingCtrl', function ($scope, $appService) {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
 		query.filter.roleid = STOREMANAGER;
+        query.filter["storeid.programid._id"] = $routeParams.programid;
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -2931,6 +2943,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.loadingSurveyData = false;
     $scope.venderSearch = [
         {"value": "title", "name": "Title"},
+        {"value": "programid.name", "name": "Program"},
         {"value": "description", "name": "Description"}
     ];
     $scope.searchby = $scope.venderSearch[0];
@@ -2948,7 +2961,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
 
         $scope.loadingSurveyData = true;
         var query = {"table": "surveys__cstore"};
-        query.columns = ["title", "description", "survey_question", "survey_question.question", "survey_question.options"];
+        query.columns = ["title", "description", "survey_question", "survey_question.question", "survey_question.options","programid"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -2988,6 +3001,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
         $scope.getAllSurveys(0, 10, column, searchText);
     }
     $scope.getStores();
+    $scope.getProgramList();
 });
 cstore.controller('addSurveyCtrl', function ($scope, $appService) {
     /*$scope.clearSurveyContent = function () {
@@ -3002,7 +3016,7 @@ cstore.controller('addSurveyCtrl', function ($scope, $appService) {
 });
 
 /************************************ Assign Survey *****************************************************/
-cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
+cstore.controller('assignSurveyCtrl', function ($scope, $appService,$routeParams) {
     $scope.preCursor = 0
     $scope.currentCursor = 0;
     $scope.venderSearch = [
@@ -3028,6 +3042,7 @@ cstore.controller('assignSurveyCtrl', function ($scope, $appService) {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
 		query.filter.roleid = STOREMANAGER;
+        query.filter["storeid.programid._id"] = $routeParams.programid;
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -3119,6 +3134,8 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
 		query.filter.roleid = STOREMANAGER;
+          console.log($routeParams.programid);
+        query.filter["storeid.programid._id"] = $routeParams.programid;
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -3158,6 +3175,7 @@ cstore.controller('assignPromoCtrl', function ($scope, $appService,$routeParams)
                             }
                         }
                     }
+                    console.log("storeNames :: " +JSON.stringify($scope.storesName));
                 }, function (jqxhr, error) {
                     $("#popupMessage").html(error);
                     $('.popup').toggle("slide");
@@ -4160,6 +4178,29 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText,orderStartDate,orderEndDate) {
         $scope.getAllOrders(0, 10, column, searchText,orderStartDate,orderEndDate);
     }
+
+    $scope.exportFunction=function(){
+        tableToExcel('testTable', 'Order List Table');
+    }
+    var tableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+        return function(table, name) {
+            if (!table.nodeType){
+                table = document.getElementById(table)
+                var myclone = $("#testTable").clone();
+                myclone.find( "tr > th:last-child" ).remove();
+                myclone.find( "tr > td:last-child" ).remove();
+                var html=myclone.html();
+                //console.log(myclone.html());
+                //console.log(table.innerHTML);
+            }
+            var ctx = {worksheet: name || 'Worksheet', table: html}
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
 });
 
 cstore.controller('printPreviewOrderCtrl', function ($scope, $appService) {
@@ -4228,23 +4269,16 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
 
 cstore.controller('contactPageCtrl', function ($scope, $appService) {
     $scope.contact={};
-    //$appService.auth();
-   // if($scope.displayData["loggedIn"] = true){
-    //$scope.getEditCountries(null, null, null, $scope.data);
     $scope.loadingAddContactData = false;
     $scope.clearContactContent = function () {
         $scope.contact.name = "";
-        $scope.contact.company_name = "";
         $scope.contact.email = "";
-        $scope.contact.siteid = "";
-        $scope.contact.address = "";
-        $scope.contact.zipcode = "";
+        $scope.contact.sitename = "";
+        $scope.contact.program = "";
         $scope.contact.phone = "";
-        $scope.contact.extension = "";
-        $scope.contact.notes = "";
-        $scope.contact.country = "";
-        $scope.contact.state = "";
-        $scope.contact.city = "";
-        //$scope.getEditCountries(null, null, null,$scope.data);
+        $scope.contact.comment_box = "";
     }
+});
+cstore.controller('promoNotificationCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
 });
