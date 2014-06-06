@@ -3450,7 +3450,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
             '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>{{promotion.programid.name}}</td><td>' +
             '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
-            '<td><a class="edit_btn" ng-click="setAssignedPromo(promotion._id,promotion.programid._id)" href>Assign</a><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
+            '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -3564,6 +3564,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["threshold"] = promotion.threshold ? promotion.threshold : "";
                         $scope.promotiondata["codes"] = promotion.codes ? promotion.codes : [];
                         $scope.promotiondata["top_promo"] = promotion.top_promo ? promotion.top_promo : "";
+                        $scope.promotiondata["minimum_retail"] = promotion.minimum_retail ? promotion.minimum_retail : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
                         }
@@ -3601,12 +3602,13 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             }
                         }
                         if (promotion.programid) {
-                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
-                                if ($scope.productdata.programs[j]._id == promotion.programid._id) {
-                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
-                                    break;
-                                }
-                            }
+                            $scope.getPrograms(promotion.programid._id,promotion._id);
+                            //for (var j = 0; j < $scope.promotiondata.programs.length; j++) {
+                            //    if ($scope.promotiondata.programs[j]._id == promotion.programid._id) {
+                            //        $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[j];
+                            //        break;
+                            //    }
+                           // }
                         }
                         window.location.href = "#!edit-promotion?q=" + promotion._id;
                     }
@@ -3618,7 +3620,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
 cstore.directive('promoAssignStore', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div><div class="add_delete pull-left"><div class="add_btn pull-left">' +
+        template: '<div><div class="add_delete pull-left"><input type="checkbox" ng-model="assignStore.master" ng-click="getAllStoresChecked()" class="master_checkbox"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="assignPromo()"><a href>Save</a></button>' +
             '<button type="button" ng-click="setPath(\'promotions\')"><a href>Back</a></button>' +
             '</div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
@@ -3630,12 +3632,22 @@ cstore.directive('promoAssignStore', ['$appService', function ($appService, $sco
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromoStoreNameOrder(\'storeid.programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setPromoStoreNameOrder(\'storeid.programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{store.storeid.storename}}</td><td>{{store.storeid.programid.name}}</td><td>' +
+            '<th>Assign Store</th></tr><tr ng-repeat="store in storesName"><td>{{$index}}{{store.storeid.storename}}</td><td>{{store.storeid.programid.name}}</td><td>' +
             '<input type="checkbox" ng-model="store.assigned" ng-click="getOperationData($index)"></td>' +
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
                 post: function ($scope) {
+                    $scope.getAllStoresChecked = function () {
+                        for (var i = 0; i < $scope.storesName.length; i++) {
+                            if ($scope.assignStore.master == true) {
+                                $scope.storesName[i].assigned = true;
+                            }
+                            else {
+                                $scope.storesName[i].assigned = false;
+                            }
+                        }
+                    }
                     $scope.getOperationData = function (index) {
                         var push = true;
                         if ($scope.storeManager && $scope.storeManager.length > 0) {
@@ -3691,6 +3703,7 @@ cstore.directive('promoAssignStore', ['$appService', function ($appService, $sco
                         $scope.getPromoStoresName(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                 }
+
             }
         }
     }
@@ -3836,7 +3849,12 @@ cstore.directive('startDate', ['$appService', function ($appService, $scope) {
     }
 }]);
 
-//changed 2404
+cstore.directive('selectProgramPromo', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="promotiondata.selectedProgram" ng-options="program.name for program in promotiondata.programs" ng-change="getProgramSelectedStore(promotiondata.selectedProgram._id,null)"></select>'
+    }
+}]);
 
 
 cstore.directive('addPromotion', ['$appService', function ($appService, $scope) {
@@ -3902,20 +3920,28 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.threshold"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
-            '<td><div class="margin_top">Promo Image*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program</div></td>' +
+            '<td class="half_td"><div class="margin_top">Sites</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><select-program-promo></select-program-promo></td>' +
+            '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Promo Image*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><upc-select></upc-select></td>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="margin_top">Program</div></td>' +
+            '<td class="half_td"><div class="margin_top">Minimum Retail*</div></td>' +
+            '<td class="half_td"><div class="margin_top"></div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><program-select></program-select></td>' +
-            '<td class="half_td"><div>Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo" style="width:auto"/></div>' +
-            '</td>' +
+            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
+            '<td class="half_td"><div>Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo" style="width:auto"/></div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
@@ -3940,7 +3966,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
+                    var regDecimalNumberOnly = /^[+]?\d[0-9\.-]*$/;
                     $scope.savePromotion = function () {
+
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
@@ -3990,15 +4018,23 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-
-
+                            //if (!$scope.resultData || $scope.resultData.length<=0) {
+                            //    $("#popupMessage").html("Please select atleast one store");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
+                            if (($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1) {
+                                $("#popupMessage").html("You can select only one tag in " + $scope.promotiondata.selectedUpc.name);
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.oFile.fileExist) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1) {
-                                $("#popupMessage").html("You can select only one tag in " + $scope.promotiondata.selectedUpc.name);
+                            if (!$scope.promotiondata.minimum_retail || !$scope.promotiondata.minimum_retail.amount || !regDecimalNumberOnly.test($scope.promotiondata.minimum_retail.amount)) {
+                                $("#popupMessage").html("Please enter valid minimum retail");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -4009,6 +4045,10 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             query.table = "promotions__cstore";
                             if ($scope.promotiondata["promotionid"]) {
                                 $scope.newPromotion["_id"] = $scope.promotiondata["promotionid"];
+                            }
+                            $scope.storeManagerArray = [];
+                            for (var i = 0; i < $scope.resultData.length; i++) {
+                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true});
                             }
                             $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
@@ -4021,7 +4061,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
                             $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute);
                             $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
-                            // change made
+                            $scope.newPromotion["store_manager_id"] = {data: $scope.storeManagerArray, "override": "true"};
+                            $scope.newPromotion["minimum_retail"] = {"amount": $scope.promotiondata.minimum_retail.amount, "type": {"currency": "usd"}};
                             if (tags && tags.length > 0) {
                                 $scope.newPromotion["codes"] = tags;
                             }
@@ -4029,7 +4070,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
                             $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};
-                            $scope.newPromotion["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                            $scope.newPromotion["programid"] = {"name": $scope.promotiondata.selectedProgram.name, "_id": $scope.promotiondata.selectedProgram._id};
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];
@@ -4158,7 +4199,6 @@ cstore.directive('googlePlaces', function () {
 /*bharat change end here*/
 
 /******************************************* Training Session****************************************************/
-//changes made by anuradha on 30-04
 cstore.directive('trainingSessionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -4176,7 +4216,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
             '</span></th><th><span>Video Url</span><span class="sortWrap"><div class="sortUp" ng-click="setTrainingSessionOrder(\'video_url\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setTrainingSessionOrder(\'video_url\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="trainingSession in trainingSessions"><td>' +
             '<input type="checkbox" ng-model="trainingSession.deleteStatus"></td><td>{{trainingSession.title}}</td><td>{{trainingSession.programid.name}}</td><td>{{trainingSession.training_category_id.name}}</td><td>' +
-            '{{trainingSession.string_video_url}}</td><td><a class="edit_btn" ng-click="setAssignedPath(trainingSession._id,trainingSession.programid._id)" href>Assign</a>' +
+            '{{trainingSession.string_video_url}}</td><td>' +
             '<a class="edit_btn" ng-click="setTrainingSessionState(trainingSession)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingTrainingSessionData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
@@ -4264,12 +4304,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             }
                         }
                         if (trainingSession.programid) {
-                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
-                                if ($scope.productdata.programs[j]._id == trainingSession.programid._id) {
-                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
-                                    break;
-                                }
-                            }
+                            $scope.getProgramsForTraining(trainingSession.programid._id,trainingSession._id);
                         }
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
@@ -4374,6 +4409,12 @@ cstore.directive('trainingAssignStore', ['$appService', function ($appService, $
     }
 }]);
 
+cstore.directive('selectProgramTraining', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="trainingdata.selectedProgram" ng-options="program.name for program in trainingdata.programs" ng-change="getProgramSelectedStoreForTraining(trainingdata.selectedProgram._id,null)"></select>'
+    }
+}]);
 cstore.directive('addTrainingSession', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -4384,12 +4425,12 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tbody>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Title*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Training Category*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Title*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Training Category*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="trainingdata.title"></td>' +
-            '<td class="half_td"><training-category-select></training-category-select></td>' +
+            '<td class="half_td pull-left"><input type="text" placeholder="" ng-model="trainingdata.title"></td>' +
+            '<td class="half_td pull-left"><training-category-select></training-category-select></td>' +
             '</tr>' +
             '<tr>' +
             '<td><div class="margin_top">Description*</div></td>' +
@@ -4416,8 +4457,14 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '</ul>' +
             '</td>' +
             '</tr>' +
-            '<tr><td class="half_td"><div class="margin_top">Program*</div></td></tr>' +
-            '<tr><td class="half_td"><program-select></program-select></td></tr>'+
+            '<tr>' +
+            '<td class="half_td pull-left"><div class="margin_top">Program*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Sites</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td pull-left"><select-program-training></select-program-training></td>' +
+            '<td class="half_td pull-left"><div multi-select  input-model="trainingdata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '</tr>'+
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
             '<tr><td>' +
             '<ul class="uploadList">' +
@@ -4478,14 +4525,21 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-
+                            //if (!$scope.resultData || $scope.resultData.length<=0) {
+                            //    $("#popupMessage").html("Please select atleast one store");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
                             if (!$scope.trainingdata.uploadedimages || $scope.trainingdata.uploadedimages.length == 0) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
                             $scope.loadingAddTrainingdata = true;
-
+                            $scope.trainingAssignedStoreManagerArray = [];
+                            for (var i = 0; i < $scope.resultData.length; i++) {
+                                $scope.trainingAssignedStoreManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid});
+                            }
                             var query = {};
                             query.table = "training_session__cstore";
                             if ($scope.trainingdata["trainingSessionId"]) {
@@ -4495,7 +4549,8 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
-                            $scope.newSession["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                            $scope.newSession["programid"] = {"name": $scope.trainingdata.selectedProgram.name, "_id": $scope.trainingdata.selectedProgram._id};
+                            $scope.newSession["store_manager_id"] = {data: $scope.trainingAssignedStoreManagerArray, "override": "true"};
                             if ($scope.trainingdata.uploadedimages && $scope.trainingdata.uploadedimages.length == 0) {
                                 query.operations = [$scope.newSession];
                                 $scope.saveFunction(query);
@@ -4610,7 +4665,6 @@ cstore.directive('docFileUpload', ['$appService', '$compile', function ($appServ
 }]);
 
 /*************************************** Survey ************************************************/
-//changes made by anu on 2904
 cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -4622,7 +4676,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="survey in surveys"><td>' +
-            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.programid.name}}</td><td>{{survey.description}}</td><td><a class="edit_btn"  ng-click="setSurveyAssignedPath(survey._id,survey.programid._id)" href>Assign</a><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a>' +
+            '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.programid.name}}</td><td>{{survey.description}}</td><td><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a>' +
             '<a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
@@ -4720,12 +4774,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (survey.programid) {
-                            for (var j = 0; j < $scope.productdata.programs.length; j++) {
-                                if ($scope.productdata.programs[j]._id == survey.programid._id) {
-                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
-                                    break;
-                                }
-                            }
+                            $scope.getProgramsForSurvey(survey.programid._id,survey._id);
                         }
                         window.location.href = "#!/edit-survey?q=" + survey._id;
                     }
@@ -4735,6 +4784,12 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('selectProgramSurvey', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="surveydata.selectedProgram" ng-options="program.name for program in surveydata.programs" ng-change="getProgramSelectedStoreForSurvey(surveydata.selectedProgram._id,null)"></select>'
+    }
+}]);
 cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -4742,15 +4797,21 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
         template: '<div><div class="table_1 pull-left"><div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Title*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
+            '<td class="full"><div class="margin_top">Title*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="surveydata.title"></td>' +
-            '<td class="half_td"><program-select></program-select></td>' +
+            '<td class="full"><input type="text" placeholder="" ng-model="surveydata.title"></td>' +
             '</tr>' +
             '<tr><td><div class="margin_top">Description*</div></td></tr>' +
             '<tr><td colspan="2"><textarea type="text" placeholder="" ng-model="surveydata.description" class="description_1"></textarea></td></tr>' +
+            '<tr>' +
+            '<td class="half_td pull-left"><div class="margin_top">Program*</div></td>' +
+            '<td class="half_td pull-left"><div class="margin_top">Sites</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td pull-left"><select-program-survey></select-program-survey></td>' +
+            '<td class="half_td pull-left"><div multi-select  input-model="surveydata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '</tr>' +
             '</tbody></table></div>' +
             '<h2 class="sub-head-border">' +
             '<span class="small-txt">Choose the type and add as many questions as you need.</span>  ' +
@@ -4844,6 +4905,11 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            //if (!$scope.resultData || $scope.resultData.length<=0) {
+                            //    $("#popupMessage").html("Please select atleast one store");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
                             $scope.loadingAddTrainingdata = true;
                             var query = {};
                             var newSession = {};
@@ -4851,9 +4917,14 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                             if ($scope.surveydata["surveyId"]) {
                                 newSession["_id"] = $scope.surveydata["surveyId"];
                             }
+                            $scope.surveyStoreManagerArray = [];
+                            for (var i = 0; i < $scope.resultData.length; i++) {
+                                $scope.surveyStoreManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "status": "unanswered"});
+                            }
                             newSession["title"] = $scope.surveydata.title;
                             newSession["description"] = $scope.surveydata.description;
-                            newSession["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                            newSession["programid"] = {"name": $scope.surveydata.selectedProgram.name, "_id": $scope.surveydata.selectedProgram._id};
+                            newSession["store_manager_id"] = {data: $scope.surveyStoreManagerArray, "override": "true"};
                             newSession["survey_question"] = [];
                             for (i = 0; i < $scope.questions.length; i++) {
                                 if (!$scope.questions[i].question) {
