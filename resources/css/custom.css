@@ -2045,8 +2045,8 @@ width: 100%;  }
     white-space:normal;
     background-color: #fff;
     background-image: linear-gradient(#fff, #e4e4e4);
-    min-width: 300px;
-    max-width: 300px;
+    /*min-width: 330px;*/
+    max-width: 310px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
