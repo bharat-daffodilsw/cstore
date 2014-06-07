@@ -3565,9 +3565,10 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         }
         $scope.promotionData.loadingData = true;
         var query = {"table": "promotions__cstore"};
-        query.columns = ["end_date", "start_date", "image", "promo_title"];
+        query.columns = ["end_date", "start_date", "image", "promo_title","store_manager_id"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.unwindcolumns={"store_manager_id":1};
         query.filter["start_date"] = {"$lte": currentTime};
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
@@ -3580,7 +3581,6 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
-            //var rawData = promoData.response.data;
             if ($scope.promotions.length) {
                 for (var i = 0; i < rawData.length; i++) {
                     $scope.promotions.push(rawData[i]);
@@ -3631,7 +3631,13 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "image",
             "promo_description",
             "promo_title",
-            "store_manager_id"
+            "store_manager_id",
+            "threshold",
+            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
+            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
+            "offer_title",
+            "reward_value",
+            "offer_description"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();

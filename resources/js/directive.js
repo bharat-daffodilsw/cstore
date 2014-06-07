@@ -5220,15 +5220,65 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions</div>' +
-            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
+            '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
-            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
+            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="Qty"><div class="quantity_border">Opt: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +
+            '<div class="add_to_btn pull-left" ng-click="changeOptStatus(promotion)"><a href="">In/Out</a></div>' +
             '' +
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.getInitialData(0);
+                },
+                post:function($scope){
+                    $scope.CSession = $appService.getSession();
+                    $scope.changeOptStatus = function (promo) {
+                        if ($scope.CSession) {
+                        $scope.promotionData.loadingData = true;
+                            var query = {};
+                            $scope.newOptStatus = {};
+                            $scope.newOptStatus["store_manager_id"] = {};
+                            query.table = "promotions__cstore";
+                            $scope.newOptStatus["_id"] = promo._id;
+                            var storeArray = [];
+                            var optStatusObj = {"_id": "", "opt":"","__type__":""};
+                            optStatusObj._id=$scope.currentUser.data.storeid;
+                            for(var i=0; i < $scope.promotions.length;i++){
+                                if($scope.promotions[i]._id==promo._id){
+                                    optStatusObj.opt=$scope.promotions[i].store_manager_id.opt;
+                                    console.log(optStatusObj.opt);
+                                    break;
+                                }
+                            }
+                            optStatusObj.__type__="update";
+                            storeArray.push(optStatusObj);
+                            $scope.newOptStatus.store_manager_id=storeArray;
+                            query.operations = [$scope.newOptStatus];
+                            console.log(JSON.stringify(query));
+                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                                $scope.promotionData.loadingData = false;
+                                if (callBackData.code == 200 && callBackData.status == "ok") {
+                                   // $("#popupMessage").html("Submitted");
+                                   // $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("some error while submitting survey");
+                                    $('.popup').toggle("slide");
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err.stack);
+                                $('.popup').toggle("slide");
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    }
                 }
             }
         }
@@ -5272,9 +5322,12 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left"><div class="short_details">{{promotion[0].promo_description}}</div>' +
-            '<div class="Qty"><div class="quantity_border">Opt/Out: <input type="checkbox" ng-model="booleanOpt"/> </div></div>' +
-            '<div class="add_to_btn pull-left"><a href="" ng-click="changeAssignedPromoStatus()">Opt/Out</a></div></div>' +
+            '<div class="details_product pull-left"><div class="Qty"><div class="quantity_border"><b>Offer</b> : {{promotion[0].offer_title}}</div><div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>'+
+            '<div class="quantity_border"><b>End Date</b> :{{promotion[0].end_date}} </div>'+
+            '<div class="quantity_border"><b>Threshold</b> :{{promotion[0].threshold}} </div>'+
+            '<div class="quantity_border"><b>Reward Value</b> :{{promotion[0].reward_value}} </div>'+
+            '<div class="final_price">Opt : <input type="checkbox" ng-model="booleanOpt"/></div><div class="add_to_btn pull-left" ng-click="changeAssignedPromoStatus()">' +
+            '<a href="">In/Out</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile:function(){
             return {
@@ -5289,14 +5342,28 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
                             $scope.newPromoStatus["store_manager_id"] = {};
                             query.table = "promotions__cstore";
                             $scope.newPromoStatus["_id"] = $scope.promotion[0]._id;
-                            var promoStoreArray = [];
-                            for(var i=0;i<$scope.assignedStoreManagers.length;i++){
-                                if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
-                                    $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
-                                }
-                                promoStoreArray.push({"_id": $scope.assignedStoreManagers[i]._id, "opt": $scope.assignedStoreManagers[i].opt});
-                            }
-                            $scope.newPromoStatus.store_manager_id = {data: promoStoreArray, "override": "true"};
+                            var storeArray = [];
+                            var optStatusObj = {"_id": "", "opt":"","__type__":""};
+                            optStatusObj._id=$scope.currentUser.data.storeid;
+                            optStatusObj.opt=$scope.booleanOpt;
+
+                            //for(var i=0;i<$scope.assignedStoreManagers.length;i++){
+                                //    if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
+                                //        $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
+
+                                //    }
+                            //}
+                            optStatusObj.__type__="update";
+                            storeArray.push(optStatusObj);
+                            //var promoStoreArray = [];
+                            //for(var i=0;i<$scope.assignedStoreManagers.length;i++){
+                            //    if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
+                            //        $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
+                            //    }
+                            //    promoStoreArray.push({"_id": $scope.assignedStoreManagers[i]._id, "opt": $scope.assignedStoreManagers[i].opt});
+                            //}
+                            //$scope.newPromoStatus.store_manager_id = {data: promoStoreArray, "override": "true"};
+                            $scope.newPromoStatus.store_manager_id=storeArray;
                             query.operations = [$scope.newPromoStatus];
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                                 $scope.loadingPromotionDetailData = false;

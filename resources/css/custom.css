@@ -400,6 +400,7 @@ a:hover {
 }
 
 .Qty {
+    border-top: 1px dotted #DDD;
     font-size: 17px;
     margin-top: 10px;
 }
@@ -1219,7 +1220,7 @@ table td input {
 }
 
 .quantity_border {
-    border-top: 1px dotted #DDD;
+    /*border-top: 1px dotted #DDD;*/
     padding-top: 5px;
     padding-left: 10px;
 }
@@ -1406,7 +1407,17 @@ span.sortWrap {
     max-height: 248px;
     overflow: hidden;
 }
-
+.all_promotions{
+    width: 24%;
+    margin: .5%;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    padding: 10px;
+    /* min-height: 248px;  */
+    min-height: 311px;
+    /* max-height: 248px; */
+    max-height: 311px;
+    overflow: hidden;
+}
 .c-row {
     margin-left: 0px;
     height: 247px;
