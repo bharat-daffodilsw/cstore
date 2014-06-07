@@ -1589,7 +1589,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $scope.getPopularProducts(8, $routeParams.search);
             $scope.getRecentPromotions(8, $routeParams.search);
             $scope.getAssignedTrainingSessions(4, $routeParams.search);
-            $scope.getCarouselPromotions(4);
+            //$scope.getCarouselPromotions(4);
             $scope.homeView = {"storeManager": true, "admin": false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {

@@ -1362,7 +1362,83 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
         }
     }
 }]);
+cstore.directive('coolerFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+    return {
+        restrict: "E",
+        replace: true,
+//        scope:true,
+        template: "<div>" +
+            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
+            "<span><input ng-show='readonlycoolerrow.filenotexist' type='file' id='coolerfile'/></span>" +
+            "<div ng-hide='readonlycoolerrow.filenotexist'>" +
+            "<span>" +
+            "<div class='pic_preview'><img ng-src='{{readonlycoolerrow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "</span>" +
+            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
+            "</div>" +
+            "</div>",
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    //$scope.oFile.fileExist=false;
+                },
+                post: function ($scope, iElement) {
+                    $scope.removeFile = function () {
+                        delete $scope.coolerrow[$scope.colmetacoolerdata.expression];
+                        $("#coolerfile").val("");
+                        $scope.readonlycoolerrow.filenotexist = true;
+                        $scope.oCoolerFile.fileExist = false;
+                    };
+                    if ($scope.coolerrow[$scope.colmetacoolerdata.expression]) {
+                        $scope.showFile($scope.row[$scope.colmetacoolerdata.expression], false);
+                        //changed 2804
+                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
 
+                    } else if (!$scope.readonlycoolerrow.fileurl) {
+                        $scope.readonlycoolerrow.filenotexist = true;
+                    }
+                    $scope.loadFile = function (evt) {
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test($scope.oCoolerFile.name)) {
+                            $scope.file = {};
+                            $scope.file.name = $scope.oFile.name;
+                            $scope.file.result = evt.target.result;
+                            $scope.oCoolerFile['data'] = evt.target.result;
+                            $scope.showUploadedFile($scope.file);
+                        }
+                        else {
+                            $("#popupMessage").html("You can upload image file only");
+                            $('.popup').toggle("slide");
+                        }
+                    };
+                    $scope.showUploadedFile = function (file) {
+
+                        var file_ext = $scope.getFileExtension(file.name);
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
+                            $scope.showimage = true;
+                            $scope.imageData = file.result;
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+
+                        }
+                    }
+                    iElement.bind('change', function () {
+                        $scope.$apply(function () {
+                            $scope.oFCoolerReader = new FileReader();
+                            if (document.getElementById('coolerfile').files.length === 0) {
+                                return;
+                            }
+                            $scope.oCoolerFile = document.getElementById('coolerfile').files[0];
+                            $scope.oFCoolerReader.onload = $scope.loadFile;
+                            $scope.oFCoolerReader.readAsDataURL($scope.oFile);
+                            $scope.oCoolerFile.fileExist = true;
+                        });
+                    });
+                }
+            }
+        }
+    }
+}]);
 /*****************************Store Manager******************************/
 cstore.directive('storeManagerList', ['$appService', function ($appService, $scope) {
     return {
@@ -3941,9 +4017,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
-            '<td class="half_td"><div>Top Promo : <input type="checkbox" ng-model="promotiondata.top_promo" style="width:auto"/></div></td>' +
-            '</tr>' +
-            '<tr>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
@@ -4067,7 +4140,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.newPromotion["codes"] = tags;
                             }
                             //changes made by anuradha 0105 evening
-                            $scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
+                            //$scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
                             $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};
                             $scope.newPromotion["programid"] = {"name": $scope.promotiondata.selectedProgram.name, "_id": $scope.promotiondata.selectedProgram._id};
