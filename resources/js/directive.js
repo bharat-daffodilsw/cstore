@@ -5219,12 +5219,10 @@ cstore.directive('assignedSurveyResponse', ['$appService', function ($appService
 cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions</div>' +
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">OPT In/Out</a></span><span class="opt_button pull-right"><a href="">Export as txt</a></span></div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
-            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="Qty"><div class="quantity_border">Opt: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +
-            '<div class="add_to_btn pull-left" ng-click="changeOptStatus(promotion)"><a href="">In/Out</a></div>' +
-            '' +
+            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="Qty"><div class="quantity_border">Opt: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -5233,11 +5231,55 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                 },
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
+                    $scope.optArray=[];
+                    $scope.getOptData = function (index) {
+                        for(var i=0; i < $scope.promotions.length;i++){
+                            if($scope.promotions[i]._id==$scope.promotions[index]._id){
+                                console.log($scope.promotions[i]);
+                                $scope.promotions[i]["optStatus"] = true;
+                            }
+                        }
+                    }
+                    $scope.changeOptInOutStatus = function () {
+                        for (var i = 0; i < $scope.promotions.length; i++) {
+                            if ($scope.promotions[i].optStatus) {
+                                $scope.optArray.push({"_id":$scope.promotions[i]._id,"store_manager_id":[{"_id":$scope.promotions[i].store_manager_id._id,"opt":$scope.promotions[i].store_manager_id.opt,"__type__":"update"}]});
+                            }
+                        }
+                        console.log("test array " + JSON.stringify($scope.optArray));
+                        if (!$scope.optArray.length || $scope.optArray.length ==0) {
+                            $("#popupMessage").html("Please opt atleast one promo");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        $scope.promotionData.loadingData = true;
+                        var query = {};
+                        query.table = "promotions__cstore";
+                        query.operations = $scope.testArray;
+                        console.log(JSON.stringify(query));
+                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                         $scope.promotionData.loadingData = false;
+                         if (callBackData.code == 200 && callBackData.status == "ok") {
+                         // $("#popupMessage").html("Submitted");
+                         // $('.popup').toggle("slide");
+                         } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                         $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                         $('.popup').toggle("slide");
+                         }
+                         else {
+                         $("#popupMessage").html("some error while updating promos");
+                         $('.popup').toggle("slide");
+                         }
+                         }, function (err) {
+                         $("#popupMessage").html(err.stack);
+                         $('.popup').toggle("slide");
+                         });
+                    }
                     $scope.changeOptStatus = function (promo) {
                         if ($scope.CSession) {
-                        $scope.promotionData.loadingData = true;
+                       // $scope.promotionData.loadingData = true;
                             var query = {};
-                            $scope.newOptStatus = {};
+							$scope.newOptStatus={};
                             $scope.newOptStatus["store_manager_id"] = {};
                             query.table = "promotions__cstore";
                             $scope.newOptStatus["_id"] = promo._id;
@@ -5246,7 +5288,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                             optStatusObj._id=$scope.currentUser.data.storeid;
                             for(var i=0; i < $scope.promotions.length;i++){
                                 if($scope.promotions[i]._id==promo._id){
-                                    optStatusObj.opt=$scope.promotions[i].store_manager_id.opt;
+                                    optStatusObj.opt=!$scope.promotions[i].store_manager_id.opt;
                                     console.log(optStatusObj.opt);
                                     break;
                                 }
@@ -5255,8 +5297,8 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                             storeArray.push(optStatusObj);
                             $scope.newOptStatus.store_manager_id=storeArray;
                             query.operations = [$scope.newOptStatus];
-                            console.log(JSON.stringify(query));
-                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            console.log(JSON.stringify($scope.newOptStatus));
+                            /* $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                                 $scope.promotionData.loadingData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                    // $("#popupMessage").html("Submitted");
@@ -5266,13 +5308,13 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                                     $('.popup').toggle("slide");
                                 }
                                 else {
-                                    $("#popupMessage").html("some error while submitting survey");
+                                    $("#popupMessage").html("some error while updating promos");
                                     $('.popup').toggle("slide");
                                 }
                             }, function (err) {
                                 $("#popupMessage").html(err.stack);
                                 $('.popup').toggle("slide");
-                            });
+                            }); */
                         }
                         else {
                             $("#popupMessage").html("Please login first");
@@ -7452,7 +7494,7 @@ cstore.directive('orderStatusSelect', ['$appService', function ($appService, $sc
         }
     }
 }]);
-cstore.directive('orderList', ['$appService', function ($appService, $scope) {
+cstore.directive('orderList', ['$appService', function ($appService, $scope,$window) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left">' +
@@ -7460,7 +7502,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="printPreview()">Preview</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -7477,7 +7519,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
             '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
-                pre: function ($scope) {
+                pre: function ($scope,$window) {
                     $scope.setPath = function (orderid) {
                         window.location.href = "#!/order-detail?orderid=" + orderid;
                     }
@@ -7492,7 +7534,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                         $scope.getAllOrders(1, 10, null, null,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
 
                     }
-                    $scope.printPreview=function(){
+                    $scope.printPreview=function(){                        
                         console.log($scope.orderFilterData.start_date+ "hdgvchjgdhsjhbnbx"+$scope.orderFilterData.end_date);
 
                         var query = {"table": "orders__cstore"};
@@ -7512,14 +7554,44 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope) {
                         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (orderData) {
                             $scope.loadingOrderData = false;
                             $scope.download.orders = orderData.response.data;
+                            $scope.myHtml='<table id="testTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+                                '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span></th>' +
+                                '<th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Program </span></th>' +
+                                '<th>Total</th><th><span>Order Date</span></th>' +
+                                '<th><span>Status</span></th></tr><tr ng-repeat="order in download.orders">' +
+                                '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
+                                '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+                                '{{order.storeid.storename}}</td><td  ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+                                '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
+                                '</tr></table>';
+							//console.log("11111" + $scope.myHtml);
+							var orderHtml = $scope.myHtml;
+							//$scope.testFunction();
+								//var w = $window.open();
+								//console.log(w);
+								//w.document.write(orderHtml);
+								//w.print();
+								//w.close();							
                             window.location.href = "#!/print-preview";
-                            $scope.exportFunction();
-                            $scope.clearOrderContent();
+                            //$scope.exportFunction();
+                            //$scope.clearOrderContent();
                         }, function (jqxhr, error) {
                             $("#popupMessage").html(error);
                             $('.popup').toggle("slide");
                         })
+						
                     }
+					$scope.testFunction = function(){
+						$scope.myHtml2='<div ng-repeat="order in download.orders">{{order.status}} Test</div>';
+						var orderHtml2 = $scope.myHtml2;
+								console.log("222222" + orderHtml2);
+								var w = window.open();
+								w.document.write(orderHtml2);
+								console.log(JSON.stringify($scope.download.orders));
+								//w.print();
+								//w.close();
+					}
+
                     $scope.updateStatusOfOrder = function (order) {
                         $scope.loadingOrderData = true;
                         $scope.updateOrderStatus = {};
@@ -7569,11 +7641,11 @@ cstore.directive('printPreviewOrders', ['$appService', function ($appService, $s
             '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span></th>' +
             '<th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Program </span></th>' +
             '<th>Total</th><th><span>Order Date</span></th>' +
-            '<th><span>Status</span></th></tr><tr ng-repeat="order in download.orders">' +
+            '<th><span>Status</span></th><th><span>Status2</span></th></tr><tr ng-repeat="order in download.orders">' +
             '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
             '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
             '{{order.storeid.storename}}</td><td  ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
+            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td><td>test case</td>' +
             '</tr></table>' +
             '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
         compile: function () {
@@ -7589,12 +7661,18 @@ cstore.directive('printPreviewOrders', ['$appService', function ($appService, $s
                     };
                     $scope.printDiv = function(divName) {
                         var printContents = document.getElementById(divName).innerHTML;
+                        //console.log("111111" + printContents);
+                        var myTable = document.getElementById('testTable');
+                        myTable.border="1";
+                        var printContents2 = document.getElementById(divName).innerHTML;
+                        //console.log("22222"+ printContents2);
                         var originalContents = document.body.innerHTML;
                         var popupWin = window.open('', '_blank', 'width=300,height=300');
                         popupWin.document.open()
-                        popupWin.document.write('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><link rel="stylesheet" type="text/css" href="custom.css" /></head><body onload="window.print()"><table>' + printContents + '</table></body></html>');
+                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="custom.css" /></head><body onload="window.print()"><table border="1">' + printContents2 + '</table></body></html>');
                         popupWin.document.close();
                     }
+
                 }
             }
         }

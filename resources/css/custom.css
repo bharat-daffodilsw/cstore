@@ -1412,10 +1412,10 @@ span.sortWrap {
     margin: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
-    /* min-height: 248px;  */
-    min-height: 311px;
-    /* max-height: 248px; */
-    max-height: 311px;
+    min-height: 274px;
+   /* min-height: 311px; */
+     max-height: 274px;
+/*max-height: 311px; */
     overflow: hidden;
 }
 .c-row {
@@ -2212,3 +2212,14 @@ label.multiSelect span:hover {
     height: 400px;
 }
 .multiSelect input { width: 62% !important;}
+.opt_button {
+    margin-top: 0;
+    background-color: #000;
+    margin-left: 10px;
+}
+.opt_button a {
+    color: #b88a3f;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+}

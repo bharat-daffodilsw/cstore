@@ -3590,6 +3590,9 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
                 $scope.promotions = rawData;
 
             }
+            for (var k = 0; k < $scope.promotions.length; k++) {
+                $scope.promotions[k]["optStatus"] = false;
+            }
             $scope.promotionData.loadingData = false;
             $scope.cursor = promoData.response.cursor;
             if ($scope.promotions.length) {
