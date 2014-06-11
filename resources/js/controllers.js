@@ -4620,7 +4620,7 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
 
         $scope.loadingFileData = true;
         var query = {"table": "file__cstore"};
-        query.columns = ["title","programid","programid","store_manager_id","file"];
+        query.columns = ["title","programid","store_manager_id","file"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -4675,58 +4675,69 @@ cstore.controller('addFileCtrl', function ($scope, $appService, $routeParams) {
     }
 })
 cstore.controller('allFilesCtrl', function ($scope, $appService, $routeParams) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingDownloadFileData = false;
+    $scope.venderSearch = [
+        {"value": "title", "name": "Title"},
+        {"value": "programid.name", "name": "Program"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.downloadFiles = [];
     $appService.auth();
-    $scope.allFileData = {"loadingData": false, "available": false};
-
-    $scope.allFiles = [];
-    $scope.getFileList = function (cursor, searchText) {
-        if ($scope.allFileData.loadingData) {
+    $scope.getAllFilesList = function (direction, limit, column, searchText) {
+        if ($scope.loadingDownloadFileData) {
             return false;
         }
-        $scope.allFileData.loadingData = true;
-        var query = {"table": "file__cstore__cstore"};
-        query.columns = ["title"];
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingDownloadFileData = true;
+        var query = {"table": "file__cstore"};
+        query.columns = ["title","programid","store_manager_id","file"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
-        if (searchText && searchText != "") {
-            query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        query.max_rows = 8;
-        query.cursor = cursor;
+        query.orders = {};
+        query.orders["title"]="asc";
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (fileData) {
-            var rawFileData = fileData.response.data;
-            if ($scope.allFiles.length) {
-                for (var i = 0; i < rawFileData.length; i++) {
-                    $scope.allFiles.push(rawFileData[i]);
-                }
-            }
-            if (!$scope.allFiles.length) {
-                $scope.allFiles = rawFileData;
-
-            }
-            $scope.allFileData.loadingData = false;
-            $scope.cursor = fileData.response.cursor;
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
-            $(window).scroll(function () {
-                if ($("#scrollDiv").offset()) {
-                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
-                        if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getFileList($scope.cursor, $routeParams.search);
-                        }
-                    }
-                }
-            });
-
+            $scope.loadingDownloadFileData = false;
+            $scope.show.currentCursor = fileData.response.cursor;
+            $scope.downloadFiles = fileData.response.data;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
-    $scope.getInitialFileData = function (cursor) {
-        $scope.getFileList(cursor, $routeParams.search);
-    };
+    $scope.getAllFilesList(1, 10);
+    $scope.setDownloadFileOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllFilesList(1, 10, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllFilesList(1, 10, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllFilesList(0, 10, column, searchText);
+    }
+    $scope.downloadFileLink=function(file){
+        if(file) {
+            $scope.downloadUrl = BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
+        }
+    }
 });

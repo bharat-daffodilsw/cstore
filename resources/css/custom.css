@@ -2223,3 +2223,6 @@ label.multiSelect span:hover {
     font-weight: bold;
     padding: 10px;
 }
+.downloadFile {
+    cursor: pointer;
+}

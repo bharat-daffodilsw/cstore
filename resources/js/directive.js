@@ -7527,7 +7527,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="printPreview()">Preview</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -8200,12 +8200,6 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
                             //    $('.popup').toggle("slide");
                             //    return false;
                             //}
-
-                            //if (!$scope.anyoFile.fileExist) {
-                            //    $("#popupMessage").html("Please upload file");
-                            //    $('.popup').toggle("slide");
-                            //    return false;
-                            //}
                             if (!$scope.filedata.uploadedimages || $scope.filedata.uploadedimages.length == 0) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
@@ -8247,6 +8241,7 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
                     };
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            $scope.loadingAddFileData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
@@ -8268,6 +8263,40 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
 
                         });
+                    }
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('downloadFileList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left">'+
+            '<div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
+            '<div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + downloadFiles.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<th><span>Files</span></th>'+
+            '</tr><tr ng-repeat="file in downloadFiles"><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
+            '<td><div class="downloadFile"ng-repeat="subfile in file.file" ng-click="downloadFileLink(subfile)"><a ng-href={{downloadUrl}} target="_blank">{{subfile.name}}</a></div></td></div><div class="loadingImage" ng-hide="!loadingDownloadFileData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllUploadFiles(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                    $scope.downloadFile = function (file) {
+                        var url = BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
+                        window.open(url, '_blank', 'width=300,height=300');
                     }
                 }
             }
