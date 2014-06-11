@@ -8281,7 +8281,7 @@ cstore.directive('downloadFileList', ['$appService', function ($appService, $sco
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
 
             '<th><span>Files</span></th>'+
-            '</tr><tr ng-repeat="file in downloadFiles"><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
+            '</tr><tr ng-repeat="file in downloadFiles"><td>{{file.title}}</td>' +
             '<td><div class="downloadFile"ng-repeat="subfile in file.file" ng-click="downloadFileLink(subfile)"><a ng-href={{downloadUrl}} target="_blank">{{subfile.name}}</a></div></td></div><div class="loadingImage" ng-hide="!loadingDownloadFileData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
