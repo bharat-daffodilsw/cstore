@@ -8051,8 +8051,8 @@ cstore.directive('uploadFileList', ['$appService', function ($appService, $scope
             '<div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + uploadFiles.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
-            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th></th></tr><tr ng-repeat="file in uploadFiles"><td>' +
             '<input type="checkbox" ng-model="file.deleteStatus"></td><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
             '<td><a class="edit_btn" ng-click="setFileState(file)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingFileData"><img src="images/loading.gif"></div>',
@@ -8278,8 +8278,8 @@ cstore.directive('downloadFileList', ['$appService', function ($appService, $sco
             '<div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + downloadFiles.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
-            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+
             '<th><span>Files</span></th>'+
             '</tr><tr ng-repeat="file in downloadFiles"><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
             '<td><div class="downloadFile"ng-repeat="subfile in file.file" ng-click="downloadFileLink(subfile)"><a ng-href={{downloadUrl}} target="_blank">{{subfile.name}}</a></div></td></div><div class="loadingImage" ng-hide="!loadingDownloadFileData"><img src="images/loading.gif"></div>',
@@ -8292,7 +8292,7 @@ cstore.directive('downloadFileList', ['$appService', function ($appService, $sco
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllUploadFiles(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                        $scope.getAllFilesList(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                     $scope.downloadFile = function (file) {
                         var url = BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
