@@ -110,7 +110,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li><li ng-click="clearSurveyContent()">' +
-            '<a href="#!/surveys" active-link="active">Surveys</a></li><li id="orders" ng-click="clearOrderContent()"><a href="#!/orders"active-link="active">Orders</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
+            '<a href="#!/surveys" active-link="active">Surveys</a></li><li id="orders" ng-click="clearOrderContent()"><a href="#!/orders"active-link="active">Orders</a></li><li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
             '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
             '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
@@ -138,7 +138,8 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
             '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li><li><a href="#!/all-promos" active-link="active">Promos</a></li>' +
             '<li><a href="#!/all-trainings" active-link="active">Training</a></li>' +
             '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
-            '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li></ul></div>',
+            '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li>'+
+            '<li><a href ="#!/all-files" active-link="active">Files</a></li></ul></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -1362,83 +1363,107 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
         }
     }
 }]);
-cstore.directive('coolerFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
         restrict: "E",
         replace: true,
-//        scope:true,
-        template: "<div>" +
-            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
-            "<span><input ng-show='readonlycoolerrow.filenotexist' type='file' id='coolerfile'/></span>" +
-            "<div ng-hide='readonlycoolerrow.filenotexist'>" +
-            "<span>" +
-            "<div class='pic_preview'><img ng-src='{{readonlycoolerrow.fileurl}}&resize={\"width\":100}'/></div>" +
-            "</span>" +
-            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
-            "</div>" +
+        scope: false,
+        template: "<div class='app-float-left'>" +
+            "<input  onchange='angular.element(this).scope().uploadFileChange()' class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
+            '<span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
             "</div>",
         compile: function () {
             return {
                 pre: function ($scope) {
-                    //$scope.oFile.fileExist=false;
+                    $scope.albumArr = {};
+                    $scope.albumArr.uploadedimg = [];
                 },
                 post: function ($scope, iElement) {
-                    $scope.removeFile = function () {
-                        delete $scope.coolerrow[$scope.colmetacoolerdata.expression];
-                        $("#coolerfile").val("");
-                        $scope.readonlycoolerrow.filenotexist = true;
-                        $scope.oCoolerFile.fileExist = false;
-                    };
-                    if ($scope.coolerrow[$scope.colmetacoolerdata.expression]) {
-                        $scope.showFile($scope.row[$scope.colmetacoolerdata.expression], false);
-                        //changed 2804
-                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
-
-                    } else if (!$scope.readonlycoolerrow.fileurl) {
-                        $scope.readonlycoolerrow.filenotexist = true;
-                    }
-                    $scope.loadFile = function (evt) {
-                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test($scope.oCoolerFile.name)) {
-                            $scope.file = {};
-                            $scope.file.name = $scope.oFile.name;
-                            $scope.file.result = evt.target.result;
-                            $scope.oCoolerFile['data'] = evt.target.result;
-                            $scope.showUploadedFile($scope.file);
-                        }
-                        else {
-                            $("#popupMessage").html("You can upload image file only");
-                            $('.popup').toggle("slide");
-                        }
-                    };
-                    $scope.showUploadedFile = function (file) {
-
-                        var file_ext = $scope.getFileExtension(file.name);
-                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
-                            $scope.showimage = true;
-                            $scope.imageData = file.result;
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-
-                        }
-                    }
-                    iElement.bind('change', function () {
+                    $scope.uploadFileChange = function () {
                         $scope.$apply(function () {
-                            $scope.oFCoolerReader = new FileReader();
-                            if (document.getElementById('coolerfile').files.length === 0) {
+                            $scope.oFReader = new FileReader();
+                            if (document.getElementById('uploadMultiImgfile').files.length === 0) {
                                 return;
                             }
-                            $scope.oCoolerFile = document.getElementById('coolerfile').files[0];
-                            $scope.oFCoolerReader.onload = $scope.loadFile;
-                            $scope.oFCoolerReader.readAsDataURL($scope.oFile);
-                            $scope.oCoolerFile.fileExist = true;
+                            $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
+                            $scope.oFReader.onload = $scope.loadImgFile;
+                            $scope.oFReader.readAsDataURL($scope.oFile);
                         });
-                    });
+                    }
+                    $scope.removeImgFile = function (index) {
+                        $scope.filedata.uploadedimages.splice(index, 1);
+                        $scope.albumArr.uploadedimg.splice(index, 1);
+                        if ($scope.filedata.uploadedimages.length == 0) {
+                            $scope.imgFilenotexist = true;
+                        }
+                        $scope.imgFileLimitExceed = false;
+                        $("#uploadMultiImgfile").val("");
+                    };
+
+                    $scope.showMultiImgFile = function (file, index) {
+                        if (!$scope.filedata.uploadedimages[index]) {
+                            $scope.filedata.uploadedimages[index] = {};
+                        }
+                        if (!$scope.filedata.uploadedimages) {
+                            $scope.filedata.uploadedimages = [];
+                        }
+                        $scope.filedata.uploadedimages[index].filename = file[0].name;
+                        $scope.filedata.uploadedimages[index].fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0].key + "&ask=" + ASK + "&osk=" + OSK;
+                        $scope.filedata.uploadedimages[index].image = file;
+                        $scope.filedata.uploadedimages[index].default = true;
+                        $scope.albumArr.uploadedimg[index] = file[0];
+                        $scope.imgFilenotexist = false;
+                        $scope.uploadingimage = false;
+                        $("#uploadMultiImgfile").val("");
+                        //  $scope.row[$scope.colmetadata.expression] = file;
+                        if (index == 10)
+                            $scope.imgFileLimitExceed = true;
+                    };
+                    if ($scope.filedata.editImages && $scope.filedata.editImages.length > 0) {
+                        for (var k = 0; k < $scope.filedata.editImages.length; k++) {
+                            $scope.showMultiImgFile([$scope.filedata.editImages[k]], k);
+                        }
+                    } else {
+                        $scope.imgFilenotexist = true;
+                    }
+
+                    $scope.loadImgFile = function (evt) {
+                       // if ((/\.(doc|docx|xls|xlsx|pdf|ppt|pptx)$/i).test($scope.oFile.name)) {
+                            var current_file = {};
+                            $scope.uploadingimage = true;
+                            current_file.name = $scope.oFile.name;
+                            current_file.type = $scope.oFile.type;
+                            current_file.contents = evt.target.result;
+                            current_file.ask = ASK;
+                            current_file.osk = OSK;
+                            $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                if (data.response && data.response.length > 0) {
+                                    $scope.showMultiImgFile(data.response, $scope.filedata.uploadedimages.length);
+                                }
+                            });
+                        //} else {
+                        //    $("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
+                        //    $('.popup').toggle("slide");
+                        //}
+                    };
+
+                    /* iElement.bind('change', function () {
+                     $scope.$apply(function () {
+                     $scope.oFReader = new FileReader();
+                     if (document.getElementById('uploadMultiImgfile').files.length === 0) {
+                     return;
+                     }
+                     $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
+                     $scope.oFReader.onload = $scope.loadImgFile;
+                     $scope.oFReader.readAsDataURL($scope.oFile);
+                     });
+                     });*/
                 }
             }
         }
     }
 }]);
+
 /*****************************Store Manager******************************/
 cstore.directive('storeManagerList', ['$appService', function ($appService, $scope) {
     return {
@@ -7502,7 +7527,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="printPreview()">Preview</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -8008,6 +8033,240 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                         }, function (err) {
                             $("#popupMessage").html(err.stack);
                             $('.popup').toggle("slide");
+                        });
+                    }
+                }
+            }
+        }
+    }
+}]);
+/*************************upload file list**************************************/
+cstore.directive('uploadFileList', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left">'+
+            '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-file\')"><a href>Add</a></button>' +
+            '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteFile()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
+            '<div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + uploadFiles.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<th></th></tr><tr ng-repeat="file in uploadFiles"><td>' +
+            '<input type="checkbox" ng-model="file.deleteStatus"></td><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
+            '<td><a class="edit_btn" ng-click="setFileState(file)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingFileData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllUploadFiles(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                    $scope.deleteFileArray = [];
+                    $scope.deleteFile = function () {
+                        for (var i = 0; i < $scope.uploadFiles.length; i++) {
+                            if ($scope.uploadFiles[i].deleteStatus) {
+                                $scope.deleteFileArray.push({"_id": $scope.uploadFiles[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "file__cstore";
+                        query.operations = angular.copy($scope.deleteFileArray);
+                        $scope.deleteFileArray = [];
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                for (var i = 0; i < $scope.uploadFiles.length; i++) {
+                                    if ($scope.uploadFiles[i].deleteStatus) {
+                                        $scope.uploadFiles.splice(i, 1);
+                                        i--;
+                                    }
+                                }
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                $("#popupMessage").html("This record is referred in another table");
+                                $('.popup').toggle("slide");
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("Some error occur while deleting");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
+
+                    }
+                    $scope.setFileState = function (file) {
+
+                        $scope.filedata["title"] = file.title ? file.title : "";
+                        if (file.programid) {
+                            $scope.getProgramsForFiles(file.programid._id,file._id);
+                        }
+                        $scope.filedata.editImages = file.file;
+                        if (file.file && file.file.length > 0) {
+                            for (var k = 0; k < file.file.length; k++) {
+                                $scope.filedata.uploadedimages[k] = {"filename": file.file[k].name};
+                                $scope.filedata.uploadedimages[k].fileurl = BAAS_SERVER + "/file/download?filekey=" + file.file[k].key + "&ask=" + ASK + "&osk=" + OSK;
+                            }
+                        }
+                        window.location.href = "#!edit-file?q=" + file._id;
+                    }
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('selectProgramFile', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="filedata.selectedProgram" ng-options="program.name for program in filedata.programs" ng-change="getProgramSelectedStoreForFiles(filedata.selectedProgram._id,null)"></select>'
+    }
+}]);
+cstore.directive('addFile', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        replace: 'true',
+        template: '<div><div class="table_1 pull-left"><div>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Title*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="filedata.title"></td>' +
+            '<td class="half_td"><select-program-file></select-program-file></td>' +
+            '</tr>' +
+            '<td class="half_td"><div class="margin_top">Sites</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div multi-select  input-model="filedata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '</tr>' +
+            '<tr><td><app-multi-any-file-upload></app-multi-any-file-upload></td></tr>' +
+            '<tr><td>' +
+            '<ul class="uploadList">' +
+            '<li ng-repeat="uploadedimage in filedata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
+            '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
+            '</li>' +
+            '</ul>' +
+            '</td></tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
+            '<button type="button" ng-click="saveFile()"><a href>Save</a></button>' +
+            '</div><div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="setPathforFile(\'files\')"><a href="">Close</a></button>' +
+            '</div></div></td>' +
+            '</tr>' +
+            '</tbody></table></div>' +
+            '<div class="loadingImage" ng-hide="!loadingAddFileData"><img src="images/loading.gif"></div>' +
+            '</div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+
+                    $scope.loadingAddFileData = true;
+                    $scope.newFile = {};
+                    $scope.setPathforFile = function (path) {
+                        $scope.clearFileContent();
+                        window.location.href = "#!/" + path;
+                    }
+                },
+                post: function ($scope) {
+                    $scope.loadingAddFileData = false;
+                    $scope.saveFile = function () {
+
+                        $scope.CSession = $appService.getSession();
+                        if ($scope.CSession) {
+                            if (!$scope.filedata.title) {
+                                $("#popupMessage").html("Please enter title");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            //if (!$scope.resultData || $scope.resultData.length<=0) {
+                            //    $("#popupMessage").html("Please select atleast one store");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
+
+                            //if (!$scope.anyoFile.fileExist) {
+                            //    $("#popupMessage").html("Please upload file");
+                            //    $('.popup').toggle("slide");
+                            //    return false;
+                            //}
+                            if (!$scope.filedata.uploadedimages || $scope.filedata.uploadedimages.length == 0) {
+                                $("#popupMessage").html("Please upload file");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+
+                            $scope.loadingAddFileData = true;
+
+                            var query = {};
+                            query.table = "file__cstore";
+                            if ($scope.filedata["fileId"]) {
+                                $scope.newFile["_id"] = $scope.filedata["fileId"];
+                            }
+                            $scope.newFile["title"] = $scope.filedata.title;
+                            $scope.fileStoreManagerArray = [];
+                            for (var i = 0; i < $scope.resultData.length; i++) {
+                                $scope.fileStoreManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid});
+                            }
+                            $scope.newFile["store_manager_id"] = {data: $scope.fileStoreManagerArray, "override": "true"};
+
+                            $scope.newFile["programid"] = {"name": $scope.filedata.selectedProgram.name, "_id": $scope.filedata.selectedProgram._id};
+                            if ($scope.filedata.uploadedimages && $scope.filedata.uploadedimages.length == 0) {
+                                query.operations = [$scope.newFile];
+                                $scope.saveFunction(query);
+                            }
+                            else {
+                                $scope.newFile["file"] = [];
+                                for (j = 0; j < $scope.filedata.uploadedimages.length; j++) {
+                                    $scope.newFile["file"][j] = $scope.filedata.uploadedimages[j].image[0];
+                                }
+                                query.operations = [$scope.newFile];
+                                $scope.saveFunction(query);
+                            }
+                        }
+                        else {
+                            $("#popupMessage").html("Please login first");
+                            $('.popup').toggle("slide");
+                        }
+                    };
+                    $scope.saveFunction = function (query) {
+                        $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
+                                $scope.setPathforFile("files");
+                            }
+                            else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            }
+                            else {
+                                $("#popupMessage").html("some error while saving file");
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
+
                         });
                     }
                 }

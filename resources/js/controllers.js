@@ -196,6 +196,21 @@ cstore.config(
             }).when('/promo-notification',{
                 templateUrl:'../promo-notification',
                 controller:'promoNotificationCtrl'
+            }).when('/files',{
+                templateUrl:'../files',
+                controller:'fileCtrl'
+            }).when('/add-file', {
+                templateUrl: '../add-file',
+                controller: 'addFileCtrl'
+            }).when('/edit-file', {
+                templateUrl: '../add-file',
+                controller: 'addFileCtrl'
+            }).when('/all-files', {
+                templateUrl: '../all-files',
+                controller: 'allFilesCtrl'
+            }).when('/file', {
+                templateUrl: '../filedetail',
+                controller: 'fileDetailCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -322,6 +337,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[0];
     $scope.trainingdata = {"trainingCategories": [], "selectedTrainingCategory": "", "stores": [], "assignedStore": "", "uploadedimages": []};
     $scope.surveydata = {};
+    $scope.filedata={"uploadedimages": [],"selectedProgram":"","programs":[]};
     $scope.codedata = {"codeTypes": [], "selectedCodeType": ""};
     $scope.codedata.codeTypes = [
         {"name": "UPC"},
@@ -851,6 +867,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.$apply();
         }
     }
+
+
     $scope.showDownloadableFile = function (file, updateScope) {
         if (file) {
             $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
@@ -1043,7 +1061,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.trainingdata["uploadedimages"] = [];
         $scope.trainingdata["editImages"] = [];
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
-        $scope.productdata.selectedProgram = $scope.productdata.programs[0];
         $scope.getProgramsForTraining(null,null);
     }
     $scope.clearSurveyContent = function () {
@@ -1071,7 +1088,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearPromotionNotificationContent = function () {
 
     }
-    //changes 0605
+    $scope.clearFileContent = function () {
+        $scope.filedata["title"] = "";
+        $scope.filedata["file"] = "";
+        $scope.getProgramsForFiles(null,null);
+        $scope.filedata["uploadedimages"] = [];
+        $scope.filedata["editImages"] = [];
+    }
+
     $scope.getShoppingCartLength = function () {
         if ($scope.currentUser.data.roleid == STOREMANAGER) {
             var query = {"table": "shopping_cart__cstore"};
@@ -1426,6 +1450,75 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                         $scope.surveydata.stores[j].ticked=false;
                     }
                     $scope.surveydata.stores[j].siteName=$scope.surveydata.stores[j].storeid.storename;
+                }
+            }, function (jqxhr, error) {
+                $("#popupMessage").html(error);
+                $('.popup').toggle("slide");
+            });
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    /********************************multiSelectStoreForFiles*********************************************************/
+    $scope.getProgramsForFiles = function (programid,fileid) {
+        var query = {"table": "program__cstore"};
+        query.columns = ["name"];
+        query.orders = {"name": "asc"};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
+            $scope.filedata.programs = programData.response.data;
+            if(programid || fileid){
+                for( var i = 0; i< $scope.filedata.programs.length;i++){
+                    if($scope.filedata.programs[i]._id==programid){
+                        $scope.filedata.selectedProgram = $scope.filedata.programs[i];
+                        break;
+                    }
+                }
+                $scope.getProgramSelectedStoreForFiles(programid,fileid);
+            }
+            else {
+                $scope.filedata.selectedProgram = $scope.filedata.programs[0];
+                $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[0]._id,null);
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getProgramSelectedStoreForFiles = function (programid,trainingid) {
+        var query = {"table": "user_profiles__cstore"};
+        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.filter = {};
+        query.filter.roleid = STOREMANAGER;
+        if(programid){
+            query.filter["storeid.programid._id"] = programid;
+        }
+        query.orders = {"storeid.storename": "asc"};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+            $scope.filedata.stores = storeData.response.data;
+            var promoQuery = {"table": "file__cstore"};
+            promoQuery.columns = ["store_manager_id"];
+            promoQuery.filter = {"_id": trainingid};
+            var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
+            var serviceUrl = "/rest/data";
+            $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeFileData) {
+                for(var j =0;j <$scope.filedata.stores.length;j++){
+                    if (storeFileData.response.data && storeFileData.response.data.length > 0 && storeFileData.response.data[0].store_manager_id && storeFileData.response.data[0].store_manager_id.length) {
+                        $scope.fileAssignedStoreManagers = storeFileData.response.data[0].store_manager_id;
+                        for (var k = 0; k < $scope.fileAssignedStoreManagers.length; k++) {
+                            if ($scope.filedata.stores[j].storeid._id == $scope.fileAssignedStoreManagers[k]._id) {
+                                $scope.filedata.stores[j].ticked=true;
+                            }
+                        }
+                    }
+                    else{
+                        $scope.filedata.stores[j].ticked=false;
+                    }
+                    $scope.filedata.stores[j].siteName=$scope.filedata.stores[j].storeid.storename;
                 }
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
@@ -4502,4 +4595,138 @@ cstore.controller('contactPageCtrl', function ($scope, $appService) {
 });
 cstore.controller('promoNotificationCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
+});
+/*************************file upload**************************/
+cstore.controller('fileCtrl', function ($scope, $appService) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingFileData = false;
+    $scope.venderSearch = [
+        {"value": "title", "name": "Title"},
+        {"value": "programid.name", "name": "Program"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.uploadFiles = [];
+    $appService.auth();
+    $scope.getAllUploadFiles = function (direction, limit, column, searchText) {
+        if ($scope.loadingFileData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+
+        $scope.loadingFileData = true;
+        var query = {"table": "file__cstore"};
+        query.columns = ["title","programid","programid","store_manager_id","file"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (fileData) {
+            $scope.loadingFileData = false;
+            $scope.show.currentCursor = fileData.response.cursor;
+            $scope.uploadFiles = fileData.response.data;
+            for (var i = 0; i < $scope.uploadFiles.length; i++) {
+                $scope.uploadFiles[i]["deleteStatus"] = false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllUploadFiles(1, 10);
+    $scope.setUploadFileOrder = function (sortingCol, sortingType, column, searchText) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllUploadFiles(1, 10, column, searchText);
+    }
+    $scope.getMore = function (column, searchText) {
+        $scope.getAllUploadFiles(1, 10, column, searchText);
+    }
+    $scope.getLess = function (column, searchText) {
+        $scope.getAllUploadFiles(0, 10, column, searchText);
+    }
+    $scope.getProgramsForFiles(null,null);
+});
+
+cstore.controller('addFileCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+
+
+    var fileId = $routeParams.q;
+    if (fileId && fileId != undefined && fileId != "undefined") {
+        $scope.filedata["fileId"] = fileId;
+    }
+    else {
+        delete $scope.filedata["fileId"];
+    }
+})
+cstore.controller('allFilesCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
+    $scope.allFileData = {"loadingData": false, "available": false};
+
+    $scope.allFiles = [];
+    $scope.getFileList = function (cursor, searchText) {
+        if ($scope.allFileData.loadingData) {
+            return false;
+        }
+        $scope.allFileData.loadingData = true;
+        var query = {"table": "file__cstore__cstore"};
+        query.columns = ["title"];
+        query.filter = {};
+        query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
+        if (searchText && searchText != "") {
+            query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.max_rows = 8;
+        query.cursor = cursor;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (fileData) {
+            var rawFileData = fileData.response.data;
+            if ($scope.allFiles.length) {
+                for (var i = 0; i < rawFileData.length; i++) {
+                    $scope.allFiles.push(rawFileData[i]);
+                }
+            }
+            if (!$scope.allFiles.length) {
+                $scope.allFiles = rawFileData;
+
+            }
+            $scope.allFileData.loadingData = false;
+            $scope.cursor = fileData.response.cursor;
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+            $(window).scroll(function () {
+                if ($("#scrollDiv").offset()) {
+                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
+                        if ($scope.cursor != "" && $scope.cursor != undefined) {
+                            $scope.getFileList($scope.cursor, $routeParams.search);
+                        }
+                    }
+                }
+            });
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getInitialFileData = function (cursor) {
+        $scope.getFileList(cursor, $routeParams.search);
+    };
 });
