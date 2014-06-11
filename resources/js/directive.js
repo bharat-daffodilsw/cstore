@@ -8294,10 +8294,6 @@ cstore.directive('downloadFileList', ['$appService', function ($appService, $sco
                         $scope.show.currentCursor = 0;
                         $scope.getAllFilesList(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
-                    $scope.downloadFile = function (file) {
-                        var url = BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
-                        window.open(url, '_blank', 'width=300,height=300');
-                    }
                 }
             }
         }

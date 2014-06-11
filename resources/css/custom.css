@@ -2225,4 +2225,6 @@ label.multiSelect span:hover {
 }
 .downloadFile {
     cursor: pointer;
+    margin-left: 246px;
+    text-align: left;
 }
