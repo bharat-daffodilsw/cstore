@@ -4462,7 +4462,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image"];
+        query.columns = ["name", "image","cooler_template","aisle_template"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
