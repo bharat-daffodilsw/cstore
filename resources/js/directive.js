@@ -416,7 +416,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
-            '</div><div class="delete_btn pull-left"><button ng-click="deleteVendors()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '</div><div class="delete_btn pull-left"><button ng-click="deleteVendors()"  type="button">Delete</button></div><div class="delete_btn pull-left"><button type="button">Export</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
@@ -996,7 +996,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Name*</div></td>' +
-            '<td class="half_td"><div class="margin_top">POP Categroy*</div></td>' +
+            '<td class="half_td"><div class="margin_top">POP category*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.name"></td>' +
@@ -1363,6 +1363,160 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
         }
     }
 }]);
+cstore.directive('appCoolerFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+    return {
+        restrict: "E",
+        replace: true,
+//        scope:true,
+        template: "<div>" +
+            '<div></div>' +
+            "<span><input ng-show='readonlycoolerrow.filenotexist' type='file' id='uploadCoolerFile'/></span>" +
+            "<div ng-hide='readonlycoolerrow.filenotexist'>" +
+            "<span>" +
+            "<div class='pic_preview'><img ng-src='{{readonlycoolerrow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "</span>" +
+            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeCoolerFile()'/>" +
+            "</div>" +
+            "</div>",
+        compile: function () {
+            return {
+                pre: function ($scope) {
+
+                },
+                post: function ($scope, iElement) {
+                    $scope.removeCoolerFile = function () {
+                        delete $scope.coolerrow[$scope.colmetacoolerdata.expression];
+                        $("#uploadCoolerFile").val("");
+                        $scope.readonlycoolerrow.filenotexist = true;
+                        $scope.coolerOFile.fileExist = false;
+                    };
+                    if ($scope.coolerrow[$scope.colmetacoolerdata.expression]) {
+                        $scope.showCoolerFile($scope.coolerrow[$scope.colmetacoolerdata.expression], false);
+                        //changed 2804
+                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
+
+                    } else if (!$scope.readonlycoolerrow.fileurl) {
+                        $scope.readonlycoolerrow.filenotexist = true;
+                    }
+                    $scope.loadCoolerFile = function (evt) {
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test($scope.coolerOFile.name)) {
+                            $scope.coolerfile = {};
+                            $scope.coolerfile.name = $scope.coolerOFile.name;
+                            $scope.coolerfile.result = evt.target.result;
+                            $scope.coolerOFile['data'] = evt.target.result;
+                            $scope.showUploadedCoolerFile($scope.coolerfile);
+                        }
+                        else {
+                            $("#popupMessage").html("You can upload image file only");
+                            $('.popup').toggle("slide");
+                        }
+                    };
+                    $scope.showUploadedCoolerFile = function (file) {
+
+                        var file_ext = $scope.getFileExtension(file.name);
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
+                            $scope.showcoolerimage = true;
+                            $scope.coolerimageData = file.result;
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+
+                        }
+                    }
+                    iElement.bind('change', function () {
+                        $scope.$apply(function () {
+                            $scope.oFCoolerReader = new FileReader();
+                            if (document.getElementById('uploadCoolerFile').files.length === 0) {
+                                return;
+                            }
+                            $scope.coolerOFile = document.getElementById('uploadCoolerFile').files[0];
+                            $scope.oFCoolerReader.onload = $scope.loadCoolerFile;
+                            $scope.oFCoolerReader.readAsDataURL($scope.coolerOFile);
+                            $scope.coolerOFile.fileExist = true;
+                        });
+                    });
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('appAisleFileUpload', ['$appService', '$compile', function ($appService, $compile) {
+    return {
+        restrict: "E",
+        replace: true,
+//        scope:true,
+        template: "<div>" +
+            '<div></div>' +
+            "<span><input ng-show='readonlyaislerow.filenotexist' type='file' id='uploadAisleFile'/></span>" +
+            "<div ng-hide='readonlyaislerow.filenotexist'>" +
+            "<span>" +
+            "<div class='pic_preview'><img ng-src='{{readonlyaislerow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "</span>" +
+            "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeAisleFile()'/>" +
+            "</div>" +
+            "</div>",
+        compile: function () {
+            return {
+                pre: function ($scope) {
+
+                },
+                post: function ($scope, iElement) {
+                    $scope.removeAisleFile = function () {
+                        delete $scope.aislerow[$scope.colmetaaisledata.expression];
+                        $("#uploadAisleFile").val("");
+                        $scope.readonlyaislerow.filenotexist = true;
+                        $scope.aisleOFile.fileExist = false;
+                    };
+                    if ($scope.aislerow[$scope.colmetaaisledata.expression]) {
+                        $scope.showAisleFile($scope.aislerow[$scope.colmetaaisledata.expression], false);
+                        //changed 2804
+                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
+
+                    } else if (!$scope.readonlyaislerow.fileurl) {
+                        $scope.readonlyaislerow.filenotexist = true;
+                    }
+                    $scope.loadAisleFile = function (evt) {
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test($scope.aisleOFile.name)) {
+                            $scope.aislefile = {};
+                            $scope.aislefile.name = $scope.aisleOFile.name;
+                            $scope.aislefile.result = evt.target.result;
+                            $scope.aisleOFile['data'] = evt.target.result;
+                            $scope.showUploadedAisleFile($scope.aislefile);
+                        }
+                        else {
+                            $("#popupMessage").html("You can upload image file only");
+                            $('.popup').toggle("slide");
+                        }
+                    };
+                    $scope.showUploadedAisleFile = function (file) {
+
+                        var file_ext = $scope.getFileExtension(file.name);
+                        if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/gi).test(file.name)) {
+                            $scope.showaisleimage = true;
+                            $scope.aisleimageData = file.result;
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+
+                        }
+                    }
+                    iElement.bind('change', function () {
+                        $scope.$apply(function () {
+                            $scope.oFAisleReader = new FileReader();
+                            if (document.getElementById('uploadAisleFile').files.length === 0) {
+                                return;
+                            }
+                            $scope.aisleOFile = document.getElementById('uploadAisleFile').files[0];
+                            $scope.oFAisleReader.onload = $scope.loadAisleFile;
+                            $scope.oFAisleReader.readAsDataURL($scope.aisleOFile);
+                            $scope.aisleOFile.fileExist = true;
+                        });
+                    });
+                }
+            }
+        }
+    }
+}]);
 cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {
         restrict: "E",
@@ -1474,6 +1628,9 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '</div>' +
             '<div class="delete_btn pull-left">' +
             '<button type="button" ng-click="deleteStoreManagers()"><a href>Delete</a></button>' +
+            '</div>' +
+            '<div class="delete_btn pull-left">' +
+            '<button type="button" ng-click="getExportSites(searchby.value,search.searchContent,sortingCol,sortingType)"><a href>Export</a></button>' +
             '</div>' +
             '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()">' +
@@ -7348,7 +7505,10 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                             $scope.oFile.fileExist = true;
                         }
                         $scope.showFile(program.image, false);
-
+                        if (program.cooler_template) {
+                            $scope.coolerOFile.fileExist = true;
+                        }
+                        $scope.showCoolerFile(program.cooler_template, false);
                         window.location.href = "#!edit-program?q=" + program._id;
                     }
                     if (!$scope.$$phase) {
@@ -7374,6 +7534,14 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.name"></td>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Cooler</div></td>' +
+            '<td class="half_td"><div class="margin_top">Aisle*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><app-cooler-file-upload></app-cooler-file-upload></td>' +
+            '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -7413,7 +7581,17 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 return false;
                             }
                             if (!$scope.oFile.fileExist) {
-                                $("#popupMessage").html("Please upload file");
+                                $("#popupMessage").html("Please upload program image");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+							if (!$scope.coolerOFile.fileExist) {
+                                $("#popupMessage").html("Please upload cooler template");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+							if (!$scope.aisleOFile.fileExist) {
+                                $("#popupMessage").html("Please upload aisle template");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -7440,8 +7618,11 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                     $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                         if (data.response) {
                                             $scope.newProgram["image"] = data.response;
-                                            query.operations = [$scope.newProgram];
-                                            $scope.saveFunction(query);
+                                            //console.log("query without cooler template111 " + JSON.stringify(query));
+											$scope.uploadCoolerTemplate(query);
+											
+                                            //query.operations = [$scope.newProgram];
+                                            //$scope.saveFunction(query);
                                         }
                                         else {
 
@@ -7466,7 +7647,85 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                         }
 
                     };
+                    $scope.uploadCoolerTemplate = function (query) {
+                        if (document.getElementById('uploadCoolerFile').files.length === 0) {
+                            delete $scope.newProgram["cooler_template"];
+                            query.operations = [$scope.newProgram];
+							//console.log("query without cooler template 222 " + JSON.stringify(query));	
+                            $scope.saveFunction(query);
+                        }
+                        else  {
+                            if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.coolerOFile.name)) {
+                                var cooler_file = {};
+                                cooler_file.name = $scope.coolerOFile.name;
+                                cooler_file.type = $scope.coolerOFile.type;
+                                cooler_file.contents = $scope.coolerOFile.data;
+                                cooler_file.ask = ASK;
+                                cooler_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', cooler_file, "POST", "JSON", function (coolerdata) {
+                                    if (coolerdata.response) {
+                                        $scope.newProgram["cooler_template"] = coolerdata.response;
+                                        $scope.uploadAisleTemplate(query);
+										//query.operations = [$scope.newProgram];
+                                        //console.log("query with cooler template " + JSON.stringify(query));
+										//$scope.saveFunction(query);
+                                    }
+                                    else {
 
+                                        $("#popupMessage").html("some error while uploading cooler template please try again");
+                                        $('.popup').toggle("slide");
+
+                                    }
+                                }, function (callbackerror) {
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
+                                });
+                            }
+                            else {
+                                $("#popupMessage").html("Please Upload Image File only");
+                                $('.popup').toggle("slide");
+                            }
+                        }
+                    }
+                    $scope.uploadAisleTemplate = function (query) {
+                        if (document.getElementById('uploadAisleFile').files.length === 0) {
+                            delete $scope.newProgram["aisle_template"];
+                            query.operations = [$scope.newProgram];
+                            console.log("query without aisle template 222 " + JSON.stringify(query));
+                            $scope.saveFunction(query);
+                        }
+                        else  {
+                            if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.aisleOFile.name)) {
+                                var aisle_file = {};
+                                aisle_file.name = $scope.aisleOFile.name;
+                                aisle_file.type = $scope.aisleOFile.type;
+                                aisle_file.contents = $scope.aisleOFile.data;
+                                aisle_file.ask = ASK;
+                                aisle_file.osk = OSK;
+                                $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', aisle_file, "POST", "JSON", function (aisledata) {
+                                    if (aisledata.response) {
+                                        $scope.newProgram["aisle_template"] = aisledata.response;
+                                        query.operations = [$scope.newProgram];
+                                        console.log("query with aisle template " + JSON.stringify(query));
+                                        $scope.saveFunction(query);
+                                    }
+                                    else {
+
+                                        $("#popupMessage").html("some error while uploading aisle template please try again");
+                                        $('.popup').toggle("slide");
+
+                                    }
+                                }, function (callbackerror) {
+                                    $("#popupMessage").html(callbackerror);
+                                    $('.popup').toggle("slide");
+                                });
+                            }
+                            else {
+                                $("#popupMessage").html("Please Upload Image File only");
+                                $('.popup').toggle("slide");
+                            }
+                        }
+                    }
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             $scope.loadingAddProgramData = false;
@@ -7527,7 +7786,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button><button>Export</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -7551,15 +7810,15 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
                     }
                     $scope.orderDateFilter = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllOrders(1, 10, null, null,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
+                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
 
                     }
-                    $scope.printPreview=function(){                        
+                    $scope.printPreview=function(){
                         console.log($scope.orderFilterData.start_date+ "hdgvchjgdhsjhbnbx"+$scope.orderFilterData.end_date);
 
                         var query = {"table": "orders__cstore"};
@@ -7589,14 +7848,14 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
                                 '{{order.storeid.storename}}</td><td  ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
                                 '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
                                 '</tr></table>';
-							//console.log("11111" + $scope.myHtml);
-							var orderHtml = $scope.myHtml;
-							//$scope.testFunction();
-								//var w = $window.open();
-								//console.log(w);
-								//w.document.write(orderHtml);
-								//w.print();
-								//w.close();							
+                            //console.log("11111" + $scope.myHtml);
+                            var orderHtml = $scope.myHtml;
+                            //$scope.testFunction();
+                            //var w = $window.open();
+                            //console.log(w);
+                            //w.document.write(orderHtml);
+                            //w.print();
+                            //w.close();
                             window.location.href = "#!/print-preview";
                             //$scope.exportFunction();
                             //$scope.clearOrderContent();
@@ -7604,18 +7863,18 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
                             $("#popupMessage").html(error);
                             $('.popup').toggle("slide");
                         })
-						
+
                     }
-					$scope.testFunction = function(){
-						$scope.myHtml2='<div ng-repeat="order in download.orders">{{order.status}} Test</div>';
-						var orderHtml2 = $scope.myHtml2;
-								console.log("222222" + orderHtml2);
-								var w = window.open();
-								w.document.write(orderHtml2);
-								console.log(JSON.stringify($scope.download.orders));
-								//w.print();
-								//w.close();
-					}
+                    $scope.testFunction = function(){
+                        $scope.myHtml2='<div ng-repeat="order in download.orders">{{order.status}} Test</div>';
+                        var orderHtml2 = $scope.myHtml2;
+                        console.log("222222" + orderHtml2);
+                        var w = window.open();
+                        w.document.write(orderHtml2);
+                        console.log(JSON.stringify($scope.download.orders));
+                        //w.print();
+                        //w.close();
+                    }
 
                     $scope.updateStatusOfOrder = function (order) {
                         $scope.loadingOrderData = true;
@@ -8013,7 +8272,7 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                         var mailContent= {}
                         mailContent["to"] = $scope.userNotification;
                         mailContent["subject"] = "Promo Notification";
-                        mailContent["html"]="<div>Hello<br/>New promos have been uploaded.You can it in your portal.</div><div>Thank You</div>";
+                        mailContent["html"]="<div>Hello<br/>New promos have been uploaded.You can check it in your portal.</div><div>Thank You</div>";
 
 
                         $appService.sendNotification(mailContent, ASK, OSK, $scope.currentSession["usk"], function (callBackData) {

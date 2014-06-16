@@ -232,13 +232,19 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.row = {};
     $scope.colmetadata = {"expression": "postfile", "type": "file"};
     var FILE_KEY = 'key';
-    //changes made by anuradha
     $scope.loadingstatus = false;
-    $scope.docfile = {};
-    $scope.docOFile = {};
-    $scope.readonlydocrow = {};
-    $scope.docrow = {};
-    $scope.colmetadocdata = {"expression": "postfile", "type": "file"};
+    $scope.coolerfile = {};
+    $scope.coolerOFile = {};
+    $scope.coolerOFile.fileExist = false;
+    $scope.readonlycoolerrow = {};
+    $scope.coolerrow = {};
+    $scope.colmetacoolerdata = {"expression": "postfile", "type": "file"};
+    $scope.aislefile = {};
+    $scope.aisleOFile = {};
+    $scope.aisleOFile.fileExist = false;
+    $scope.readonlyaislerow = {};
+    $scope.aislerow = {};
+    $scope.colmetaaisledata = {"expression": "postfile", "type": "file"};
     /*********************/
     $scope.data = {"countries": [], "cities": [], "states": [], "selectedCity": "", "selectedState": "", "selectedVendorCategory": "", "selectedCountry": "", "vendorCategories": []};
     $scope.data.vendorCategories = [
@@ -867,8 +873,60 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.$apply();
         }
     }
-
-
+    $scope.showCoolerFile = function (coolerFile, updateScope) {
+        if (updateScope) {
+            if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(coolerFile[0].name)) {
+                $scope.readonlycoolerrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + coolerFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+                $scope.readonlycoolerrow.fileType = "imagefile";
+                $scope.readonlycoolerrow.filenotexist = false;
+                $scope.readonlycoolerrow.imgWidth = 75;
+                $scope.readonlycoolerrow.imgHeight = 75;
+            }
+            else {
+                $scope.readonlycoolerrow.filenotexist = true;
+                $scope.popuptext = "Please Upload Image File only";
+                $('#pop_forgt').toggle("slide");
+            }
+            $scope.coolerrow[$scope.colmetacoolerdata.expression] = coolerFile;
+        }
+        else if (coolerFile && coolerFile.length > 0) {
+            $scope.readonlycoolerrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + coolerFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+            $scope.readonlycoolerrow.fileType = "imagefile";
+            $scope.readonlycoolerrow.filenotexist = false;
+            $scope.readonlycoolerrow.imgWidth = 75;
+            $scope.readonlycoolerrow.imgHeight = 75;
+        }
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
+    }
+    $scope.showAisleFile = function (aisleFile, updateScope) {
+        if (updateScope) {
+            if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(aisleFile[0].name)) {
+                $scope.readonlyaislerow.fileurl = BAAS_SERVER + "/file/render?filekey=" + aisleFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+                $scope.readonlyaislerow.fileType = "imagefile";
+                $scope.readonlyaislerow.filenotexist = false;
+                $scope.readonlyaislerow.imgWidth = 75;
+                $scope.readonlyaislerow.imgHeight = 75;
+            }
+            else {
+                $scope.readonlyaislerow.filenotexist = true;
+                $scope.popuptext = "Please Upload Image File only";
+                $('#pop_forgt').toggle("slide");
+            }
+            $scope.aislerow[$scope.colmetaaisledata.expression] = aisleFile;
+        }
+        else if (aisleFile && aisleFile.length > 0) {
+            $scope.readonlyaislerow.fileurl = BAAS_SERVER + "/file/render?filekey=" + aisleFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+            $scope.readonlyaislerow.fileType = "imagefile";
+            $scope.readonlyaislerow.filenotexist = false;
+            $scope.readonlyaislerow.imgWidth = 75;
+            $scope.readonlyaislerow.imgHeight = 75;
+        }
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
+    }
     $scope.showDownloadableFile = function (file, updateScope) {
         if (file) {
             $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/download?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
@@ -2029,6 +2087,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingVenderData = false;
+    $scope.testSortingCol="";
     $scope.venderSearch = [
         {"value": "firstname", "name": "Name"},
         {"value": "address", "name": "Address"},
@@ -2097,6 +2156,28 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
     }
     $scope.getEditCountries(null, null, null, $scope.data);
     $scope.getProgramList();
+    $scope.getExportVendors = function (column,searchText,sortingCol,sortingType) {
+        var query = {"table": "vendors__cstore"};
+        query.columns = ["firstname","lastname",{"expression": "programid", "columns": ["_id", "name"]},"email","address","address2",{"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]},"category",{"expression":"postalcode", "type":"number"},"contact"];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if (sortingCol && sortingType) {
+            query.orders[sortingCol] = sortingType;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/excelexport";
+        var tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
+        window.open(tempUrl,'_blank', 'width=300,height=300');
+        //$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+        //    console.log("done");
+        //}, function (jqxhr, error) {
+        //    $("#popupMessage").html(error);
+        //    $('.popup').toggle("slide");
+        //})
+    }
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -2290,6 +2371,28 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
     }
     $scope.getEditCountries(null, null, null, $scope.storedata);
     $scope.getProgramList();
+    $scope.getExportSites = function (column,searchText,sortingCol,sortingType) {
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["siteid","storename",{"expression": "programid", "columns": ["_id", "name"]},"shift","contact","email","address",{"expression": "countryid", "columns": ["_id", "name"]},{"expression": "stateid", "columns": ["_id", "name"]},{"expression": "cityid", "columns": ["_id", "name"]},{"expression":"postalcode","type":"number"},"pos_type","pos_version","loyalty_status","reward_point","brands","pump_brand","pump_model",{"expression":"manager","columns":["_id","name"]}];
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter = {};
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {};
+        if (sortingCol && sortingType) {
+            query.orders[sortingCol] = sortingType;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/excelexport";
+        var tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
+        window.open(tempUrl,'_blank', 'width=300,height=300');
+        //$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+        //    console.log("done");
+        //}, function (jqxhr, error) {
+        //    $("#popupMessage").html(error);
+        //    $('.popup').toggle("slide");
+        //})
+    }
 });
 
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routeParams) {
@@ -4515,6 +4618,37 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
             window.location.href = uri + base64(format(template, ctx))
         }
     })()
+    $scope.getExportOrders = function (column,searchText,sortingCol,sortingType,orderStartDate,orderEndDate) {
+
+        var query = {"table": "orders__cstore"};
+        query.columns = [{"expression":"userid","columns":["_id","username"]},{"expression":"storeid","columns":["_id","storename"]},"status","sub_total",{"expression":"total","type":"currency"},{"expression": "order_date","type":"date", "format": "MM/DD/YYYY"}];
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+                query.filter["storeid._id"] = $scope.currentUser["data"]["storeid"];
+            }
+        }
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (orderStartDate && orderStartDate != "" && orderEndDate && orderEndDate != "") {
+            query.filter["order_date"] = {"$gte":orderStartDate,"$lte": orderEndDate};
+        }
+        if (sortingCol && sortingType) {
+            query.orders = {};
+            query.orders[sortingCol] = sortingType;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/excelexport";
+        var tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
+        window.open(tempUrl,'_blank', 'width=300,height=300');
+        //$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
+        //    console.log("done");
+        //}, function (jqxhr, error) {
+        //    $("#popupMessage").html(error);
+        //    $('.popup').toggle("slide");
+        //})
+    }
 });
 
 cstore.controller('printPreviewOrderCtrl', function ($scope, $appService) {
