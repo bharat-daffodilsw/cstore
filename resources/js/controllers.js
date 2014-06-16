@@ -1135,9 +1135,15 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
     $scope.clearProgramContent = function () {
         $scope.programdata["name"] = "";
-        $scope.productdata["image"] = "";
+        $scope.programdata["image"] = "";
         $scope.readonlyrow.fileurl = "";
         $scope.oFile.fileExist = false;
+        $scope.programdata["cooler_template"] = "";
+        $scope.readonlycoolerrow.fileurl = "";
+        $scope.coolerOFile.fileExist = false;
+        $scope.programdata["aisle_template"] = "";
+        $scope.readonlyaislerow.fileurl = "";
+        $scope.aisleOFile.fileExist = false;
     }
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
