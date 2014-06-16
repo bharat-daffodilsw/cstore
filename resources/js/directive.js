@@ -7509,6 +7509,10 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                             $scope.coolerOFile.fileExist = true;
                         }
                         $scope.showCoolerFile(program.cooler_template, false);
+						if (program.aisle_template) {
+                            $scope.aisleOFile.fileExist = true;
+                        }
+                        $scope.showAisleFile(program.aisle_template, false);
                         window.location.href = "#!edit-program?q=" + program._id;
                     }
                     if (!$scope.$$phase) {
