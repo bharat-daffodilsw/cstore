@@ -7608,8 +7608,9 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             $scope.newProgram["name"] = $scope.programdata.name;
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
-                                query.operations = [$scope.newProgram];
-                                $scope.saveFunction(query);
+                                $scope.uploadCoolerTemplate(query);
+								//query.operations = [$scope.newProgram];
+                                //$scope.saveFunction(query);
                             }
                             else {
                                 if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)) {
@@ -7654,9 +7655,10 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                     $scope.uploadCoolerTemplate = function (query) {
                         if (document.getElementById('uploadCoolerFile').files.length === 0) {
                             delete $scope.newProgram["cooler_template"];
-                            query.operations = [$scope.newProgram];
+                            $scope.uploadAisleTemplate(query);
+							//query.operations = [$scope.newProgram];
 							//console.log("query without cooler template 222 " + JSON.stringify(query));	
-                            $scope.saveFunction(query);
+                            //$scope.saveFunction(query);
                         }
                         else  {
                             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.coolerOFile.name)) {
