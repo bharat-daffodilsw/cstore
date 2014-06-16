@@ -7544,7 +7544,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><div class="margin_top">Aisle*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><app-cooler-file-upload></app-cooler-file-upload></td>' +
+            '<td class="product_image half_td"><app-cooler-file-upload></app-cooler-file-upload></td>' +
             '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
             '</tr>' +
             '</table>' +
