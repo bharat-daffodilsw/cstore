@@ -106,15 +106,33 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="admin_menu pull-left">' +
-            '<ul><li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li><li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Program</a></li><li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>' +
+            '<ul>'+
+            '<li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li>'+
+            '<li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>'+
+            '<li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Users</a></li>'+
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
-            '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li><li ng-click="clearSurveyContent()">' +
-            '<a href="#!/surveys" active-link="active">Surveys</a></li><li id="orders" ng-click="clearOrderContent()"><a href="#!/orders"active-link="active">Orders</a></li><li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li><li id="setup"><a href active-link="active">Setup</a><div class="setup pull-left"><ul><li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Manage Users</a></li>' +
+            '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li>'+
+            '<li ng-click="clearSurveyContent()"><a href="#!/surveys" active-link="active">Surveys</a></li>'+
+            '<li id="orders" ng-click="clearOrderContent()"><a href="#!/orders"active-link="active">Orders</a></li>'+
+            '<li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li>'+
+            '<li id="setup"><a href active-link="active">Setup</a>'+
+            '<div class="setup pull-left"><ul>'+
+            '<li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Program</a></li>' +
             '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
-            '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a>' +
-            '</li><li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li><li id="cities"><a href="#!/cities" active-link="active">Cities</a></li><li id="states"><a href="#!/states" active-link="active">States</a></li><li id="countries">' +
-            '<a href="#!/countries"active-link="active">Countries</a></li></ul></div></li></ul></div>',
+            '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a></li>' +
+            '<li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li>'+
+            '<li id="cities"><a href="#!/cities" active-link="active">Cities</a></li>'+
+            '<li id="states"><a href="#!/states" active-link="active">States</a></li>'+
+            '<li id="countries"><a href="#!/countries"active-link="active">Countries</a></li>'+
+            '</ul></div></li>'+
+            '<li id="setup"><a href active-link="active">Reports</a>'+
+            '<div class="setup pull-left"><ul>'+
+            '<li><a href="#!/vendor-report" active-link="active">Vendors</a></li>' +
+            '<li><a href="#!/site-info-report" active-link="active">Site Info</a></li>' +
+            '<li><a href="#!/order-report" active-link="active">Orders</a></li>' +
+            '</ul></div></li>'+
+            '</ul></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -416,7 +434,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-vendor\')" type="button">Add</button>' +
-            '</div><div class="delete_btn pull-left"><button ng-click="deleteVendors()"  type="button">Delete</button></div><div class="delete_btn pull-left"><button type="button">Export</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '</div><div class="delete_btn pull-left"><button ng-click="deleteVendors()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendors.length}} from start' +
@@ -7871,16 +7889,6 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
                         })
 
                     }
-                    $scope.testFunction = function(){
-                        $scope.myHtml2='<div ng-repeat="order in download.orders">{{order.status}} Test</div>';
-                        var orderHtml2 = $scope.myHtml2;
-                        console.log("222222" + orderHtml2);
-                        var w = window.open();
-                        w.document.write(orderHtml2);
-                        console.log(JSON.stringify($scope.download.orders));
-                        //w.print();
-                        //w.close();
-                    }
 
                     $scope.updateStatusOfOrder = function (order) {
                         $scope.loadingOrderData = true;
@@ -8564,3 +8572,313 @@ cstore.directive('downloadFileList', ['$appService', function ($appService, $sco
         }
     }
 }]);
+/**********************Reports************************/
+cstore.directive('filterProgram', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedProgram" ng-options="program.name for program in filterdata.programs" ng-change="filterByProgram(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"><option value="">-- Choose Program --</option></select>'
+    }
+}]);
+
+cstore.directive('filterStates', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedState" ng-options="state.name for state in filterdata.states" ng-change="filterByState(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"><option value="">-- Choose State --</option></select>'
+    }
+}]);
+cstore.directive('vendorReport', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="filter_div pull-left"><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div><div class="pull-left filter_table"><filter-states></filter-states></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendorReport.length}} from start' +
+            '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="add_delete"><div class="delete_btn pull-right"><button type="button" ng-click="exportVendors()">Export</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div></div>' +
+            '<div class="table pull-left vendor_report" id="printVendors"><table id="vendorTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+            '<th><span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'firstname\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'firstname\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div></span></th>'+
+            '<th><span>Address</span>' +
+            '<span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'address\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'address\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th>'+
+            '<th><span>Address 2</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'address2\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'address2\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th>'+
+            '<th><span>City</span><span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'city.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'city.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th><th><span>State</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'state.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'state.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div></span></th>'+
+            '<th><span>Country</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'country.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'country.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th>'+
+            '<th><span>Postal Code</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'postalcode\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'postalcode\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th>'+
+            '<th><span>Category</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'category\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'category\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th>'+
+            '<th><span>Email</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th><th>' +
+            '<span>Program</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>	</span></th><th><span>Contact No.</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div><div class="sortDown" ng-click="setOrder(\'contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div></span></th>' +
+            '</tr><tr ng-repeat="vendor in vendorReport"><td>{{vendor.firstname}} {{vendor.lastname}}</td><td>{{vendor.address}}' +
+            '</td>'+
+            '<td>{{vendor.address2}}</td><td>{{vendor.city.name}}</td>'+
+            '<td>{{vendor.state.name}}</td><td>{{vendor.country.name}}</td>'+
+            '<td>{{vendor.postalcode}}</td><td>{{vendor.category}}</td>'+
+            '<td>{{vendor.email}}</td><td>{{vendor.programid.name}}</td><td>{{vendor.contact}}</td>'+
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingVendorReportData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllVendorsReport(1, 200, $scope.searchby.value, $scope.search.searchContent,$scope.filterdata.selectedProgram,$scope.filterdata.selectedState);
+                    }
+                    $scope.printDiv = function(divName) {
+                        var printContents = document.getElementById(divName).innerHTML;
+                        var popupWin = window.open();
+                        popupWin.document.write('<html><head><style>table { border:solid #000 !important;  border-width:1px 0 0 1px !important;} th, td { border:solid #000 !important;border-width:0 1px 1px 0 !important;}</style></head><body onload="window.print()"><table border="1">' + printContents + '</table></body></html>');
+                        //popupWin..print();
+                        popupWin.document.close();
+                    }
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('filterProgramSite', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedProgram" ng-options="program.name for program in filterdata.programs" ng-change="filterByProgram(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift)"><option value="">-- Choose Program --</option></select>'
+    }
+}]);
+cstore.directive('filterShift', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="storedata.selectedShift" ng-options="shift.name for shift in storedata.shifts" ng-change="filterByShift(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift)"><option value="">-- Choose Shift --</option></select>'
+    }
+}]);
+cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="filter_div pull-left">' +
+            '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left">' +
+            '<form ng-submit="search()">' +
+            '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form>' +
+            '</div><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
+            '<div class="pull-left filter_table"><filter-shift></filter-shift></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + siteInfoReport.length}} from start' +
+            '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '<div class="add_delete"><div class="delete_btn pull-right"><button type="button" ng-click="exportSites()">Export</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>'+
+            '<div class="table_3 pull-left site_info" id="printSiteInfo">' +
+            '<table id="siteTable" width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<th><span>Site Id</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'siteid\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'siteid\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Site Name</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Program</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Manager Name</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Manager Shift<span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Site Phone</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Manager Phone</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Email</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Manager Email</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Address</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'address\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'address\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Country</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'countryid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'countryid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>State</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'stateid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'stateid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>City</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'cityid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'cityid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Postal Code</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'postalcode\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'postalcode\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>POS Type</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_type\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pos_type\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>POS Version</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_version\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pos_version\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Loyalty Status</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Reward Type</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Brand</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'brands\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'brands\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>' +
+            '<th><span>Pump Brand</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_brand\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pump_brand\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '<th><span>Pump Model</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_model\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pump_model\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '</span></th>'+
+            '</tr><tr ng-repeat="storeManager in siteInfoReport">' +
+            '<td>{{storeManager.siteid}}</td><td>{{storeManager.storename}}</td><td>{{storeManager.programid.name}}</td><td>{{storeManager.manager.name}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.contact}}</td>' +
+            '<td>{{storeManager.manager.contact}}</td><td>{{storeManager.email}}</td><td>{{storeManager.manager.email}}</td><td>{{storeManager.address}}</td><td>{{storeManager.countryid.name}}</td>' +
+            '<td>{{storeManager.stateid.name}}</td><td>{{storeManager.cityid.name}}</td><td>{{storeManager.postalcode}}</td><td>{{storeManager.pos_type}}</td><td>{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td>'+
+            '<td>{{storeManager.brands}}</td><td>{{storeManager.pump_brand}}</td><td>{{storeManager.pump_model}}</td>' +
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingSiteInfoReportData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+                    $scope.setPath = function (path) {
+                        window.location.href = "#!/" + path;
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllSiteInfoReport(1, 200, $scope.searchby.value, $scope.search.searchContent,$scope.filterdata.selectedProgram,$scope.storedata.selectedShift);
+                    }
+                    $scope.printSiteInfo = function(divName) {
+                        var printContents = document.getElementById(divName).innerHTML;
+                        var popupWin = window.open();
+                        popupWin.document.write('<html><head><style>table { border:solid #000 !important;  border-width:1px 0 0 1px !important;} th, td { border:solid #000 !important;border-width:0 1px 1px 0 !important;}</style></head><body onload="window.print()"><table border="1">' + printContents + '</table></body></html>');
+                        //popupWin..print();
+                        popupWin.document.close();
+                    }
+                }
+            }
+        }
+    }
+}]);
+
+cstore.directive('filterStatus', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedStatus" ng-options="status.name for status in filterdata.status" ng-change="filterByStatus(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><option value="">-- Choose Status --</option></select>'
+    }
+}]);
+
+cstore.directive('filterProgramOrder', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedProgram" ng-options="program.name for program in filterdata.programs" ng-change="filterByProgram(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><option value="">-- Choose Program --</option></select>'
+    }
+}]);
+
+cstore.directive('filterSite', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedSite" ng-options="site.storename for site in filterdata.sites" ng-change="filterBySite(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><option value="">-- Choose Site --</option></select>'
+    }
+}]);
+cstore.directive('orderReport', ['$appService', function ($appService, $scope,$window) {
+    return {
+        restrict: 'E',
+        template: '<div class="add_delete pull-left">' +
+            '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
+            '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
+            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="exportOrders()">Export</button><button ng-click="printOrders(\'printOrder\')">Print</button></div>'+
+            '<div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orderReport.length}} from start</div>' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
+            '<div class="filter_div pull-left">'+
+            '<div class="pull-left filter_text">Filter</div>'+
+            '<div class="pull-left filter_table"><filter-program-order></filter-program-order></div>'+
+            '<div class="pull-left filter_table"><filter-site></filter-site></div>'+
+            '<div class="pull-left filter_table"><filter-status></filter-status></div></div>'+
+            '<div class="table pull-left" id="printOrder">' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0" id="orderTable"><tr>' +
+            '<th>POP</th><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div><div class="sortDown" ng-click="sortOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>	</span></th>' +
+            '<th><span>Program </span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'storeid.programid.name\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div><div class="sortDown" ng-click="sortOrder(\'storeid.programid.name\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>	</span></th>' +
+            '<th>Total<span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'total\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div><div class="sortDown" ng-click="sortOrder(\'total\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>	</span></th><th><span>Order Date</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'order_date\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>' +
+            '<div class="sortDown" ng-click="sortOrder(\'order_date\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>	</span></th>' +
+            '<th><span>Status</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'status\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div><div class="sortDown" ng-click="sortOrder(\'status\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div></span></th></tr><tr ng-repeat="order in orderReport">' +
+            '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
+            '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td>' +
+            '{{order.storeid.storename}}</td><td>' +
+            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
+            '</tr></table>' +
+            '</div><div class="loadingImage" ng-hide="!loadingOrderReportData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope,$window) {
+                    $scope.setPath = function (orderid) {
+                        window.location.href = "#!/order-detail?orderid=" + orderid;
+                    }
+					$scope.orderDateFilter = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllOrderReport(1, 200, $scope.searchby.value,$scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date,$scope.filterdata.selectedProgram,$scope.filterdata.selectedSite,$scope.filterdata.selectedStatus);
+
+                    }
+                    $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllOrderReport(1, 10, $scope.searchby.value,$scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date,$scope.filterdata.selectedProgram,$scope.filterdata.selectedSite,$scope.filterdata.selectedStatus);
+                    }                   
+					$scope.printOrders = function(divName) {
+                        var printContents = document.getElementById(divName).innerHTML;
+                        var popupWin = window.open();
+                        popupWin.document.write('<html><head><style> #orderTable { border:solid #000 !important;  border-width:1px 0 0 1px !important;} #orderTable th, td { border:solid #000 !important;border-width:0 1px 1px 0 !important;}</style></head><body onload="window.print()"><table border="1">' + printContents + '</table></body></html>');
+                        //popupWin..print();
+                        popupWin.document.close();
+                    }
+                    
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                },
+                post:function($scope){
+
+                }
+            }
+        }
+    }
+}]);
+
+

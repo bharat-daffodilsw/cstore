@@ -211,6 +211,15 @@ cstore.config(
             }).when('/file', {
                 templateUrl: '../filedetail',
                 controller: 'fileDetailCtrl'
+            }).when('/vendor-report', {
+                templateUrl: '../vendor-report',
+                controller: 'vendorReportCtrl'
+            }).when('/site-info-report', {
+                templateUrl: '../site-info-report',
+                controller: 'siteInfoReportCtrl'
+            }).when('/order-report', {
+                templateUrl: '../order-report',
+                controller: 'orderReportCtrl'
             })
             .otherwise(
 //            {"redirectTo":"/login.html"}
@@ -222,6 +231,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
     $scope.orderFilterData={"start_date":"","end_date":""};
+	$scope.filterdata={"programs":"","selectedProgram":"","states":[],"selectedState":"","status":[],"selectedStatus":"","sites":[],"selectedSite":""};
     $scope.download={"orders":[]};
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
@@ -361,7 +371,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     ];
     $scope.cartData = {"quantity": []};
     $scope.billingdata = {"bill_address": {}, "shipping_address": {}, "setData": ""};
-    //$scope.billingdata.setData=
+    $scope.filterdata.status = [
+        {"name": "In Progress"},
+        {"name": "Delivered"},
+        {"name":"Cancelled"}
+    ];
     /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
@@ -969,7 +983,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     $scope.getStores = function () {
-        //change
         var query = {"table": "storemanagers__cstore"};
         query.columns = ["storename"];
         query.orders = {"storename": "asc"};
@@ -980,6 +993,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.trainingdata.stores = storeData.response.data;
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
             $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
+			$scope.filterdata.sites = storeData.response.data;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -1302,6 +1316,21 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.productdata.programs = programData.response.data;
             $scope.productdata.selectedProgram = $scope.productdata.programs[0];
+			$scope.filterdata.programs = programData.response.data;
+            //$scope.filterdata.selectedProgram = $scope.filterdata.programs[0];
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+	$scope.getStateListForFilter = function () {
+        var query = {"table": "states__cstore"};
+        query.columns = ["name"];
+        query.orders = {"name": "asc"};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {            
+			$scope.filterdata.states = stateData.response.data;            
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -4880,4 +4909,333 @@ cstore.controller('allFilesCtrl', function ($scope, $appService, $routeParams) {
             $scope.downloadUrl = BAAS_SERVER + "/file/download?filekey=" + file.key + "&ask=" + ASK + "&osk=" + OSK;
         }
     }
+});
+/*************************Reports***********************/
+cstore.controller('vendorReportCtrl', function ($scope, $appService, $location) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingVendorReportData = false;    
+    $scope.venderSearch = [
+        {"value": "firstname", "name": "Name"},
+        {"value": "address", "name": "Address"},
+		{"value": "address2", "name": "Address"},
+		{"value": "postalcode", "name": "Postal Code"},
+        {"value": "city.name", "name": "City"},
+		{"value": "country.name", "name": "Country"},
+        {"value": "email", "name": "Email"},
+		{"value": "category", "name": "Category"},
+        {"value": "contact", "name": "Contact"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.vendorReport = [];
+    $appService.auth();
+    $scope.getAllVendorsReport = function (direction, limit, column, searchText,programFilter,stateFilter) {
+        if ($scope.loadingVendorReportData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingVendorReportData = true;
+
+        var query = {"table": "vendors__cstore"};
+        query.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+        query.filter = {};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (programFilter && programFilter!="") {           
+            query.filter["programid._id"] = programFilter._id;
+        }
+		if (stateFilter && stateFilter!="") {
+            query.filter["state._id"] = stateFilter._id;
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorReportData) {
+            $scope.loadingVendorReportData = false;
+            $scope.show.currentCursor = vendorReportData.response.cursor;
+            $scope.vendorReport = vendorReportData.response.data;            
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllVendorsReport(1, 200);
+    $scope.setOrder = function (sortingCol, sortingType, column, searchText,programFilter,stateFilter) {
+        $scope.show.currentCursor = 0;
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllVendorsReport(1, 200, column, searchText,programFilter,stateFilter);
+    }
+    $scope.getMore = function (column, searchText,programFilter,stateFilter) {
+        $scope.getAllVendorsReport(1, 200, column, searchText,programFilter,stateFilter);
+    }
+    $scope.getLess = function (column, searchText,programFilter,stateFilter) {
+        $scope.getAllVendorsReport(0, 200, column, searchText,programFilter,stateFilter);
+    }
+    $scope.getProgramList();
+	$scope.getStateListForFilter();
+    $scope.filterByProgram=function(column, searchText,programFilter,stateFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllVendorsReport(1, 200, column, searchText,programFilter,stateFilter)
+    }
+	$scope.filterByState=function(column, searchText,programFilter,stateFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllVendorsReport(1, 200, column,searchText,programFilter,stateFilter)
+    }
+	$scope.exportVendors=function(){
+        vendorTableToExcel('vendorTable', 'vendor List');
+    }
+    var vendorTableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+        return function(table, name) {
+            if (!table.nodeType){
+                table = document.getElementById(table)
+                var myvendorclone = $("#vendorTable").clone();
+                var vendorHtml=myvendorclone.html();
+            }
+            var ctx = {worksheet: name || 'Worksheet', table: vendorHtml}
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()	
+});
+
+cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingSiteInfoReportData = false;    
+    $scope.venderSearch = [
+        {"value": "siteid", "name": "Site Id"},
+        {"value": "storename", "name": "Site Name"},
+        {"value": "manager.name", "name": "Manager Name"},
+        {"value": "contact", "name": "Site Phone"},
+        {"value": "manager.contact", "name": "Manager Phone"},
+        {"value": "email", "name": "Email"},
+        {"value": "manager.email", "name": "Manager Email"},
+        {"value": "address", "name": "Address"},
+        {"value": "countryid.name", "name": "Country"},
+        {"value": "stateid.name", "name": "State"},
+        {"value": "cityid.name", "name": "City"},
+        {"value": "postalcode", "name": "Postal Code"},
+        {"value": "pos_type", "name": "POS Type"},
+        {"value": "pos_version", "name": "POS Version"},
+        {"value": "loyalty_status", "name": "Loyalty Status"},
+        {"value": "reward_point", "name": "Reward Type"},
+        {"value": "brands", "name": "Brand"},
+        {"value": "pump_brand", "name": "Pump Brand"},
+        {"value": "pump_model", "name": "Pump Model"},
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.siteInfoReport = [];
+    $appService.auth();
+    $scope.getAllSiteInfoReport = function (direction, limit, column, searchText,programFilter,shiftFilter) {
+        if ($scope.loadingSiteInfoReportData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingSiteInfoReportData = true;
+
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["programid", "siteid", "manager.email", "manager.contact", "manager.name", "address", "cityid", "countryid", "manager", "postalcode", "stateid", "storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point", "pump_brand", "pump_model", "address2"];
+        query.filter = {};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (programFilter && programFilter!="") {
+            query.filter["programid._id"] = programFilter._id;
+        }
+        if (shiftFilter && shiftFilter!="") {
+            query.filter["shift"] = shiftFilter.name;
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (siteReportData) {
+            $scope.loadingSiteInfoReportData = false;
+            $scope.show.currentCursor = siteReportData.response.cursor;
+            $scope.siteInfoReport = siteReportData.response.data;            
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllSiteInfoReport(1, 200);
+    $scope.setStoreOrder = function (sortingCol, sortingType, column, searchText,programFilter,shiftFilter) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllSiteInfoReport(1, 200, column, searchText,programFilter,shiftFilter);
+    }
+    $scope.getMore = function (column, searchText,programFilter,shiftFilter) {
+        $scope.getAllSiteInfoReport(1, 200, column, searchText,programFilter,shiftFilter);
+    }
+    $scope.getLess = function (column, searchText,programFilter,shiftFilter) {
+        $scope.getAllSiteInfoReport(0, 200, column, searchText,programFilter,shiftFilter);
+    }
+    $scope.getProgramList();
+	
+    $scope.filterByProgram=function(column, searchText,programFilter,shiftFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllSiteInfoReport(1, 200, column, searchText,programFilter,shiftFilter);
+    }
+    $scope.filterByShift=function(column, searchText,programFilter,shiftFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllSiteInfoReport(1, 200, column, searchText,programFilter,shiftFilter);
+    }
+	$scope.exportSites=function(){
+        siteTableToExcel('siteTable', 'Site Info');
+    }
+    var siteTableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+        return function(table, name) {
+            if (!table.nodeType){
+                table = document.getElementById(table)
+                var mysiteclone = $("#siteTable").clone();
+                var siteHtml=mysiteclone.html();
+            }
+            var ctx = {worksheet: name || 'Worksheet', table: siteHtml}
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()	
+});
+
+cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
+    $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.loadingOrderReportData = false;
+    $scope.venderSearch = [
+        {"value": "storeid.storename", "name": "Site Name"},
+        {"value": "status", "name": "Status"}
+    ];
+    $scope.searchby = $scope.venderSearch[0];
+    $scope.orderReport = [];
+    $appService.auth();
+    $scope.getAllOrderReport = function (direction, limit, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter) {
+        if ($scope.loadingSiteInfoReportData) {
+            return false;
+        }
+        if (direction == 1) {
+            $scope.show.preCursor = $scope.show.currentCursor;
+        } else {
+            $scope.show.preCursor = $scope.show.preCursor - limit;
+            $scope.show.currentCursor = $scope.show.preCursor;
+        }
+        $scope.loadingOrderReportData = true;
+
+        var query = {"table": "orders__cstore"};
+        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+        query.filter = {};
+        if (column && searchText && column != "" && searchText != "") {
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (orderStartDate && orderStartDate != "" && orderEndDate && orderEndDate != "") {
+            query.filter["order_date"] = {"$gte":orderStartDate,"$lte": orderEndDate};
+        }
+        if (programFilter && programFilter!="") {
+            query.filter["storeid.programid._id"] = programFilter._id;
+        }
+        if (siteFilter && siteFilter!="") {
+            query.filter["storeid._id"] = siteFilter._id;
+        }
+        if (statusFilter && statusFilter!="") {
+            query.filter["status"] = statusFilter.name;
+        }
+        query.orders = {};
+        if ($scope.sortingCol && $scope.sortingType) {
+            query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        query.max_rows = limit;
+        query.cursor = $scope.show.currentCursor;
+        query.$count = 1;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (orderReportData) {
+            $scope.loadingOrderReportData = false;
+            $scope.show.currentCursor = orderReportData.response.cursor;
+            $scope.orderReport = orderReportData.response.data;
+
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllOrderReport(1, 200);
+    $scope.sortOrder = function (sortingCol, sortingType, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter) {
+        $scope.show.currentCursor = 0
+        $scope.sortingCol = sortingCol;
+        $scope.sortingType = sortingType;
+        $scope.getAllOrderReport(1, 10, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+    }
+    $scope.getMore = function (column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter) {
+        $scope.getAllOrderReport(1, 10, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+    }
+    $scope.getLess = function (column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter) {
+        $scope.getAllOrderReport(0, 10, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+    }
+    $scope.getProgramList();
+    $scope.getStores();
+    $scope.filterByProgram=function(column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllOrderReport(1, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+    }
+    $scope.filterBySite=function(column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllOrderReport(1, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+    }
+    $scope.filterByStatus=function(column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllOrderReport(1, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+    }
+    $scope.exportOrders=function(){
+        orderTableToExcel('orderTable', 'Order List');
+    }
+    var orderTableToExcel = (function() {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+        return function(table, name) {
+            if (!table.nodeType){
+                table = document.getElementById(table)
+                var myorderclone = $("#orderTable").clone();
+                var orderHtml=myorderclone.html();
+            }
+            var ctx = {worksheet: name || 'Worksheet', table: orderHtml}
+            window.location.href = uri + base64(format(template, ctx))
+        }
+    })()
 });

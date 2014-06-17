@@ -2228,3 +2228,22 @@ label.multiSelect span:hover {
     margin-left: 350px;
     text-align: left;
 }
+.vendor_report {
+   /* max-width: 1200px;   */
+    overflow: auto;
+}
+.filter_program{
+    padding: 5px;
+    margin: 0 10px;
+    width:90%;
+}
+.filter_table {
+    width:22%;
+    margin-top: 5px;
+}
+.filter_text {
+    margin:10px 0 0 5px;
+}
+.filter_div {
+    margin-bottom: 10px;
+}
