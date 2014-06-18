@@ -228,6 +228,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
+    $scope.notification={};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
     $scope.orderFilterData={"start_date":"","end_date":""};
@@ -1124,6 +1125,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata["top_promo"] = false;
         $scope.oFile.fileExist = false;
         $scope.getPrograms(null,null);
+        $scope.clearPromotionNotificationContent();
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
@@ -1164,7 +1166,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.orderFilterData.end_date="";
     }
     $scope.clearPromotionNotificationContent = function () {
-
+        $scope.notification.subject="";
+        $scope.notification.mail_content="";
     }
     $scope.clearFileContent = function () {
         $scope.filedata["title"] = "";
@@ -1650,7 +1653,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         $scope.loadingPopularProductData = true;
         var query = {"table": "products__cstore"};
 
-        query.columns = ["name", "image", "short_description", "cost", "soldcount"];
+        query.columns = ["name", "image", "short_description", "cost", "soldcount","product_category"];
         query.filter = {};
         query.filter["programid._id"] = $scope.currentUser.data.programid;
         if (searchText && searchText != "") {
@@ -1678,7 +1681,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
         var query = {"table": "promotions__cstore"};
-        query.columns = ["promo_title", "image", "start_date", "end_date"];
+        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.filter["start_date"] = {"$lte": currentTime};
@@ -3796,7 +3799,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         }
         $scope.promotionData.loadingData = true;
         var query = {"table": "promotions__cstore"};
-        query.columns = ["end_date", "start_date", "image", "promo_title","store_manager_id"];
+        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.unwindcolumns={"store_manager_id":1};
@@ -3871,7 +3874,13 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
             "offer_title",
             "reward_value",
-            "offer_description"
+            "offer_description",
+            "sponsor",
+            "vendorid",
+            "item_signage",
+            "minimum_retail",
+            "upc",
+            "offer_type"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
@@ -4764,6 +4773,22 @@ cstore.controller('contactPageCtrl', function ($scope, $appService) {
 });
 cstore.controller('promoNotificationCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
+    $scope.getAllAvailableMultipleUsers = function () {
+        var query = {"table": "user_profiles__cstore"};
+        query.columns = ["username"];
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
+            $scope.userData = userData.response.data;
+            for(var i=0;i<$scope.userData.length;i++){
+                $scope.userData[i].ticked=false;
+            }
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getAllAvailableMultipleUsers();
 });
 /*************************file upload**************************/
 cstore.controller('fileCtrl', function ($scope, $appService) {

@@ -245,6 +245,19 @@ a:hover {
 .product_details {
     font-size: 12px;
     margin: 5px 0;
+   /* max-height: 50px;
+    min-height: 50px;*/
+    max-height: 35px;
+    min-height: 35px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+.product_details_category {
+    font-size: 12px;
+    margin: 5px 0;
     max-height: 50px;
     min-height: 50px;
     overflow: hidden;
@@ -253,11 +266,18 @@ a:hover {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
-
 .name {
     font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
+    min-height: 16px;
+    max-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.promo_details {
+    font-size: 12.5px;
     min-height: 16px;
     max-height: 16px;
     overflow: hidden;
@@ -354,8 +374,8 @@ a:hover {
 .img_product {
     padding: 5px;
     position: relative;
-    min-height: 370px;
-    max-height: 370px;
+    min-height: 385px;
+    max-height: 385px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -389,7 +409,7 @@ a:hover {
 }
 
 .short_details {
-    padding: 10px 10px 0 5px;
+    padding: 10px 10px 0 10px;
     font-size: 17px;
     overflow: hidden;
     max-height: 200px;
@@ -1197,8 +1217,8 @@ table td input {
 
 .details_product {
     width: 54.5%;
-    max-height: 370px;
-    min-height: 370px;
+    max-height: 385px;
+    min-height: 385px;
     margin-top: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
@@ -1403,8 +1423,8 @@ span.sortWrap {
     margin: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
-    min-height: 248px;
-    max-height: 248px;
+    min-height: 350px;
+    max-height: 350px;
     overflow: hidden;
 }
 .all_promotions{
@@ -1412,9 +1432,9 @@ span.sortWrap {
     margin: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
-    min-height: 274px;
+    min-height: 380px;
    /* min-height: 311px; */
-     max-height: 274px;
+     max-height: 380px;
 /*max-height: 311px; */
     overflow: hidden;
 }
@@ -2209,7 +2229,7 @@ label.multiSelect span:hover {
 
 .multipleOuterDiv {
     overflow: auto;
-    height: 400px;
+    height: 230px;
 }
 .multiSelect input { width: 62% !important;}
 .opt_button {
@@ -2246,4 +2266,8 @@ label.multiSelect span:hover {
 }
 .filter_div {
     margin-bottom: 10px;
+}
+.mailContent {
+    width: 97.5%;
+    height: 100px;
 }

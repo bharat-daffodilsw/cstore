@@ -350,13 +350,11 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
         restrict: "E",
         template: '<div class="category pull-left" ng-show="popularProducts.length > 0"><div class="pop_products">Popular Signage <a href="#!/all-pops">( View all )</a>' +
             '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
-
-
             '<a href="#!/pop?popid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
-
-            '</a></div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details">' +
+            '</a></div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div>'+
+            '<div class="name"><a href="#!/psop-category?q={{product.product_category._id}}">{{product.product_category.name}}</a></div>'+
+            '<div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href=>{{product.cost.amount | currency}}</a></div>' +
-
             '<div class="add_to_cart" ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -375,6 +373,11 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
+            '<div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
+            '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>'+
+            '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>'+
+            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div>'+
+            '<div class="product_details">{{promotion.promo_description}}</div>'+
             '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
     }
 }]);
@@ -396,7 +399,9 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
         template: '<div class="m_bar pull-left"><div class="category pull-left">' +
             '<div class="pop_products">All POP </div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in allproducts" ng-show="allproducts.length">' +
             '<div class="products_img"><a href="#!/pop?popid={{product._id}}"><img ng-src="{{product.imageUrl}}"></a></div><div class="name"><a href="#!/pop?popid={{product._id}}">' +
-            '{{product.name}}</a></div><div class="product_details">' +
+            '{{product.name}}</a></div>'+
+            '<div class="name"><a href="#!/pop-category?q={{product.product_category._id}}">{{product.product_category.name}}</a></div>'+
+            '<div class="product_details">' +
             '{{product.short_description}}</div><div class="price">' +
             '<a href>{{product.cost.amount | currency}}</a></div><div class="add_to_cart"ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div>' +
             '</div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!allProductData.loadingData"><img src="images/loading.gif"></div>',
@@ -859,7 +864,7 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{products[0].product_category.name}}</div>' +
             '<div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in products"><div class="products_img"><a href="#!/pop?popid={{product._id}}">' +
             '<img src="{{product.imageUrl}}"/></a>' +
-            '</div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details">{{product.short_description}}</div>' +
+            '</div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div><div class="product_details_category">{{product.short_description}}</div>' +
             '<div class="price"><a href>{{product.cost.amount | currency}}</a></div><div class="add_to_cart" ng-click="showCartPopup(product,null)"><a href>' +
             'Add To Cart</a></div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
@@ -5419,10 +5424,17 @@ cstore.directive('assignedSurveyResponse', ['$appService', function ($appService
 cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">OPT In/Out</a></span><span class="opt_button pull-right"><a href="">Export as txt</a></span></div>' +
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span><span class="opt_button pull-right"><a href="">Export as txt</a></span></div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
-            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div><div class="Qty"><div class="quantity_border">Opt: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
+            '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>'+
+            '<div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
+            '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>'+
+            '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>'+
+            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div>'+
+            '<div class="product_details">' +
+            '{{promotion.promo_description}}</div>'+
+            '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -5564,12 +5576,19 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
-            '<div class="details_product pull-left"><div class="Qty"><div class="quantity_border"><b>Offer</b> : {{promotion[0].offer_title}}</div><div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>'+
+            '<div class="details_product pull-left"><div class="Qty"><div class="quantity_border"><b>Offer</b> : {{promotion[0].offer_title}}</div>'+
+            '<div class="short_details ng-binding"><b>Offer Description</b> : {{promotion[0].offer_description}}</div>'+
+            '<div class="quantity_border"><b>Offer Type</b> : {{promotion[0].offer_type}}</div>'+
+            '<div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>'+
             '<div class="quantity_border"><b>End Date</b> :{{promotion[0].end_date}} </div>'+
             '<div class="quantity_border"><b>Threshold</b> :{{promotion[0].threshold}} </div>'+
             '<div class="quantity_border"><b>Reward Value</b> :{{promotion[0].reward_value}} </div>'+
-            '<div class="final_price">Opt : <input type="checkbox" ng-model="booleanOpt"/></div><div class="add_to_btn pull-left" ng-click="changeAssignedPromoStatus()">' +
-            '<a href="">In/Out</a></div></div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
+            '<div class="quantity_border"><b>Sponsor</b> : {{promotion[0].sponsor}}</div>'+
+            '<div class="quantity_border"><b>Vendor</b> : {{promotion[0].vendorid.firstname}}</div>'+
+            '<div class="quantity_border"><b>Item Signage</b> : {{promotion[0].item_signage}}</div>'+
+            '<div class="quantity_border"><b>Minimum Retail</b> : {{promotion[0].minimum_retail.amount | currency}}</div>'+
+            '<div class="quantity_border"><b>UPC/PLU/GROUP</b> : {{promotion[0].upc}}</div>'+
+            '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile:function(){
             return {
@@ -8229,17 +8248,18 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
             '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr>' +
-            '<td><div class="margin_top">Users*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Users*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Subject*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td>' +
-            '<ul id="user_tags" data-name="user_tags" class="tagit ui-sortable">' +
-            '<li class="tagit-new">' +
-            '<input class="tagit-input ui-autocomplete-input" type="text" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></li>' +
-            '<ul class="ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all" role="listbox" aria-activedescendant="ui-active-menuitem" style="z-index: 1; top: 0px; left: 0px; display: none;">' +
-            '</ul>' +
-            '</ul>' +
-            '</td>' +
+            '<td class="half_td"><div multi-select  input-model="userData"  button-label="username" item-label="username" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="notification.subject"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td><div class="margin_top">Mail Content*</div></td>' +
+            '</tr>'+
+            '<tr>' +
+            '<td colspan="2"><textarea type="text" placeholder="" ng-model="notification.mail_content" class="mailContent"></textarea></td>' +
             '</tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
@@ -8255,6 +8275,7 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                 post: function ($scope) {
                     $scope.setClosePath=function(path){
                         window.location.href="#!/"+ path;
+                        $scope.clearPromotionNotificationContent();
                     }
                     $scope.getAllAvailableUsers = function () {
                         var query = {"table": "user_profiles__cstore"};
@@ -8272,23 +8293,32 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                             $('.popup').toggle("slide");
                         })
                     }
-                    $scope.getAllAvailableUsers();
+                    //$scope.getAllAvailableUsers();
                     $scope.sendMailNotification=function(){
-                        $scope.userNotification=[];
-                        $scope.userNotification = $scope.showTags($("#user_tags").tagit("tags"));
-                        console.log($scope.userNotification);
+                        $scope.notification.users=[];
+                        for (var i = 0; i < $scope.resultData.length; i++) {
+                            $scope.notification.users.push($scope.resultData[i].username);
+                        }
                         $scope.currentSession = $appService.getSession();
-                        if (!$scope.userNotification || ($scope.userNotification.length == 0)) {
-                            $("#popupMessage").html("Please specify atleast one username");
+                        if (!$scope.notification.users || ($scope.notification.users.length == 0)) {
+                            $("#popupMessage").html("Please choose atleast one user");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if (!$scope.notification.subject) {
+                            $("#popupMessage").html("Please enter subject");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if (!$scope.notification.mail_content) {
+                            $("#popupMessage").html("Please enter mail content");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         var mailContent= {}
-                        mailContent["to"] = $scope.userNotification;
-                        mailContent["subject"] = "Promo Notification";
-                        mailContent["html"]="<div>Hello<br/>New promos have been uploaded.You can check it in your portal.</div><div>Thank You</div>";
-
-
+                        mailContent["to"] = $scope.notification.users;
+                        mailContent["subject"] = $scope.notification.subject;
+                        mailContent["html"]="<div>Hello<br/>"+ $scope.notification.mail_content+"</div><div>Thank You</div>";
                         $appService.sendNotification(mailContent, ASK, OSK, $scope.currentSession["usk"], function (callBackData) {
                             console.log(JSON.stringify(callBackData));
                             $scope.loadingStatus = false;
