@@ -1652,9 +1652,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<div class="delete_btn pull-left">' +
             '<button type="button" ng-click="deleteStoreManagers()"><a href>Delete</a></button>' +
             '</div>' +
-            '<div class="delete_btn pull-left">' +
-            '<button type="button" ng-click="getExportSites(searchby.value,search.searchContent,sortingCol,sortingType)"><a href>Export</a></button>' +
-            '</div>' +
             '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()">' +
             '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
@@ -7829,7 +7826,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button><button>Export</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -8620,13 +8617,13 @@ cstore.directive('filterStates', ['$appService', function ($appService, $scope) 
 cstore.directive('vendorReport', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="filter_div pull-left"><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+        template: '<div class="add_delete pull-left"><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div><div class="pull-left filter_table"><filter-states></filter-states></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="exportVendors()">Export</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div></div>' +
+            '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div><div class="pull-left filter_table"><filter-states></filter-states></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendorReport.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="add_delete"><div class="delete_btn pull-right"><button type="button" ng-click="exportVendors()">Export</button></div>' +
-            '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div></div>' +
             '<div class="table pull-left vendor_report" id="printVendors"><table id="vendorTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
             '<th><span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'firstname\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'firstname\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div></span></th>'+
@@ -8696,18 +8693,18 @@ cstore.directive('filterShift', ['$appService', function ($appService, $scope) {
 cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="filter_div pull-left">' +
+        template: '<div class="add_delete pull-left">' +
             '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left">' +
             '<form ng-submit="search()">' +
             '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form>' +
-            '</div><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="exportSites()">Export</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>' +
+            '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
             '<div class="pull-left filter_table"><filter-shift></filter-shift></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + siteInfoReport.length}} from start' +
-            '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="add_delete"><div class="delete_btn pull-right"><button type="button" ng-click="exportSites()">Export</button></div>' +
-            '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>'+
+            '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
             '<div class="table_3 pull-left site_info" id="printSiteInfo">' +
             '<table id="siteTable" width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
@@ -8852,16 +8849,16 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
             '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
-            '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
-            '<button ng-click="orderDateFilter()">Filter</button><button ng-click="exportOrders()">Export</button><button ng-click="printOrders(\'printOrder\')">Print</button></div>'+
-            '<div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
-            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orderReport.length}} from start</div>' +
+            '<div class="pull-left order_date"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker></div><div class="pull-left order_date"><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker></div>' +
+            '<div class="pull-left"><button ng-click="orderDateFilter()">Filter</button></div><div class="pull-right"><div class="pull-right"><button ng-click="exportOrders()">Export</button></div><div class="pull-right"><button ng-click="printOrders(\'printOrder\')">Print</button></div></div>'+
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
-            '<div class="filter_div pull-left">'+
+            '<div class="filter_div">'+
             '<div class="pull-left filter_text">Filter</div>'+
             '<div class="pull-left filter_table"><filter-program-order></filter-program-order></div>'+
             '<div class="pull-left filter_table"><filter-site></filter-site></div>'+
-            '<div class="pull-left filter_table"><filter-status></filter-status></div></div>'+
+            '<div class="pull-left filter_table"><filter-status></filter-status></div>'+
+            '<div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orderReport.length}} from start</div></div>'+
             '<div class="table pull-left" id="printOrder">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0" id="orderTable"><tr>' +
             '<th>POP</th><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div><div class="sortDown" ng-click="sortOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>	</span></th>' +

@@ -1112,9 +1112,9 @@ table td input {
 
 .search_2 input {
     margin-top: 0px;
-    position: absolute;
     width: 190px;
     padding: 5px 0;
+    float: left;
 }
 
 .search_2 {
@@ -2255,19 +2255,29 @@ label.multiSelect span:hover {
 .filter_program{
     padding: 5px;
     margin: 0 10px;
-    width:90%;
+    width:100%;
 }
 .filter_table {
     width:22%;
-    margin-top: 5px;
+    margin: 5px;
 }
 .filter_text {
-    margin:10px 0 0 5px;
+    margin: 10px 0 0 0px;
 }
 .filter_div {
-    margin-bottom: 10px;
+    /*margin-bottom: 10px; */
+    width: 98%;
+    margin: 0 auto;
+    padding: 0px 10px 0px 0px;
 }
 .mailContent {
     width: 97.5%;
     height: 100px;
+}
+.order_date {
+    padding: 4px 8px;
+}
+
+.order_date input {
+    padding:5px;
 }
