@@ -4773,12 +4773,14 @@ cstore.controller('contactPageCtrl', function ($scope, $appService) {
 });
 cstore.controller('promoNotificationCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
+    $scope.loadingSendNotification=true;
     $scope.getAllAvailableMultipleUsers = function () {
         var query = {"table": "user_profiles__cstore"};
         query.columns = ["username"];
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
+            $scope.loadingSendNotification=false;
             $scope.userData = userData.response.data;
             for(var i=0;i<$scope.userData.length;i++){
                 $scope.userData[i].ticked=false;
