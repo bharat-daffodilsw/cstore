@@ -2193,29 +2193,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.getAllVendors(0, 10, column, searchText);
     }
     $scope.getEditCountries(null, null, null, $scope.data);
-    $scope.getProgramList();
-    $scope.getExportVendors = function (column,searchText,sortingCol,sortingType) {
-        var query = {"table": "vendors__cstore"};
-        query.columns = ["firstname","lastname",{"expression": "programid", "columns": ["_id", "name"]},"email","address","address2",{"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]},"category",{"expression":"postalcode", "type":"number"},"contact"];
-        if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
-            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
-        }
-        query.orders = {};
-        if (sortingCol && sortingType) {
-            query.orders[sortingCol] = sortingType;
-        }
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/excelexport";
-        var tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
-        window.open(tempUrl,'_blank', 'width=300,height=300');
-        //$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
-        //    console.log("done");
-        //}, function (jqxhr, error) {
-        //    $("#popupMessage").html(error);
-        //    $('.popup').toggle("slide");
-        //})
-    }
+    $scope.getProgramList();    
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -2408,29 +2386,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $scope.getAllStoreManagers(0, 10, column, searchText);
     }
     $scope.getEditCountries(null, null, null, $scope.storedata);
-    $scope.getProgramList();
-    $scope.getExportSites = function (column,searchText,sortingCol,sortingType) {
-        var query = {"table": "storemanagers__cstore"};
-        query.columns = ["siteid","storename",{"expression": "programid", "columns": ["_id", "name"]},"shift","contact","email","address",{"expression": "countryid", "columns": ["_id", "name"]},{"expression": "stateid", "columns": ["_id", "name"]},{"expression": "cityid", "columns": ["_id", "name"]},{"expression":"postalcode","type":"number"},"pos_type","pos_version","loyalty_status","reward_point","brands","pump_brand","pump_model",{"expression":"manager","columns":["_id","name"]}];
-        if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
-            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
-        }
-        query.orders = {};
-        if (sortingCol && sortingType) {
-            query.orders[sortingCol] = sortingType;
-        }
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/excelexport";
-        var tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
-        window.open(tempUrl,'_blank', 'width=300,height=300');
-        //$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
-        //    console.log("done");
-        //}, function (jqxhr, error) {
-        //    $("#popupMessage").html(error);
-        //    $('.popup').toggle("slide");
-        //})
-    }
+    $scope.getProgramList();    
 });
 
 cstore.controller('addStoreManagerCtrl', function ($scope, $appService, $routeParams) {
@@ -5040,7 +4996,29 @@ cstore.controller('vendorReportCtrl', function ($scope, $appService, $location) 
             var ctx = {worksheet: name || 'Worksheet', table: vendorHtml}
             window.location.href = uri + base64(format(template, ctx))
         }
-    })()	
+    })()
+$scope.getExportVendors = function (column,searchText,programFilter,stateFilter,sortingCol,sortingType) {
+        var query = {"table": "vendors__cstore"};
+        query.columns = ["firstname","lastname",{"expression": "programid", "columns": ["_id", "name"]},"email","address","address2",{"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]},"category",{"expression":"postalcode", "type":"number"},"contact"];
+		query.filter = {};
+        if (column && searchText && column != "" && searchText != "") {            
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+		if (programFilter && programFilter!="") {           
+            query.filter["programid._id"] = programFilter._id;
+        }
+		if (stateFilter && stateFilter!="") {
+            query.filter["state._id"] = stateFilter._id;
+        }
+        query.orders = {};
+        if (sortingCol && sortingType) {
+            query.orders[sortingCol] = sortingType;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/export/excel";
+        $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
+        //window.open(tempUrl,'_blank', 'width=300,height=300');        
+    }	
 });
 
 cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location) {
@@ -5155,7 +5133,29 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
             var ctx = {worksheet: name || 'Worksheet', table: siteHtml}
             window.location.href = uri + base64(format(template, ctx))
         }
-    })()	
+    })()
+$scope.getExportSites = function (column,searchText,programFilter,shiftFilter,sortingCol,sortingType) {
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["siteid","storename",{"expression": "programid", "columns": ["_id", "name"]},"shift","contact","email","address",{"expression": "countryid", "columns": ["_id", "name"]},{"expression": "stateid", "columns": ["_id", "name"]},{"expression": "cityid", "columns": ["_id", "name"]},{"expression":"postalcode","type":"number"},"pos_type","pos_version","loyalty_status","reward_point","brands","pump_brand","pump_model",{"expression":"manager","columns":["_id","name"]}];
+        query.filter = {};
+		if (column && searchText && column != "" && searchText != "") {            
+            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+		
+        if (programFilter && programFilter!="") {
+            query.filter["programid._id"] = programFilter._id;
+        }
+        if (shiftFilter && shiftFilter!="") {
+            query.filter["shift"] = shiftFilter.name;
+        }
+        query.orders = {};
+        if (sortingCol && sortingType) {
+            query.orders[sortingCol] = sortingType;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/export/excel";
+        $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;       
+    }	
 });
 
 cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
