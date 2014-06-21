@@ -29,43 +29,8 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
             }
         }
     }
-}]);
+}]);   
 
-//cstore.directive('locationPopup', ['$appService', function ($appService, $scope) {
-//    return{
-//        restrict: "E",
-//        template: '<div class="location_popup pull-left"><div class="loction_img pull-left"><img src="images/location.png"></div><div class="popup">Help us to serve you better</div>' +
-//            '<div class="popup">Please provide your location details.</div><div class="pop_btn pull-left"><div class="popup_input pull-left">' +
-//            '<input type="text" ng-model="asyncSelected" placeholder="Locations" typeahead="address for address in getLocation($viewValue) | filter:$viewValue" typeahead-loading="loadingLocations">' +
-//            '</div><div class="delete_btn pull-right"><button type="button" ng-click="selectedLocation()"><a href="">Go</a></button></div><div class="add_btn"><button type="button" ng-click="hidePopup()"><a href>Cancel</a></button></div></div></div>',
-//        compile: function () {
-//            return {
-//                pre: function ($scope) {
-//                    $scope.hidePopup = function () {
-//                        $(".location_popup").hide();
-//                    }
-//                    /*$scope.selectedLocation=function(){
-//                     $appService.delete_cookie("selectedLoc");
-//                     $scope.selectedLoc=$scope.asyncSelected;
-//                     var c_name = "selectedLoc";
-//                     if($scope.selectedLoc && $scope.selectedLoc!=null && $scope.selectedLoc!="null"){
-//                     document.cookie = c_name + "=" + escape($scope.selectedLoc);
-//                     }
-//                     else {
-//                     var defaultLocation ="United States";
-//                     document.cookie = c_name + "=" + escape(defaultLocation);
-//                     }
-//                     $(".location_popup").hide();
-//                     } */
-//                },
-//                post: function () {
-//                }
-//            }
-//        }
-//
-//    }
-//}]);
-/*bharat chanage */
 cstore.directive('locationPopup', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -78,20 +43,7 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
                 pre: function ($scope) {
                     $scope.hidePopup = function () {
                         $(".location_popup").hide();
-                    }
-                    /*$scope.selectedLocation=function(){
-                     $appService.delete_cookie("selectedLoc");
-                     $scope.selectedLoc=$scope.asyncSelected;
-                     var c_name = "selectedLoc";
-                     if($scope.selectedLoc && $scope.selectedLoc!=null && $scope.selectedLoc!="null"){
-                     document.cookie = c_name + "=" + escape($scope.selectedLoc);
-                     }
-                     else {
-                     var defaultLocation ="United States";
-                     document.cookie = c_name + "=" + escape(defaultLocation);
-                     }
-                     $(".location_popup").hide();
-                     } */
+                    }                    
                 },
                 post: function () {
                 }
@@ -100,7 +52,7 @@ cstore.directive('locationPopup', ['$appService', function ($appService, $scope)
 
     }
 }]);
-/*change end here */
+
 
 cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
     return{
@@ -206,16 +158,13 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 }
                             }
                             else if (hash.indexOf("?popid=") > 0) {
-
                                 window.location.href = "#!/all-pops?search=" + $scope.searchContent;
-                            }//changes made by anuradha 3004
+                            }
                             else if (hash.indexOf("?promoid=") > 0) {
-
                                 window.location.href = "#!/all-promos?search=" + $scope.searchContent;
                             }
                             else if (hash.indexOf("?sessionid=") > 0) {
-                                window.location.href = "#!/all-trainings?search=" + $scope.searchContent;
-                                //$scope.searchContent="";
+                                window.location.href = "#!/all-trainings?search=" + $scope.searchContent;                                
                             }
                             else if (hash.indexOf("?surveyid=") > 0) {
                                 window.location.href = "#!/all-surveys?search=" + $scope.searchContent;
@@ -259,10 +208,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
 cstore.directive('dropDown', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-
-
         template: '<div id="primary" class="pull-left" style="display:none;z-index:100000"><ul><li ng-repeat="productCategory in productdata.productCategories" class="active" ng-click="hideOptions()"><a href="#!/pop-category?q={{productCategory._id}}">{{productCategory.name}}</a></li>' +
-
             '</ul></div>',
         compile: function () {
             return {
@@ -365,7 +311,6 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
         }
     }
 }]);
-//changes by anu 2804
 cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
@@ -381,7 +326,6 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
             '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
     }
 }]);
-/***************/
 
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
@@ -392,7 +336,6 @@ cstore.directive('assignedTrainingSessions', ['$appService', function ($appServi
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
     }
 }]);
-/************/
 cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
@@ -874,7 +817,6 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
 
     }
 }]);
-
 cstore.directive('productCategoryDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
@@ -893,9 +835,7 @@ cstore.directive('productCategoryDetail', ['$appService', function ($appService,
         }
     }
 }]);
-
 /********************************Product*****************************************/
-
 cstore.directive('productList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -1431,9 +1371,7 @@ cstore.directive('appCoolerFileUpload', ['$appService', '$compile', function ($a
                         $scope.coolerOFile.fileExist = false;
                     };
                     if ($scope.coolerrow[$scope.colmetacoolerdata.expression]) {
-                        $scope.showCoolerFile($scope.coolerrow[$scope.colmetacoolerdata.expression], false);
-                        //changed 2804
-                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
+                        $scope.showCoolerFile($scope.coolerrow[$scope.colmetacoolerdata.expression], false);                        
 
                     } else if (!$scope.readonlycoolerrow.fileurl) {
                         $scope.readonlycoolerrow.filenotexist = true;
@@ -4044,7 +3982,7 @@ cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scop
         }
     }
 }]);
-// change made
+
 cstore.directive('upcSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -4465,46 +4403,7 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
         }
     };
 }]);
-//changes made 02/05
-cstore.directive('jqtimepicker', [ '$appService', function ($appService, $scope) {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-        link: function ($scope, element, attrs, ngModelCtrl) {
-            var model = attrs.ngModel.split(".");
-            $(element).timepicker({
-                onSelect: function (time) {
-                    if (!$scope[model[0]])
-                        $scope[model[0]] = {};
-                    $scope[model[0]][model[1]] = time;
-                    $scope.$apply();
-                }
-            });
-        }
-    };
-}]);
 
-/*bharat chnage */
-cstore.directive('googlePlaces', function () {
-    return {
-        restrict: 'E',
-        replace: true,
-        // transclude:true,
-        scope: {location: '='},
-        template: '<input id="google_places_ac" name="google_places_ac" type="text" class="input-block-level"/>',
-        link: function ($scope, elm, attrs) {
-            var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                $scope.location = place["address_components"][0].long_name;
-//
-// $scope.location = place.geometry.location.lat() + ',' + place.geometry.location.lng();
-                $scope.$apply();
-            });
-        }
-    }
-});
-/*bharat change end here*/
 
 /******************************************* Training Session****************************************************/
 cstore.directive('trainingSessionList', ['$appService', function ($appService, $scope) {
@@ -4901,71 +4800,6 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $('.popup').toggle("slide");
                         });
                     }
-                }
-            }
-        }
-    }
-}]);
-
-cstore.directive('docFileUpload', ['$appService', '$compile', function ($appService, $compile) {
-    return {
-        restrict: "E",
-        replace: true,
-//        scope:true,
-        template: "<div>" +
-            '<div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div>' +
-            "<span><input ng-show='readonlydocrow.filenotexist' type='file' id='uploaddocfile'/></span>" +
-            "<div ng-hide='readonlydocrow.filenotexist'>" +
-            "<span>" +
-            "<div class='pic_preview'>{{readonlydocrow.filename}}</div>" +
-            "</span>" +
-            "<img src='images/icon_cross.gif'class='cross_icon_doc' value='Remove' ng-click='removeFile()'/>" +
-            "</div>" +
-            "</div>",
-        compile: function () {
-            return {
-                post: function ($scope, iElement) {
-                    $scope.removeFile = function () {
-                        delete $scope.docrow[$scope.colmetadocdata.expression];
-                        $("#uploaddocfile").val("");
-                        $scope.readonlydocrow.filenotexist = true;
-                    };
-                    if ($scope.docrow[$scope.colmetadocdata.expression]) {
-                        $scope.showDocFile($scope.docrow[$scope.colmetadocdata.expression], false);
-
-                    } else if (!$scope.readonlydocrow.fileurl) {
-                        $scope.readonlydocrow.filenotexist = true;
-                    }
-                    $scope.loadFile = function (evt) {
-                        $scope.docfile = {};
-                        $scope.docfile.name = $scope.docOFile.name;
-                        $scope.docfile.result = evt.target.result;
-                        $scope.docOFile['data'] = evt.target.result;
-                        $scope.showUploadedFile($scope.docfile);
-                    };
-                    $scope.showUploadedFile = function (file) {
-
-                        var file_ext = $scope.getFileExtension(file.name);
-                        if ((/\.(doc|docx|pdf|ppt|pptx)$/gi).test(file.name)) {
-
-                            $scope.documentData = file.result;
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-
-                        }
-                    }
-                    iElement.bind('change', function () {
-                        $scope.$apply(function () {
-                            $scope.oFReader = new FileReader();
-                            if (document.getElementById('uploaddocfile').files.length === 0) {
-                                return;
-                            }
-                            $scope.docOFile = document.getElementById('uploaddocfile').files[0];
-                            $scope.oFReader.onload = $scope.loadFile;
-                            $scope.oFReader.readAsDataURL($scope.docOFile);
-                        });
-                    });
                 }
             }
         }
@@ -5737,7 +5571,7 @@ cstore.directive('assignStorePopup', ['$appService', function ($appService, $sco
         }
     }
 }]);
-//changes made by anuradha on 30-04
+
 cstore.directive('assignedSurveyList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -8659,9 +8493,10 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="exportVendors()">Export</button></div>' +
-            '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div></div>' +
-            '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-company></filter-company></div><div class="pull-left filter_table"><filter-program></filter-program></div><div class="pull-left filter_table"><filter-states></filter-states></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="getExportVendors()"><a ng-href={{tempUrl}} target="_blank">Excel</a></button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="generatepdf()"><a ng-href={{vendorpdfurl}} target="_blank">PDF</a></button></div></div>'+
+            '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-company></filter-company></div><div class="pull-left filter_table"><filter-program></filter-program></div><div class="pull-left filter_table"><filter-states></filter-states></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState,filterdata.selectedCompany)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendorReport.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState,filterdata.selectedCompany)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table pull-left vendor_report" id="printVendors"><table id="vendorTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
@@ -8715,6 +8550,52 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         //popupWin..print();
                         popupWin.document.close();
                     }
+
+                },
+                post:function($scope){
+                    $scope.generatepdf=function(){						
+                        var tempalateId = "cstore_vendorpdf";
+                        var pdfquery = {"table": "vendors__cstore"};
+                        pdfquery.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+                        pdfquery.filter = {};
+                        if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
+                            pdfquery.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
+                        }
+                        if ($scope.filterdata.selectedProgram) {
+                            pdfquery.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
+                        }
+                        if ($scope.filterdata.selectedState && $scope.filterdata.selectedState!="") {
+                            pdfquery.filter["state._id"] = $scope.filterdata.selectedState._id;
+                        }
+                        pdfquery.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+                        console.log(JSON.stringify(pdfquery))
+                        $scope.vendorpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+                    }
+					$scope.getExportVendors = function () {
+        var query = {"table": "vendors__cstore"};
+        query.columns = ["firstname","lastname",{"expression": "programid", "columns": ["_id", "name"]},"email","address","address2",{"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]},"category",{"expression":"postalcode", "type":"number"},"contact"];
+		query.filter = {};
+        if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
+                            query.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
+                        }
+                        if ($scope.filterdata.selectedProgram) {
+                            query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
+                        }
+                        if ($scope.filterdata.selectedState && $scope.filterdata.selectedState!="") {
+                            query.filter["state._id"] = $scope.filterdata.selectedState._id;
+                        }
+                        query.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            query.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/export/excel";
+        $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
+        //window.open(tempUrl,'_blank', 'width=300,height=300');        
+    }
                 }
             }
         }
@@ -8741,7 +8622,8 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
             '<form ng-submit="search()">' +
             '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form>' +
-            '</div><div class="delete_btn pull-right"><button type="button" ng-click="exportSites()">Export</button></div>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()"><a ng-href={{tempUrl}} target="_blank">Excel</a></button></div>' +
+			'<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()"><a ng-href={{sitepdfurl}} target="_blank">PDF</a></button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>' +
             '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
             '<div class="pull-left filter_table"><filter-shift></filter-shift></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
@@ -8858,7 +8740,51 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         //popupWin..print();
                         popupWin.document.close();
                     }
-                }
+                },
+				post: function($scope) {
+					$scope.generatesitepdf=function(){						
+						var tempalateId = "cstore_siteinfopdf";
+                        var pdfquery = {"table": "storemanagers__cstore"};
+						pdfquery.columns = ["programid", "siteid", "manager.name","manager", "stateid", "storename", "shift", "reward_point","brands","contact","email","cityid","countryid","postalcode","address"];
+                        pdfquery.filter = {};
+                        if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
+                            pdfquery.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
+                        }
+                        if ($scope.filterdata.selectedProgram) {
+                            pdfquery.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
+                        }
+                        if ($scope.storedata.selectedShift && $scope.storedata.selectedShift!="") {
+							pdfquery.filter["shift"] = $scope.storedata.selectedShift.name;
+						}            
+						pdfquery.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+                        console.log(JSON.stringify(pdfquery))
+                        $scope.sitepdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+                    }
+					$scope.getExportSites = function () {
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["siteid","storename",{"expression": "programid", "columns": ["_id", "name"]},"shift","contact","email","address",{"expression": "countryid", "columns": ["_id", "name"]},{"expression": "stateid", "columns": ["_id", "name"]},{"expression": "cityid", "columns": ["_id", "name"]},{"expression":"postalcode","type":"number"},"pos_type","pos_version","loyalty_status","reward_point","brands","pump_brand","pump_model",{"expression":"manager","columns":["_id","name"]}];
+        query.filter = {};
+		if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
+                            query.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
+                        }
+                        if ($scope.filterdata.selectedProgram) {
+                            query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
+                        }
+                        if ($scope.storedata.selectedShift && $scope.storedata.selectedShift!="") {
+							query.filter["shift"] = $scope.storedata.selectedShift.name;
+						}            
+						query.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            query.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/export/excel";
+        $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;       
+    }
+				}
             }
         }
     }
@@ -8892,7 +8818,7 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker></div><div class="pull-left order_date"><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker></div>' +
-            '<div class="pull-left"><button ng-click="orderDateFilter()">Filter</button></div><div class="pull-right"><div class="pull-right"><button ng-click="exportOrders()">Export</button></div><div class="pull-right"><button ng-click="printOrders(\'printOrder\')">Print</button></div></div>'+
+            '<div class="pull-left"><button ng-click="orderDateFilter()">Filter</button></div><div class="pull-right"><div class="pull-right"><button ng-click="exportOrders()">Excel</button></div><div class="pull-right"><button ng-click="generateorderpdf()"><a ng-href={{orderpdfurl}} target="_blank">PDF</a></button></div></div>'+
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
             '<div class="filter_div">'+
             '<div class="pull-left filter_text">Filter</div>'+
@@ -8942,10 +8868,33 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
-                },
-                post:function($scope){
-
-                }
+                },                
+				post: function($scope) {
+					$scope.generateorderpdf=function(){						
+						var tempalateId = "cstore_orderPdf";
+						var pdfquery = {"table": "orders__cstore"};
+						pdfquery.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+                        pdfquery.filter = {};
+                        if ($scope.orderFilterData.start_date && $scope.orderFilterData.start_date != "" && $scope.orderFilterData.end_date && $scope.orderFilterData.end_date != "") {
+							pdfquery.filter["order_date"] = {"$gte":$scope.orderFilterData.start_date,"$lte": $scope.orderFilterData.end_date};
+						}
+						if ($scope.filterdata.selectedProgram && $scope.filterdata.selectedProgram!="") {
+							pdfquery.filter["storeid.programid._id"] = $scope.filterdata.selectedProgram._id;
+						}
+						if ($scope.filterdata.selectedSite && $scope.filterdata.selectedSite!="") {
+							pdfquery.filter["storeid._id"] = $scope.filterdata.selectedSite._id;
+						}
+						if ($scope.filterdata.selectedStatus && $scope.filterdata.selectedStatus!="") {
+							pdfquery.filter["status"] = $scope.filterdata.selectedStatus.name;
+						}            
+						pdfquery.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+                        console.log(JSON.stringify(pdfquery))
+                        $scope.orderpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+                    }
+				}
             }
         }
     }

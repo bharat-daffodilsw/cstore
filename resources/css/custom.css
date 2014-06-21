@@ -1121,6 +1121,7 @@ table td input {
     margin-top: 4px;
     position: relative;
     width: 190px;
+	margin-right: 5px;
 }
 
 .search_sign_2 {
@@ -2275,7 +2276,7 @@ label.multiSelect span:hover {
     height: 100px;
 }
 .order_date {
-    padding: 4px 8px;
+    padding: 4px 5px 0 5px;
 }
 
 .order_date input {
