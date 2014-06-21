@@ -8453,7 +8453,7 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="getExportVendors($scope.searchby.value, $scope.search.searchContent,$scope.filterdata.selectedProgram,$scope.filterdata.selectedState,$scope.sortingCol,$scope.sortingType)"><a ng-href={{tempUrl}} target="_blank">Export</a></button></div>' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="getExportVendors()"><a ng-href={{tempUrl}} target="_blank">Export</a></button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div>'+
             '<div class="delete_btn pull-right"><button type="button" ng-click="generatepdf()"><a ng-href={{vendorpdfurl}} target="_blank">PDF</a></button></div>'+
             '</div>' +
@@ -8533,6 +8533,28 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         console.log(JSON.stringify(pdfquery))
                         $scope.vendorpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
                     }
+					$scope.getExportVendors = function () {
+        var query = {"table": "vendors__cstore"};
+        query.columns = ["firstname","lastname",{"expression": "programid", "columns": ["_id", "name"]},"email","address","address2",{"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]},"category",{"expression":"postalcode", "type":"number"},"contact"];
+		query.filter = {};
+        if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
+                            query.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
+                        }
+                        if ($scope.filterdata.selectedProgram) {
+                            query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
+                        }
+                        if ($scope.filterdata.selectedState && $scope.filterdata.selectedState!="") {
+                            query.filter["state._id"] = $scope.filterdata.selectedState._id;
+                        }
+                        query.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            query.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/export/excel";
+        $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
+        //window.open(tempUrl,'_blank', 'width=300,height=300');        
+    }
                 }
             }
         }
@@ -8559,7 +8581,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
             '<form ng-submit="search()">' +
             '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form>' +
-            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites($scope.searchby.value, $scope.search.searchContent,$scope.filterdata.selectedProgram,$scope.storedata.selectedShift,$scope.sortingCol,$scope.sortingType)"><a ng-href={{tempUrl}} target="_blank">Excel</a></button></div>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()"><a ng-href={{tempUrl}} target="_blank">Excel</a></button></div>' +
 			'<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()"><a ng-href={{sitepdfurl}} target="_blank">PDF</a></button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>' +
             '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
@@ -8700,6 +8722,27 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         console.log(JSON.stringify(pdfquery))
                         $scope.sitepdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
                     }
+					$scope.getExportSites = function () {
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["siteid","storename",{"expression": "programid", "columns": ["_id", "name"]},"shift","contact","email","address",{"expression": "countryid", "columns": ["_id", "name"]},{"expression": "stateid", "columns": ["_id", "name"]},{"expression": "cityid", "columns": ["_id", "name"]},{"expression":"postalcode","type":"number"},"pos_type","pos_version","loyalty_status","reward_point","brands","pump_brand","pump_model",{"expression":"manager","columns":["_id","name"]}];
+        query.filter = {};
+		if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
+                            query.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
+                        }
+                        if ($scope.filterdata.selectedProgram) {
+                            query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
+                        }
+                        if ($scope.storedata.selectedShift && $scope.storedata.selectedShift!="") {
+							query.filter["shift"] = $scope.storedata.selectedShift.name;
+						}            
+						query.orders = {};
+                        if ($scope.sortingCol && $scope.sortingType) {
+                            query.orders[$scope.sortingCol] = $scope.sortingType;
+                        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/export/excel";
+        $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;       
+    }
 				}
             }
         }
