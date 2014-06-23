@@ -232,7 +232,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
     $scope.orderFilterData={"start_date":"","end_date":""};
-	$scope.filterdata={"programs":"","selectedProgram":"","states":[],"selectedState":"","status":[],"selectedStatus":"","sites":[],"selectedSite":""};
+	$scope.filterdata={"programs":[],"selectedProgram":"","companies":[],"selectedCompany":"","states":[],"selectedState":"","status":[],"selectedStatus":"","sites":[],"selectedSite":""};
     $scope.download={"orders":[]};
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
@@ -1326,6 +1326,22 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
+    $scope.getCompanyList = function () {
+        var query = {"table": "company__cstore"};
+        query.columns = ["name"];
+        query.orders = {"name": "asc"};
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (companyData) {
+            $scope.data.companies = companyData.response.data;
+            $scope.data.selectedCompany = $scope.data.companies[0];
+            $scope.filterdata.companies = companyData.response.data;
+            //$scope.filterdata.selectedProgram = $scope.filterdata.programs[0];
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
 	$scope.getStateListForFilter = function () {
         var query = {"table": "states__cstore"};
         query.columns = ["name"];
@@ -2133,7 +2149,8 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         {"value": "state.name", "name": "State"},
         {"value": "email", "name": "Email"},
         {"value": "programid.name", "name": "Program"},
-        {"value": "contact", "name": "Contact"}
+        {"value": "contact", "name": "Contact"},
+        {"value": "companyid.name", "name": "Company"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.vendors = [];
@@ -2151,7 +2168,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.loadingVenderData = true;
 
         var query = {"table": "vendors__cstore"};
-        query.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+        query.columns = ["address2","programid", "companyid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -2193,7 +2210,8 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.getAllVendors(0, 10, column, searchText);
     }
     $scope.getEditCountries(null, null, null, $scope.data);
-    $scope.getProgramList();    
+    $scope.getProgramList();
+    $scope.getCompanyList();
 });
 
 cstore.controller('addNewVendorCtrl', function ($scope, $appService, $routeParams) {
@@ -2327,7 +2345,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         {"value": "reward_point", "name": "Reward Type"},
         {"value": "brands", "name": "Brand"},
         {"value": "pump_brand", "name": "Pump Brand"},
-        {"value": "pump_model", "name": "Pump Model"},
+        {"value": "pump_model", "name": "Pump Model"}
     ];
 
     $scope.searchby = $scope.venderSearch[0];
@@ -4732,14 +4750,17 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
     $scope.loadingSendNotification=true;
     $scope.getAllAvailableMultipleUsers = function () {
         var query = {"table": "user_profiles__cstore"};
-        query.columns = ["username"];
+        query.columns = ["username","storeid.siteid","storeid.storename"];
+        query.filter = {"roleid.name":"store-manager"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
             $scope.loadingSendNotification=false;
             $scope.userData = userData.response.data;
             for(var i=0;i<$scope.userData.length;i++){
-                $scope.userData[i].ticked=false;
+                var row = $scope.userData[i];
+                row["label"] = row.storeid.siteid + " - " + row.storeid.storename
+                row.ticked=false;
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -4906,12 +4927,13 @@ cstore.controller('vendorReportCtrl', function ($scope, $appService, $location) 
 		{"value": "country.name", "name": "Country"},
         {"value": "email", "name": "Email"},
 		{"value": "category", "name": "Category"},
-        {"value": "contact", "name": "Contact"}
+        {"value": "contact", "name": "Contact"},
+        {"value": "companyid.name", "name": "Company"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.vendorReport = [];
     $appService.auth();
-    $scope.getAllVendorsReport = function (direction, limit, column, searchText,programFilter,stateFilter) {
+    $scope.getAllVendorsReport = function (direction, limit, column, searchText, programFilter, stateFilter, companyFilter) {
         if ($scope.loadingVendorReportData) {
             return false;
         }
@@ -4924,13 +4946,16 @@ cstore.controller('vendorReportCtrl', function ($scope, $appService, $location) 
         $scope.loadingVendorReportData = true;
 
         var query = {"table": "vendors__cstore"};
-        query.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+        query.columns = ["address2","programid", "companyid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
         query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         if (programFilter && programFilter!="") {           
             query.filter["programid._id"] = programFilter._id;
+        }
+        if (companyFilter && companyFilter != "") {
+            query.filter["companyid._id"] = companyFilter._id;
         }
 		if (stateFilter && stateFilter!="") {
             query.filter["state._id"] = stateFilter._id;
@@ -4955,29 +4980,35 @@ cstore.controller('vendorReportCtrl', function ($scope, $appService, $location) 
         })
     }
     $scope.getAllVendorsReport(1, 200);
-    $scope.setOrder = function (sortingCol, sortingType, column, searchText,programFilter,stateFilter) {
+    $scope.setOrder = function (sortingCol, sortingType, column, searchText, programFilter, stateFilter, companyFilter) {
         $scope.show.currentCursor = 0;
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllVendorsReport(1, 200, column, searchText,programFilter,stateFilter);
+        $scope.getAllVendorsReport(1, 200, column, searchText, programFilter, stateFilter, companyFilter);
     }
-    $scope.getMore = function (column, searchText,programFilter,stateFilter) {
-        $scope.getAllVendorsReport(1, 200, column, searchText,programFilter,stateFilter);
+    $scope.getMore = function (column, searchText, programFilter, stateFilter) {
+        $scope.getAllVendorsReport(1, 200, column, searchText, programFilter, stateFilter, companyFilter);
     }
-    $scope.getLess = function (column, searchText,programFilter,stateFilter) {
-        $scope.getAllVendorsReport(0, 200, column, searchText,programFilter,stateFilter);
+    $scope.getLess = function (column, searchText, programFilter, stateFilter) {
+        $scope.getAllVendorsReport(0, 200, column, searchText, programFilter, stateFilter, companyFilter);
     }
     $scope.getProgramList();
+    $scope.getCompanyList();
 	$scope.getStateListForFilter();
-    $scope.filterByProgram=function(column, searchText,programFilter,stateFilter){
+    $scope.filterByProgram=function(column, searchText, programFilter, stateFilter, companyFilter){
         $scope.show.preCursor = 0;
         $scope.show.currentCursor = 0;
-        $scope.getAllVendorsReport(1, 200, column, searchText,programFilter,stateFilter)
+        $scope.getAllVendorsReport(1, 200, column, searchText, programFilter, stateFilter, companyFilter)
     }
-	$scope.filterByState=function(column, searchText,programFilter,stateFilter){
+    $scope.filterByCompany=function(column, searchText, programFilter, stateFilter, companyFilter){
         $scope.show.preCursor = 0;
         $scope.show.currentCursor = 0;
-        $scope.getAllVendorsReport(1, 200, column,searchText,programFilter,stateFilter)
+        $scope.getAllVendorsReport(1, 200, column, searchText, programFilter, stateFilter, companyFilter)
+    }
+	$scope.filterByState=function(column, searchText, programFilter, stateFilter, companyFilter){
+        $scope.show.preCursor = 0;
+        $scope.show.currentCursor = 0;
+        $scope.getAllVendorsReport(1, 200, column,searchText,programFilter,stateFilter, companyFilter)
     }
 	$scope.exportVendors=function(){
         vendorTableToExcel('vendorTable', 'vendor List');
@@ -5021,7 +5052,7 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
         {"value": "reward_point", "name": "Reward Type"},
         {"value": "brands", "name": "Brand"},
         {"value": "pump_brand", "name": "Pump Brand"},
-        {"value": "pump_model", "name": "Pump Model"},
+        {"value": "pump_model", "name": "Pump Model"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.siteInfoReport = [];
