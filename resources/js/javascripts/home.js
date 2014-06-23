@@ -1,0 +1,167 @@
+cstore.controller('homeCtrl', function ($scope, $appService, $location, $routeParams) {
+    $scope.homeView = {};
+    $scope.myInterval = 5000;
+    $scope.loadingPopularProductData = false;
+    $scope.getPopularProducts = function (maxRow, searchText) {
+        $scope.loadingPopularProductData = true;
+        var query = {"table": "products__cstore"};
+
+        query.columns = ["name", "image", "short_description", "cost", "soldcount","product_category"];
+        query.filter = {};
+        query.filter["programid._id"] = $scope.currentUser.data.programid;
+        if (searchText && searchText != "") {
+            query.filter["name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {"soldcount": "desc"};
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 8;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
+            $scope.loadingPopularProductData = false;
+            $scope.popularProducts = $appService.setUrls(productData.response.data, 291, 196);
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getRecentPromotions = function (maxRow, searchText) {
+        $scope.loadingRecentPromotionData = true;
+        var currentTime = new Date();
+        currentTime.setMinutes(currentTime.getMinutes());
+        var query = {"table": "promotions__cstore"};
+        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
+        query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.filter["start_date"] = {"$lte": currentTime};
+        query.filter["end_date"] = {"$gte": currentTime};
+        if (searchText && searchText != "") {
+            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        query.orders = {"__createdon": "desc"};
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 8;
+        }
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
+            $scope.loadingRecentPromotionData = false;
+            $scope.recentPromotions = $appService.setUrls(promotionData.response.data, 291, 196);
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    
+    $scope.getAssignedTrainingSessions = function (maxRow, searchText) {
+        $scope.loadingAssignedTrainingSessionData = true;
+        var query = {"table": "training_session__cstore"};
+
+        query.columns = ["store_manager_id", "title", "description"];
+        query.filter = {};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        if (searchText && searchText != "") {
+            query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if (maxRow) {
+            query.max_rows = maxRow;
+        }
+        else {
+            query.max_rows = 4;
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (sessionData) {
+            $scope.loadingAssignedTrainingSessionData = false;
+            $scope.assignedTrainingSessions = sessionData.response.data;
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    //changes end
+    if ($scope.currentUser["data"]) {
+        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+            $scope.getPopularProducts(8, $routeParams.search);
+            $scope.getRecentPromotions(8, $routeParams.search);
+            $scope.getAssignedTrainingSessions(4, $routeParams.search);
+            //$scope.getCarouselPromotions(4);
+            $scope.homeView = {"storeManager": true, "admin": false};
+        }
+        else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
+            $scope.homeView = {"storeManager": false, "admin": true};
+//            var pathToBeSet = $appService.getCookie("adminView");
+//            if (pathToBeSet) {
+////                $appService.setAdminView(pathToBeSet);
+//                window.location
+//            }
+//            else {
+////                $appService.setAdminView(VENDOR);
+//            }
+
+            window.location.href = "#!/vendors";
+
+        }
+    }
+    else {
+        window.location.href = "#!/login";
+    }
+
+
+});
+
+
+cstore.directive('popularProducts', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="category pull-left" ng-show="popularProducts.length > 0"><div class="pop_products">Popular Signage <a href="#!/all-pops">( View all )</a>' +
+            '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
+            '<a href="#!/pop?popid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
+            '</a></div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div>'+
+            '<div class="name"><a href="#!/psop-category?q={{product.product_category._id}}">{{product.product_category.name}}</a></div>'+
+            '<div class="product_details">' +
+            '{{product.short_description}}</div><div class="price"><a href=>{{product.cost.amount | currency}}</a></div>' +
+            '<div class="add_to_cart" ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>',
+        compile: function () {
+            return {
+                pre: function ($scope) {
+
+                }
+            }
+        }
+    }
+}]);
+cstore.directive('recentPromotions', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div ng-show="recentPromotions.length > 0"><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
+            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
+            '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
+            '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
+            '<div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
+            '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>'+
+            '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>'+
+            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div>'+
+            '<div class="product_details">{{promotion.promo_description}}</div>'+
+            '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
+    }
+}]);
+
+cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-trainings">( View all )</a>' +
+            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
+            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
+            '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
+    }
+}]);
+
