@@ -8515,7 +8515,7 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                     $scope.generatepdf=function(){						
                         var tempalateId = "cstore_vendorpdf";
                         var pdfquery = {"table": "vendors__cstore"};
-                        pdfquery.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+                        pdfquery.columns = ["address2","programid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", {"expression": "postalcode","type":"number"}, "category"];
                         pdfquery.filter = {};
                         if ($scope.searchby.value && $scope.search.searchContent && $scope.searchby.value != "" && $scope.search.searchContent != "") {
                             pdfquery.filter[$scope.searchby.value] = {"$regex": "(" + $scope.search.searchContent + ")", "$options": "-i"};
@@ -8553,7 +8553,8 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/export/excel";
         $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
-        //window.open(tempUrl,'_blank', 'width=300,height=300');        
+        console.log($scope.tempUrl);
+		//window.open(tempUrl,'_blank', 'width=300,height=300');        
     }
                 }
             }
