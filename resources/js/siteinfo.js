@@ -273,34 +273,11 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         $scope.storedata["address2"] = store.address2 ? store.address2 : "";
                         $scope.storedata["pump_brand"] = store.pump_brand ? store.pump_brand : "";
                         $scope.storedata["pump_model"] = store.pump_model ? store.pump_model : "";
-                        /*if (store.brands && store.brands.length > 0) {
-                         //                            for(var i=0; i < store.brands.length;i++){
-                         //                                $scope.storedata.brands[i] = {};
-                         //                                $scope.storedata.brands[i] = store.brands[i];
-                         //                            }
-                         for (var i = 0; i < $scope.brands.length; i++) {
-                         for (var j = 0; j < store.brands.length; j++) {
-                         if (angular.equals($scope.brands[i].name, store.brands[j])) {
-                         if (!$scope.storedata.brands)
-                         $scope.storedata.brands = [];
-                         $scope.storedata.brands.push($scope.brands[i]);
-                         }
-                         }
-                         }
-                         }
-                         else {
-                         $scope.storedata["brands"] = [];
-                         }   */
                         $scope.storedata["contact"] = store.contact ? store.contact : "";
-                        //$scope.storedata["loyalty_status"] = store.loyalty_status ? store.loyalty_status : "";
-                        //$scope.storedata["pos_type"] = store.pos_type ? store.pos_type : "" ;
                         $scope.storedata["email"] = store.email ? store.email : "";
                         $scope.storedata["pos_version"] = store.pos_version ? store.pos_version : "";
                         $scope.storedata["postalcode"] = store.postalcode ? store.postalcode : "";
-                        //$scope.storedata["reward_point"] = store.reward_point ? store.reward_point : "" ;
-                        //$scope.storedata["shift"] = store.shift ? store.shift : "" ;
                         $scope.storedata["storename"] = store.storename ? store.storename : "";
-                        //$scope.storedata["username"] = store.username ? store.username : "";
                         $scope.storedata["siteid"] = store.siteid ? store.siteid : "";
                         if (store.company_logo) {
                             $scope.oFile.fileExist = true;

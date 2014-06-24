@@ -1420,14 +1420,14 @@ span.sortWrap {
 }
 
 .promotions {
-    width: 24%;
-    margin: .5%;
-    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-    padding: 10px;
-    min-height: 350px;
-    max-height: 350px;
-    overflow: hidden;
-}
+     width: 24%;
+     margin: .5%;
+     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+     padding: 10px;
+     min-height: 350px;
+     max-height: 350px;
+     overflow: hidden;
+ }
 .all_promotions{
     width: 24%;
     margin: .5%;
@@ -2281,4 +2281,26 @@ label.multiSelect span:hover {
 
 .order_date input {
     padding:5px;
+}
+
+.trainings {
+    width: 24%;
+    margin: .5%;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    padding: 10px;
+    min-height: 220px;
+    max-height: 220px;
+    overflow: hidden;
+}
+.category_name {
+    font-size: 13px;
+    min-height: 16px;
+    max-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 3px 0px;
+}
+.detail_outer {
+    margin:4px 0px;
 }

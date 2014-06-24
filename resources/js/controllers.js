@@ -203,7 +203,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
     $scope.orderFilterData={"start_date":"","end_date":""};
-    $scope.filterdata={"programs":[],"selectedProgram":"","companies":[],"selectedCompany":"","states":[],"selectedState":"","status":[],"selectedStatus":"","sites":[],"selectedSite":""};
+    $scope.filterdata={"programs":[],"selectedProgram":"","companies":[],"selectedCompany":"","states":[],"selectedState":"","status":[],"selectedStatus":"","sites":[],"selectedSite":"","brands":[],"selectedBrand":""};
     $scope.download={"orders":[]};
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
@@ -278,6 +278,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Valero"},
         {"name": "Others"}
     ];
+    $scope.filterdata.brands=$scope.storedata.brands;
     $scope.storedata.selectedBrand = $scope.storedata.brands[0];
     $scope.storedata.shifts = [
         {"name": "Day"},
@@ -453,36 +454,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             arr.push(tags[i].value);
         return arr;
     }
-    /********************** Location**************************/
-    /*$scope.getLocation = function(val) {
-     return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
-     params: {
-     address: val,
-     sensor: true
-     }
-     }).then(function(res){
-     var addresses = [];
-     angular.forEach(res.data.results, function(item){
-     addresses.push(item.formatted_address);
-     });
-     return addresses;
-     });
-     };
-
-     $scope.selectedLocation=function(){
-     $appService.delete_cookie("selectedLoc");
-     //$scope.selectedLoc=$scope.asyncSelected;
-     $scope.currentLoc.data.selectedLoc=$scope.asyncSelected;
-     var c_name = "selectedLoc";
-     if($scope.currentLoc.data.selectedLoc && $scope.currentLoc.data.selectedLoc!=null && $scope.currentLoc.data.selectedLoc!="null"){
-     document.cookie = c_name + "=" + escape($scope.currentLoc.data.selectedLoc);
-     }
-     else {
-     var defaultLocation ="United States";
-     document.cookie = c_name + "=" + escape(defaultLocation);
-     }
-     //$(".location_popup").hide();
-     } */
     /******************   Revised Country States Cities****************************/
 
     $scope.getEditCountries = function (countryid, stateid, cityid, setCountryData) {
@@ -1217,7 +1188,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.addCart.pop=product;
         $scope.addCart.quantity=quantity;
     }
-    //shopping Cart Functions
     $scope.shoppingCartProducts = {"total": "", "grandTotal": ""};
     $scope.getShoppingCart = function () {
         $scope.loadingShoppingCartData = true;
@@ -1389,7 +1359,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     }
                     $scope.promotiondata.stores[j].siteName=$scope.promotiondata.stores[j].storeid.storename;
                 }
-                console.log($scope.promotiondata.stores);
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
                 $('.popup').toggle("slide");
@@ -1613,4 +1582,3 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
 });
-

@@ -26,7 +26,7 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
     $scope.searchby = $scope.venderSearch[0];
     $scope.siteInfoReport = [];
     $appService.auth();
-    $scope.getAllSiteInfoReport = function (direction, limit, column, searchText, programFilter, shiftFilter) {
+    $scope.getAllSiteInfoReport = function (direction, limit, column, searchText, programFilter, shiftFilter,brandFilter) {
         if ($scope.loadingSiteInfoReportData) {
             return false;
         }
@@ -50,6 +50,9 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
         if (shiftFilter && shiftFilter != "") {
             query.filter["shift"] = shiftFilter.name;
         }
+        if (brandFilter && brandFilter != "") {
+            query.filter["brands"] = brandFilter.name;
+        }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -70,29 +73,29 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
         })
     }
     $scope.getAllSiteInfoReport(1, 200);
-    $scope.setStoreOrder = function (sortingCol, sortingType, column, searchText, programFilter, shiftFilter) {
+    $scope.setStoreOrder = function (sortingCol, sortingType, column, searchText, programFilter, shiftFilter,brandFilter) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter);
+        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter,brandFilter);
     }
-    $scope.getMore = function (column, searchText, programFilter, shiftFilter) {
-        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter);
+    $scope.getMore = function (column, searchText, programFilter, shiftFilter,brandFilter) {
+        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter,brandFilter);
     }
-    $scope.getLess = function (column, searchText, programFilter, shiftFilter) {
-        $scope.getAllSiteInfoReport(0, 200, column, searchText, programFilter, shiftFilter);
+    $scope.getLess = function (column, searchText, programFilter, shiftFilter,brandFilter) {
+        $scope.getAllSiteInfoReport(0, 200, column, searchText, programFilter, shiftFilter,brandFilter);
     }
     $scope.getProgramList();
 
-    $scope.filterByProgram = function (column, searchText, programFilter, shiftFilter) {
+    $scope.filterByProgram = function (column, searchText, programFilter, shiftFilter,brandFilter) {
         $scope.show.preCursor = 0;
         $scope.show.currentCursor = 0;
-        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter);
+        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter,brandFilter);
     }
-    $scope.filterByShift = function (column, searchText, programFilter, shiftFilter) {
+    $scope.filterSiteData = function (column, searchText, programFilter, shiftFilter,brandFilter) {
         $scope.show.preCursor = 0;
         $scope.show.currentCursor = 0;
-        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter);
+        $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter,brandFilter);
     }
     $scope.exportSites = function () {
         siteTableToExcel('siteTable', 'Site Info');
@@ -124,13 +127,19 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
 cstore.directive('filterProgramSite', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand filter_program" ng-model="filterdata.selectedProgram" ng-options="program.name for program in filterdata.programs" ng-change="filterByProgram(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift)"><option value="">-- Choose Program --</option></select>'
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedProgram" ng-options="program.name for program in filterdata.programs" ng-change="filterByProgram(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"><option value="">-- Choose Program --</option></select>'
     }
 }]);
 cstore.directive('filterShift', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand filter_program" ng-model="storedata.selectedShift" ng-options="shift.name for shift in storedata.shifts" ng-change="filterByShift(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift)"><option value="">-- Choose Shift --</option></select>'
+        template: '<select class="brand filter_program" ng-model="storedata.selectedShift" ng-options="shift.name for shift in storedata.shifts" ng-change="filterSiteData(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"><option value="">-- Choose Shift --</option></select>'
+    }
+}]);
+cstore.directive('filterBrand', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedBrand" ng-options="brand.name for brand in filterdata.brands" ng-change="filterSiteData(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"><option value="">-- Choose Brand --</option></select>'
     }
 }]);
 cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
@@ -142,99 +151,101 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
             '<form ng-submit="search()">' +
             '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form>' +
-            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()"><a ng-href={{tempUrl}} target="_blank">Excel</a></button></div>' +
-            '<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()"><a ng-href={{sitepdfurl}} target="_blank">PDF</a></button></div>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()">Excel</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()">PDF</button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>' +
             '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
-            '<div class="pull-left filter_table"><filter-shift></filter-shift></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
+            '<div class="pull-left filter_table"><filter-shift></filter-shift></div>' +
+            '<div class="pull-left filter_table"><filter-brand></filter-brand></div>' +
+            '<div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + siteInfoReport.length}} from start' +
-            '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
+            '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
             '<div class="table_3 pull-left site_info" id="printSiteInfo">' +
             '<table id="siteTable" width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<th><span>Site Id</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'siteid\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'siteid\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'siteid\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'siteid\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Site Name</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'storename\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'storename\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Program</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Manager Name</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'manager.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Manager Shift<span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'shift\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'shift\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Site Phone</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Manager Phone</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'manager.contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.contact\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.contact\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Email</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Manager Email</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'manager.email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'manager.email\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'manager.email\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Address</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'address\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'address\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'address\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'address\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Country</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'countryid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'countryid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'countryid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'countryid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>State</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'stateid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'stateid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'stateid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'stateid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>City</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'cityid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'cityid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'cityid.name\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'cityid.name\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Postal Code</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'postalcode\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'postalcode\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'postalcode\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'postalcode\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>POS Type</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_type\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'pos_type\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_type\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pos_type\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>POS Version</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_version\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'pos_version\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pos_version\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pos_version\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Loyalty Status</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'loyalty_status\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'loyalty_status\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Reward Type</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'reward_point\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'reward_point\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Brand</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'brands\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'brands\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'brands\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'brands\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Pump Brand</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_brand\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'pump_brand\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_brand\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pump_brand\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '<th><span>Pump Model</span>' +
-            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_model\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
-            '<div class="sortDown" ng-click="setStoreOrder(\'pump_model\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState)"></div>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_model\',\'asc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'pump_model\',\'desc\',searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"></div>' +
             '</span></th>' +
             '</tr><tr ng-repeat="storeManager in siteInfoReport">' +
             '<td>{{storeManager.siteid}}</td><td>{{storeManager.storename}}</td><td>{{storeManager.programid.name}}</td><td>{{storeManager.manager.name}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.contact}}</td>' +
@@ -251,7 +262,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllSiteInfoReport(1, 200, $scope.searchby.value, $scope.search.searchContent, $scope.filterdata.selectedProgram, $scope.storedata.selectedShift);
+                        $scope.getAllSiteInfoReport(1, 200, $scope.searchby.value, $scope.search.searchContent, $scope.filterdata.selectedProgram, $scope.storedata.selectedShift,$scope.filterdata.selectedBrand);
                     }
                     $scope.printSiteInfo = function (divName) {
                         var printContents = document.getElementById(divName).innerHTML;
@@ -276,12 +287,20 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         if ($scope.storedata.selectedShift && $scope.storedata.selectedShift != "") {
                             pdfquery.filter["shift"] = $scope.storedata.selectedShift.name;
                         }
+                        if ($scope.filterdata.selectedBrand && $scope.filterdata.selectedBrand != "") {
+                            pdfquery.filter["brands"] = $scope.filterdata.selectedBrand.name;
+                        }
                         pdfquery.orders = {};
                         if ($scope.sortingCol && $scope.sortingType) {
                             pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
                         }
                         console.log(JSON.stringify(pdfquery))
                         $scope.sitepdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId=" + tempalateId;
+                        var a = document.createElement('a');
+                        a.href=$scope.sitepdfurl;
+                        a.target = '_blank';
+                        document.body.appendChild(a);
+                        a.click();
                     }
                     $scope.getExportSites = function () {
                         var query = {"table": "storemanagers__cstore"};
@@ -296,6 +315,9 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         if ($scope.storedata.selectedShift && $scope.storedata.selectedShift != "") {
                             query.filter["shift"] = $scope.storedata.selectedShift.name;
                         }
+                        if ($scope.filterdata.selectedBrand && $scope.filterdata.selectedBrand != "") {
+                            query.filter["brands"] = $scope.filterdata.selectedBrand.name;
+                        }
                         query.orders = {};
                         if ($scope.sortingCol && $scope.sortingType) {
                             query.orders[$scope.sortingCol] = $scope.sortingType;
@@ -303,6 +325,11 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
                         var serviceUrl = "/rest/export/excel";
                         $scope.tempUrl = serviceUrl + "?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK;
+                        var a = document.createElement('a');
+                        a.href=$scope.tempUrl;
+                        a.target = '_blank';
+                        document.body.appendChild(a);
+                        a.click();
                     }
                 }
             }

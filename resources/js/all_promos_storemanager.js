@@ -79,10 +79,10 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>'+
-            '<div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
+            '<div class="detail_outer"><div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
             '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>'+
             '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>'+
-            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div>'+
+            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div></div>'+
             '<div class="product_details">' +
             '{{promotion.promo_description}}</div>'+
             '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +

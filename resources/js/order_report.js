@@ -133,7 +133,7 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker></div><div class="pull-left order_date"><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker></div>' +
-            '<div class="pull-left"><button ng-click="orderDateFilter()">Filter</button></div><div class="pull-right"><div class="pull-right"><button ng-click="exportOrders()">Excel</button></div><div class="pull-right"><button ng-click="generateorderpdf()"><a ng-href={{orderpdfurl}} target="_blank">PDF</a></button></div></div>'+
+            '<div class="pull-left"><button ng-click="orderDateFilter()">Filter</button></div><div class="pull-right"><div class="pull-right"><button ng-click="exportOrders()">Excel</button></div><div class="pull-right"><button ng-click="generateorderpdf()">PDF</button></div></div>'+
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
             '<div class="filter_div">'+
             '<div class="pull-left filter_text">Filter</div>'+
@@ -206,8 +206,12 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
                         if ($scope.sortingCol && $scope.sortingType) {
                             pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
                         }
-                        console.log(JSON.stringify(pdfquery))
                         $scope.orderpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+                        var a = document.createElement('a');
+                        a.href=$scope.orderpdfurl;
+                        a.target = '_blank';
+                        document.body.appendChild(a);
+                        a.click();
                     }
 				}
             }

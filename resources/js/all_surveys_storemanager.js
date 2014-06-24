@@ -65,7 +65,8 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
     return{
         restrict: 'E',
         template: '<div>'+
-            '<div class="survey_all" ng-repeat="survey in surveys">' +
+            '<div ng-hide="surveys.length > 0">No Survey has been assigned.</div>'+
+            '<div class="survey_all" ng-show="surveys.length > 0" ng-repeat="survey in surveys">' +
             '<div class="survey_dic pull-left">' +
             '<div class="survey_left pull-left">Title</div>' +
             '<div class="survey_right pull-right">{{survey.title}}</div></div>' +

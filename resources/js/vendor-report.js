@@ -138,9 +138,9 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="getExportVendors()"><a ng-href={{tempUrl}} target="_blank">Excel</a></button></div>' +
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div class="delete_btn pull-right"><button type="button" ng-click="getExportVendors()"><a>Excel</a></button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printDiv(\'printVendors\')">Print</button></div>' +
-            '<div class="delete_btn pull-right"><button type="button" ng-click="generatepdf()"><a ng-href={{vendorpdfurl}} target="_blank">PDF</a></button></div></div>'+
+            '<div class="delete_btn pull-right"><button type="button" ng-click="generatepdf()">PDF</button></div></div>'+
             '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-company></filter-company></div><div class="pull-left filter_table"><filter-program></filter-program></div><div class="pull-left filter_table"><filter-states></filter-states></div><div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState,filterdata.selectedCompany)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + vendorReport.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,filterdata.selectedProgram,filterdata.selectedState,filterdata.selectedCompany)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
@@ -218,6 +218,11 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         }
                         console.log(JSON.stringify(pdfquery))
                         $scope.vendorpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+                        var a = document.createElement('a');
+                        a.href=$scope.vendorpdfurl;
+                        a.target = '_blank';
+                        document.body.appendChild(a);
+                        a.click();
                     }
                     $scope.getExportVendors = function () {
                         var query = {"table": "vendors__cstore"};
@@ -240,7 +245,11 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         var serviceUrl = "/rest/export/excel";
                         $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
                         console.log($scope.tempUrl);
-                        //window.open(tempUrl,'_blank', 'width=300,height=300');
+                        var a = document.createElement('a');
+                        a.href=$scope.tempUrl;
+                        a.target = '_blank';
+                        document.body.appendChild(a);
+                        a.click();
                     }
                 }
             }

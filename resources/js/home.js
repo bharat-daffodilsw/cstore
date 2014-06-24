@@ -126,7 +126,7 @@ cstore.directive('popularProducts', ['$appService', function ($appService, $scop
             '</div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in popularProducts"><div class="products_img">' +
             '<a href="#!/pop?popid={{product._id}}"><img title="{{product.name}}" ng-src="{{product.imageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/pop?popid={{product._id}}">{{product.name}}</a></div>'+
-            '<div class="name"><a href="#!/psop-category?q={{product.product_category._id}}">{{product.product_category.name}}</a></div>'+
+            '<div class="category_name"><a href="#!/psop-category?q={{product.product_category._id}}">{{product.product_category.name}}</a></div>'+
             '<div class="product_details">' +
             '{{product.short_description}}</div><div class="price"><a href=>{{product.cost.amount | currency}}</a></div>' +
             '<div class="add_to_cart" ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div></div><div class="loadingImage" ng-hide="!loadingPopularProductData"><img src="images/loading.gif"></div>',
@@ -146,10 +146,10 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
-            '<div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
+            '<div class="detail_outer"><div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
             '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>'+
             '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>'+
-            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div>'+
+            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div></div>'+
             '<div class="product_details">{{promotion.promo_description}}</div>'+
             '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
     }
@@ -159,7 +159,7 @@ cstore.directive('assignedTrainingSessions', ['$appService', function ($appServi
     return{
         restrict: "E",
         template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-trainings">( View all )</a>' +
-            '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
+            '</div><div class="trainings col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
             '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
             '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
     }
