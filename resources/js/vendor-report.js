@@ -1,6 +1,7 @@
 cstore.controller('vendorReportCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingVendorReportData = false;
+    $scope.filterdata.selectedProgram="";
     $scope.venderSearch = [
         {"value": "firstname", "name": "Name"},
         {"value": "address", "name": "Address"},
