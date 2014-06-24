@@ -25,49 +25,24 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
+            $scope.promotionData.loadingData = false;
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
-            if ($scope.promotions.length) {
-                for (var i = 0; i < rawData.length; i++) {
-                    $scope.promotions.push(rawData[i]);
-                }
-            }
-            if (!$scope.promotions.length) {
-                $scope.promotions = rawData;
 
-            }
             for (var k = 0; k < $scope.promotions.length; k++) {
                 $scope.promotions[k]["optStatus"] = false;
-            }
-            $scope.promotionData.loadingData = false;
-            $scope.cursor = promoData.response.cursor;
-            if ($scope.promotions.length) {
-                $scope.promotionData.available = "true";
-            }
-            else {
-                $scope.promotionData.available = "false";
             }
 
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
-            $(window).scroll(function () {
-                if ($("#scrollDiv").offset()) {
-                    if ($(window).scrollTop() + $(window).height() > $("#scrollDiv").offset().top) {
-                        if ($scope.cursor != "" && $scope.cursor != undefined) {
-                            $scope.getAllPromos($scope.cursor, $routeParams.search);
-                        }
-                    }
-                }
-            });
 
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
-    $scope.getInitialData = function (cursor) {
-        $scope.getAllPromos(cursor, $routeParams.search);
-    }
+        $scope.getAllPromos(0, $routeParams.search);
+
 });
 
 
@@ -90,7 +65,6 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
         compile: function () {
             return {
                 pre: function ($scope) {
-                    $scope.getInitialData(0);
                 },
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
@@ -109,7 +83,6 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                                 $scope.optArray.push({"_id":$scope.promotions[i]._id,"store_manager_id":[{"_id":$scope.promotions[i].store_manager_id._id,"opt":$scope.promotions[i].store_manager_id.opt,"__type__":"update"}]});
                             }
                         }
-                        console.log("test array " + JSON.stringify($scope.optArray));
                         if (!$scope.optArray.length || $scope.optArray.length ==0) {
                             $("#popupMessage").html("Please opt atleast one promo");
                             $('.popup').toggle("slide");
