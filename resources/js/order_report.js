@@ -1,6 +1,7 @@
 cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingOrderReportData = false;
+    $scope.filterdata.selectedProgram="";
     $scope.venderSearch = [
         {"value": "storeid.storename", "name": "Site Name"},
         {"value": "status", "name": "Status"}
