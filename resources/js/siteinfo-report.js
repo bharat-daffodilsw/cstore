@@ -294,7 +294,6 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         if ($scope.sortingCol && $scope.sortingType) {
                             pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
                         }
-                        console.log(JSON.stringify(pdfquery))
                         $scope.sitepdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId=" + tempalateId;
                         var a = document.createElement('a');
                         a.href=$scope.sitepdfurl;

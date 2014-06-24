@@ -1127,9 +1127,9 @@ table td input {
 .search_sign_2 {
     width: 30px;
     height: 0px;
-    position: absolute;
+    position: relative;
     margin-left: 155px;
-    margin-top: 0;
+    margin-top: -30px;
 }
 
 .search_by {
@@ -2039,7 +2039,7 @@ width: 100%;  }
     width: 30px;
     height: 0px;
     position: absolute;
-    margin-left: -30px;
+    margin-left: -35px;
     margin-top: 4px;
 }
 

@@ -746,6 +746,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.data["address2"] = "";
         $scope.data["email"] = "";
         $scope.data["otherCategory"] = "";
+        $scope.data["otherCompany"] = "";
+        //$scope.data["selectedCompany"] = $scope.data.companies[0];
         $scope.data["selectedVendorCategory"] = $scope.data.vendorCategories[0];
         for (var i = 0; i < $scope.data.countries.length; i++) {
             if ($scope.data.countries[i]._id == "531d3e9b8826fc304706a460") {
@@ -998,17 +1000,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata["manager"]["contact"] = "";
         $scope.storedata["manager"]["email"] = "";
         $scope.storedata["manager"]["name"] = "";
-        //changes Made
         $scope.readonlyrow.fileurl = "";
-        //$scope.storedata["company_logo"] = "";
-        //$scope.readonlyrow.fileurl = "";
         $scope.storedata.selectedCountry = "";
         $scope.storedata.selectedCity = "";
         $scope.storedata.selectedState = "";
         $scope.storedata.selectedPosType = $scope.storedata.posTypes[0];
-        //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
         $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
-        //changes made 02/05
         $scope.storedata.selectedBrand = $scope.storedata.brands[0];
         $scope.storedata.otherBrand = "";
         $scope.storedata.otherPosType = "";
@@ -1016,7 +1013,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata.siteid = "";
         $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
         $scope.storedata.selectedShift = "";
-        //$scope.oFile.fileExist = false;
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
     }
     $scope.clearProductContent = function () {
@@ -1277,7 +1273,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.data.companies = companyData.response.data;
             $scope.data.selectedCompany = $scope.data.companies[0];
             $scope.filterdata.companies = companyData.response.data;
-            //$scope.filterdata.selectedProgram = $scope.filterdata.programs[0];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");

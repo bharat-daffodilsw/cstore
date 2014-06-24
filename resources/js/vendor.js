@@ -229,7 +229,9 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
 cstore.directive('company', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="select_city"  ng-model="data.selectedCompany" ng-options="company.name for company in data.companies"></select>',
+        template: '<select class="select_city"  ng-model="data.selectedCompany" ng-options="company.name for company in data.companies"></select>'+
+        '<input type="text" placeholder="" ng-show = "data.selectedCompany.name == \'Others\'" ng-model="data.otherCompany" class="other_input pull-left" >',
+
         compile: function () {
             return{
                 pre: function () {
@@ -412,6 +414,11 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
+                        if (!$scope.data.selectedCompany || ($scope.data.selectedCompany.name == "Others" && !$scope.data.otherCompany)) {
+                            $("#popupMessage").html("Please choose brand");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
                         if ($scope.data["userid"]) {
                             $scope.newVendor["_id"] = $scope.data["userid"];
                         }
@@ -436,7 +443,13 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["contact"] = $scope.data.contact;
                         $scope.newVendor["email"] = $scope.data.email;
                         $scope.newVendor["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
-                        $scope.newVendor["companyid"] = {"name": $scope.data.selectedCompany.name, "_id": $scope.data.selectedCompany._id};
+                        if($scope.data.selectedCompany.name=="Others" || $scope.data.otherCompany){
+                            $scope.newVendor["companyid"] = { "name": $scope.data.otherCompany };
+                        }
+                        else{
+                            $scope.newVendor["companyid"] = {"name": $scope.data.selectedCompany.name, "_id": $scope.data.selectedCompany._id};
+                        }
+
                         var query = {};
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];

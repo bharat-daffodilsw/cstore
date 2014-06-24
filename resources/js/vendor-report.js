@@ -217,7 +217,6 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         if ($scope.sortingCol && $scope.sortingType) {
                             pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
                         }
-                        console.log(JSON.stringify(pdfquery))
                         $scope.vendorpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
                         var a = document.createElement('a');
                         a.href=$scope.vendorpdfurl;
@@ -245,7 +244,6 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
                         var serviceUrl = "/rest/export/excel";
                         $scope.tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
-                        console.log($scope.tempUrl);
                         var a = document.createElement('a');
                         a.href=$scope.tempUrl;
                         a.target = '_blank';
