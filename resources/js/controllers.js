@@ -284,6 +284,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Day"},
         {"name": "Night"}
     ];
+    $scope.storedata.dealers = [
+        {"name": "Dealer"},
+        {"name": "Company Op"}
+    ];
     //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
     $scope.storedata.loyalty_status = [
         {"name": "Active"},
@@ -292,7 +296,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Off program"}
     ];
     $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
-    //changes Made 14/05
     $scope.productdata = {"productCategories": [], "vendors": [], "selectedProductCategory": "", "selectedVendor": "", "programs": [], "selectedProgram": ""};
     $scope.userdata = {"roles": [], "selectedRole": "", "stores": [], "selectedStore": ""};
     $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedEndHour": "", "selectedEndMinute": ""};
@@ -305,7 +308,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Cooler"}
     ];
     $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
-    // change made
     $scope.promotiondata.upc = [
         {"name": "GROUP"},
         {"name": "PLU"},
@@ -989,7 +991,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata.manager = {};
         $scope.storedata["address"] = "";
         $scope.storedata["contact"] = "";
-        //$scope.storedata["loyalty_status"] = "";
         $scope.storedata["pump_model"] = "";
         $scope.storedata["pump_brand"] = ""
         $scope.storedata["email"] = "";
@@ -1013,6 +1014,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata.siteid = "";
         $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
         $scope.storedata.selectedShift = "";
+        $scope.storedata.selectedDealer = "";
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
     }
     $scope.clearProductContent = function () {

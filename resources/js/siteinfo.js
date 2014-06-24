@@ -23,7 +23,8 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         {"value": "reward_point", "name": "Reward Type"},
         {"value": "brands", "name": "Brand"},
         {"value": "pump_brand", "name": "Pump Brand"},
-        {"value": "pump_model", "name": "Pump Model"}
+        {"value": "pump_model", "name": "Pump Model"},
+        {"value": "dealer", "name": "Dealer/Company Op"}
     ];
 
     $scope.searchby = $scope.venderSearch[0];
@@ -43,7 +44,7 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
         $scope.loadingStoreData = true;
         var query = {"table": "storemanagers__cstore"};
 
-        query.columns = ["programid", "siteid", "manager.email", "manager.contact", "manager.name", "address", "cityid", "countryid", "manager", "postalcode", "stateid", "storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point", "pump_brand", "pump_model", "address2"];
+        query.columns = ["dealer","programid", "siteid", "manager.email", "manager.contact", "manager.name", "address", "cityid", "countryid", "manager", "postalcode", "stateid", "storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point", "pump_brand", "pump_model", "address2"];
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -206,12 +207,17 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'pump_model\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setStoreOrder(\'pump_model\',\'desc\',searchby.value,search.searchContent)"></div>' +
             '</span></th>'+
+            '<th><span>Dealer/Company Op</span>' +
+            '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'dealer\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setStoreOrder(\'dealer\',\'desc\',searchby.value,search.searchContent)"></div>' +
+            '</span></th>'+
             '<th></th>' +
             '</tr><tr ng-repeat="storeManager in storeManagers"><td>' +
             '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.siteid}}</td><td>{{storeManager.storename}}</td><td>{{storeManager.programid.name}}</td><td>{{storeManager.manager.name}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.contact}}</td>' +
             '<td>{{storeManager.manager.contact}}</td><td>{{storeManager.email}}</td><td>{{storeManager.manager.email}}</td><td>{{storeManager.address}}</td><td>{{storeManager.countryid.name}}</td>' +
             '<td>{{storeManager.stateid.name}}</td><td>{{storeManager.cityid.name}}</td><td>{{storeManager.postalcode}}</td><td>{{storeManager.pos_type}}</td><td>{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td>'+
             '<td>{{storeManager.brands}}</td><td>{{storeManager.pump_brand}}</td><td>{{storeManager.pump_model}}</td>' +
+            '<td>{{storeManager.dealer}}</td>' +
             '<td><a class="edit_btn" ng-click="setStoreState(storeManager)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingStoreData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -346,6 +352,17 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                                 }
                             }
                         }
+                        if (store.dealer && $scope.storedata.dealers) {
+                            for (var j = 0; j < $scope.storedata.dealers.length; j++) {
+                                if ($scope.storedata.dealers[j].name == store.dealer) {
+                                    $scope.storedata.selectedDealer = $scope.storedata.dealers[j];
+                                    break;
+                                }
+                                else {
+                                    $scope.storedata.selectedDealer = "";
+                                }
+                            }
+                        }
                         if (store.loyalty_status && $scope.storedata.loyalty_status) {
                             for (var j = 0; j < $scope.storedata.loyalty_status.length; j++) {
                                 if ($scope.storedata.loyalty_status[j].name == store.loyalty_status) {
@@ -442,6 +459,20 @@ cstore.directive('loyaltyStatus', ['$appService', function ($appService, $scope)
     }
 }]);
 
+cstore.directive('dealer', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="storedata.selectedDealer" ng-options="dealer.name for dealer in storedata.dealers"></select>',
+        compile: function () {
+            return{
+                pre: function () {
+
+                }, post: function ($scope) {
+                }
+            }
+        }
+    }
+}]);
 cstore.directive('addStoreManager', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -539,7 +570,12 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<td class="half_td"><program-select></program-select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><div class="save_close pull-left">' +
+            '<td class="half_td"><div class="margin_top">Dealer/Company Op</div></td>' +
+            '<td class="half_td"></td>'+
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><dealer></dealer></td>' +
+            '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveStore()"><a href="">Save</a></button>' +
             '</div>' +
@@ -547,6 +583,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<button type="button" ng-click="setPathforStore(\'site-info\')"><a href="">Close</a></button>' +
             '</div>' +
             '</div></td>' +
+            '</tr>' +
+            '<tr>' +
             '</tr>' +
             '</table></div>' +
             '</div><div class="loadingImage" ng-hide="!loadingAddStoreData"><img src="images/loading.gif"></div></div>',
@@ -662,11 +700,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["storename"] = $scope.storedata.storename;
                             $scope.newStore["address"] = $scope.storedata.address;
                             $scope.newStore["address2"] = $scope.storedata.address2;
-                            //changes made 02/05
-                            //for (var i = 0; i < $scope.storedata.brands.length; i++) {
-                            //    var selectedBrands = $scope.storedata.brands[i].name
-                            //}
-                            //$scope.newStore["brands"] = [selectedBrands];
                             $scope.newStore["brands"] = ($scope.storedata.selectedBrand.name == "Others") ? $scope.storedata.otherBrand : $scope.storedata.selectedBrand.name;
                             $scope.newStore["siteid"] = $scope.storedata.siteid;
                             $scope.newStore["contact"] = $scope.storedata.contact;
@@ -689,6 +722,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["postalcode"] = $scope.storedata.postalcode;
                             $scope.newStore["reward_point"] = ($scope.storedata.selectedRewardType.name == "Others") ? $scope.storedata.otherRewardType : $scope.storedata.selectedRewardType.name;
                             $scope.newStore["shift"] = $scope.storedata.selectedShift.name;
+                            $scope.newStore["dealer"] = $scope.storedata.selectedDealer.name;
                             $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                             $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
                             $scope.newStore["manager"]["name"] = $scope.storedata.manager.name;
@@ -711,39 +745,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                                 $scope.setPathforStore("site-info");
                             } else {
                                 $("#popupMessage").html(callBackData.response);
-                                $('.popup').toggle("slide");
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
-                            $('.popup').toggle("slide");
-                        });
-                    }
-                    $scope.saveUser = function (storeid) {
-                        $scope.newUser = {};
-                        $scope.newUser["userid"] = {"emailid": $scope.storedata.username, "firstname": $scope.storedata.manager.name, "lastname": "", "password": $scope.storedata.password, "username": $scope.storedata.username};
-                        $scope.newUser["roleid"] = {"_id": STOREMANAGER, "name": "store-manager"};
-                        $scope.newUser["username"] = $scope.storedata.username;
-                        $scope.newUser["storeid"] = {"_id": storeid, "storename": $scope.storedata.storename};
-                        var userquery = {};
-                        userquery.table = "user_profiles__cstore";
-                        userquery.operations = [$scope.newUser];
-                        $appService.save(userquery, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.code == 200 && callBackData.status == "ok") {
-                                if (!$scope.storedata["storeid"]) {
-                                    $scope.clearStoreContent();
-                                }
-                                $("#popupMessage").html("Store manager saved");
-                                $('.popup').toggle("slide");
-                                window.location.href = "#!/store-managers"
-                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                $('.popup').toggle("slide");
-                            }
-                            else {
-                                $("#popupMessage").html("some error while saving user");
                                 $('.popup').toggle("slide");
                             }
                             if (!$scope.$$phase) {
