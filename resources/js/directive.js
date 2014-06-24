@@ -43,7 +43,6 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li>'+
             '<li ng-click="clearSurveyContent()"><a href="#!/surveys" active-link="active">Surveys</a></li>'+
-            '<li id="orders" ng-click="clearOrderContent()"><a href="#!/orders"active-link="active">Orders</a></li>'+
             '<li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li>'+
             '<li id="setup"><a href active-link="active">Setup</a>'+
             '<div class="setup pull-left"><ul>'+
