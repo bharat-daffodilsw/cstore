@@ -595,100 +595,6 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                 },
                 post: function ($scope) {
-                    $scope.checkoutParameters = {};
-                   function checkoutParameters(serviceName, merchantID, options) {
-                        this.serviceName = serviceName;
-                        this.merchantID = merchantID;
-                        this.options = options;
-                    }
-                    $scope.addCheckoutParameters = function (serviceName, merchantID, options) {
-
-                        // check parameters
-                        if (serviceName != "PayPal" && serviceName != "Google") {
-                            throw "serviceName must be 'PayPal' or 'Google'.";
-                        }
-                        if (merchantID == null) {
-                            throw "A merchantID is required in order to checkout.";
-                        }
-
-                        // save parameters
-                        $scope.checkoutParameters[serviceName] = new checkoutParameters(serviceName, merchantID, options);
-                    }
-                    $scope.addCheckoutParameters("PayPal", "bernardo.castilho-facilitator@gmail.com");
-                    $scope.checkout = function (serviceName, clearCart) {
-
-                        // select serviceName if we have to
-                        if (serviceName == null) {
-                            var p = $scope.checkoutParameters[Object.keys($scope.checkoutParameters)[0]];
-                            serviceName = p.serviceName;
-                        }
-
-                        // sanity
-                        if (serviceName == null) {
-                            throw "Use the 'addCheckoutParameters' method to define at least one checkout service.";
-                        }
-
-                        // go to work
-                        var parms = $scope.checkoutParameters[serviceName];
-                        if (parms == null) {
-                            throw "Cannot get checkout parameters for '" + serviceName + "'.";
-                        }
-                        switch (parms.serviceName) {
-                            case "PayPal":
-                                $scope.checkoutPayPal(parms, clearCart);
-                                break;
-                            case "Google":
-                                this.checkoutGoogle(parms, clearCart);
-                                break;
-                            default:
-                                throw "Unknown checkout service: " + parms.serviceName;
-                        }
-                    }
-                    $scope.checkoutPayPal = function (parms, clearCart) {
-
-                        // global data
-                        var data = {
-                            cmd: "_cart",
-                            business: parms.merchantID,
-                            upload: "1",
-                            rm: "2",
-                            charset: "utf-8"
-                        };
-
-                        // item data
-                        for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
-                            var item = $scope.shoppingCartProducts[i];
-                            var ctr = i + 1;
-                            //data["item_number_" + ctr] = item.sku;
-                            data["item_name_" + ctr] = item.name;
-                            data["quantity_" + ctr] = item.quantity;
-                            data["amount_" + ctr] = item.cost.amount;
-                        }
-
-                        // build form
-                        var form = $('<form/></form>');
-                        form.attr("action", "https://www.paypal.com/cgi-bin/webscr");
-                        form.attr("method", "POST");
-                        form.attr("style", "display:none;");
-                        $scope.addFormFields(form, data);
-                        $scope.addFormFields(form, parms.options);
-                        $("body").append(form);
-
-                        // submit form
-                        this.clearCart = clearCart == null || clearCart;
-                        form.submit();
-                        form.remove();
-                    }
-                    $scope.addFormFields = function (form, data) {
-                        if (data != null) {
-                            $.each(data, function (name, value) {
-                                if (value != null) {
-                                    var input = $("<input></input>").attr("type", "hidden").attr("name", name).val(value);
-                                    form.append(input);
-                                }
-                            });
-                        }
-                    }
                     $scope.setPaymentPath = function (paymentId) {
                         window.location.href = "#!/payment?id=" + paymentId;
                     }
@@ -721,6 +627,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         $scope.setPathForOrder('billing-address?q=setBackData');
                     }
                     $scope.saveOrder = function (cart) {
+                        console.log(cart)
                         var order_date = new Date();
                         $scope.loadingShoppingCartData = true;
                         $scope.newOrder = {};

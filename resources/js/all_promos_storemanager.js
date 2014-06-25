@@ -27,7 +27,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promoData) {
             $scope.promotionData.loadingData = false;
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
-
+            $scope.promotions=rawData;
             for (var k = 0; k < $scope.promotions.length; k++) {
                 $scope.promotions[k]["optStatus"] = false;
             }
@@ -91,7 +91,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                         $scope.promotionData.loadingData = true;
                         var query = {};
                         query.table = "promotions__cstore";
-                        query.operations = $scope.testArray;
+                        query.operations = $scope.optArray;
                         console.log(JSON.stringify(query));
                          $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                          $scope.promotionData.loadingData = false;

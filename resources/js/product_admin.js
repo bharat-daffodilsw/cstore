@@ -210,7 +210,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Name*</div></td>' +
-            '<td class="half_td"><div class="margin_top">POP category*</div></td>' +
+            '<td class="half_td"><div class="margin_top">POP Category*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="productdata.name"></td>' +
