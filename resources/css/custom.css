@@ -2304,3 +2304,6 @@ label.multiSelect span:hover {
 .detail_outer {
     margin:4px 0px;
 }
+.datanotes textarea {
+    width: 95% !important;
+}

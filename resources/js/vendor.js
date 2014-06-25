@@ -28,7 +28,7 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
         $scope.loadingVenderData = true;
 
         var query = {"table": "vendors__cstore"};
-        query.columns = ["address2","programid", "companyid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category"];
+        query.columns = ["address2","programid", "companyid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category","notes"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -183,7 +183,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         $scope.data["address"] = vendor.address ? vendor.address : "";
                         $scope.data["email"] = vendor.email ? vendor.email : "";
                         $scope.data["address2"] = vendor.address2 ? vendor.address2 : "";
-
+                        $scope.data["notes"] = vendor.notes ? vendor.notes : "";
                         //$scope.data["vendorCategory"]=vendor.category ;//? vendor.category :$scope.vendorCategories[0];
                         if (vendor.category) {
                             for (var j = 0; j < $scope.data.vendorCategories.length; j++) {
@@ -206,6 +206,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         if (vendor.programid) {
                             for (var j = 0; j < $scope.productdata.programs.length; j++) {
                                 if ($scope.productdata.programs[j]._id == vendor.programid._id) {
+                                    $scope.productdata.selectedProgram = $scope.productdata.programs[j];
                                     break;
                                 }
                             }
@@ -314,11 +315,14 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Company*</div></td>' +
+            '<td><div class="margin_top">Notes</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><company></company></td>' +
+            '<td class="datanotes"><textarea ng-model="data.notes"> </textarea></td>' +
             '</tr>' +
-            '</table></div>' +
+            '</table>' +
+            '</div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td><div class="save_close pull-left">' +
@@ -428,7 +432,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["lastname"] = $scope.data.lastname;
                         $scope.newVendor["address"] = $scope.data.address;
                         $scope.newVendor["address2"] = $scope.data.address2;
-
+                        $scope.newVendor["notes"] = $scope.data.notes;
                         $scope.newVendor["category"] = ($scope.data.selectedVendorCategory.name == "Others") ? $scope.data.otherCategory : $scope.data.selectedVendorCategory.name;
                         if ($scope.data.selectedCountry && $scope.data.selectedCountry != null && $scope.data.selectedCountry != undefined && $scope.data.selectedCountry != "undefined" && $scope.data.selectedCountry != "null") {
                             $scope.newVendor["country"] = {"_id": $scope.data.selectedCountry._id, "name": $scope.data.selectedCountry.name}

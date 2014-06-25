@@ -41,18 +41,19 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Users</a></li>'+
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
+            '<li><a active-link="active" href="#!/promo-text-files" >Promo Text Files</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li>'+
             '<li ng-click="clearSurveyContent()"><a href="#!/surveys" active-link="active">Surveys</a></li>'+
             '<li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li>'+
-            '<li id="setup"><a href active-link="active">Setup</a>'+
+            '<li id="setup"><a href  ng-class="{\'active\': hasHighlight}">Setup</a>'+
             '<div class="setup pull-left"><ul>'+
-            '<li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-link="active">Program</a></li>' +
-            '<li id="product-codes"><a href="#!/product-codes" active-link="active">Product Codes</a></li>' +
-            '<li id="training-categories"><a href="#!/training-categories" active-link="active">Training Category</a></li>' +
-            '<li id="product-categories"><a href="#!/pop-categories" active-link="active">POP Category</a></li>'+
-            '<li id="cities"><a href="#!/cities" active-link="active">Cities</a></li>'+
-            '<li id="states"><a href="#!/states" active-link="active">States</a></li>'+
-            '<li id="countries"><a href="#!/countries"active-link="active">Countries</a></li>'+
+            '<li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-setup="highlight">Program</a></li>' +
+            '<li id="product-codes"><a href="#!/product-codes" active-setup="highlight">Product Codes</a></li>' +
+            '<li id="training-categories"><a href="#!/training-categories" active-setup="highlight">Training Category</a></li>' +
+            '<li id="product-categories"><a href="#!/pop-categories" active-setup="highlight">POP Category</a></li>'+
+            '<li id="cities"><a href="#!/cities" active-setup="highlight">Cities</a></li>'+
+            '<li id="states"><a href="#!/states" active-setup="highlight">States</a></li>'+
+            '<li id="countries"><a href="#!/countries"active-setup="highlight">Countries</a></li>'+
             '</ul></div></li>'+
             '<li id="setup"><a href active-link="active">Reports</a>'+
             '<div class="setup pull-left"><ul>'+
@@ -194,6 +195,29 @@ cstore.directive('activeLink', ['$location', function (location) {
                     element.addClass(clazz);
                 } else {
                     element.removeClass(clazz);
+
+                }
+            });
+        }
+    };
+}]);
+
+cstore.directive('activeSetup', ['$location', function (location) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs, controller) {
+            var clazz = attrs.activeSetup;
+            var path = attrs.href;
+            path = path.substring(2); //hack because path does bot return including hashbang
+            scope.location = location;
+            scope.$watch('location.path()', function (newPath) {
+                if (path === newPath) {
+                    element.addClass(clazz);
+                    scope.hasHighlight=true;
+
+                } else {
+                    element.removeClass(clazz);
+                    scope.hasHighlight=false;
                 }
             });
         }
@@ -343,7 +367,6 @@ cstore.directive('programSelect', ['$appService', function ($appService, $scope)
         template: '<select class="brand" ng-model="productdata.selectedProgram" ng-options="program.name for program in productdata.programs"></select>'
     }
 }]);
-
 
 cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($appService, $compile) {
     return {

@@ -192,6 +192,9 @@ cstore.config(
             }).when('/order-report', {
                 templateUrl: '../order-report',
                 controller: 'orderReportCtrl'
+            }).when('/promo-text-files', {
+                templateUrl: '../promo-text-files',
+                controller: 'promoTextFilesCtrl'
             }).otherwise(
 //            {"redirectTo":"/login.html"}
             );
@@ -360,7 +363,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.shoppingCartData.quantity.push(i);
     }
     $scope.programdata = {};
-    /*bharat change for location*/
     $scope.location = '';
     $scope.allAssignedSurveys = [];
     $scope.getURLParam = function (strParamName) {
@@ -380,21 +382,19 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
         return unescape(strReturn);
     }
-    $scope.doSearch = function () {
-        if ($scope.location === '') {
-            alert('Directive did not update the location property in parent controller.');
-        } else {
-            $appService.delete_cookie("selectedLoc");
-            var c_name = "selectedLoc";
-            document.cookie = c_name + "=" + escape($scope.location);
-            $scope.currentLoc["data"] = $appService.getLocation();
-            if (!$scope.$$phase) {
-                $scope.$apply();
-            }
-        }
-    };
-    /*change end*/
-
+//    $scope.doSearch = function () {
+//        if ($scope.location === '') {
+//            alert('Directive did not update the location property in parent controller.');
+//        } else {
+//            $appService.delete_cookie("selectedLoc");
+//            var c_name = "selectedLoc";
+//            document.cookie = c_name + "=" + escape($scope.location);
+//            $scope.currentLoc["data"] = $appService.getLocation();
+//            if (!$scope.$$phase) {
+//                $scope.$apply();
+//            }
+//        }
+//    };
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
         query.columns = ["firstname"];
@@ -749,6 +749,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.data["email"] = "";
         $scope.data["otherCategory"] = "";
         $scope.data["otherCompany"] = "";
+        $scope.data.notes="";
         //$scope.data["selectedCompany"] = $scope.data.companies[0];
         $scope.data["selectedVendorCategory"] = $scope.data.vendorCategories[0];
         for (var i = 0; i < $scope.data.countries.length; i++) {
@@ -1027,7 +1028,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.readonlyrow.fileurl = "";
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
-        //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
         $scope.oFile.fileExist = false;
 
     }
@@ -1042,8 +1042,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["end_date"] = "";
-        //$scope.promotiondata["end_time"]="";
-        //$scope.promotiondata["start_time"]="";
         $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
         $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[0];
         $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[0];
@@ -1257,9 +1255,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.productdata.programs = programData.response.data;
-            $scope.productdata.selectedProgram = $scope.productdata.programs[0];
+            for (var i = 0; i < $scope.productdata.programs.length; i++) {
+                if ($scope.productdata.programs[i]._id == "53743f7af36413a56b280897") {
+                    $scope.productdata.selectedProgram = $scope.productdata.programs[i];
+                    break;
+                }
+            }
             $scope.filterdata.programs = programData.response.data;
-            //$scope.filterdata.selectedProgram = $scope.filterdata.programs[0];
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -1312,8 +1314,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.getProgramSelectedStore(programid,promotionid);
             }
             else {
-                $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[0];
-                $scope.getProgramSelectedStore($scope.promotiondata.programs[0]._id,null);
+                for (var i = 0; i < $scope.promotiondata.programs.length; i++) {
+                    if ($scope.promotiondata.programs[i]._id == "53743f7af36413a56b280897") {
+                        $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[i];
+                        $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id,null);
+                        break;
+                    }
+                }
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -1346,9 +1353,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                             if ($scope.promotiondata.stores[j].storeid._id == $scope.assignedStoreManagers[k]._id) {
                                 $scope.promotiondata.stores[j].ticked=true;
                             }
-                            //else {
-                            //    $scope.promotiondata.stores[j].ticked=false;
-                            //}
                         }
                     }
                     else{
@@ -1384,8 +1388,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.getProgramSelectedStoreForTraining(programid,trainingid);
             }
             else {
-                $scope.trainingdata.selectedProgram = $scope.trainingdata.programs[0];
-                $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[0]._id,null);
+                for (var i = 0; i < $scope.trainingdata.programs.length; i++) {
+                    if ($scope.trainingdata.programs[i]._id == "53743f7af36413a56b280897") {
+                        $scope.trainingdata.selectedProgram = $scope.trainingdata.programs[i];
+                        $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id,null);
+                        break;
+                    }
+                }
+
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -1456,8 +1466,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.getProgramSelectedStoreForSurvey(programid,surveyid);
             }
             else {
-                $scope.surveydata.selectedProgram = $scope.surveydata.programs[0];
-                $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[0]._id,null);
+                for (var i = 0; i < $scope.surveydata.programs.length; i++) {
+                    if ($scope.surveydata.programs[i]._id == "53743f7af36413a56b280897") {
+                        $scope.surveydata.selectedProgram = $scope.surveydata.programs[i];
+                        $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id,null);
+                        break;
+                    }
+                }
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -1528,8 +1543,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 $scope.getProgramSelectedStoreForFiles(programid,fileid);
             }
             else {
-                $scope.filedata.selectedProgram = $scope.filedata.programs[0];
-                $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[0]._id,null);
+                for (var i = 0; i < $scope.filedata.programs.length; i++) {
+                    if ($scope.filedata.programs[i]._id == "53743f7af36413a56b280897") {
+                        $scope.filedata.selectedProgram = $scope.filedata.programs[i];
+                        $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id,null);
+                        break;
+                    }
+                }
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
