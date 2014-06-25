@@ -41,25 +41,25 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Users</a></li>'+
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
             '<li id="promotions" ng-click="clearPromotionContent()"><a active-link="active" href="#!/promotions" >Promotion</a></li>' +
-            '<li><a active-link="active" href="#!/promo-text-files" >Promo Text Files</a></li>' +
+            '<li ng-click="deactiveHightLight()"><a active-link="active" href="#!/promo-text-files" >Promo Text Files</a></li>' +
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li>'+
             '<li ng-click="clearSurveyContent()"><a href="#!/surveys" active-link="active">Surveys</a></li>'+
             '<li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li>'+
-            '<li id="setup"><a href  ng-class="{\'active\': hasHighlight}">Setup</a>'+
+            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.setup}">Setup</a>'+
             '<div class="setup pull-left"><ul>'+
-            '<li id="programs" ng-click="clearProgramContent()"><a href="#!/programs" active-setup="highlight">Program</a></li>' +
-            '<li id="product-codes"><a href="#!/product-codes" active-setup="highlight">Product Codes</a></li>' +
-            '<li id="training-categories"><a href="#!/training-categories" active-setup="highlight">Training Category</a></li>' +
-            '<li id="product-categories"><a href="#!/pop-categories" active-setup="highlight">POP Category</a></li>'+
-            '<li id="cities"><a href="#!/cities" active-setup="highlight">Cities</a></li>'+
-            '<li id="states"><a href="#!/states" active-setup="highlight">States</a></li>'+
-            '<li id="countries"><a href="#!/countries"active-setup="highlight">Countries</a></li>'+
+            '<li ng-click="clearProgramContent()"><a href="#!/programs" active-link="highlight">Program</a></li>' +
+            '<li ng-click="activeHightLight()"><a href="#!/product-codes" active-link="highlight">Product Codes</a></li>' +
+            '<li id="training-categories" ng-click="activeHightLight()"><a href="#!/training-categories" active-link="highlight">Training Category</a></li>' +
+            '<li id="product-categories" ng-click="activeHightLight()"><a href="#!/pop-categories" active-link="highlight">POP Category</a></li>'+
+            '<li id="cities" ng-click="activeHightLight()"><a href="#!/cities" active-link="highlight">Cities</a></li>'+
+            '<li id="states" ng-click="activeHightLight()"><a href="#!/states" active-link="highlight">States</a></li>'+
+            '<li id="countries" ng-click="activeHightLight()"><a href="#!/countries"active-link="highlight">Countries</a></li>'+
             '</ul></div></li>'+
-            '<li id="setup"><a href active-link="active">Reports</a>'+
+            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.reports}">Reports</a>'+
             '<div class="setup pull-left"><ul>'+
-            '<li><a href="#!/vendor-report" active-link="active">Vendors</a></li>' +
-            '<li><a href="#!/site-info-report" active-link="active">Site Info</a></li>' +
-            '<li><a href="#!/order-report" active-link="active">Orders</a></li>' +
+            '<li ng-click="activeHightLightReports()"><a href="#!/vendor-report" active-link="active">Vendors</a></li>' +
+            '<li ng-click="activeHightLightReports()"><a href="#!/site-info-report" active-link="active">Site Info</a></li>' +
+            '<li ng-click="activeHightLightReports()"><a href="#!/order-report" active-link="active">Orders</a></li>' +
             '</ul></div></li>'+
             '</ul></div>',
         compile: function () {
@@ -195,29 +195,6 @@ cstore.directive('activeLink', ['$location', function (location) {
                     element.addClass(clazz);
                 } else {
                     element.removeClass(clazz);
-
-                }
-            });
-        }
-    };
-}]);
-
-cstore.directive('activeSetup', ['$location', function (location) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs, controller) {
-            var clazz = attrs.activeSetup;
-            var path = attrs.href;
-            path = path.substring(2); //hack because path does bot return including hashbang
-            scope.location = location;
-            scope.$watch('location.path()', function (newPath) {
-                if (path === newPath) {
-                    element.addClass(clazz);
-                    scope.hasHighlight=true;
-
-                } else {
-                    element.removeClass(clazz);
-                    scope.hasHighlight=false;
                 }
             });
         }

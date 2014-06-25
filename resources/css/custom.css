@@ -2246,7 +2246,7 @@ label.multiSelect span:hover {
 }
 .downloadFile {
     cursor: pointer;
-    margin-left: 350px;
+    margin-left: 280px;
     text-align: left;
 }
 .vendor_report {
@@ -2306,4 +2306,12 @@ label.multiSelect span:hover {
 }
 .datanotes textarea {
     width: 95% !important;
+}
+.downloadTextFile {
+    cursor: pointer;
+    margin-left: 115px;
+    text-align: left;
+}
+.downloadTextFile a {
+    text-decoration: underline;
 }

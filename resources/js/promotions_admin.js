@@ -134,13 +134,13 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.promotiondata.filter_date);
                     }
 
                     $scope.filterByDate = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllPromotions(1, 10, null, null,$scope.promotiondata.filter_date);
+                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.promotiondata.filter_date);
                     }
                     $scope.setAssignedPromo = function (promotionid,programid) {
                         window.location.href = "#!/assign-promo?id=" + promotionid + "&programid=" + programid;
@@ -228,8 +228,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             }
                         }
                         $scope.promotiondata["promo_title"] = promotion.promo_title ? promotion.promo_title : "";
-                        //$scope.promotiondata.end_date = promotion.end_date ? promotion.end_date : "";
-                        //$scope.promotiondata.start_date = promotion.start_date ? promotion.start_date : "";
                         $scope.promotiondata["offer_description"] = promotion.offer_description ? promotion.offer_description : "";
                         $scope.promotiondata["offer_title"] = promotion.offer_title ? promotion.offer_title : "";
                         $scope.promotiondata["promo_description"] = promotion.promo_description ? promotion.promo_description : "";
@@ -277,12 +275,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         }
                         if (promotion.programid) {
                             $scope.getPrograms(promotion.programid._id,promotion._id);
-                            //for (var j = 0; j < $scope.promotiondata.programs.length; j++) {
-                            //    if ($scope.promotiondata.programs[j]._id == promotion.programid._id) {
-                            //        $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[j];
-                            //        break;
-                            //    }
-                           // }
                         }
                         window.location.href = "#!edit-promotion?q=" + promotion._id;
                     }

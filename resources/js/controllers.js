@@ -202,6 +202,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
+    $scope.hasHighlight={"reports":false,"setup":false};
     $scope.notification={};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
@@ -382,19 +383,18 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
         return unescape(strReturn);
     }
-//    $scope.doSearch = function () {
-//        if ($scope.location === '') {
-//            alert('Directive did not update the location property in parent controller.');
-//        } else {
-//            $appService.delete_cookie("selectedLoc");
-//            var c_name = "selectedLoc";
-//            document.cookie = c_name + "=" + escape($scope.location);
-//            $scope.currentLoc["data"] = $appService.getLocation();
-//            if (!$scope.$$phase) {
-//                $scope.$apply();
-//            }
-//        }
-//    };
+    $scope.activeHightLight=function(){
+        $scope.hasHighlight.setup=true;
+        $scope.hasHighlight.reports=false;
+    }
+    $scope.activeHightLightReports=function(){
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=true;
+    }
+    $scope.deactiveHightLight=function(){
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
+    }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
         query.columns = ["firstname"];
@@ -761,6 +761,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.getStatesNew($scope.data, false);
         $scope.getCitiesNew($scope.data, false);
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.logOut = function () {
         $appService.deleteAllCookie();
@@ -1017,6 +1019,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata.selectedShift = "";
         $scope.storedata.selectedDealer = "";
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearProductContent = function () {
         $scope.productdata["name"] = "";
@@ -1029,7 +1033,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
         $scope.oFile.fileExist = false;
-
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearUserContent = function () {
         $scope.userdata["username"] = "";
@@ -1038,6 +1043,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.userdata["password"] = "";
         $scope.userdata.selectedRole = $scope.userdata.roles[0];
         $scope.userdata.selectedStore = $scope.userdata.roles[0];
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
@@ -1064,6 +1071,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.oFile.fileExist = false;
         $scope.getPrograms(null,null);
         $scope.clearPromotionNotificationContent();
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
@@ -1074,6 +1083,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.trainingdata["editImages"] = [];
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
         $scope.getProgramsForTraining(null,null);
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
@@ -1086,6 +1097,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.$apply();
         }
         $scope.setPath('surveys');
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearProgramContent = function () {
         $scope.programdata["name"] = "";
@@ -1098,6 +1111,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.programdata["aisle_template"] = "";
         $scope.readonlyaislerow.fileurl = "";
         $scope.aisleOFile.fileExist = false;
+        $scope.hasHighlight.setup=true;
+        $scope.hasHighlight.reports=false;
     }
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
@@ -1113,6 +1128,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.getProgramsForFiles(null,null);
         $scope.filedata["uploadedimages"] = [];
         $scope.filedata["editImages"] = [];
+        $scope.hasHighlight.setup=false;
+        $scope.hasHighlight.reports=false;
     }
 
     $scope.getShoppingCartLength = function () {
