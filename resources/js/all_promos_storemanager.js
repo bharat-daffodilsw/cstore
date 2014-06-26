@@ -41,9 +41,6 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             $('.popup').toggle("slide");
         })
     }
-    var content = 'file content';
-    var blob = new Blob([ content ], { type : 'text/plain' });
-    $scope.url = (window.URL || window.webkitURL).createObjectURL( blob );
 
     $scope.getAllPromos(0, $routeParams.search);
 
@@ -54,7 +51,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
 cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span><span class="opt_button pull-right"><a download="content.txt" ng-href="{{ url }}">Export as txt</a></span></div>' +
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">All Promotions<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span><span class="opt_button pull-right"><a>Export as txt</a></span></div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>'+
@@ -72,16 +69,17 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                 },
                 post:function($scope){
                     $scope.CSession = $appService.getSession();
-                    $scope.optArray=[];
+
                     $scope.getOptData = function (index) {
                         for(var i=0; i < $scope.promotions.length;i++){
                             if($scope.promotions[i]._id==$scope.promotions[index]._id){
-                                console.log($scope.promotions[i]);
+                                //console.log($scope.promotions[i]);
                                 $scope.promotions[i]["optStatus"] = true;
                             }
                         }
                     }
                     $scope.changeOptInOutStatus = function () {
+                        $scope.optArray=[];
                         for (var i = 0; i < $scope.promotions.length; i++) {
                             if ($scope.promotions[i].optStatus) {
                                 $scope.optArray.push({"_id":$scope.promotions[i]._id,"store_manager_id":[{"_id":$scope.promotions[i].store_manager_id._id,"opt":$scope.promotions[i].store_manager_id.opt,"__type__":"update"}]});
@@ -96,9 +94,10 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "promotions__cstore";
                         query.operations = $scope.optArray;
-                        console.log(JSON.stringify(query));
+                        //console.log(JSON.stringify(query));
                          $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                          $scope.promotionData.loadingData = false;
+                         $scope.optArray=[];
                          if (callBackData.code == 200 && callBackData.status == "ok") {
                          // $("#popupMessage").html("Submitted");
                          // $('.popup').toggle("slide");
