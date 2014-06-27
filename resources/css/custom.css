@@ -2308,6 +2308,9 @@ label.multiSelect span:hover {
     width: 97.5% !important;
     height: 65px;
 }
+.datanotes input {
+    width: 97.5% !important;
+}
 .downloadTextFile {
     cursor: pointer;
     margin-left: 115px;
