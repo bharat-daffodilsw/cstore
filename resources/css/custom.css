@@ -1433,7 +1433,7 @@ span.sortWrap {
     margin: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
-    min-height: 380px;
+    min-height: 350px;
    /* min-height: 311px; */
      max-height: 380px;
 /*max-height: 311px; */
@@ -2305,7 +2305,8 @@ label.multiSelect span:hover {
     margin:4px 0px;
 }
 .datanotes textarea {
-    width: 95% !important;
+    width: 97.5% !important;
+    height: 65px;
 }
 .downloadTextFile {
     cursor: pointer;

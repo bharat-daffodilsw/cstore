@@ -23,7 +23,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image","cooler_template","aisle_template"];
+        query.columns = ["name", "image","cooler_template","aisle_template","participation_id"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -86,8 +86,10 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + programs.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Program Name</span><span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Participation Id</span><span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'participation_id\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'participation_id\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th>Image<span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'image.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'image.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th></th></tr><tr ng-repeat="program in programs"><td>' +
-            '<input type="checkbox" ng-model="program.deleteStatus"></td><td>{{program.name}}</td><td>{{program.image[0].name}}</td>' +
+            '<input type="checkbox" ng-model="program.deleteStatus"></td>'+
+            '<td>{{program.name}}</td><td>{{program.participation_id}}</td><td>{{program.image[0].name}}</td>' +
             '<td><a class="edit_btn" ng-click="setProgramState(program)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProgramData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -145,6 +147,7 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                     }
                     $scope.setProgramState = function (program) {
                         $scope.programdata["name"] = program.name ? program.name : "";
+                        $scope.programdata["participation_id"] = program.participation_id ? program.participation_id : "";
                         if (program.image) {
                             $scope.oFile.fileExist = true;
                         }
@@ -177,23 +180,26 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Name*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Program Image*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Participation Id*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.name"></td>' +
+            '<td class="product_image half_td"><input type="text" placeholder="" ng-model="programdata.participation_id"></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Program Image*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Cooler*</div></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Cooler</div></td>' +
-            '<td class="half_td"><div class="margin_top">Aisle*</div></td>' +
-            '</tr>' +
-            '<tr>' +
             '<td class="product_image half_td"><app-cooler-file-upload></app-cooler-file-upload></td>' +
-            '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
             '</tr>' +
-            '</table>' +
-            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
+            '<td class="half_td"><div class="margin_top">Aisle</div></td>' +
+            '<td class="half_td"><div class="margin_top"></div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
             '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveProgram()"><a href>Save</a></button>' +
@@ -204,7 +210,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</td>' +
             '</tr>' +
-            '</table>' +
             '</div>' +
             '<div class="loadingImage" ng-hide="!loadingAddProgramData"><img src="images/loading.gif"></div>' +
             '</div>',
@@ -225,6 +230,11 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                         if ($scope.CSession) {
                             if (!$scope.programdata.name) {
                                 $("#popupMessage").html("Please enter program name");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.programdata.participation_id) {
+                                $("#popupMessage").html("Please enter participation id");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -250,6 +260,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $scope.newProgram["_id"] = $scope.programdata["programid"];
                             }
                             $scope.newProgram["name"] = $scope.programdata.name;
+                            $scope.newProgram["participation_id"] = $scope.programdata.participation_id;
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
                                 $scope.uploadCoolerTemplate(query);

@@ -264,11 +264,9 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Email*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="email" ng-model="data.email"></td>' +
-            '<td class="half_td"><program-select></program-select></td>' +
+            '<td class="datanotes"><input type="email" ng-model="data.email"></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -315,11 +313,19 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Company*</div></td>' +
-            '<td><div class="margin_top">Notes</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><company></company></td>' +
-            '<td class="datanotes"><textarea ng-model="data.notes"> </textarea></td>' +
+            '<td class="half_td"><program-select></program-select></td>' +
+            '</tr>' +
+            '</table>' +
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Notes</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="data.notes"> </textarea></textarea></td>' +
             '</tr>' +
             '</table>' +
             '</div>' +
@@ -342,7 +348,6 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             return {
                 pre: function ($scope) {
                     $scope.loadingAddVenderData = true;
-                    //evening changes
                     $scope.disabled = false;
                     $scope.newVendor = {};
                     $scope.setPathforVender = function (path) {

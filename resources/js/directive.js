@@ -82,11 +82,17 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<add-to-cart-pop-up></add-to-cart-pop-up><div class="admin_menu pull-left">' +
-            '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li><li><a href="#!/all-promos" active-link="active">Promos</a></li>' +
+            '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li>'+
             '<li><a href="#!/all-trainings" active-link="active">Training</a></li>' +
             '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
             '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li>'+
-            '<li><a href ="#!/all-files" active-link="active">Files</a></li></ul></div>',
+            '<li><a href ="#!/all-files" active-link="active">Files</a></li>'+
+            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.setup}">Promos</a>'+
+            '<div class="setup pull-left"><ul>'+
+            '<li><a href="#!/all-promos" active-link="active">Offered Promos</a></li>' +
+            '<li><a href="#!/submitted-promos" active-link="active">Submitted Promos</a></li>' +
+            '</ul></div></li>'+
+            '</ul></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -429,17 +435,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
                         }
                     };
 
-                    /* iElement.bind('change', function () {
-                     $scope.$apply(function () {
-                     $scope.oFReader = new FileReader();
-                     if (document.getElementById('uploadMultiImgfile').files.length === 0) {
-                     return;
-                     }
-                     $scope.oFile = document.getElementById('uploadMultiImgfile').files[0];
-                     $scope.oFReader.onload = $scope.loadImgFile;
-                     $scope.oFReader.readAsDataURL($scope.oFile);
-                     });
-                     });*/
+
                 }
             }
         }

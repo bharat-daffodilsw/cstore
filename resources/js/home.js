@@ -37,7 +37,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
-        query.filter["start_date"] = {"$lte": currentTime};
+        query.filter["store_manager_id.submitted"] =  false;
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -87,7 +87,6 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $('.popup').toggle("slide");
         })
     }
-    //changes end
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             $scope.getPopularProducts(8, $routeParams.search);
@@ -98,15 +97,6 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
             $scope.homeView = {"storeManager": false, "admin": true};
-//            var pathToBeSet = $appService.getCookie("adminView");
-//            if (pathToBeSet) {
-////                $appService.setAdminView(pathToBeSet);
-//                window.location
-//            }
-//            else {
-////                $appService.setAdminView(VENDOR);
-//            }
-
             window.location.href = "#!/vendors";
 
         }

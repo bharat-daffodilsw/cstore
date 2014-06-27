@@ -27,7 +27,6 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
 
         $scope.loadingPromotionData = true;
         var query = {"table": "promotions__cstore"};
-        //change made
         query.columns = [
             {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
             "image",
@@ -53,7 +52,6 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         if (filterDate && filterDate != "") {
-            query.filter["start_date"] ={"$lte": new Date(filterDate)};
             query.filter["end_date"] = {"$gte": new Date(filterDate)};
         }
         query.orders = {};
@@ -605,7 +603,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             }
                             $scope.storeManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
-                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true});
+                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true,"submitted":false});
                             }
                             $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
@@ -623,7 +621,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             if (tags && tags.length > 0) {
                                 $scope.newPromotion["codes"] = tags;
                             }
-                            //changes made by anuradha 0105 evening
                             //$scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
                             $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};

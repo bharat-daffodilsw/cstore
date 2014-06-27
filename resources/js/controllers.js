@@ -195,6 +195,9 @@ cstore.config(
             }).when('/promo-text-files', {
                 templateUrl: '../promo-text-files',
                 controller: 'promoTextFilesCtrl'
+            }).when('/submitted-promos', {
+                templateUrl: '../submitted-promos',
+                controller: 'submittedPromotionsCtrl'
             }).otherwise(
 //            {"redirectTo":"/login.html"}
             );
