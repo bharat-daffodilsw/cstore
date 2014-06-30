@@ -78,7 +78,7 @@ cstore.directive('trainingCategoryDetail', ['$appService', function ($appService
     return{
         restrict: 'E',
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{sessions[0].training_category_id.name}}</div>' +
-            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="session in sessions">' +
+            '<div class="trainings col-sm-3 col-md-3 pull-left" ng-repeat="session in sessions">' +
             '<div class="name"><a href="#!/training-session?sessionid={{session._id}}">{{session.title}}</a></div>' +
             '<div class="short_product_details">{{session.description}}</div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
