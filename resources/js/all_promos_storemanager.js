@@ -87,8 +87,10 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                     }
                     $scope.changeOptInOutStatus = function () {
                         $scope.optArray = [];
+                        $scope.promosArray = [];
                         for (var i = 0; i < $scope.promotions.length; i++) {
                             if (!$scope.promotions[i].optStatus || ($scope.promotions[i].store_manager_id.opt == true)) {
+                                $scope.promosArray.push($scope.promotions[i]._id);
                                 $scope.optArray.push({"_id": $scope.promotions[i]._id, "store_manager_id": [
                                     {"_id": $scope.promotions[i].store_manager_id._id, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
                                 ]});
@@ -103,11 +105,11 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "promotions__cstore";
                         query.operations = $scope.optArray;
-                        console.log(JSON.stringify(query));
+
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             $scope.promotionData.loadingData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $scope.updateSiteCounter();
+                                $scope.updateSiteCounter($scope.promosArray);
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
@@ -121,7 +123,32 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                         });
                     }
-                    $scope.updateSiteCounter = function () {
+                    $scope.submitPromoOptOut=function(promos){
+                        var storeid = $scope.currentUser.data.storeid;
+                        var programid = $scope.currentUser.data.programid;
+                        $appService.createFile(storeid, programid,promos,ASK,OSK, null, function (callBackData) {
+                            $scope.loadingSendNotification = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Submitted");
+                                $('.popup').toggle("slide");
+                                $scope.setClosePath('promotions');
+                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html("some error while uploading  file");
+                                $('.popup').toggle("slide");
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err.stack);
+                            $('.popup').toggle("slide");
+                        });
+                    }
+                    $scope.uploadTextFile=function(promos){
+
+                        $scope.submitPromoOptOut(promos);
+                    };
+                    $scope.updateSiteCounter = function (promos) {
                         var siteList = {"_id": "", "counter": ""};
                         if ($scope.currentUser.data.storeid) {
                             siteList["_id"] = $scope.currentUser.data.storeid;
@@ -133,6 +160,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.getInitialData(0);
+                                $scope.uploadTextFile(promos)
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
