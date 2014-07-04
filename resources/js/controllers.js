@@ -208,7 +208,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
-    $scope.hasHighlight={"reports":false,"setup":false};
+    $scope.hasHighlight={"reports":false,"setup":false,"promos":false};
     $scope.notification={};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
@@ -398,6 +398,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.deactiveHightLight=function(){
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
+    }
+    $scope.activePromo=function(){
+        $scope.hasHighlight.promos=true;
+    }
+    $scope.inActivePromo=function(){
+        $scope.hasHighlight.promos=false;
     }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
@@ -1142,6 +1148,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
         $scope.orderFilterData.end_date="";
+        $scope.inActivePromo();
     }
     $scope.clearPromotionNotificationContent = function () {
         $scope.notification.subject="";

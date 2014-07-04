@@ -64,10 +64,11 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-show="promotions.length > 0" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
-            '<div class="detail_outer"><div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>' +
-            '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>' +
-            '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>' +
-            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value.amount | currency}}</div></div>' +
+            '<div class="detail_outer"><div class="promo_details">' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div>: {{promotion.start_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="product_details">' +
             '{{promotion.promo_description}}</div>' +
             '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
@@ -267,10 +268,10 @@ cstore.directive('submittedPromos', ['$appService', function ($appService, $scop
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in submittedPromos" ng-show="submittedPromos.length > 0"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
-            '<div class="detail_outer"><div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>' +
-            '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>' +
-            '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>' +
-            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value.amount | currency}}</div></div>' +
+            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="product_details">' +
             '{{promotion.promo_description}}</div>' +
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
@@ -350,10 +351,10 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-show="promotions.length > 0" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
-            '<div class="detail_outer"><div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>' +
-            '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>' +
-            '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>' +
-            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value.amount | currency}}</div></div>' +
+            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="product_details">' +
             '{{promotion.promo_description}}</div>' +
             '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +

@@ -374,8 +374,8 @@ a:hover {
 .img_product {
     padding: 5px;
     position: relative;
-    min-height: 385px;
-    max-height: 385px;
+    min-height: 410px;
+    max-height: 410px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1218,8 +1218,8 @@ table td input {
 
 .details_product {
     width: 54.5%;
-    max-height: 385px;
-    min-height: 385px;
+    min-height: 410px;
+    max-height: 410px;
     margin-top: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
@@ -2320,9 +2320,12 @@ label.multiSelect span:hover {
     text-decoration: underline;
 }
 .promo_drop {
-    width: 140px !important;
+    width: 150px !important;
     left: 5px !important;
 }
 .hours {
     margin-left: 2%;
+}
+.left_align_promo {
+    width:95px;
 }
