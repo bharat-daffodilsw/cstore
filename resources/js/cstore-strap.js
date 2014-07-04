@@ -141,6 +141,62 @@ appStrapServices.factory('$appService', [
                 async: true
             });
         }
+        $appService.createPayment=function(url,requestBody,calltype,dataType,callback,errcallback){
+            $.ajax({
+                url: url,
+                type: calltype,
+                timeout:1200000,
+                dataType:dataType,
+                async:true,
+                crossDomain:true,
+                data:requestBody,
+                success:function (returnData, status, xhr) {
+                    callback(returnData);
+                    var result = returnData;
+                    var links = result.response.links;
+                    var paymentId = result.response.id;
+                    var redirectUrl;
+                    for (var index=0; index < links.length; index++) {
+                        //Redirect user to this endpoint for redirect url
+                        if (links[index].rel == 'approval_url') {
+                            redirectUrl = links[index].href;
+                            break;
+                        }
+                    }
+                    // Need to save paymentId and tokenId in application database table
+                    //window.location.href=redirectUrl;
+                },
+                error: function (jqXHR, exception) {
+                    if (errcallback) {
+                        errcallback(jqXHR, exception);
+                    } else {
+                        callback(jqXHR);
+                        console.log("exception in making [" + url + "] :[" + exception + "]");
+                    }
+
+                }
+            });
+        }
+        $appService.executePayment = function (paymentId, payerId, mode, ask, osk, usk, callBack) {
+            if (!ask) {
+                throw "No ask found for saving";
+            }
+            var params;
+            if (usk) {
+
+                params = {"paymentId": paymentId, "payerId": payerId, "mode":mode, "ask": ask, "osk": osk, "usk": usk};
+            }
+            else {
+                params = {"paymentId": paymentId, "payerId": payerId,"mode":mode, "ask": ask, "osk": osk};
+
+            }
+
+
+            var url = BAAS_SERVER + "/execute/payment";
+            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+                callBack(callBackData);
+            });
+        }
         $appService.setUrls = function (data, size, height) {
 
             for (var i = 0; i < data.length; i++) {

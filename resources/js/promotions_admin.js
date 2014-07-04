@@ -12,7 +12,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
     $scope.searchby = $scope.venderSearch[0];
     $scope.promotions = [];
     $appService.auth();
-    $scope.getAllPromotions = function (direction, limit, column, searchText,filterDate) {
+    $scope.getAllPromotions = function (direction, limit, column, searchText, filterDate) {
         if ($scope.loadingPromotionData) {
             return false;
         }
@@ -26,7 +26,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         $scope.loadingPromotionData = true;
         var query = {"table": "promotions__cstore"};
         query.columns = [
-            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
+            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"},
             "image",
             "item_signage",
             "offer_description",
@@ -36,14 +36,16 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "promo_title",
             "reward_value",
             "sponsor",
-            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
+            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},
             "threshold",
             "upc",
             "vendorid",
             "top_promo",
             "codes",
             "programid",
-            "minimum_retail"
+            "minimum_retail",
+            "decal_description",
+            "decal_subdescription"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -81,19 +83,19 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         })
     }
     $scope.getAllPromotions(1, 10);
-    $scope.setPromotionOrder = function (sortingCol, sortingType, column, searchText,filterDate) {
+    $scope.setPromotionOrder = function (sortingCol, sortingType, column, searchText, filterDate) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllPromotions(1, 10, column, searchText,filterDate);
+        $scope.getAllPromotions(1, 10, column, searchText, filterDate);
     }
-    $scope.getMore = function (column, searchText,filterDate) {
-        $scope.getAllPromotions(1, 10, column, searchText,filterDate);
+    $scope.getMore = function (column, searchText, filterDate) {
+        $scope.getAllPromotions(1, 10, column, searchText, filterDate);
     }
-    $scope.getLess = function (column, searchText,filterDate) {
-        $scope.getAllPromotions(0, 10, column, searchText,filterDate);
+    $scope.getLess = function (column, searchText, filterDate) {
+        $scope.getAllPromotions(0, 10, column, searchText, filterDate);
     }
-    $scope.getPrograms(null,null);
+    $scope.getPrograms(null, null);
 });
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
@@ -110,18 +112,18 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
 cstore.directive('promotionList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<div class="add_delete pull-left">'+
-        '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'promo-notification\')"><a href>Notification</a></button></div>'+
+        template: '<div class="add_delete pull-left">' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'promo-notification\')"><a href>Notification</a></button></div>' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
-            '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()"><input id="filter_date" type="text" placeholder="Date" ng-model="promotiondata.filter_date" jqdatepicker /><span class="search_sign_3 pull-left"><a ng-click="filterByDate()"><img style="cursor: pointer width:30px;" src="images/Search.png"></a></span><input type="submit" style="display:none;"></form></div>'+
+            '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()"><input id="filter_date" type="text" placeholder="Date" ng-model="promotiondata.filter_date" jqdatepicker /><span class="search_sign_3 pull-left"><a ng-click="filterByDate()"><img style="cursor: pointer width:30px;" src="images/Search.png"></a></span><input type="submit" style="display:none;"></form></div>' +
             '<div ng-click="getMore(searchby.value,search.searchContent,promotiondata.filter_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,promotiondata.filter_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
-            '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
-            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>'+
+            '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
             '<th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
             '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>{{promotion.programid.name}}</td><td>' +
             '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
@@ -135,15 +137,15 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.promotiondata.filter_date);
+                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent, $scope.promotiondata.filter_date);
                     }
 
                     $scope.filterByDate = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.promotiondata.filter_date);
+                        $scope.getAllPromotions(1, 10, $scope.searchby.value, $scope.search.searchContent, $scope.promotiondata.filter_date);
                     }
-                    $scope.setAssignedPromo = function (promotionid,programid) {
+                    $scope.setAssignedPromo = function (promotionid, programid) {
                         window.location.href = "#!/assign-promo?id=" + promotionid + "&programid=" + programid;
                     }
                     $scope.deletePromotionArray = [];
@@ -190,43 +192,37 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
 
                     }
                     $scope.setPromotionState = function (promotion) {
-                        var endArray = promotion["end_date"].split(" ");
-                        var endMinArray = endArray[1].split(":");
+                        var endArray=[];
+                        var endMinArray=[];
+                        var startArray = [];
+                        var startMinArray = [];
+                        if(promotion["end_date"]){
+                            endArray = promotion["end_date"].split(" ");
+                            endMinArray = endArray[1].split(":");
+                        }
                         $scope.promotiondata.end_date = endArray[0];
-                        var startArray = promotion["start_date"].split(" ");
-                        var startMinArray = startArray[1].split(":");
+                        if(promotion["start_date"]){
+                            startArray = promotion["start_date"].split(" ");
+                            startMinArray = startArray[1].split(":");
+                        }
                         $scope.promotiondata.start_date = startArray[0];
-                        if (promotion.end_date && $scope.promotiondata.hours) {
-                            for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
-                                if ($scope.promotiondata.hours[j] == endMinArray[0]) {
-                                    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[j];
-                                    break;
-                                }
-                            }
+                        if (promotion.end_date && $scope.promotiondata.hours && endMinArray) {
+                            $scope.promotiondata.selectedEndHour = endMinArray[0];
                         }
-                        if (promotion.start_date && $scope.promotiondata.hours) {
-                            for (var j = 0; j < $scope.promotiondata.hours.length; j++) {
-                                if ($scope.promotiondata.hours[j] == startMinArray[0]) {
-                                    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[j];
-                                    break;
-                                }
-                            }
+                        if (promotion.start_date && $scope.promotiondata.hours && startMinArray) {
+                            $scope.promotiondata.selectedStartHour = startMinArray[0];
                         }
-                        if (promotion.end_date && $scope.promotiondata.minutes) {
-                            for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
-                                if ($scope.promotiondata.minutes[j] == endMinArray[1]) {
-                                    $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[j];
-                                    break;
-                                }
-                            }
+                        if (promotion.end_date && $scope.promotiondata.minutes && endMinArray) {
+                            $scope.promotiondata.selectedEndMinute = endMinArray[1];
                         }
-                        if (promotion.start_date && $scope.promotiondata.minutes) {
-                            for (var j = 0; j < $scope.promotiondata.minutes.length; j++) {
-                                if ($scope.promotiondata.minutes[j] == startMinArray[1]) {
-                                    $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[j];
-                                    break;
-                                }
-                            }
+                        if (promotion.start_date && $scope.promotiondata.minutes && startMinArray) {
+                            $scope.promotiondata.selectedStartMinute = startMinArray[1];
+                        }
+                        if (promotion.end_date && $scope.promotiondata.minutes && endMinArray) {
+                            $scope.promotiondata.selectedEndSecond = endMinArray[2];
+                        }
+                        if (promotion.start_date && $scope.promotiondata.seconds && startMinArray) {
+                            $scope.promotiondata.selectedStartSecond = startMinArray[2];
                         }
                         $scope.promotiondata["promo_title"] = promotion.promo_title ? promotion.promo_title : "";
                         $scope.promotiondata["offer_description"] = promotion.offer_description ? promotion.offer_description : "";
@@ -238,6 +234,8 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["codes"] = promotion.codes ? promotion.codes : [];
                         $scope.promotiondata["top_promo"] = promotion.top_promo ? promotion.top_promo : "";
                         $scope.promotiondata["minimum_retail"] = promotion.minimum_retail ? promotion.minimum_retail : "";
+                        $scope.promotiondata["decal_description"] = promotion.decal_description ? promotion.decal_description : "";
+                        $scope.promotiondata["decal_subdescription"] = promotion.decal_subdescription ? promotion.decal_subdescription : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
                         }
@@ -275,7 +273,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                             }
                         }
                         if (promotion.programid) {
-                            $scope.getPrograms(promotion.programid._id,promotion._id);
+                            $scope.getPrograms(promotion.programid._id, promotion._id);
                         }
                         window.location.href = "#!edit-promotion?q=" + promotion._id;
                     }
@@ -449,19 +447,21 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date*</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
-            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">End Date*</div><span class="hours">HH</span><span class="minutes">MM</span></div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date*</div><span class="hours">HH</span><span class="minutes">MM</span><span class="minutes">SS</span></div></td>' +
+            '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">End Date*</div><span class="hours">HH</span><span class="minutes">MM</span><span class="minutes">SS</span></div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td">' +
             '<input class="date_time" id="start_date" type="text" ng-model="promotiondata.start_date" jqdatepicker />' +
             '<select class="hour_min" ng-model="promotiondata.selectedStartHour" ng-options="hour for hour in promotiondata.hours"></select>' +
             '<select class="hour_min" ng-model="promotiondata.selectedStartMinute" ng-options="minute for minute in promotiondata.minutes"></select>' +
+            '<select class="hour_min" ng-model="promotiondata.selectedStartSecond" ng-options="second for second in promotiondata.seconds"></select>' +
             '</td>' +
             '<td class="half_td">' +
             '<input class="date_time" id="end_date" type="text" ng-model="promotiondata.end_date" jqdatepicker />' +
             '<select class="hour_min" ng-model="promotiondata.selectedEndHour" ng-options="hour for hour in promotiondata.hours"></select>' +
             '<select class="hour_min" ng-model="promotiondata.selectedEndMinute" ng-options="minute for minute in promotiondata.minutes"></select>' +
+            '<select class="hour_min" ng-model="promotiondata.selectedEndSecond" ng-options="second for second in promotiondata.seconds"></select>' +
             '</td>' +
             '</tr>' +
             '<tr>' +
@@ -486,7 +486,15 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><select-program-promo ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-promo><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
-            '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Decal Description</div></td>' +
+            '<td class="half_td"><div class="margin_top">Decal Subdescription</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.decal_description"></textarea></td>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.decal_subdescription"></textarea></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
@@ -495,6 +503,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr>' +
             '<td class="half_td"><upc-select></upc-select></td>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><img ng-src="promotiondata.display_image"</span></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Minimum Retail*</div></td>' +
@@ -611,9 +620,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             }
                             $scope.storeManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
-                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true,"submitted":false});
+                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true, "submitted": false});
                             }
-                            $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute);
+                            $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute + ":" + $scope.promotiondata.selectedEndSecond);
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
                             $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
                             $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
@@ -622,10 +631,12 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
                             $scope.newPromotion["reward_value"] = {"amount": $scope.promotiondata.reward_value.amount, "type": {"currency": "usd"}};
                             $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
-                            $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute);
+                            $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute + ":" + $scope.promotiondata.selectedStartSecond);
                             $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
                             $scope.newPromotion["store_manager_id"] = {data: $scope.storeManagerArray, "override": "true"};
                             $scope.newPromotion["minimum_retail"] = {"amount": $scope.promotiondata.minimum_retail.amount, "type": {"currency": "usd"}};
+                            $scope.newPromotion["decal_description"] = $scope.promotiondata.decal_description;
+                            $scope.newPromotion["decal_subdescription"] = $scope.promotiondata.decal_subdescription;
                             if (tags && tags.length > 0) {
                                 $scope.newPromotion["codes"] = tags;
                             }
@@ -639,6 +650,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     $scope.newPromotion["programid"] = {"name": $scope.promotiondata.selectedProgram.name, "_id": $scope.promotiondata.selectedProgram._id};
                                 }
                             }
+
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];
@@ -655,6 +667,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     $scope.loadingAddPromotionData = false;
                                     if (data.response) {
                                         $scope.newPromotion["image"] = data.response;
+                                        if(!$scope.promotiondata.selectedProgram.cooler_html && !$scope.promotiondata.selectedProgram.aisle_html){
+                                            $scope.newPromotion["display_image"] = data.response;
+                                        }
                                         query.operations = [$scope.newPromotion];
                                         $scope.saveFunction(query);
                                     }
@@ -676,6 +691,31 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
+//                                if($scope.promotiondata.selectedProgram && $scope.promotiondata.selectedProgram.cooler_html && $scope.promotiondata.selectedProgram.aisle_html){
+//                                    var requestBody={};
+//                                    if(callBackData.response.insert){
+//                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.insert[0]._id}
+//                                    }
+//                                    else {
+//                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.update[0]._id};
+//                                    }
+//
+//                                    $appService.getDataFromJQuery("/rest/create/image/cstore",requestBody,"GET","JSON",function(err,data){
+//                                        if(err){
+//                                            $("#popupMessage").html(err.Error);
+//                                            $('.popup').toggle("slide");
+//                                        }
+//                                        else {
+//                                            if(data.update.display_image){
+//                                                var display_image=data.update.display_image;
+//                                               $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
+//                                            }
+//                                        }
+//                                    })
+//                                }
+////                                else{
+////                                    $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + data.update.image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
+////                                }
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
                                 $scope.setPathforPromotion("promotions");

@@ -37,7 +37,6 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
-        query.filter["store_manager_id.submitted"] =  false;
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -143,7 +142,7 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
             '<div class="detail_outer"><div class="promo_details"><b>Start Date</b> : {{promotion.start_date}}</div>'+
             '<div class="promo_details"><b>End Date</b> : {{promotion.end_date}}</div>'+
             '<div class="promo_details"><b>Threshold</b> : {{promotion.threshold}}</div>'+
-            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value}}</div></div>'+
+            '<div class="promo_details"><b>Reward Value</b>: {{promotion.reward_value.amount | currency}}</div></div>'+
             '<div class="product_details">{{promotion.promo_description}}</div>'+
             '</div></div><div class="loadingImage" ng-hide="!loadingRecentPromotionData"><img src="images/loading.gif"></div></div>'
     }

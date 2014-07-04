@@ -721,11 +721,11 @@ tr {
 
 .hour_min {
     padding: 5px;
-    width: 23.75% !important;
+    width: 20% !important;
 }
 
 .date_time {
-    width: 47.5% !important;
+    width: 34.4% !important;
 }
 
 .table th {
@@ -1614,7 +1614,7 @@ span.btn:hover {
 }
 
 .minutes {
-    margin-left: 18%;
+    margin-left: 12%;
 }
 
 .shopping_cart_popup {
@@ -2318,4 +2318,11 @@ label.multiSelect span:hover {
 }
 .downloadTextFile a {
     text-decoration: underline;
+}
+.promo_drop {
+    width: 140px !important;
+    left: 5px !important;
+}
+.hours {
+    margin-left: 2%;
 }
