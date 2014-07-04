@@ -2329,3 +2329,8 @@ label.multiSelect span:hover {
 .left_align_promo {
     width:95px;
 }
+.programTexarea{
+    width: 94.5%;
+    height: 144px;
+    overflow: auto;
+}
