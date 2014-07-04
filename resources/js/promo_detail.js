@@ -21,7 +21,8 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "item_signage",
             "minimum_retail",
             "upc",
-            "offer_type"
+            "offer_type",
+            "codes"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
@@ -64,6 +65,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div class="quantity_border"><b>Item Signage</b> : {{promotion[0].item_signage}}</div>'+
             '<div class="quantity_border"><b>Minimum Retail</b> : {{promotion[0].minimum_retail.amount | currency}}</div>'+
             '<div class="quantity_border"><b>UPC/PLU/GROUP</b> : {{promotion[0].upc}}</div>'+
+            '<div class="quantity_border"><b>Codes</b> : <span ng-repeat="code in promotion[0].codes">{{code}}</span></div>'+
             '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile:function(){

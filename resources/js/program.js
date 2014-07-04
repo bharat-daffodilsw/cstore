@@ -3,7 +3,6 @@
 cstore.controller('programList', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingProgramData = false;
-
     $scope.venderSearch = [
         {"value": "name", "name": "Program Name"}
     ];
@@ -69,7 +68,6 @@ cstore.controller('programList', function ($scope, $appService) {
 cstore.controller('addProgramCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     var programId = $routeParams.q;
-
     if (programId && programId != undefined && programId != "undefined") {
         $scope.programdata["programid"] = programId;
     }
@@ -150,7 +148,6 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                     $scope.setProgramState = function (program) {
                         $scope.programdata["name"] = program.name ? program.name : "";
                         $scope.programdata["participation_id"] = program.participation_id ? program.participation_id : "";
-                        console.log(program.image_type);
                         for(var i=0;i<$scope.imageTypes.length;i++){
                             if(program.image_type==$scope.imageTypes[i].name){
                                 $scope.programdata.image_type=$scope.imageTypes[i];
@@ -222,7 +219,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Aisle *</div></td>' +
-            '<td class="half_td"><div class="margin_top">Select Image Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">Image Type</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +

@@ -192,11 +192,19 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
 
                     }
                     $scope.setPromotionState = function (promotion) {
-                        var endArray = promotion["end_date"].split(" ");
-                        var endMinArray = endArray[1].split(":");
+                        var endArray=[];
+                        var endMinArray=[];
+                        var startArray = [];
+                        var startMinArray = [];
+                        if(promotion["end_date"]){
+                            endArray = promotion["end_date"].split(" ");
+                            endMinArray = endArray[1].split(":");
+                        }
                         $scope.promotiondata.end_date = endArray[0];
-                        var startArray = promotion["start_date"].split(" ");
-                        var startMinArray = startArray[1].split(":");
+                        if(promotion["start_date"]){
+                            startArray = promotion["start_date"].split(" ");
+                            startMinArray = startArray[1].split(":");
+                        }
                         $scope.promotiondata.start_date = startArray[0];
                         if (promotion.end_date && $scope.promotiondata.hours && endMinArray) {
                             $scope.promotiondata.selectedEndHour = endMinArray[0];
@@ -703,8 +711,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                                 var display_image=data.response.update[0].display_image;
                                                 $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
                                                 console.log("704 src of display image"+ $scope.promotiondata["display_image"]);
-                                                $("#popupMessage").html("Saved successfully");
-                                                $('.popup').toggle("slide");
+                                $("#popupMessage").html("Saved successfully");
+                                $('.popup').toggle("slide");
                                                 $scope.loadingAddPromotionData = false;
 
                                             }
