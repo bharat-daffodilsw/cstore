@@ -37,10 +37,10 @@ appStrapServices.factory('$appService', [
             var params;
             if (usk) {
 
-                params = {"updates":JSON.stringify(data), "ask":ask, "osk":osk, "usk":usk};
+                params = {"updates": JSON.stringify(data), "ask": ask, "osk": osk, "usk": usk};
             }
             else {
-                params = {"updates":JSON.stringify(data), "ask":ask, "osk":osk};
+                params = {"updates": JSON.stringify(data), "ask": ask, "osk": osk};
 
             }
             var that = this;
@@ -58,10 +58,10 @@ appStrapServices.factory('$appService', [
             var params;
             if (usk) {
 
-                params = {"mailContent":data, "ask":ask, "osk":osk, "usk":usk};
+                params = {"mailContent": data, "ask": ask, "osk": osk, "usk": usk};
             }
             else {
-                params = {"mailContent":data, "ask":ask, "osk":osk};
+                params = {"mailContent": data, "ask": ask, "osk": osk};
 
             }
             var that = this;
@@ -104,18 +104,18 @@ appStrapServices.factory('$appService', [
             $.support.cors = true;
 
             $.ajax({
-                type:callType,
-                url:url,
-                data:requestBody,
-                crossDomain:true,
-                success:function (returnData, status, xhr) {
+                type: callType,
+                url: url,
+                data: requestBody,
+                crossDomain: true,
+                success: function (returnData, status, xhr) {
                     callback(returnData);
                     $rootScope.showbusymessage = false;
                     if (!$rootScope.$$phase) {
                         $rootScope.$apply();
                     }
                 },
-                error:function (jqXHR, exception) {
+                error: function (jqXHR, exception) {
                     if (jqXHR.status == 417 && jqXHR.responseText) {
                         var error_resp = JSON.parse(jqXHR.responseText);
                         if (error_resp.code && error_resp.code == 34) {
@@ -136,9 +136,9 @@ appStrapServices.factory('$appService', [
                     }
 
                 },
-                timeout:1200000,
-                dataType:dataType,
-                async:true
+                timeout: 1200000,
+                dataType: dataType,
+                async: true
             });
         }
         $appService.setUrls = function (data, size, height) {
@@ -226,11 +226,28 @@ appStrapServices.factory('$appService', [
                 return false;
             }
         }
+        $appService.createFile = function (storeId, programId, promos, ask, osk, usk, callBack) {
+            if (!ask) {
+                throw "No ask found for saving";
+            }
+            var params;
+            if (usk) {
+                params = {"storeId": storeId, "programId": programId, "ask": ask, "osk": osk, "usk": usk, "promos": JSON.stringify(promos)};
+            }
+            else {
+                params = {"storeId": storeId, "programId": programId, "ask": ask, "osk": osk, "promos": JSON.stringify(promos)};
+
+            }
+            var url = BAAS_SERVER + "/create/file/cstore";
+            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+                callBack(callBackData);
+            });
+        }
         $appService.getCountries = function () {
             var countries = {};
-            var query = {"table":"countries__cstore"};
+            var query = {"table": "countries__cstore"};
             query.columns = ["name", "_id"];
-            var queryParams = {query:JSON.stringify(query), "ask":ASK, "osk":OSK};
+            var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
             var serviceUrl = "/rest/data";
             this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
                 countries = countryData.response.data;
