@@ -1,5 +1,4 @@
 cstore.controller('loginCtrl', function ($scope, $appService, $location) {
-    //changed on 0105
     $appService.unauth();
     $scope.login = function () {
         var username = $("#username").val();
@@ -41,7 +40,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                 if (usk) {
 
                     var query = {"table": "user_profiles__cstore"};
-                    query.columns = ["userid", "roleid", "storeid", "storeid.programid", "storeid.programid.image", "storeid.stateid.name", "username"];
+                    query.columns = ["userid", "roleid", "storeid", "storeid.programid", "storeid.programid.image", "storeid.stateid.name", "username", "programid"];
                     query.filter = {"userid": "{_CurrentUserId}"};
                     var params = {"query": JSON.stringify(query), "ask": ASK, "osk": OSK, "usk": usk};
 
@@ -75,12 +74,16 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                                 var c_name = "programid";
                                 document.cookie = c_name + "=" + escape(programid);
                                 if (companyLogoUrl) {
-                                    //changes made 3004
                                     var c_name = "companyLogoUrl";
                                     document.cookie = c_name + "=" + escape(companyLogoUrl);
-
                                 }
-
+                            }
+                        }
+                        if (callBackData.response.data[0] && callBackData.response.data[0]["programid"]) {
+                            var programid = callBackData.response.data[0]["programid"]._id;
+                            if (programid) {
+                                var c_name = "programid";
+                                document.cookie = c_name + "=" + escape(programid);
                             }
                         }
                         var c_name = "usk";
@@ -95,7 +98,6 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                         document.cookie = c_name + "=" + escape(username);
                         if (!$scope.$$phase) {
                             $scope.$apply();
-
                         }
                         window.location.href = "/";
 

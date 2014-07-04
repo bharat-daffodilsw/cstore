@@ -15,7 +15,6 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
     $scope.searchby = $scope.venderSearch[0];
     $scope.textFiles = [];
     $appService.auth();
-    $scope.objFilter = {"dateFilter": ""};
     $scope.getAllTextFilesList = function (direction, limit, column, searchText) {
         if ($scope.loadingPromoTextFileData) {
             return false;
@@ -31,16 +30,21 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
         var query = {"table": "promo_text_files__cstore"};
         query.columns = ["programid", "siteid", "text_files", {"expression": "date", "format": "MM/DD/YYYY"}];
         query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        if ($scope.objFilter.dateFilter && $scope.objFilter.dateFilter != "") {
-            query.filter["date"] = new Date($scope.objFilter.dateFilter);
+        if ($scope.filterdata.filter_date && $scope.filterdata.filter_date != "") {
+            query.filter["date"] = new Date($scope.filterdata.filter_date);
         }
         if ($scope.filterdata.selectedSite && $scope.filterdata.selectedSite!="") {
             query.filter["siteid._id"] = $scope.filterdata.selectedSite._id;
         }
-        if ($scope.filterdata.selectedProgram && $scope.filterdata.selectedProgram!="") {
+        if ($scope.currentUser["data"]["roleid"] != PROGRAMADMIN && $scope.filterdata.selectedProgram && $scope.filterdata.selectedProgram!="") {
             query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
         }
         query.orders = {};
@@ -130,7 +134,7 @@ cstore.directive('textFileList', ['$appService', function ($appService, $scope) 
             '<date-filter></date-filter>' +
             '</div>' +
             '<div class="filter_div"><div class="pull-left filter_text">Filter</div>' +
-            '<div class="pull-left filter_table"><filter-program-text></filter-program-text></div>' +
+            '<div class="pull-left filter_table" ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"><filter-program-text></filter-program-text></div>' +
             '<div class="pull-left filter_table"><filter-sites></filter-sites></div>' +
             '<div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div>' +
@@ -161,7 +165,6 @@ cstore.directive('textFileList', ['$appService', function ($appService, $scope) 
                     $scope.filterByDate = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.objFilter.dateFilter = $scope.filterdata.filter_date;
                         $scope.getAllTextFilesList(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                 }

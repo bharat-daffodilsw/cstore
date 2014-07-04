@@ -29,9 +29,13 @@ cstore.controller('vendorCtrl', function ($scope, $appService, $location) {
 
         var query = {"table": "vendors__cstore"};
         query.columns = ["address2","programid", "companyid", "address", {"expression": "city", "columns": ["_id", "name"]}, {"expression": "state", "columns": ["_id", "name"]}, {"expression": "country", "columns": ["_id", "name"]}, "contact", "email", "firstname", "lastname", "postalcode", "category","notes"];
-
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -184,7 +188,6 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         $scope.data["email"] = vendor.email ? vendor.email : "";
                         $scope.data["address2"] = vendor.address2 ? vendor.address2 : "";
                         $scope.data["notes"] = vendor.notes ? vendor.notes : "";
-                        //$scope.data["vendorCategory"]=vendor.category ;//? vendor.category :$scope.vendorCategories[0];
                         if (vendor.category) {
                             for (var j = 0; j < $scope.data.vendorCategories.length; j++) {
                                 $scope.data.selectedVendorCategory = "";
@@ -203,7 +206,8 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                             vendor.city = (vendor.city) ? {"_id": vendor.city._id} : {"_id": false};
                             $scope.getEditCountries(vendor.country._id, vendor.state._id, vendor.city._id, $scope.data);
                         }
-                        if (vendor.programid) {
+
+                        if (vendor.programid && $scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == ADMIN) {
                             for (var j = 0; j < $scope.productdata.programs.length; j++) {
                                 if ($scope.productdata.programs[j]._id == vendor.programid._id) {
                                     $scope.productdata.selectedProgram = $scope.productdata.programs[j];
@@ -211,6 +215,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                 }
                             }
                         }
+
                         if (vendor.companyid) {
                             for (var j = 0; j < $scope.data.companies.length; j++) {
                                 if ($scope.data.companies[j]._id == vendor.companyid._id) {
@@ -317,7 +322,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><company></company></td>' +
-            '<td class="half_td"><program-select></program-select></td>' +
+            '<td class="half_td"><program-select ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></program-select><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -451,7 +456,14 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         $scope.newVendor["postalcode"] = $scope.data.postalCode;
                         $scope.newVendor["contact"] = $scope.data.contact;
                         $scope.newVendor["email"] = $scope.data.email;
-                        $scope.newVendor["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                        if ($scope.currentUser["data"]) {
+                            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                $scope.newVendor["programid"] = {"_id": $scope.currentUser.data.programid};
+                            }
+                            else {
+                                $scope.newVendor["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                            }
+                        }
                         if($scope.data.selectedCompany.name=="Others" || $scope.data.otherCompany){
                             $scope.newVendor["companyid"] = { "name": $scope.data.otherCompany };
                         }

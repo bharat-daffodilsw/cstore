@@ -7,9 +7,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         {"value": "offer_title", "name": "Offer Title"},
         {"value": "programid.name", "name": "Program"},
         {"value": "offer_type", "name": "Offer Type"},
-        {"value": "item_signage", "name": "Item Signage"},
-        {"value": "start_date", "name": "Start Date"},
-        {"value": "end_date", "name": "End Date"}
+        {"value": "item_signage", "name": "Item Signage"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.promotions = [];
@@ -48,6 +46,11 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "minimum_retail"
         ];
         query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
@@ -462,11 +465,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Reward Value</div></td>' +
+            '<td class="half_td"><div class="margin_top">Reward Value*</div></td>' +
             '<td class="half_td"><div class="margin_top">Offer Type*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.reward_value"></td>' +
+            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.reward_value.amount"></td>' +
             '<td class="half_td"><offer-type-select></offer-type-select></td>' +
             '</tr>' +
             '<tr>' +
@@ -482,7 +485,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><div class="margin_top">Sites</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><select-program-promo></select-program-promo></td>' +
+            '<td class="half_td"><select-program-promo ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-promo><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
             '</tr>' +
             '<tr>' +
@@ -563,8 +566,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if ($scope.promotiondata.start_date > $scope.promotiondata.end_date) {
+                            if (new Date($scope.promotiondata.start_date) > new Date($scope.promotiondata.end_date)) {
                                 $("#popupMessage").html("Please select valid start or end date");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
+                            if (!$scope.promotiondata.reward_value || !$scope.promotiondata.reward_value.amount || !regDecimalNumberOnly.test($scope.promotiondata.reward_value.amount)) {
+                                $("#popupMessage").html("Please enter valid reward value");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -612,7 +620,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["offer_type"] = $scope.promotiondata.selectedOfferType.name;
                             $scope.newPromotion["promo_description"] = $scope.promotiondata.promo_description;
                             $scope.newPromotion["promo_title"] = $scope.promotiondata.promo_title;
-                            $scope.newPromotion["reward_value"] = $scope.promotiondata.reward_value;
+                            $scope.newPromotion["reward_value"] = {"amount": $scope.promotiondata.reward_value.amount, "type": {"currency": "usd"}};
                             $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
                             $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute);
                             $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
@@ -621,10 +629,16 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             if (tags && tags.length > 0) {
                                 $scope.newPromotion["codes"] = tags;
                             }
-                            //$scope.newPromotion["top_promo"] = $scope.promotiondata.top_promo;
                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
                             $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};
-                            $scope.newPromotion["programid"] = {"name": $scope.promotiondata.selectedProgram.name, "_id": $scope.promotiondata.selectedProgram._id};
+                            if ($scope.currentUser["data"]) {
+                                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                    $scope.newPromotion["programid"] = {"_id": $scope.currentUser.data.programid};
+                                }
+                                else {
+                                    $scope.newPromotion["programid"] = {"name": $scope.promotiondata.selectedProgram.name, "_id": $scope.promotiondata.selectedProgram._id};
+                                }
+                            }
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];

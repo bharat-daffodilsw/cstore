@@ -22,8 +22,13 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
         $scope.loadingFileData = true;
         var query = {"table": "file__cstore"};
         query.columns = ["title","programid","store_manager_id","file"];
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -65,8 +70,6 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
 
 cstore.controller('addFileCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-
-
     var fileId = $routeParams.q;
     if (fileId && fileId != undefined && fileId != "undefined") {
         $scope.filedata["fileId"] = fileId;
@@ -184,7 +187,7 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="filedata.title"></td>' +
-            '<td class="half_td"><select-program-file></select-program-file></td>' +
+            '<td class="half_td"><select-program-file ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-file><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '</tr>' +
             '<td class="half_td"><div class="margin_top">Sites</div></td>' +
             '</tr>' +
@@ -255,8 +258,14 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
                                 $scope.fileStoreManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid});
                             }
                             $scope.newFile["store_manager_id"] = {data: $scope.fileStoreManagerArray, "override": "true"};
-
-                            $scope.newFile["programid"] = {"name": $scope.filedata.selectedProgram.name, "_id": $scope.filedata.selectedProgram._id};
+                            if ($scope.currentUser["data"]) {
+                                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                    $scope.newFile["programid"] = {"_id": $scope.currentUser.data.programid};
+                                }
+                                else {
+                                    $scope.newFile["programid"] = {"name": $scope.filedata.selectedProgram.name, "_id": $scope.filedata.selectedProgram._id};
+                                }
+                            }
                             if ($scope.filedata.uploadedimages && $scope.filedata.uploadedimages.length == 0) {
                                 query.operations = [$scope.newFile];
                                 $scope.saveFunction(query);

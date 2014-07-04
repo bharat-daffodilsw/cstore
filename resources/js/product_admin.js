@@ -3,7 +3,8 @@ cstore.controller('productList', function ($scope, $appService) {
     $scope.loadingProductData = false;
     $scope.venderSearch = [
         {"value": "name", "name": " POP Name"},
-        {"value": "product_category.name", "name": "POP Category"}
+        {"value": "product_category.name", "name": "POP Category"},
+        {"value": "programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.products = [];
@@ -23,9 +24,13 @@ cstore.controller('productList', function ($scope, $appService) {
 
         var query = {"table": "products__cstore"};
         query.columns = ["programid", "description", "name", "image", "short_description", {"expression": "product_category", "columns": ["_id", "name"]}, "cost", "soldcount", "quantity"];
-
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -40,7 +45,6 @@ cstore.controller('productList', function ($scope, $appService) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productData) {
             $scope.loadingProductData = false;
             $scope.show.currentCursor = productData.response.cursor;
-            //$scope.products = productData.response.data;
             $scope.products = productData.response.data;
             for (var i = 0; i < $scope.products.length; i++) {
                 $scope.products[i]["deleteStatus"] = false;
@@ -68,18 +72,6 @@ cstore.controller('productList', function ($scope, $appService) {
 
 cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    /* $scope.clearProductContent = function () {
-     $scope.productdata["name"] = "";
-     $scope.productdata["cost"] = "";
-     $scope.productdata["description"] = "";
-     $scope.productdata["short_description"] = "";
-     $scope.productdata["quantity"] = "";
-     $scope.productdata["image"] = "";
-     $scope.readonlyrow.fileurl = "";
-     $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
-     //$scope.productdata.selectedVendor = $scope.productdata.vendors[0];
-
-     }*/
     var productId = $routeParams.q;
     if (productId && productId != undefined && productId != "undefined") {
         $scope.productdata["productid"] = productId;
@@ -88,7 +80,6 @@ cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams)
         delete $scope.productdata["productid"];
 
     }
-    //$scope.getProgramList();
 });
 
 cstore.directive('productList', ['$appService', function ($appService, $scope) {
@@ -167,13 +158,10 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         $scope.productdata["cost"] = product.cost ? product.cost : "";
                         $scope.productdata["description"] = product.description ? product.description : "";
                         $scope.productdata["short_description"] = product.short_description ? product.short_description : "";
-                        //$scope.productdata["image"] = product.image;
                         if (product.image) {
                             $scope.oFile.fileExist = true;
                         }
                         $scope.showFile(product.image, false);
-                        //changed 28/04
-
                         if (product.product_category._id) {
                             for (var j = 0; j < $scope.productdata.productCategories.length; j++) {
                                 if ($scope.productdata.productCategories[j]._id == product.product_category._id) {
@@ -240,7 +228,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="productdata.cost.amount"></td>' +
-            '<td class="product_image half_td"><program-select></program-select></td>' +
+            '<td class="product_image half_td"><program-select ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></program-select><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">POP Image*</div></td>' +
@@ -315,16 +303,21 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                             $scope.loadingStatus = true;
                             var query = {};
                             query.table = "products__cstore";
-
                             if ($scope.productdata["productid"]) {
                                 $scope.newProduct["_id"] = $scope.productdata["productid"];
                             }
                             $scope.newProduct["name"] = $scope.productdata.name;
                             $scope.newProduct["description"] = $scope.productdata.description;
                             $scope.newProduct["short_description"] = $scope.productdata.short_description;
-                            //$scope.newProduct["vendor"] = {"firstname":$scope.productdata.selectedVendor.firstname, "_id":$scope.productdata.selectedVendor._id};
                             $scope.newProduct["product_category"] = {"name": $scope.productdata.selectedProductCategory.name, "_id": $scope.productdata.selectedProductCategory._id};
-                            $scope.newProduct["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                            if ($scope.currentUser["data"]) {
+                                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                    $scope.newProduct["programid"] = {"_id": $scope.currentUser.data.programid};
+                                }
+                                else {
+                                    $scope.newProduct["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                                }
+                            }
                             $scope.newProduct["cost"] = {"amount": $scope.productdata.cost.amount, "type": {"currency": "usd"}};
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProduct["image"];

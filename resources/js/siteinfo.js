@@ -43,10 +43,14 @@ cstore.controller('storeManagerList', function ($scope, $appService) {
 
         $scope.loadingStoreData = true;
         var query = {"table": "storemanagers__cstore"};
-
         query.columns = ["dealer","programid", "siteid", "manager.email", "manager.contact", "manager.name", "address", "cityid", "countryid", "manager", "postalcode", "stateid", "storename", "contact", "email", "brands", "pos_type", "shift", "loyalty_status", "pos_version", "reward_point", "pump_brand", "pump_model", "address2"];
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -567,7 +571,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><brand></brand></td>' +
-            '<td class="half_td"><program-select></program-select></td>' +
+            '<td class="half_td"><program-select ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></program-select><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Dealer/Company Op</div></td>' +
@@ -713,7 +717,14 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             if ($scope.storedata.selectedCity) {
                                 $scope.newStore["cityid"] = {"_id": $scope.storedata.selectedCity._id, "name": $scope.storedata.selectedCity.name};
                             }
-                            $scope.newStore["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                            if ($scope.currentUser["data"]) {
+                                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                    $scope.newStore["programid"] = {"_id": $scope.currentUser.data.programid};
+                                }
+                                else {
+                                    $scope.newStore["programid"] = {"name": $scope.productdata.selectedProgram.name, "_id": $scope.productdata.selectedProgram._id};
+                                }
+                            }
                             $scope.newStore["loyalty_status"] = $scope.storedata.selectedLoyaltyStatus.name;
                             $scope.newStore["pump_brand"] = $scope.storedata.pump_brand;
                             $scope.newStore["pump_model"] = $scope.storedata.pump_model;

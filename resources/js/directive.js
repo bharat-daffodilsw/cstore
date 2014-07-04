@@ -45,7 +45,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="training-sessions" ng-click="clearTrainingSessionContent()"><a active-link="active" href="#!/trainings">Training</a></li>'+
             '<li ng-click="clearSurveyContent()"><a href="#!/surveys" active-link="active">Surveys</a></li>'+
             '<li ng-click="clearFileContent()"><a href ="#!/files" active-link="active">Files</a></li>'+
-            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.setup}">Setup</a>'+
+            '<li id="setup" ng-hide="displayData.role.programAdmin"><a href ng-class="{\'active\': hasHighlight.setup}">Setup</a>'+
             '<div class="setup pull-left"><ul>'+
             '<li ng-click="clearProgramContent()"><a href="#!/programs" active-link="highlight">Program</a></li>' +
             '<li ng-click="activeHightLight()"><a href="#!/product-codes" active-link="highlight">Product Codes</a></li>' +
@@ -55,7 +55,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="states" ng-click="activeHightLight()"><a href="#!/states" active-link="highlight">States</a></li>'+
             '<li id="countries" ng-click="activeHightLight()"><a href="#!/countries"active-link="highlight">Countries</a></li>'+
             '</ul></div></li>'+
-            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.reports}">Reports</a>'+
+            '<li id="setup" ng-hide="displayData.role.programAdmin"><a href ng-class="{\'active\': hasHighlight.reports}">Reports</a>'+
             '<div class="setup pull-left"><ul>'+
             '<li ng-click="activeHightLightReports()"><a href="#!/vendor-report" active-link="active">Vendors</a></li>' +
             '<li ng-click="activeHightLightReports()"><a href="#!/site-info-report" active-link="active">Site Info</a></li>' +

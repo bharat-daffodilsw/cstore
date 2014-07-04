@@ -4,7 +4,13 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
     $scope.getAllAvailableMultipleUsers = function () {
         var query = {"table": "user_profiles__cstore"};
         query.columns = ["username","storeid.siteid","storeid.storename"];
-        query.filter = {"roleid.name":"store-manager"};
+        query.filter = {};
+        query.filter["roleid._id"] = STOREMANAGER;
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["storeid.programid._id"]=$scope.currentUser.data.programid;
+            }
+        }
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {

@@ -93,12 +93,16 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
             $scope.getRecentPromotions(8, $routeParams.search);
             $scope.getAssignedTrainingSessions(4, $routeParams.search);
             //$scope.getCarouselPromotions(4);
-            $scope.homeView = {"storeManager": true, "admin": false};
+            $scope.homeView = {"storeManager": true, "admin": false,"programAdmin":false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {
-            $scope.homeView = {"storeManager": false, "admin": true};
+            $scope.homeView = {"storeManager": false, "admin": true,"programAdmin":false};
             window.location.href = "#!/vendors";
+        }
+        else if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+            $scope.homeView = {"storeManager": false, "admin": false,"programAdmin":true};
 
+            window.location.href = "#!/vendors";
         }
     }
     else {

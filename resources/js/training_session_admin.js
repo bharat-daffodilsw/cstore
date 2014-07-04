@@ -25,8 +25,13 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
         $scope.loadingTrainingSessionData = true;
         var query = {"table": "training_session__cstore"};
         query.columns = ["title", "description", "file", "training_category_id", "video_url","programid"];
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -166,9 +171,6 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         $scope.trainingdata["title"] = trainingSession.title ? trainingSession.title : "";
                         $scope.trainingdata["video_url"] = trainingSession.video_url ? trainingSession.video_url : "";
                         $scope.trainingdata["description"] = trainingSession.description ? trainingSession.description : "";
-                        //$scope.showDocFile(trainingSession.file, false);
-                        //$scope.productdata["image"] = product.image;
-                        //$scope.showFile(product.image, false);
 
                         if (trainingSession.training_category_id._id) {
                             for (var j = 0; j < $scope.trainingdata.trainingCategories.length; j++) {
@@ -190,12 +192,10 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         }
                         window.location.href = "#!edit-training-session?q=" + trainingSession._id;
                     }
-                    //changes made on 3004  by anu
                     $scope.setAssignedSessionState = function (session) {
                         $scope.session_title = session.title;
                         window.location.href = "#!/assigned-session-store?q=" + session._id;
                     }
-                    /*****end*******/
                 }
             }
         }
@@ -263,7 +263,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<td class="half_td pull-left"><div class="margin_top">Sites</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td pull-left"><select-program-training></select-program-training></td>' +
+            '<td class="half_td pull-left"><select-program-training ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-training><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '<td class="half_td pull-left"><div multi-select  input-model="trainingdata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
             '</tr>'+
             '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
@@ -350,7 +350,14 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $scope.newSession["description"] = $scope.trainingdata.description;
                             $scope.newSession["video_url"] = $scope.showTags($("#demo2").tagit("tags"));
                             $scope.newSession["training_category_id"] = {"name": $scope.trainingdata.selectedTrainingCategory.name, "_id": $scope.trainingdata.selectedTrainingCategory._id};
-                            $scope.newSession["programid"] = {"name": $scope.trainingdata.selectedProgram.name, "_id": $scope.trainingdata.selectedProgram._id};
+                            if ($scope.currentUser["data"]) {
+                                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                    $scope.newSession["programid"] = {"_id": $scope.currentUser.data.programid};
+                                }
+                                else {
+                                    $scope.newSession["programid"] = {"name": $scope.trainingdata.selectedProgram.name, "_id": $scope.trainingdata.selectedProgram._id};
+                                }
+                            }
                             $scope.newSession["store_manager_id"] = {data: $scope.trainingAssignedStoreManagerArray, "override": "true"};
                             if ($scope.trainingdata.uploadedimages && $scope.trainingdata.uploadedimages.length == 0) {
                                 query.operations = [$scope.newSession];

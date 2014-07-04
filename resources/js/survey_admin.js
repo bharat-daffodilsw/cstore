@@ -23,8 +23,13 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
         $scope.loadingSurveyData = true;
         var query = {"table": "surveys__cstore"};
         query.columns = ["title", "description", "survey_question", "survey_question.question", "survey_question.options","programid"];
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -173,12 +178,6 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                     $scope.setSurveyAnsweredPath = function (sessionid) {
                         window.location.href = "#!/answered-survey-store?id=" + sessionid;
                     }
-                    //changes made 2904
-                    $scope.showAssignPopup = function (survey) {
-                        $(".assign_popup").show();
-                        $scope.surveyTitle = survey.title;
-                        $scope.surveyId = survey._id;
-                    }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
@@ -292,7 +291,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             '<td class="half_td pull-left"><div class="margin_top">Sites</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td pull-left"><select-program-survey></select-program-survey></td>' +
+            '<td class="half_td pull-left"><select-program-survey ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-survey><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '<td class="half_td pull-left"><div multi-select  input-model="surveydata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
             '</tr>' +
             '</tbody></table></div>' +
@@ -406,7 +405,14 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                             }
                             newSession["title"] = $scope.surveydata.title;
                             newSession["description"] = $scope.surveydata.description;
-                            newSession["programid"] = {"name": $scope.surveydata.selectedProgram.name, "_id": $scope.surveydata.selectedProgram._id};
+                            if ($scope.currentUser["data"]) {
+                                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                    newSession["programid"] = {"_id": $scope.currentUser.data.programid};
+                                }
+                                else {
+                                    newSession["programid"] = {"name": $scope.surveydata.selectedProgram.name, "_id": $scope.surveydata.selectedProgram._id};
+                                }
+                            }
                             newSession["store_manager_id"] = {data: $scope.surveyStoreManagerArray, "override": "true"};
                             newSession["survey_question"] = [];
                             for (i = 0; i < $scope.questions.length; i++) {

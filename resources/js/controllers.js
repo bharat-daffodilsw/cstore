@@ -3,11 +3,11 @@ var ASK = "531829f47754938f0ecfd3c7";
 var OSK = "531972e05fccddeb550a04a3";
 var STOREMANAGER = "531d4aa0bd1515ea1a9bbaf6";
 var ADMIN = "531d4a79bd1515ea1a9bbaf5";
+var PROGRAMADMIN ="539fddda1e993c6e426860c4";
 var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
 
 // Declare app level module which depends on filters, and services
-//changed by anuradha 2804
 var cstore = angular.module('cstore', ['multi-select','ngRoute', '$appstrap.services']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
@@ -247,8 +247,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Others"}
     ];
     $scope.data.selectedVendorCategory = $scope.data.vendorCategories[0];
-    //$scope.storedata = {"cities":[], "states":[],"countries":[] , "selectedCity":"", "selectedState":"","selectedCountry":"","manager":{"selectedCity":"","selectedState":"","selectedCountry":"","cities":[], "states":[],"countries":[]}};
-    //changes made 0205
     $scope.storedata = {"cities": [], "states": [], "countries": [], "selectedCity": "", "selectedState": "", "selectedCountry": "", "posTypes": [], "selectedPosType": "", "rewardTypes": [], "selectedRewardType": "", "shifts": [], "selectedShift": "", "manager": {}, "brands": [], "selectedBrand": "", "brandName": "", "otherPosType": "", "otherRewardType": "", "otherBrand": "", "loyalty_status": [], "selectedLoyaltyStatus": ""};
     $scope.storedata.posTypes = [
         {"name": "FisCal"},
@@ -271,7 +269,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Others"}
     ];
     $scope.storedata.selectedRewardType = $scope.storedata.rewardTypes[0];
-    //changes made 02/05
     $scope.storedata.brands = [
         {"name": "BP"},
         {"name": "CITGO"},
@@ -295,7 +292,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Dealer"},
         {"name": "Company Op"}
     ];
-    //$scope.storedata.selectedShift = $scope.storedata.shifts[0];
     $scope.storedata.loyalty_status = [
         {"name": "Active"},
         {"name": "Inactive"},
@@ -358,7 +354,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Delivered"},
         {"name":"Cancelled"}
     ];
-    /***end***/
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
     $scope.shoppingCartData = {"quantity": []};
@@ -418,7 +413,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.displayData["cart"] = true;
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = true;
-        $scope.displayData["role"] = {"admin": false, "storeManager": true};
+        $scope.displayData["role"] = {"admin": false, "storeManager": true,"programAdmin":false};
         if ($scope.currentUser["data"]["companyLogoUrl"]) {
             $scope.displayData["companyLogo"] = true;
         }
@@ -432,17 +427,22 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = true;
         $scope.displayData["loggedIn"] = true;
-        $scope.displayData["role"] = {"admin": true, "storeManager": false};
+        $scope.displayData["role"] = {"admin": true, "storeManager": false,"programAdmin":false};
     }
-
+    else if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+        $scope.displayData["options"] = false;
+        $scope.displayData["cart"] = false;
+        $scope.displayData["menu"] = true;
+        $scope.displayData["loggedIn"] = true;
+        $scope.displayData["role"] = {"admin": false, "storeManager": false,"programAdmin":true};
+    }
     else {
         $scope.displayData["options"] = false;
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = false;
-        $scope.displayData["role"] = {"admin": false, "storeManager": false};
+        $scope.displayData["role"] = {"admin": false, "storeManager": false,"programAdmin":false};
         $scope.displayData["companyLogo"] = false;
-
     }
 
     var hash = window.location.hash;
@@ -925,6 +925,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var query = {"table": "roles__cstore"};
         query.columns = ["name"];
         query.orders = {"name": "asc"};
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["_id"] = STOREMANAGER;
+            }
+        }
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (roleData) {
@@ -939,6 +945,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var query = {"table": "storemanagers__cstore"};
         query.columns = ["storename"];
         query.orders = {"storename": "asc"};
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
@@ -1144,10 +1156,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
-                //$scope.cartData = cartData.response.data;
+
                 //$scope.cartProducts=cartData.response.data[0].product;
                 if (cartData.response.data && cartData.response.data.length) {
                     $scope.cartProducts.length = cartData.response.data[0].product.length;
+                    $scope.testCartData = cartData.response.data[0];
                 }
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
@@ -1275,10 +1288,15 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.productdata.programs = programData.response.data;
+            $scope.userdata.programs = programData.response.data;
             for (var i = 0; i < $scope.productdata.programs.length; i++) {
                 if ($scope.productdata.programs[i]._id == "53743f7af36413a56b280897") {
                     $scope.productdata.selectedProgram = $scope.productdata.programs[i];
-                    break;
+                    $scope.userdata.selectedProgram = $scope.productdata.programs[i];
+                    //break;
+                }
+                else if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) && ($scope.productdata.programs[i]._id == $scope.currentUser.data.programid)){
+                   $scope.currentUser["data"]["programName"] = $scope.productdata.programs[i].name;
                 }
             }
             $scope.filterdata.programs = programData.response.data;
@@ -1335,7 +1353,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             }
             else {
                 for (var i = 0; i < $scope.promotiondata.programs.length; i++) {
-                    if ($scope.promotiondata.programs[i]._id == "53743f7af36413a56b280897") {
+                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
+                        if($scope.promotiondata.programs[i]._id == $scope.currentUser.data.programid){
+                            $scope.currentUser["data"]["programName"] = $scope.promotiondata.programs[i].name;
+                            $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id,null);
+                            break;
+                        }
+                    }
+                    else if ($scope.promotiondata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[i];
                         $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id,null);
                         break;
@@ -1409,7 +1434,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             }
             else {
                 for (var i = 0; i < $scope.trainingdata.programs.length; i++) {
-                    if ($scope.trainingdata.programs[i]._id == "53743f7af36413a56b280897") {
+                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
+                        if($scope.trainingdata.programs[i]._id == $scope.currentUser.data.programid){
+                            $scope.currentUser["data"]["programName"] = $scope.trainingdata.programs[i].name;
+                            $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id,null);
+                            break;
+                        }
+                    }
+                    else if ($scope.trainingdata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.trainingdata.selectedProgram = $scope.trainingdata.programs[i];
                         $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id,null);
                         break;
@@ -1487,7 +1519,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             }
             else {
                 for (var i = 0; i < $scope.surveydata.programs.length; i++) {
-                    if ($scope.surveydata.programs[i]._id == "53743f7af36413a56b280897") {
+                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
+                        if($scope.surveydata.programs[i]._id == $scope.currentUser.data.programid){
+                            $scope.currentUser["data"]["programName"] = $scope.surveydata.programs[i].name;
+                            $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id,null);
+                            break;
+                        }
+                    }
+                    else if ($scope.surveydata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.surveydata.selectedProgram = $scope.surveydata.programs[i];
                         $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id,null);
                         break;
@@ -1564,7 +1603,14 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             }
             else {
                 for (var i = 0; i < $scope.filedata.programs.length; i++) {
-                    if ($scope.filedata.programs[i]._id == "53743f7af36413a56b280897") {
+                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
+                        if($scope.filedata.programs[i]._id == $scope.currentUser.data.programid){
+                            $scope.currentUser["data"]["programName"] = $scope.filedata.programs[i].name;
+                            $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id,null);
+                            break;
+                        }
+                    }
+                    else if ($scope.filedata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.filedata.selectedProgram = $scope.filedata.programs[i];
                         $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id,null);
                         break;

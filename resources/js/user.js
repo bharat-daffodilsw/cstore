@@ -5,7 +5,8 @@ cstore.controller('userCtrl', function ($scope, $appService) {
         {"value": "userid.firstname", "name": "Name"},
         {"value": "username", "name": "Email"},
         {"value": "roleid.name", "name": "Role"},
-        {"value": "storeid.storename", "name": "Site Name"}
+        {"value": "storeid.storename", "name": "Site Name"},
+        {"value": "programid.name", "name": "Program"}
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.users = [];
@@ -23,9 +24,15 @@ cstore.controller('userCtrl', function ($scope, $appService) {
         $scope.loadingUserData = true;
         var query = {"table": "user_profiles__cstore"};
 
-        query.columns = ["userid", "storeid", "roleid", "username"];
+        query.columns = ["userid", "storeid", "roleid", "username","programid"];
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["roleid._id"] = STOREMANAGER;
+                query.filter["storeid.programid._id"]=$scope.currentUser.data.programid;
+            }
+        }
         if (column && searchText && column != "" && searchText != "") {
-            query.filter = {};
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
@@ -67,22 +74,15 @@ cstore.controller('userCtrl', function ($scope, $appService) {
     }
     $scope.getStores();
     $scope.getRoles();
-
+    $scope.getProgramList();
 });
 
 /********************ADD User  *****************/
 cstore.controller('addUserCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    $scope.getStores();
-    $scope.getRoles();
-    /*$scope.clearUserContent = function () {
-     $scope.userdata["username"] = "";
-     $scope.userdata["firstname"] = "";
-     $scope.userdata["lastname"] = "";
-     $scope.userdata["password"] = "";
-     $scope.userdata.selectedRole = $scope.userdata.roles[0];
-     $scope.userdata.selectedStore = $scope.userdata.roles[0];
-     } */
+    //$scope.getStores();
+    //$scope.getRoles();
+
 });
 
 cstore.directive('userList', ['$appService', function ($appService, $scope) {
@@ -103,8 +103,11 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<div class="sortDown" ng-click="setOrder(\'roleid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Site Name</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
+            '<th ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'"><span>Program</span>' +
+            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'progarid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="sortDown" ng-click="setOrder(\'progarmid.name\',\'desc\',searchby.value,search.searchContent)"></div></span></th>'+
             '</tr><tr ng-repeat="user in users"><td><input type="checkbox" ng-model="user.deleteStatus"></td><td>{{user.userid.firstname}}</td><td>{{user.username}}' +
-            '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td>' +
+            '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td><td ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{user.programid.name}}</td>' +
             '</tr></table></div><div class="loadingImage" ng-hide="!loadingUserData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -174,6 +177,13 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('programAdminSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="userdata.selectedProgram" ng-options="program.name for program in userdata.programs"></select>'
+    }
+}]);
+
 cstore.directive('addUser', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
@@ -201,10 +211,12 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Role*</div></td>' +
             '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div class="margin_top">Site Name*</div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'539fddda1e993c6e426860c4\'"><div class="margin_top">Program*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
             '<td class="half_td" ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
+            '<td class="half_td" ng-if="userdata.selectedRole._id==\'539fddda1e993c6e426860c4\'"><program-admin-select></program-admin-select></td>' +
             '</tr>' +
             '</tbody></table></div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
@@ -257,6 +269,9 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         $scope.newUser["username"] = $scope.userdata.username;
                         if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
                             $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
+                        }
+                        if ($scope.userdata.selectedProgram && $scope.userdata.selectedRole._id == '539fddda1e993c6e426860c4') {
+                            $scope.newUser["programid"] = {"_id": $scope.userdata.selectedProgram._id, "name": $scope.userdata.selectedProgram.name};
                         }
                         var query = {};
                         query.table = "user_profiles__cstore";
