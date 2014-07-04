@@ -198,6 +198,9 @@ cstore.config(
             }).when('/submitted-promos', {
                 templateUrl: '../submitted-promos',
                 controller: 'submittedPromotionsCtrl'
+            }).when('/disabled-promos', {
+                templateUrl: '../disabled-promos',
+                controller: 'disabledPromotionsCtrl'
             }).otherwise(
 //            {"redirectTo":"/login.html"}
             );
@@ -205,7 +208,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
-    $scope.hasHighlight={"reports":false,"setup":false,"promos":false};
+    $scope.hasHighlight={"reports":false,"setup":false};
     $scope.notification={};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
@@ -301,7 +304,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
     $scope.productdata = {"productCategories": [], "vendors": [], "selectedProductCategory": "", "selectedVendor": "", "programs": [], "selectedProgram": ""};
     $scope.userdata = {"roles": [], "selectedRole": "", "stores": [], "selectedStore": ""};
-    $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedEndHour": "", "selectedEndMinute": ""};
+    $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedStartSecond": "", "selectedEndHour": "", "selectedEndMinute": "","selectedEndSecond": "","seconds":[]};
     $scope.promotiondata.offerTypes = [
         {"name": "NPROD"}
     ];
@@ -321,14 +324,17 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var hr = i >= 10 ? i + "" : "0" + i;
         $scope.promotiondata.hours.push(hr);
     }
-    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
-    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[0];
+    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[12];
+    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[11];
     for (var j = 0; j < 60; j++) {
         var min = j >= 10 ? j + "" : "0" + j;
         $scope.promotiondata.minutes.push(min);
+        $scope.promotiondata.seconds.push(min);
     }
     $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[0];
-    $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[0];
+    $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[59];
+    $scope.promotiondata.selectedStartSecond = $scope.promotiondata.seconds[0];
+    $scope.promotiondata.selectedEndSecond = $scope.promotiondata.seconds[59];
     $scope.trainingdata = {"trainingCategories": [], "selectedTrainingCategory": "", "stores": [], "assignedStore": "", "uploadedimages": []};
     $scope.surveydata = {};
     $scope.filedata={"uploadedimages": [],"selectedProgram":"","programs":[]};
@@ -395,12 +401,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.deactiveHightLight=function(){
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
-    }
-    $scope.activePromo=function(){
-        $scope.hasHighlight.promos=true;
-    }
-    $scope.inActivePromo=function(){
-        $scope.hasHighlight.promos=false;
     }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
@@ -1073,10 +1073,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["end_date"] = "";
-        $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
-        $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[12];
+        $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[11];
         $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[0];
-        $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[0];
+        $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[59];
+        $scope.promotiondata.selectedStartSecond = $scope.promotiondata.minutes[0];
+        $scope.promotiondata.selectedEndSecond = $scope.promotiondata.minutes[59];
         $scope.promotiondata["start_date"] = "";
         $scope.promotiondata["offer_description"] = "";
         $scope.promotiondata["offer_title"] = "";
@@ -1090,6 +1092,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
         $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+        $scope.promotiondata["decal_description"] = "";
+        $scope.promotiondata["decal_subdescription"] = "";
         $scope.promotiondata.codes = [];
         $scope.promotiondata["top_promo"] = false;
         $scope.oFile.fileExist = false;
@@ -1141,7 +1145,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
         $scope.orderFilterData.end_date="";
-        $scope.inActivePromo();
     }
     $scope.clearPromotionNotificationContent = function () {
         $scope.notification.subject="";
