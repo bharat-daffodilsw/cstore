@@ -6,6 +6,7 @@ var ADMIN = "531d4a79bd1515ea1a9bbaf5";
 var PROGRAMADMIN ="539fddda1e993c6e426860c4";
 var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
+var DOMAIN_NAME="http://cstore.daffodilapps.com";
 
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['multi-select','ngRoute', '$appstrap.services']);
@@ -1088,6 +1089,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata["threshold"] = "";
         $scope.promotiondata["minimum_retail"] = "";
         $scope.promotiondata["image"] = "";
+        $scope.promotiondata["display_image"] = "";
         $scope.readonlyrow.fileurl = "";
         $scope.promotiondata.selectedOfferType = $scope.promotiondata.offerTypes[0];
         $scope.promotiondata.selectedItemSignage = $scope.promotiondata.itemSignage[0];
