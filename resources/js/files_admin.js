@@ -198,7 +198,7 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
             '<tr><td>' +
             '<ul class="uploadList">' +
             '<li ng-repeat="uploadedimage in filedata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
-            '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
+            '<img src="images/icon_cross.gif" style="width: 6%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
             '</li>' +
             '</ul>' +
             '</td></tr>' +
