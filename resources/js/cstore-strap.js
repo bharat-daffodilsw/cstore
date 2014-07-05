@@ -46,7 +46,7 @@ appStrapServices.factory('$appService', [
             var that = this;
 
             var url = BAAS_SERVER + "/data";
-            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+            this.getDataFromJQuery(url, params, "POST", "JSON", function (callBackData) {
                 callBack(callBackData);
             });
         }
