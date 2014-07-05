@@ -45,7 +45,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "programid",
             "minimum_retail",
             "decal_description",
-            "decal_subdescription"
+            "decal_subdescription",
+            "display_image"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -238,6 +239,9 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["decal_subdescription"] = promotion.decal_subdescription ? promotion.decal_subdescription : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
+                        }
+                        if(promotion.display_image){
+                           $scope.promotiondata.display_image= BAAS_SERVER + "/file/render?filekey=" + promotion.display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
                         }
                         $scope.showFile(promotion.image, false);
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
@@ -439,6 +443,14 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.offer_description"></textarea></td>' +
             '</tr>' +
             '<tr>' +
+            '<td class="half_td"><div class="margin_top">Decal Description</div></td>' +
+            '<td class="half_td"><div class="margin_top">Decal Subdescription</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.decal_description"></textarea></td>' +
+            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.decal_subdescription"></textarea></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="margin_top">Sponsor*</div></td>' +
             '<td class="half_td"><div class="margin_top">Vendor*</div></td>' +
             '</tr>' +
@@ -488,14 +500,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><select-program-promo ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-promo><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Decal Description</div></td>' +
-            '<td class="half_td"><div class="margin_top">Decal Subdescription</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.decal_description"></textarea></td>' +
-            '<td class="half_td"><textarea class="description_promo" type="text" placeholder="" ng-model="promotiondata.decal_subdescription"></textarea></td>' +
-            '</tr>' +
+
             '<tr>' +
             '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
             '<td class="half_td"><div class="margin_top">Promo Image*</div></td>' +
@@ -503,20 +508,22 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr>' +
             '<td class="half_td"><upc-select></upc-select></td>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
-            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><img ng-src="{{ promotiondata.display_image}}"</span></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Minimum Retail*</div></td>' +
-            '<td class="half_td"><div class="margin_top"></div></td>' +
+            '<td class="half_td"><div class="margin_top" ng-show="promotiondata.display_image">Display Image</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
+            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="'+DOMAIN_NAME+'{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
             '</div></div></td>' +
-            '</tr>' +
+            '</tr>'+
             '</tbody></table></div>' +
             '<div class="loadingImage" ng-hide="!loadingAddPromotionData"><img src="images/loading.gif"></div>' +
             '</div>',
@@ -710,9 +717,9 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                             if(data.response.update[0].display_image.length){
                                                 var display_image=data.response.update[0].display_image;
                                                 $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
-                                                console.log("704 src of display image"+ $scope.promotiondata["display_image"]);
-                                $("#popupMessage").html("Saved successfully");
-                                $('.popup').toggle("slide");
+//                                                console.log("704 src of display image"+ $scope.promotiondata["display_image"]);
+                                                $("#popupMessage").html("Saved successfully");
+                                                $('.popup').toggle("slide");
                                                 $scope.loadingAddPromotionData = false;
 
                                             }
@@ -757,6 +764,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 
                         });
                     }
+
                 }
             }
         }

@@ -7,6 +7,7 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
         var query = {"table": "promotions__cstore"};
         query.columns = [
             "image",
+            "display_image",
             "promo_description",
             "promo_title",
             "store_manager_id",
@@ -52,7 +53,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
-            '<img ng-src="{{promotion[0].imageUrl}}" /></div>' +
+            '<a target="_blank" href="'+DOMAIN_NAME+'{{promotion[0].displayImageUrl}}"><img ng-src="{{promotion[0].displayImageUrl}}" /></a></div>' +
             '<div class="details_product pull-left"><div class="Qty"><div class="quantity_border"><b>Offer</b> : {{promotion[0].offer_title}}</div>'+
             '<div class="short_details ng-binding"><b>Offer Description</b> : {{promotion[0].offer_description}}</div>'+
             '<div class="quantity_border"><b>Offer Type</b> : {{promotion[0].offer_type}}</div>'+
