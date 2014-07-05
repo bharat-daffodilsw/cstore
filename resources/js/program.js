@@ -23,7 +23,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image","cooler_template","aisle_template","participation_id"];
+        query.columns = ["name", "image","cooler_template","aisle_template","participation_id","aisle_html","cooler_html","image_type"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -148,8 +148,23 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                     $scope.setProgramState = function (program) {
                         $scope.programdata["name"] = program.name ? program.name : "";
                         $scope.programdata["participation_id"] = program.participation_id ? program.participation_id : "";
+                        for(var i=0;i<$scope.imageTypes.length;i++){
+                            if(program.image_type==$scope.imageTypes[i].name){
+                                $scope.programdata.image_type=$scope.imageTypes[i];
+                                break;
+                            }
+                        }
                         if (program.image) {
                             $scope.oFile.fileExist = true;
+                        }
+
+
+                        if (program.aisle_html) {
+
+                            $scope.programdata["aisle_html"] = program.aisle_html;
+                        }
+                        if (program.cooler_html) {
+                            $scope.programdata["cooler_html"] = program.cooler_html;
                         }
                         $scope.showFile(program.image, false);
                         if (program.cooler_template) {
@@ -187,6 +202,14 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<td class="product_image half_td"><input type="text" placeholder="" ng-model="programdata.participation_id"></td>' +
             '</tr>' +
             '<tr>' +
+            '<td class="half_td"> <div class="margin_top">Aisle Html*</div> </td>' +
+            '<td class="product_image half_td"><div class="margin_top">Cooler Html*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"> <textarea ng-model="programdata.aisle_html" class="programTexarea"></textarea> </td>' +
+            '<td class="product_image half_td"><textarea ng-model="programdata.cooler_html" class="programTexarea"></textarea></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="margin_top">Program Image*</div></td>' +
             '<td class="half_td"><div class="margin_top">Cooler*</div></td>' +
             '</tr>' +
@@ -195,11 +218,14 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<td class="product_image half_td"><app-cooler-file-upload></app-cooler-file-upload></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Aisle</div></td>' +
-            '<td class="half_td"><div class="margin_top"></div></td>' +
+            '<td class="half_td"><div class="margin_top">Aisle *</div></td>' +
+            '<td class="half_td"><div class="margin_top">Image Type</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
+            '<td class="half_td"><image-type></image-type></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveProgram()"><a href>Save</a></button>' +
@@ -209,7 +235,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</div>' +
             '</td>' +
-            '</tr>' +
+            '</tr>'+
             '</div>' +
             '<div class="loadingImage" ng-hide="!loadingAddProgramData"><img src="images/loading.gif"></div>' +
             '</div>',
@@ -261,6 +287,12 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             }
                             $scope.newProgram["name"] = $scope.programdata.name;
                             $scope.newProgram["participation_id"] = $scope.programdata.participation_id;
+                            /*bharat change*/
+
+                            $scope.newProgram["aisle_html"] = $scope.programdata.aisle_html;
+                            $scope.newProgram["cooler_html"] = $scope.programdata.cooler_html;
+                            $scope.newProgram["image_type"]=$scope.programdata.image_type.name;
+                            /*end*/
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
                                 $scope.uploadCoolerTemplate(query);
@@ -352,7 +384,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                         if (document.getElementById('uploadAisleFile').files.length === 0) {
                             delete $scope.newProgram["aisle_template"];
                             query.operations = [$scope.newProgram];
-                            console.log("query without aisle template 222 " + JSON.stringify(query));
+                           // console.log("query without aisle template 222 " + JSON.stringify(query));
                             $scope.saveFunction(query);
                         }
                         else  {

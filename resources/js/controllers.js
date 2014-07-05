@@ -208,7 +208,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
-    $scope.hasHighlight={"reports":false,"setup":false,"promos":false};
+    $scope.hasHighlight={"reports":false,"setup":false};
     $scope.notification={};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
@@ -367,7 +367,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     for (var i = 1; i <= 10; i++) {
         $scope.shoppingCartData.quantity.push(i);
     }
+    $scope.imageTypes=[{name:"jpg"},{name:"png"}];
+
     $scope.programdata = {};
+    $scope.programdata["image_type"]=$scope.imageTypes[0];
     $scope.location = '';
     $scope.allAssignedSurveys = [];
     $scope.getURLParam = function (strParamName) {
@@ -398,12 +401,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.deactiveHightLight=function(){
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
-    }
-    $scope.activePromo=function(){
-        $scope.hasHighlight.promos=true;
-    }
-    $scope.inActivePromo=function(){
-        $scope.hasHighlight.promos=false;
     }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
@@ -1148,7 +1145,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
         $scope.orderFilterData.end_date="";
-        $scope.inActivePromo();
     }
     $scope.clearPromotionNotificationContent = function () {
         $scope.notification.subject="";

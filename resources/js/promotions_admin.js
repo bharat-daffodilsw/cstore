@@ -503,7 +503,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<tr>' +
             '<td class="half_td"><upc-select></upc-select></td>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
-            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><img ng-src="promotiondata.display_image"</span></td>' +
+            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><img ng-src="{{ promotiondata.display_image}}"</span></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Minimum Retail*</div></td>' +
@@ -691,46 +691,61 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-//                                if($scope.promotiondata.selectedProgram && $scope.promotiondata.selectedProgram.cooler_html && $scope.promotiondata.selectedProgram.aisle_html){
-//                                    var requestBody={};
-//                                    if(callBackData.response.insert){
-//                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.insert[0]._id}
-//                                    }
-//                                    else {
-//                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.update[0]._id};
-//                                    }
-//
-//                                    $appService.getDataFromJQuery("/rest/create/image/cstore",requestBody,"GET","JSON",function(err,data){
-//                                        if(err){
-//                                            $("#popupMessage").html(err.Error);
-//                                            $('.popup').toggle("slide");
-//                                        }
-//                                        else {
-//                                            if(data.update.display_image){
-//                                                var display_image=data.update.display_image;
-//                                               $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
-//                                            }
-//                                        }
-//                                    })
-//                                }
-////                                else{
-////                                    $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + data.update.image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
-////                                }
+                                if($scope.promotiondata.selectedProgram && $scope.promotiondata.selectedProgram.cooler_html && $scope.promotiondata.selectedProgram.aisle_html){
+                                    var requestBody={};
+                                    if(callBackData.response.insert){
+                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.insert[0]._id}
+                                    }
+                                    else {
+                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.update[0]._id};
+                                    }
+
+                                    $appService.getDataFromJQuery("/rest/create/image/cstore",requestBody,"GET","JSON",function(data){
+                                        if(data.code!==200 && data.status!="ok" ){
+                                            $("#popupMessage").html("Error while creating image");
+                                            $('.popup').toggle("slide");
+                                            $scope.loadingAddPromotionData = false;
+                                        }
+                                        else {
+                                            if(data.response.update[0].display_image.length){
+                                                var display_image=data.response.update[0].display_image;
+                                                $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
+                                                console.log("704 src of display image"+ $scope.promotiondata["display_image"]);
                                 $("#popupMessage").html("Saved successfully");
                                 $('.popup').toggle("slide");
-                                $scope.setPathforPromotion("promotions");
+                                                $scope.loadingAddPromotionData = false;
+
+                                            }
+                                            else{
+                                                $("#popupMessage").html("Error while creating image");
+                                                $('.popup').toggle("slide");
+                                                $scope.loadingAddPromotionData = false;
+                                            }
+                                        }
+                                    })
+                                }
+                                else{
+                                    $("#popupMessage").html("Saved successfully");
+                                    $('.popup').toggle("slide");
+                                    $scope.loadingAddPromotionData = false;
+                                }
+
+                                //$scope.setPathforPromotion("promotions");
                             }
                             else if ((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns") >= 0)) {
                                 $("#popupMessage").html("There is duplicate value for promo title or offer titile");
                                 $('.popup').toggle("slide");
+                                $scope.loadingAddPromotionData = false;
                             }
                             else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
+                                $scope.loadingAddPromotionData = false;
                             }
                             else {
                                 $("#popupMessage").html("some error while saving promotion");
                                 $('.popup').toggle("slide");
+                                $scope.loadingAddPromotionData = false;
                             }
                             if (!$scope.$$phase) {
                                 $scope.$apply();
@@ -738,6 +753,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         }, function (err) {
                             $("#popupMessage").html(err.stack);
                             $('.popup').toggle("slide");
+                            $scope.loadingAddPromotionData = false;
 
                         });
                     }
