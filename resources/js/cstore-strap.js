@@ -227,19 +227,23 @@ appStrapServices.factory('$appService', [
                     if (size) {
                         if (height) {
                             data[i]["displayImageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":' + size + ',"height":' + height + '}&convert={"type":"png"}';
+                            data[i]["downloadImageUrl"]= BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK;
                         }
                         else {
 
                             data[i]["displayImageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":' + size + '}&convert={"type":"png"}';
+                            data[i]["downloadImageUrl"]= BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK;
                         }
                     }
                     else {
                         if (height) {
                             data[i]["displayImageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":216,"height":' + height + '}&convert={"type":"png"}';
+                            data[i]["downloadImageUrl"]= BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK;
                         }
 
                         else {
                             data[i]["displayImageUrl"] = BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":216}&convert={"type":"png"}';
+                            data[i]["downloadImageUrl"]= BAAS_SERVER + "/file/render?filekey=" + data[i]["display_image"][0]["key"] + '&ask=' + ASK + '&osk=' + OSK;
                         }
                     }
 
