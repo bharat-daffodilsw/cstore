@@ -24,7 +24,7 @@ cstore.controller('userCtrl', function ($scope, $appService) {
         $scope.loadingUserData = true;
         var query = {"table": "user_profiles__cstore"};
 
-        query.columns = ["userid", "storeid", "roleid", "username","programid"];
+        query.columns = ["userid", "storeid", "roleid", "username","programid","userid.status"];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
@@ -36,6 +36,7 @@ cstore.controller('userCtrl', function ($scope, $appService) {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
+        query.orders["userid.firstname"] = "asc";
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
         }
@@ -106,8 +107,11 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<th ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'"><span>Program</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'progarid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'progarmid.name\',\'desc\',searchby.value,search.searchContent)"></div></span></th>'+
+            '<th></th>'+
             '</tr><tr ng-repeat="user in users"><td><input type="checkbox" ng-model="user.deleteStatus"></td><td>{{user.userid.firstname}}</td><td>{{user.username}}' +
             '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td><td ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{user.programid.name}}</td>' +
+            '<td><a class="edit_btn" ng-show="user.userid.status==true" ng-click="toggleUserStatus(user)" href>Deactivate</a>'+
+            '<a class="edit_btn" ng-show="user.userid.status==false" ng-click="toggleUserStatus(user)" href>Activate</a></td>'+
             '</tr></table></div><div class="loadingImage" ng-hide="!loadingUserData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -169,6 +173,45 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                             $("#popupMessage").html("please select at least one vendor before delete");
                             $('.popup').toggle("slide");
                         }
+
+                    }
+                    $scope.toggleUserStatus = function (user) {
+                        var deactivateUser ={};
+                        deactivateUser["_id"]=user._id;
+                        deactivateUser["userid.username"]=user.userid.username;
+                        deactivateUser["userid.status"]=!user.userid.status;
+                        var query = {};
+                        query.table = "user_profiles__cstore";
+                        query.operations = [deactivateUser];
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            $scope.loadingStatus = false;
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("User Status Changed");
+                                $('.popup').toggle("slide");
+                                $scope.show.preCursor = 0;
+                                $scope.show.currentCursor = 0;
+                                $scope.getAllUsers(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                            }
+                            else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                $('.popup').toggle("slide");
+                                return;
+                            }
+                            else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                            });
+
 
                     }
                 }
@@ -262,7 +305,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             return false;
                         }
                         $scope.loadingStatus = true;
-                        $scope.newUser["userid"] = {"emailid": $scope.userdata.username, "firstname": $scope.userdata.firstname, "lastname": $scope.userdata.lastname, "password": $scope.userdata.password, "username": $scope.userdata.username};
+                        $scope.newUser["userid"] = {"emailid": $scope.userdata.username, "firstname": $scope.userdata.firstname, "lastname": $scope.userdata.lastname, "password": $scope.userdata.password, "username": $scope.userdata.username,"status":true};
                         if ($scope.userdata.selectedRole) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
                         }

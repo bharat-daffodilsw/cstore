@@ -40,67 +40,73 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                 if (usk) {
 
                     var query = {"table": "user_profiles__cstore"};
-                    query.columns = ["userid", "roleid", "storeid", "storeid.programid", "storeid.programid.image", "storeid.stateid.name", "username", "programid"];
-                    query.filter = {"userid": "{_CurrentUserId}"};
+                    query.columns = ["userid", "roleid", "storeid", "storeid.programid", "storeid.programid.image", "storeid.stateid.name", "username", "programid", "userid.status"];
+                    query.filter = {"userid": "{_CurrentUserId}", "userid.status": true};
                     var params = {"query": JSON.stringify(query), "ask": ASK, "osk": OSK, "usk": usk};
 
                     $appService.getDataFromJQuery("/rest/data", params, "GET", "JSON", function (callBackData) {
                         $appService.deleteAllCookie();
-                        var roleid = callBackData.response.data[0].roleid._id;
-                        var firstname = callBackData.response.data[0].userid.firstname;
-                        var userid = callBackData.response.data[0].userid._id;
-                        var username = callBackData.response.data[0].username;
-                        if (callBackData.response.data[0] && callBackData.response.data[0]["storeid"]) {
-                            var storeid = callBackData.response.data[0]["storeid"]._id;
-                            var programid = callBackData.response.data[0]["storeid"].programid._id;
-                            var stateName = callBackData.response.data[0].storeid.stateid.name;
-                            if (!$appService.getCookie("selectedLoc")) {
-                                var c_name = "selectedLoc";
-                                document.cookie = c_name + "=" + escape(stateName);
-                                $scope.currentLoc["data"] = stateName;
-                            }
-                            var image = [
-                                {"image": ""}
+                        if (callBackData.response.data && callBackData.response.data.length > 0) {
+                            var roleid = callBackData.response.data[0].roleid._id;
+                            var firstname = callBackData.response.data[0].userid.firstname;
+                            var userid = callBackData.response.data[0].userid._id;
+                            var username = callBackData.response.data[0].username;
+                            if (callBackData.response.data[0] && callBackData.response.data[0]["storeid"]) {
+                                var storeid = callBackData.response.data[0]["storeid"]._id;
+                                var programid = callBackData.response.data[0]["storeid"].programid._id;
+                                var stateName = callBackData.response.data[0].storeid.stateid.name;
+                                if (!$appService.getCookie("selectedLoc")) {
+                                    var c_name = "selectedLoc";
+                                    document.cookie = c_name + "=" + escape(stateName);
+                                    $scope.currentLoc["data"] = stateName;
+                                }
+                                var image = [
+                                    {"image": ""}
 
-                            ];
-                            for (var i = 0; i < callBackData.response.data.length; i++) {
-                                image[i]["image"] = callBackData.response.data[i].storeid.programid.image;
-                            }
-                            var setCompanyLogo = $appService.setUrls(image, 140, 88);
-                            var companyLogoUrl = setCompanyLogo[0].imageUrl;
-                            if (storeid) {
-                                var c_name = "storeid";
-                                document.cookie = c_name + "=" + escape(storeid);
-                                var c_name = "programid";
-                                document.cookie = c_name + "=" + escape(programid);
-                                if (companyLogoUrl) {
-                                    var c_name = "companyLogoUrl";
-                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+                                ];
+                                for (var i = 0; i < callBackData.response.data.length; i++) {
+                                    image[i]["image"] = callBackData.response.data[i].storeid.programid.image;
+                                }
+                                var setCompanyLogo = $appService.setUrls(image, 140, 88);
+                                var companyLogoUrl = setCompanyLogo[0].imageUrl;
+                                if (storeid) {
+                                    var c_name = "storeid";
+                                    document.cookie = c_name + "=" + escape(storeid);
+                                    var c_name = "programid";
+                                    document.cookie = c_name + "=" + escape(programid);
+                                    if (companyLogoUrl) {
+                                        var c_name = "companyLogoUrl";
+                                        document.cookie = c_name + "=" + escape(companyLogoUrl);
+                                    }
                                 }
                             }
-                        }
-                        if (callBackData.response.data[0] && callBackData.response.data[0]["programid"]) {
-                            var programid = callBackData.response.data[0]["programid"]._id;
-                            if (programid) {
-                                var c_name = "programid";
-                                document.cookie = c_name + "=" + escape(programid);
+                            if (callBackData.response.data[0] && callBackData.response.data[0]["programid"]) {
+                                var programid = callBackData.response.data[0]["programid"]._id;
+                                if (programid) {
+                                    var c_name = "programid";
+                                    document.cookie = c_name + "=" + escape(programid);
+                                }
                             }
+                            var c_name = "usk";
+                            document.cookie = c_name + "=" + escape(usk);
+                            var c_name = "roleid";
+                            document.cookie = c_name + "=" + escape(roleid);
+                            var c_name = "userid";
+                            document.cookie = c_name + "=" + escape(userid);
+                            var c_name = "firstname";
+                            document.cookie = c_name + "=" + escape(firstname);
+                            var c_name = "username";
+                            document.cookie = c_name + "=" + escape(username);
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                            window.location.href = "/";
                         }
-                        var c_name = "usk";
-                        document.cookie = c_name + "=" + escape(usk);
-                        var c_name = "roleid";
-                        document.cookie = c_name + "=" + escape(roleid);
-                        var c_name = "userid";
-                        document.cookie = c_name + "=" + escape(userid);
-                        var c_name = "firstname";
-                        document.cookie = c_name + "=" + escape(firstname);
-                        var c_name = "username";
-                        document.cookie = c_name + "=" + escape(username);
-                        if (!$scope.$$phase) {
-                            $scope.$apply();
+                        else {
+                            $("#popupMessage").html("You are currently deactivated.Please Contact admin");
+                            $('.popup').toggle("slide");
+                            return;
                         }
-                        window.location.href = "/";
-
                     }, function (err) {
                         $("#popupMessage").html("error while making request");
                         $('.popup').toggle("slide");
