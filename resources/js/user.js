@@ -53,6 +53,7 @@ cstore.controller('userCtrl', function ($scope, $appService) {
                 $scope.users[i]["deleteStatus"] = false;
                 $scope.users[i]["editStatus"] = false;
                 $scope.users[i]["oldstatus"] = true;
+                $scope.users[i]["prevStatus"]= $scope.users[i].userid.status;
             }
 
         }, function (jqxhr, error) {
@@ -190,9 +191,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Status Changed");
                                 $('.popup').toggle("slide");
-                                $scope.show.preCursor = 0;
-                                $scope.show.currentCursor = 0;
-                                $scope.getAllUsers(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                                user.userid.status=!user.userid.status;
                             }
                             else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
