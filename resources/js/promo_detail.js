@@ -59,13 +59,13 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>'+
             '<div class="quantity_border"><b>End Date</b> :{{promotion[0].end_date}} </div>'+
             '<div class="quantity_border"><b>Threshold</b> :{{promotion[0].threshold}} </div>'+
-            '<div class="quantity_border"><b>Reward Value</b> :{{promotion[0].reward_value}} </div>'+
+            '<div class="quantity_border"><b>Reward Value</b> :{{promotion[0].reward_value.amount | currency}} </div>'+
             '<div class="quantity_border"><b>Sponsor</b> : {{promotion[0].sponsor}}</div>'+
             '<div class="quantity_border"><b>Vendor</b> : {{promotion[0].vendorid.firstname}}</div>'+
             '<div class="quantity_border"><b>Item Signage</b> : {{promotion[0].item_signage}}</div>'+
             '<div class="quantity_border"><b>Minimum Retail</b> : {{promotion[0].minimum_retail.amount | currency}}</div>'+
             '<div class="quantity_border"><b>UPC/PLU/GROUP</b> : {{promotion[0].upc}}</div>'+
-            '<div class="quantity_border"><b>Codes</b> : <span ng-repeat="code in promotion[0].codes">{{code}}</span></div>'+
+            '<div class="quantity_border"><b>Codes</b> : <span ng-repeat="code in promotion[0].codes"><span ng-hide=$index==0  style="padding-right: 5px;">,</span>{{code}}</span></div>'+
             '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile:function(){

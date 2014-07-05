@@ -64,11 +64,11 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-show="promotions.length > 0" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
-            '<div class="detail_outer"><div class="promo_details">' +
+            '<div class="detail_outer">' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div>: {{promotion.start_date}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
-            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div>' +
             '<div class="product_details">' +
             '{{promotion.promo_description}}</div>' +
             '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
@@ -346,8 +346,8 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
 cstore.directive('disabledPromos', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">Available Offers<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span></div>' +
-            '<div ng-hide="promotions.length > 0">There is no new disabled promos.</div>' +
+        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">Disabled Offers<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span></div>' +
+            '<div ng-hide="promotions.length > 0">There are no new disabled promos.</div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-show="promotions.length > 0" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.imageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
