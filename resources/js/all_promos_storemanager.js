@@ -14,6 +14,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
             {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
             "image",
+            "display_image",
             "promo_title",
             "store_manager_id",
             "promo_description",
@@ -62,7 +63,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">Available Offers<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span></div>' +
             '<div ng-hide="promotions.length > 0">There is no new offered promos.</div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-show="promotions.length > 0" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
-            '<img ng-src="{{promotion.imageUrl}}"/></a>' +
+            '<img ng-src="{{promotion.displayImageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
             '<div class="detail_outer">' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div>: {{promotion.start_date}}</div>' +
@@ -266,7 +267,7 @@ cstore.directive('submittedPromos', ['$appService', function ($appService, $scop
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">Selected Offers</div>' +
             '<div ng-hide="submittedPromos.length > 0">There is no submitted promo.</div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in submittedPromos" ng-show="submittedPromos.length > 0"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
-            '<img ng-src="{{promotion.imageUrl}}"/></a>' +
+            '<img ng-src="{{promotion.displayImageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
             '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
@@ -349,7 +350,7 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">Disabled Offers<span class="opt_button pull-right" ng-click="changeOptInOutStatus()"><a href="">Submit</a></span></div>' +
             '<div ng-hide="promotions.length > 0">There are no new disabled promos.</div>' +
             '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-show="promotions.length > 0" ng-repeat="promotion in promotions"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
-            '<img ng-src="{{promotion.imageUrl}}"/></a>' +
+            '<img ng-src="{{promotion.displayImageUrl}}"/></a>' +
             '</div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
             '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +

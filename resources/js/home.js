@@ -34,7 +34,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
         var query = {"table": "promotions__cstore"};
-        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
+        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.filter["end_date"] = {"$gte": currentTime};
@@ -137,7 +137,7 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
         restrict: "E",
         template: '<div ng-show="recentPromotions.length > 0"><div class="category pull-left"><div class="pop_products">Recent Promotions <a href="#!/all-promos">( View all )</a>' +
             '</div><div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in recentPromotions"><div class="products_img">' +
-            '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.imageUrl}}"/>' +
+            '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.displayImageUrl}}"/>' +
             '</a></div><div class="name"><a href="#!/promo?promoid={{promotion._id}}">{{promotion.promo_title}}</a></div>' +
             '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>'+
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>'+

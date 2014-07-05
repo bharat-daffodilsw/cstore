@@ -1139,6 +1139,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.readonlycoolerrow.fileurl = "";
         $scope.coolerOFile.fileExist = false;
         $scope.programdata["aisle_template"] = "";
+        $scope.programdata["aisle_html"] = "";
+        $scope.programdata["cooler_html"] = "";
         $scope.readonlyaislerow.fileurl = "";
         $scope.aisleOFile.fileExist = false;
         $scope.hasHighlight.setup=true;
