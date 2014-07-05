@@ -1236,7 +1236,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getShoppingCart = function () {
         $scope.loadingShoppingCartData = true;
         var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address", "same_shipping_address"];
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address", "same_shipping_address","shipping_address.state.abbreviation"];
         query.filter = {};
         query.filter["userid._id"] = $scope.currentUser.data.userid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};

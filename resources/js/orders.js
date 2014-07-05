@@ -1,5 +1,5 @@
 /************************************ Order List For Store Manager*************************************/
-cstore.controller('orderListCtrl', function ($scope, $appService) {
+cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingOrderData = false;
     $scope.status=["In Progress","Cancelled","Delivered"];
@@ -65,7 +65,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getAllOrders(1, 10);
+    //$scope.getAllOrders(1, 10);
     $scope.sortOrder = function (sortingCol, sortingType, column, searchText,orderStartDate,orderEndDate) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
@@ -78,59 +78,131 @@ cstore.controller('orderListCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText,orderStartDate,orderEndDate) {
         $scope.getAllOrders(0, 10, column, searchText,orderStartDate,orderEndDate);
     }
-
-    $scope.exportFunction=function(){
-        tableToExcel('testTable', 'Order List Table');
+    if(!$routeParams.token && !$routeParams.PayerID){
+        $scope.getAllOrders(1, 10);
     }
-    var tableToExcel = (function() {
-        var uri = 'data:application/vnd.ms-excel;base64,'
-            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-            , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-            , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-        return function(table, name) {
-            if (!table.nodeType){
-                table = document.getElementById(table)
-                var myclone = $("#testTable").clone();
-                myclone.find( "tr > th:last-child" ).remove();
-                myclone.find( "tr > td:last-child" ).remove();
-                var html=myclone.html();
-                //console.log(myclone.html());
-                //console.log(table.innerHTML);
+    $scope.executePayment = function(){
+        var payerId=$routeParams.PayerID;
+        var mode = "sandbox";
+        $appService.executePayment($scope.paymentId,payerId,mode,ASK,OSK, null, function (callBackData) {
+            if (callBackData.code == 200 && callBackData.status == "ok") {
+                $scope.getAllOrders(1, 10);
+                $scope.updatePopSoldCount($scope.testCartData,$scope.testCartData.product);
+                $("#popupMessage").html("You have successfully placed an order");
+                $('.popup').toggle("slide");
             }
-            var ctx = {worksheet: name || 'Worksheet', table: html}
-            window.location.href = uri + base64(format(template, ctx))
-        }
-    })()
-    $scope.getExportOrders = function (column,searchText,sortingCol,sortingType,orderStartDate,orderEndDate) {
-
+            else if (callBackData.code == 17 && callBackData.status == "error") {
+                $("#popupMessage").html(callBackData.response);
+                $('.popup').toggle("slide");
+                $scope.getAllOrders(1, 10);
+            }
+        }, function (err) {
+            $("#popupMessage").html(err.stack);
+            $('.popup').toggle("slide");
+        });
+    }
+    $scope.getCompletedOrder = function () {
         var query = {"table": "orders__cstore"};
-        query.columns = [{"expression":"userid","columns":["_id","username"]},{"expression":"storeid","columns":["_id","storename"]},"status","sub_total",{"expression":"total","type":"currency"},{"expression": "order_date","type":"date", "format": "MM/DD/YYYY"}];
+        query.columns = ["_id", "token","paymentId"];
         query.filter = {};
-        if ($scope.currentUser["data"]) {
-            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
-                query.filter["storeid._id"] = $scope.currentUser["data"]["storeid"];
-            }
-        }
-        if (column && searchText && column != "" && searchText != "") {
-            query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
-        }
-        if (orderStartDate && orderStartDate != "" && orderEndDate && orderEndDate != "") {
-            query.filter["order_date"] = {"$gte":orderStartDate,"$lte": orderEndDate};
-        }
-        if (sortingCol && sortingType) {
-            query.orders = {};
-            query.orders[sortingCol] = sortingType;
-        }
+        query.filter["userid.username"] = $scope.currentUser.data.username;
+        query.filter["token"] = $routeParams.token;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/excelexport";
-        var tempUrl=serviceUrl+"?query="+JSON.stringify(query)+"&ask="+ASK+"&osk="+OSK;
-        window.open(tempUrl,'_blank', 'width=300,height=300');
-        //$appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
-        //    console.log("done");
-        //}, function (jqxhr, error) {
-        //    $("#popupMessage").html(error);
-        //    $('.popup').toggle("slide");
-        //})
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (callBackData) {
+            var completeOrderId = callBackData.response.data[0]._id;
+            $scope.paymentId = callBackData.response.data[0].paymentId;
+            var query = {};
+            query.table = "orders__cstore";
+            var completeOrder = {};
+            completeOrder["_id"] = completeOrderId;
+            completeOrder["status"] = "Ordered";
+            completeOrder["payerId"] = $routeParams.PayerID;
+            query.operations = [completeOrder];
+            $appService.save(query, ASK, OSK, null, function (callBackData) {
+                if (callBackData.code == 200 && callBackData.status == "ok") {
+                    $scope.executePayment();
+                } else {
+                    $("#popupMessage").html(callBackData.response);
+                    $('.popup').toggle("slide");
+                }
+                if (!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            }, function (err) {
+                $("#popupMessage").html(err);
+                $('.popup').toggle("slide");
+            });
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.removeCart = function (cart) {
+        $scope.removeShoppingCart = {};
+        $scope.removeShoppingCart["_id"] = cart._id;
+        $scope.removeShoppingCart["__type__"] = "delete";
+        var query = {};
+        query.table = "shopping_cart__cstore";
+        query.operations = [$scope.removeShoppingCart];
+        $appService.save(query, ASK, OSK, null, function (callBackData) {
+
+            if (callBackData.code == 200 && callBackData.status == "ok") {
+                if (cart.product.length > 0) {
+                    $scope.cartProducts.length = $scope.cartProducts.length - cart.product.length;
+                    for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
+                        //if ($scope.shoppingCartProducts[i]._id == product._id) {
+                        $scope.shoppingCartProducts.splice(i, cart.product.length);
+                        i--;
+                        //}
+                    }
+                }
+            } else {
+                $("#popupMessage").html(callBackData.response);
+                $('.popup').toggle("slide");
+                $scope.loadingShoppingCartData = false;
+            }
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (err) {
+            $("#popupMessage").html(err);
+            $('.popup').toggle("slide");
+        });
+    }
+    $scope.updatePopSoldCount = function (cart, pop) {
+        var popList = [
+            {"_id": "", "soldcount": ""}
+        ];
+        popList = pop.filter(function (el) {
+            if (el._id) {
+                return el;
+            }
+        });
+        for (var i = 0; i < popList.length; i++) {
+            popList[i] = {"_id": popList[i].popid, "$inc": {"soldcount": popList[i].quantity}};
+        }
+        var query = {};
+        query.table = "products__cstore";
+        query.operations = popList;
+        $appService.save(query, ASK, OSK, null, function (callBackData) {
+            if (callBackData.code == 200 && callBackData.status == "ok") {
+                $scope.removeCart(cart);
+            } else {
+                $("#popupMessage").html(callBackData.response);
+                $('.popup').toggle("slide");
+            }
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }, function (err) {
+            $("#popupMessage").html(err);
+            $('.popup').toggle("slide");
+        });
+    }
+
+    if($routeParams.token && $routeParams.token !="" && $routeParams.token !="undefined" && $routeParams.PayerID && $routeParams.PayerID !="" && $routeParams.PayerID != "undefined"){
+        $scope.getCompletedOrder();
     }
 });
 
@@ -189,14 +261,7 @@ cstore.directive('orderStatusSelect', ['$appService', function ($appService, $sc
         compile: function () {
             return{
                 pre: function ($scope) {
-                    /*for (var i = 0; i < $scope.orderStatus.length; i++) {
-                        if ($scope.orderStatus[i] == $scope.order.status) {
-                            $scope.orders[i].status = $scope.orderStatus[i];
-                            break;
-                        }
-                    } */
-                    //console.log($scope.order.status);
-                    //$scope.xyz=$scope.order.status;
+
                 }, post: function ($scope) {
 
                 }
@@ -245,54 +310,6 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
                         $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
 
                     }
-                    $scope.printPreview=function(){
-                        console.log($scope.orderFilterData.start_date+ "hdgvchjgdhsjhbnbx"+$scope.orderFilterData.end_date);
-
-                        var query = {"table": "orders__cstore"};
-                        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
-                        query.filter = {};
-                        if ($scope.currentUser["data"]) {
-                            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
-                                query.filter["storeid._id"] = $scope.currentUser["data"]["storeid"];
-                            }
-                        }
-                        if ($scope.orderFilterData.start_date && $scope.orderFilterData.start_date != "" && $scope.orderFilterData.end_date && $scope.orderFilterData.end_date != "") {
-                            query.filter["order_date"] = {"$gte":$scope.orderFilterData.start_date,"$lte": $scope.orderFilterData.end_date};
-                        }
-                        var timeZone = new Date().getTimezoneOffset();
-                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
-                        var serviceUrl = "/rest/data";
-                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (orderData) {
-                            $scope.loadingOrderData = false;
-                            $scope.download.orders = orderData.response.data;
-                            $scope.myHtml='<table id="testTable" width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
-                                '<th>POP</th><th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Site Name</span></th>' +
-                                '<th ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"><span>Program </span></th>' +
-                                '<th>Total</th><th><span>Order Date</span></th>' +
-                                '<th><span>Status</span></th></tr><tr ng-repeat="order in download.orders">' +
-                                '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
-                                '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-                                '{{order.storeid.storename}}</td><td  ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-                                '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td>{{order.status}}</td>' +
-                                '</tr></table>';
-                            //console.log("11111" + $scope.myHtml);
-                            var orderHtml = $scope.myHtml;
-                            //$scope.testFunction();
-                            //var w = $window.open();
-                            //console.log(w);
-                            //w.document.write(orderHtml);
-                            //w.print();
-                            //w.close();
-                            window.location.href = "#!/print-preview";
-                            //$scope.exportFunction();
-                            //$scope.clearOrderContent();
-                        }, function (jqxhr, error) {
-                            $("#popupMessage").html(error);
-                            $('.popup').toggle("slide");
-                        })
-
-                    }
-
                     $scope.updateStatusOfOrder = function (order) {
                         $scope.loadingOrderData = true;
                         $scope.updateOrderStatus = {};

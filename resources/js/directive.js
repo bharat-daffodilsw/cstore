@@ -247,8 +247,6 @@ cstore.directive('addToCartPopUp', ['$appService', function ($appService, $scope
                         $('.popup2').toggle("slide");
                     }
                     $scope.okCartPopup = function () {
-                        console.log($scope.addCart.pop);
-                        console.log($scope.addCart.quantity);
                         $('.popup2').toggle("slide");
                         $scope.addToCart($scope.addCart.pop,$scope.addCart.quantity);
                     }
