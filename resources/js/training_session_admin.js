@@ -135,9 +135,12 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         query.table = "training_session__cstore";
                         query.operations = angular.copy($scope.deleteTrainingSessionArray);
                         $scope.deleteTrainingSessionArray = [];
+                        if (query.operations.length) {
+                        $scope.loadingTrainingSessionData=true;
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            $scope.loadingTrainingSessionData=false;
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.trainingSessions.length; i++) {
                                     if ($scope.trainingSessions[i].deleteStatus) {
@@ -165,6 +168,12 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                             $("#popupMessage").html(err);
                             $('.popup').toggle("slide");
                         });
+                        }
+                        else{
+                            $("#popupMessage").html("please select at least one training before delete");
+                            $('.popup').toggle("slide");
+                            $scope.loadingProductData = false;
+                        }
 
                     }
                     $scope.setTrainingSessionState = function (trainingSession) {

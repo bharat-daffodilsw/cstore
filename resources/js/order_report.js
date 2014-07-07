@@ -63,13 +63,13 @@ cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllOrderReport(1, 10, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+        $scope.getAllOrderReport(1, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
     }
     $scope.getMore = function (column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter) {
-        $scope.getAllOrderReport(1, 10, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+        $scope.getAllOrderReport(1, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
     }
     $scope.getLess = function (column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter) {
-        $scope.getAllOrderReport(0, 10, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
+        $scope.getAllOrderReport(0, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
     }
     $scope.getProgramList();
     $scope.getStores();
@@ -135,14 +135,15 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
             '<div class="pull-left order_date"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker></div><div class="pull-left order_date"><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker></div>' +
             '<div class="pull-left"><button ng-click="orderDateFilter()">Filter</button></div><div class="pull-right"><div class="pull-right"><button ng-click="exportOrders()">Excel</button></div><div class="pull-right"><button ng-click="generateorderpdf()">PDF</button></div></div>'+
-            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
+            '</div>'+
             '<div class="filter_div">'+
             '<div class="pull-left filter_text">Filter</div>'+
             '<div class="pull-left filter_table"><filter-program-order></filter-program-order></div>'+
             '<div class="pull-left filter_table"><filter-site></filter-site></div>'+
             '<div class="pull-left filter_table"><filter-status></filter-status></div>'+
             '<div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
-            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orderReport.length}} from start</div></div>'+
+            '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orderReport.length}} from start</div>'+
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div>'+
             '<div class="table pull-left" id="printOrder">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0" id="orderTable"><tr>' +
             '<th>POP</th><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div><div class="sortDown" ng-click="sortOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date,filterdata.selectedProgram,filterdata.selectedSite,filterdata.selectedStatus)"></div>	</span></th>' +
@@ -171,7 +172,7 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllOrderReport(1, 10, $scope.searchby.value,$scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date,$scope.filterdata.selectedProgram,$scope.filterdata.selectedSite,$scope.filterdata.selectedStatus);
+                        $scope.getAllOrderReport(1, 200, $scope.searchby.value,$scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date,$scope.filterdata.selectedProgram,$scope.filterdata.selectedSite,$scope.filterdata.selectedStatus);
                     }                   
 					$scope.printOrders = function(divName) {
                         var printContents = document.getElementById(divName).innerHTML;

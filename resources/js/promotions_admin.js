@@ -159,50 +159,58 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         var query = {};
                         query.table = "promotions__cstore";
                         query.operations = angular.copy($scope.deletePromotionArray);
-                        $scope.deletePromotionArray = [];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
-                                for (var i = 0; i < $scope.promotions.length; i++) {
-                                    if ($scope.promotions[i].deleteStatus) {
-                                        $scope.promotions.splice(i, 1);
-                                        i--;
+                        if (query.operations.length) {
+                            $scope.loadingPromotionData=true;
+                            $scope.deletePromotionArray = [];
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingPromotionData=false;
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.promotions.length; i++) {
+                                        if ($scope.promotions[i].deleteStatus) {
+                                            $scope.promotions.splice(i, 1);
+                                            i--;
+                                        }
                                     }
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in another table");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
                                 }
-                                $("#popupMessage").html("Deleted");
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
-                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                $("#popupMessage").html("This record is referred in another table");
-                                $('.popup').toggle("slide");
-                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                $('.popup').toggle("slide");
-                            }
-                            else {
-                                $("#popupMessage").html("Some error occur while deleting");
-                                $('.popup').toggle("slide");
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("please select at least one promo before delete");
                             $('.popup').toggle("slide");
-                        });
+                        }
 
                     }
                     $scope.setPromotionState = function (promotion) {
-                        var endArray=[];
-                        var endMinArray=[];
+                        var endArray = [];
+                        var endMinArray = [];
                         var startArray = [];
                         var startMinArray = [];
-                        if(promotion["end_date"]){
+                        if (promotion["end_date"]) {
                             endArray = promotion["end_date"].split(" ");
                             endMinArray = endArray[1].split(":");
                         }
                         $scope.promotiondata.end_date = endArray[0];
-                        if(promotion["start_date"]){
+                        if (promotion["start_date"]) {
                             startArray = promotion["start_date"].split(" ");
                             startMinArray = startArray[1].split(":");
                         }
@@ -240,8 +248,8 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
                         }
-                        if(promotion.display_image){
-                           $scope.promotiondata.display_image= BAAS_SERVER + "/file/render?filekey=" + promotion.display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
+                        if (promotion.display_image) {
+                            $scope.promotiondata.display_image = BAAS_SERVER + "/file/render?filekey=" + promotion.display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
                         }
                         $scope.showFile(promotion.image, false);
                         if (promotion.offer_type && $scope.promotiondata.offerTypes) {
@@ -515,7 +523,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
-            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="'+DOMAIN_NAME+'{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
+            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="' + DOMAIN_NAME + '{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
@@ -523,7 +531,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</div><div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
             '</div></div></td>' +
-            '</tr>'+
+            '</tr>' +
             '</tbody></table></div>' +
             '<div class="loadingImage" ng-hide="!loadingAddPromotionData"><img src="images/loading.gif"></div>' +
             '</div>',
@@ -674,7 +682,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     $scope.loadingAddPromotionData = false;
                                     if (data.response) {
                                         $scope.newPromotion["image"] = data.response;
-                                        if(!$scope.promotiondata.selectedProgram.cooler_html && !$scope.promotiondata.selectedProgram.aisle_html){
+                                        if (!$scope.promotiondata.selectedProgram.cooler_html && !$scope.promotiondata.selectedProgram.aisle_html) {
                                             $scope.newPromotion["display_image"] = data.response;
                                         }
                                         query.operations = [$scope.newPromotion];
@@ -698,31 +706,31 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                     $scope.saveFunction = function (query) {
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                if($scope.promotiondata.selectedProgram && $scope.promotiondata.selectedProgram.cooler_html && $scope.promotiondata.selectedProgram.aisle_html){
-                                    var requestBody={};
-                                    if(callBackData.response.insert){
-                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.insert[0]._id}
+                                if ($scope.promotiondata.selectedProgram && $scope.promotiondata.selectedProgram.cooler_html && $scope.promotiondata.selectedProgram.aisle_html) {
+                                    var requestBody = {};
+                                    if (callBackData.response.insert) {
+                                        requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.insert[0]._id}
                                     }
                                     else {
-                                        requestBody={"ask":ASK,"osk":OSK,"promoid":callBackData.response.update[0]._id};
+                                        requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id};
                                     }
 
-                                    $appService.getDataFromJQuery("/rest/create/image/cstore",requestBody,"GET","JSON",function(data){
-                                        if(data.code!==200 && data.status!="ok" ){
+                                    $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "GET", "JSON", function (data) {
+                                        if (data.code !== 200 && data.status != "ok") {
                                             $("#popupMessage").html("Error while creating image");
                                             $('.popup').toggle("slide");
                                             $scope.loadingAddPromotionData = false;
                                         }
                                         else {
-                                            if(data.response.update[0].display_image.length){
-                                                var display_image=data.response.update[0].display_image;
-                                                $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
+                                            if (data.response.update[0].display_image.length) {
+                                                var display_image = data.response.update[0].display_image;
+                                                $scope.promotiondata["display_image"] = BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
                                                 $("#popupMessage").html("Saved successfully");
                                                 $('.popup').toggle("slide");
                                                 $scope.loadingAddPromotionData = false;
 
                                             }
-                                            else{
+                                            else {
                                                 $("#popupMessage").html("Error while creating image");
                                                 $('.popup').toggle("slide");
                                                 $scope.loadingAddPromotionData = false;
@@ -730,7 +738,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                         }
                                     })
                                 }
-                                else{
+                                else {
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     $scope.loadingAddPromotionData = false;

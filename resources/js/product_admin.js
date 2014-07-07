@@ -117,13 +117,15 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                 $scope.deleteProductArray.push({"_id": $scope.products[i]._id, "__type__": "delete"});
                             }
                         }
+                        $scope.loadingProductData = true;
                         var query = {};
                         query.table = "products__cstore";
                         query.operations = angular.copy($scope.deleteProductArray);
-                        $scope.deleteProductArray = [];
+                        if (query.operations.length) {
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            $scope.loadingProductData = false;
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.products.length; i++) {
                                     if ($scope.products[i].deleteStatus) {
@@ -151,6 +153,12 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                             $("#popupMessage").html(err);
                             $('.popup').toggle("slide");
                         });
+                        }
+                        else{
+                            $("#popupMessage").html("please select at least one product before delete");
+                            $('.popup').toggle("slide");
+                            $scope.loadingProductData = false;
+                        }
 
                     }
                     $scope.setProductState = function (product) {

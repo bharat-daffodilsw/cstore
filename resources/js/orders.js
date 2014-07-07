@@ -1,8 +1,8 @@
 /************************************ Order List For Store Manager*************************************/
-cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
+cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingOrderData = false;
-    $scope.status=["In Progress","Cancelled","Delivered"];
+    $scope.status = ["In Progress", "Cancelled", "Delivered"];
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
             $scope.venderSearch = [
@@ -19,7 +19,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
     $scope.searchby = $scope.venderSearch[0];
     $scope.orders = {};
     $appService.auth();
-    $scope.getAllOrders = function (direction, limit, column, searchText,orderStartDate,orderEndDate) {
+    $scope.getAllOrders = function (direction, limit, column, searchText, orderStartDate, orderEndDate) {
         if ($scope.loadingOrderData) {
             return false;
         }
@@ -33,7 +33,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
         $scope.loadingOrderData = true;
 
         var query = {"table": "orders__cstore"};
-        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+        query.columns = ["userid", "storeid", "storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
@@ -44,7 +44,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         if (orderStartDate && orderStartDate != "" && orderEndDate && orderEndDate != "") {
-            query.filter["order_date"] = {"$gte":orderStartDate,"$lte": orderEndDate};
+            query.filter["order_date"] = {"$gte": orderStartDate, "$lte": orderEndDate};
         }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
@@ -66,28 +66,28 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
         })
     }
     //$scope.getAllOrders(1, 10);
-    $scope.sortOrder = function (sortingCol, sortingType, column, searchText,orderStartDate,orderEndDate) {
+    $scope.sortOrder = function (sortingCol, sortingType, column, searchText, orderStartDate, orderEndDate) {
         $scope.show.currentCursor = 0
         $scope.sortingCol = sortingCol;
         $scope.sortingType = sortingType;
-        $scope.getAllOrders(1, 10, column, searchText,orderStartDate,orderEndDate);
+        $scope.getAllOrders(1, 10, column, searchText, orderStartDate, orderEndDate);
     }
-    $scope.getMore = function (column, searchText,orderStartDate,orderEndDate) {
-        $scope.getAllOrders(1, 10, column, searchText,orderStartDate,orderEndDate);
+    $scope.getMore = function (column, searchText, orderStartDate, orderEndDate) {
+        $scope.getAllOrders(1, 10, column, searchText, orderStartDate, orderEndDate);
     }
-    $scope.getLess = function (column, searchText,orderStartDate,orderEndDate) {
-        $scope.getAllOrders(0, 10, column, searchText,orderStartDate,orderEndDate);
+    $scope.getLess = function (column, searchText, orderStartDate, orderEndDate) {
+        $scope.getAllOrders(0, 10, column, searchText, orderStartDate, orderEndDate);
     }
-    if(!$routeParams.token && !$routeParams.PayerID){
+    if (!$routeParams.token && !$routeParams.PayerID) {
         $scope.getAllOrders(1, 10);
     }
-    $scope.executePayment = function(){
-        var payerId=$routeParams.PayerID;
+    $scope.executePayment = function () {
+        var payerId = $routeParams.PayerID;
         var mode = "sandbox";
-        $appService.executePayment($scope.paymentId,payerId,mode,ASK,OSK, null, function (callBackData) {
+        $appService.executePayment($scope.paymentId, payerId, mode, ASK, OSK, null, function (callBackData) {
             if (callBackData.code == 200 && callBackData.status == "ok") {
                 $scope.getAllOrders(1, 10);
-                $scope.updatePopSoldCount($scope.testCartData,$scope.testCartData.product);
+                $scope.updatePopSoldCount($scope.testCartData, $scope.testCartData.product);
                 $("#popupMessage").html("You have successfully placed an order");
                 $('.popup').toggle("slide");
             }
@@ -103,7 +103,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
     }
     $scope.getCompletedOrder = function () {
         var query = {"table": "orders__cstore"};
-        query.columns = ["_id", "token","paymentId"];
+        query.columns = ["_id", "token", "paymentId"];
         query.filter = {};
         query.filter["userid.username"] = $scope.currentUser.data.username;
         query.filter["token"] = $routeParams.token;
@@ -112,27 +112,32 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (callBackData) {
             var completeOrderId = callBackData.response.data[0]._id;
             $scope.paymentId = callBackData.response.data[0].paymentId;
-            var query = {};
-            query.table = "orders__cstore";
-            var completeOrder = {};
-            completeOrder["_id"] = completeOrderId;
-            completeOrder["status"] = "Ordered";
-            completeOrder["payerId"] = $routeParams.PayerID;
-            query.operations = [completeOrder];
-            $appService.save(query, ASK, OSK, null, function (callBackData) {
-                if (callBackData.code == 200 && callBackData.status == "ok") {
-                    $scope.executePayment();
-                } else {
-                    $("#popupMessage").html(callBackData.response);
+            if (callBackData.response.data[0].status == "In Progress" || callBackData.response.data[0].status == "Delivered") {
+                var query = {};
+                query.table = "orders__cstore";
+                var completeOrder = {};
+                completeOrder["_id"] = completeOrderId;
+                completeOrder["status"] = "Ordered";
+                completeOrder["payerId"] = $routeParams.PayerID;
+                query.operations = [completeOrder];
+                $appService.save(query, ASK, OSK, null, function (callBackData) {
+                    if (callBackData.code == 200 && callBackData.status == "ok") {
+                        $scope.executePayment();
+                    } else {
+                        $("#popupMessage").html(callBackData.response);
+                        $('.popup').toggle("slide");
+                    }
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                }, function (err) {
+                    $("#popupMessage").html(err);
                     $('.popup').toggle("slide");
-                }
-                if (!$scope.$$phase) {
-                    $scope.$apply();
-                }
-            }, function (err) {
-                $("#popupMessage").html(err);
-                $('.popup').toggle("slide");
-            });
+                });
+            }
+            else {
+                $scope.getAllOrders(1, 10);
+            }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -201,7 +206,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService,$routeParams) {
         });
     }
 
-    if($routeParams.token && $routeParams.token !="" && $routeParams.token !="undefined" && $routeParams.PayerID && $routeParams.PayerID !="" && $routeParams.PayerID != "undefined"){
+    if ($routeParams.token && $routeParams.token != "" && $routeParams.token != "undefined" && $routeParams.PayerID && $routeParams.PayerID != "" && $routeParams.PayerID != "undefined") {
         $scope.getCompletedOrder();
     }
 });
@@ -215,7 +220,7 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         }
         $scope.loadingStatus = true;
         var query = {"table": "orders__cstore"};
-        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid","storeid","bill_address", "shipping_address"];
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "storeid", "bill_address", "shipping_address"];
         query.filter = {};
         query.filter["_id"] = $routeParams.orderid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -251,6 +256,19 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         })
     }
     $scope.getOrderDetail();
+//    $scope.getOrderDetailPdf=function(){
+//        var templateId="abc";
+//        var query = {"table": "orders__cstore"};
+//        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "storeid", "bill_address", "shipping_address"];
+//        query.filter = {};
+//        query.filter["_id"] = $routeParams.orderid;
+//        $scope.orderDetailpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+//        var a = document.createElement('a');
+//        a.href=$scope.orderDetailpdfurl;
+//        a.target = '_blank';
+//        document.body.appendChild(a);
+//        a.click();
+//    }
 });
 
 /*********************************Order View**************************************/
@@ -270,13 +288,13 @@ cstore.directive('orderStatusSelect', ['$appService', function ($appService, $sc
     }
 }]);
 
-cstore.directive('orderList', ['$appService', function ($appService, $scope,$window) {
+cstore.directive('orderList', ['$appService', function ($appService, $scope, $window) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left">' +
             '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
-            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>'+
+            '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div>' +
             '<div class="pull-left order_date_filter"><input type="text" ng-model="orderFilterData.start_date" placeholder="Start Date" jqdatepicker><input type="text" placeholder="End Date" ng-model="orderFilterData.end_date" jqdatepicker>' +
             '<button ng-click="orderDateFilter()">Filter</button></div><div ng-click="getMore(searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + orders.length}} from start</div>' +
@@ -288,38 +306,38 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
             '<div class="sortDown" ng-click="sortOrder(\'order_date\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"></div>	</span></th>' +
             '<th><span>Status</span><span class="sortWrap"><div class="sortUp" ng-click="sortOrder(\'status\',\'asc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"></div><div class="sortDown" ng-click="sortOrder(\'status\',\'desc\',searchby.value,search.searchContent,orderFilterData.start_date,orderFilterData.end_date)"></div></span></th><th></th></tr><tr ng-repeat="order in orders">' +
             '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
-            '<tr ng-repeat="pop in order.product | limitTo:3"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
+            '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
             '{{order.storeid.storename}}</td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
             '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td><span ng-if="currentUser.data.roleid == \'531d4aa0bd1515ea1a9bbaf6\'">{{order.status}}</span><order-status-select ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"></order-status-select></td>' +
             '<td><a class="edit_btn" ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'" ng-click="updateStatusOfOrder(order)" href>Change Status</a><a class="edit_btn" ng-click="setPath(order._id)" href>View Detail</a></td></tr></table>' +
             '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
-                pre: function ($scope,$window) {
+                pre: function ($scope, $window) {
                     $scope.setPath = function (orderid) {
                         window.location.href = "#!/order-detail?orderid=" + orderid;
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
+                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent, $scope.orderFilterData.start_date, $scope.orderFilterData.end_date);
                     }
                     $scope.orderDateFilter = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
-                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent,$scope.orderFilterData.start_date,$scope.orderFilterData.end_date);
+                        $scope.getAllOrders(1, 10, $scope.searchby.value, $scope.search.searchContent, $scope.orderFilterData.start_date, $scope.orderFilterData.end_date);
 
                     }
                     $scope.updateStatusOfOrder = function (order) {
                         $scope.loadingOrderData = true;
                         $scope.updateOrderStatus = {};
-                        $scope.updateOrderStatus["_id"] =order._id;
+                        $scope.updateOrderStatus["_id"] = order._id;
                         $scope.updateOrderStatus["status"] = order.status;
                         var query = {};
                         query.table = "orders__cstore";
                         query.operations = [$scope.updateOrderStatus];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
-                            $scope.loadingOrderData=false;
+                            $scope.loadingOrderData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 //$scope.getAllOrders(1, 10);
                                 $("#popupMessage").html("Update Order Status");
@@ -340,7 +358,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope,$win
                         $scope.$apply();
                     }
                 },
-                post:function($scope){
+                post: function ($scope) {
 
                 }
             }

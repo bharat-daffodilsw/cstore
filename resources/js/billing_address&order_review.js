@@ -48,7 +48,7 @@ cstore.controller('billingAddressCtrl', function ($scope, $appService, $routePar
     }
 });
 
-cstore.controller('orderReviewCtrl', function ($scope, $appService,$routeParams) {
+cstore.controller('orderReviewCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
     $scope.getShoppingCart();
     $scope.getCanceledOrder = function () {
@@ -61,25 +61,31 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService,$routeParams)
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (callBackData) {
             var cancelOrderId = callBackData.response.data[0]._id;
-            var query = {};
-            query.table = "orders__cstore";
-            var cancelOrder = {};
-            cancelOrder["_id"] = cancelOrderId;
-            cancelOrder["status"] = "Cancelled";
-            query.operations = [cancelOrder];
-            $appService.save(query, ASK, OSK, null, function (callBackData) {
-                if (callBackData.code == 200 && callBackData.status == "ok") {
-                } else {
-                    $("#popupMessage").html(callBackData.response);
+            if (callBackData.response.data[0].status == "In Progress") {
+                var query = {};
+                query.table = "orders__cstore";
+                var cancelOrder = {};
+                cancelOrder["_id"] = cancelOrderId;
+                cancelOrder["status"] = "Cancelled";
+                query.operations = [cancelOrder];
+                $appService.save(query, ASK, OSK, null, function (callBackData) {
+                    if (callBackData.code == 200 && callBackData.status == "ok") {
+                    } else {
+                        $("#popupMessage").html(callBackData.response);
+                        $('.popup').toggle("slide");
+                    }
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                }, function (err) {
+                    $("#popupMessage").html(err);
                     $('.popup').toggle("slide");
-                }
-                if (!$scope.$$phase) {
-                    $scope.$apply();
-                }
-            }, function (err) {
-                $("#popupMessage").html(err);
+                });
+            }
+            else {
+                $("#popupMessage").html("You have already cancelled this order");
                 $('.popup').toggle("slide");
-            });
+            }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -654,7 +660,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             $scope.billingdata["shipping_address"]["firstname"] = cart.shipping_address.firstname ? cart.shipping_address.firstname : "";
                             $scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
                             $scope.billingdata["shipping_address"]["address"] = cart.shipping_address.address ? cart.shipping_address.address : "";
-                            $scope.billingdata["shipping_addresss"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
+                            $scope.billingdata["shipping_address"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
                             $scope.billingdata["shipping_address"]["zipcode"] = cart.shipping_address.zipcode ? cart.shipping_address.zipcode : "";
                             $scope.billingdata["shipping_address"]["phone"] = cart.shipping_address.phone ? cart.shipping_address.phone : "";
                             $scope.billingdata["shipping_address"]["email"] = cart.shipping_address.email ? cart.shipping_address.email : "";

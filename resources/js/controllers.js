@@ -359,7 +359,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.filterdata.status = [
         {"name": "In Progress"},
         {"name": "Delivered"},
-        {"name":"Cancelled"}
+        {"name":"Cancelled"},
+        {"name": "Ordered"},
+        {"name": "Shipped"}
     ];
     $scope.currentUser["data"] = $appService.getSession();
     $scope.displayData = {};
@@ -961,6 +963,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
             }
         }
+        query.filter["assigned_user"] = false;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
@@ -1167,7 +1170,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getShoppingCartLength = function () {
         if ($scope.currentUser.data.roleid == STOREMANAGER) {
             var query = {"table": "shopping_cart__cstore"};
-            query.columns = ["product", "product.name", "product.cost", "product.quantity", "userid"];
+            query.columns = ["product", "userid"];
             query.filter = {};
             query.filter["userid._id"] = $scope.currentUser.data.userid;
             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -1248,6 +1251,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.cartData = cartData.response.data[0];
             if (cartData.response.data && cartData.response.data.length) {
                 $scope.shoppingCartProducts = cartData.response.data[0].product;
+                $scope.cartProducts.length = cartData.response.data[0].product.length;
                 $scope.savedBillingAddress = cartData.response.data[0].bill_address;
                 $scope.savedShippingAddress = cartData.response.data[0].shipping_address;
                 $scope.shipping_charges = (cartData.response.data[0].shipping_charges && cartData.response.data[0].shipping_charges.amount) ? cartData.shipping_charges.amount : "Free";
@@ -1264,7 +1268,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.removeFromCart = function (product) {
         if (product) {
             $scope.removeShoppingCartProduct = {};
-            $scope.loadingStatus = true;
+            $scope.loadingShoppingCartData = true;
             $scope.products = [];
             $scope.removeShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
             $scope.products.push({"_id": product._id, "__type__": "delete"});
@@ -1275,7 +1279,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             query.table = "shopping_cart__cstore";
             query.operations = [$scope.removeShoppingCartProduct];
             $appService.save(query, ASK, OSK, null, function (callBackData) {
-                $scope.loadingStatus = false;
+                $scope.loadingShoppingCartData = false;
                 if (callBackData.code == 200 && callBackData.status == "ok") {
                     for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                         if ($scope.shoppingCartProducts[i]._id == product._id) {

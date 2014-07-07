@@ -36,9 +36,11 @@ cstore.controller('userCtrl', function ($scope, $appService) {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {};
-        query.orders["userid.firstname"] = "asc";
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        else {
+            query.orders["userid.firstname"] = "asc";
         }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
@@ -126,10 +128,14 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                         $scope.getAllUsers(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                     $scope.deleteUserArray = [];
+                    $scope.siteArray=[];
                     $scope.deleteUsers = function () {
                         for (var i = 0; i < $scope.users.length; i++) {
                             if ($scope.users[i].deleteStatus) {
                                 $scope.deleteUserArray.push({"_id": $scope.users[i]._id, "__type__": "delete"});
+                            }
+                            if ($scope.users[i].deleteStatus && $scope.users[i].storeid && ($scope.users[i].roleid._id==STOREMANAGER)) {
+                                $scope.siteArray.push({"_id": $scope.users[i]._id, "storeid": $scope.users[i].storeid});
                             }
                         }
                         var query = {};
@@ -137,9 +143,11 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                         query.operations = angular.copy($scope.deleteUserArray);
                         $scope.deleteUserArray = [];
                         if (query.operations.length) {
+                            $scope.loadingUserData = true;
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingUserData = false;
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.users.length; i++) {
                                         if ($scope.users[i].deleteStatus) {
@@ -147,9 +155,14 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                             i--;
                                         }
                                     }
+                                    if($scope.siteArray && $scope.siteArray.length > 0){
+                                        $scope.updateSiteStatusWhileDeleting($scope.siteArray);
+                                    }
+                                    else {
+                                        $("#popupMessage").html("Deleted");
+                                        $('.popup').toggle("slide");
+                                    }
 
-                                    $("#popupMessage").html("Deleted");
-                                    $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                     $("#popupMessage").html("This record is referred in another table");
                                     $('.popup').toggle("slide");
@@ -165,13 +178,12 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                     $scope.$apply();
                                 }
                             }, function (err) {
-
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
                         }
                         else {
-                            $("#popupMessage").html("please select at least one vendor before delete");
+                            $("#popupMessage").html("please select at least one user before delete");
                             $('.popup').toggle("slide");
                         }
 
@@ -181,13 +193,14 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                         deactivateUser["_id"]=user._id;
                         deactivateUser["userid.username"]=user.userid.username;
                         deactivateUser["userid.status"]=!user.userid.status;
+                        $scope.loadingUserData = true;
                         var query = {};
                         query.table = "user_profiles__cstore";
                         query.operations = [deactivateUser];
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            $scope.loadingStatus = false;
+                            $scope.loadingUserData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Status Changed");
                                 $('.popup').toggle("slide");
@@ -212,6 +225,30 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                             });
 
 
+                    }
+                    $scope.updateSiteStatusWhileDeleting = function (sitearray) {
+                        var siteList=[];
+                        for (var i = 0; i < sitearray.length; i++) {
+                            siteList.push({"_id": sitearray[i].storeid._id, "assigned_user": false});
+                        }
+                        var query = {};
+                        query.table = "storemanagers__cstore";
+                        query.operations = siteList;
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("Deleted");
+                                $('.popup').toggle("slide");
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
+                        });
                     }
                 }
             }
@@ -321,10 +358,17 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                $("#popupMessage").html("User Saved");
-                                $('.popup').toggle("slide");
-                                $scope.clearUserContent();
-                                window.location.href = "#!/manage-users";
+                                if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
+                                    $scope.updateSiteStatus($scope.userdata.selectedStore._id);
+                                }
+                                else {
+                                    $("#popupMessage").html("User Saved");
+                                    $('.popup').toggle("slide");
+                                    $scope.clearUserContent();
+                                    window.location.href = "#!/manage-users";
+                                }
+
+
                             }
                             else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
@@ -351,6 +395,31 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                                 return;
                             }
 
+                        });
+                    }
+                    $scope.updateSiteStatus = function (siteid) {
+                        var siteList = {"_id": "", "assigned_user": ""};
+                        siteList["_id"]=siteid;
+                        siteList["assigned_user"]=true;
+                        var query = {};
+                        query.table = "storemanagers__cstore";
+                        query.operations = [siteList];
+                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $("#popupMessage").html("User Saved");
+                                $('.popup').toggle("slide");
+                                $scope.clearUserContent();
+                                window.location.href = "#!/manage-users";
+                            } else {
+                                $("#popupMessage").html(callBackData.response);
+                                $('.popup').toggle("slide");
+                            }
+                            if (!$scope.$$phase) {
+                                $scope.$apply();
+                            }
+                        }, function (err) {
+                            $("#popupMessage").html(err);
+                            $('.popup').toggle("slide");
                         });
                     }
                 }

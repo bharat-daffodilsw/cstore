@@ -1,4 +1,3 @@
-
 /********************************************* Program 14/05**********************************************************/
 cstore.controller('programList', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
@@ -23,7 +22,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image","cooler_template","aisle_template","participation_id","aisle_html","cooler_html","image_type"];
+        query.columns = ["name", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -86,9 +85,9 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + programs.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Program Name</span><span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th><span>Participation Id</span><span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'participation_id\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'participation_id\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
+            '<th><span>Participation Id</span><span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'participation_id\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'participation_id\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Image<span class="sortWrap"><div class="sortUp" ng-click="setProgramOrder(\'image.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setProgramOrder(\'image.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th></th></tr><tr ng-repeat="program in programs"><td>' +
-            '<input type="checkbox" ng-model="program.deleteStatus"></td>'+
+            '<input type="checkbox" ng-model="program.deleteStatus"></td>' +
             '<td>{{program.name}}</td><td>{{program.participation_id}}</td><td>{{program.image[0].name}}</td>' +
             '<td><a class="edit_btn" ng-click="setProgramState(program)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingProgramData"><img src="images/loading.gif"></div>',
         compile: function () {
@@ -113,44 +112,52 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                         query.table = "program__cstore";
                         query.operations = angular.copy($scope.deleteProgramArray);
                         $scope.deleteProgramArray = [];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
-                                for (var i = 0; i < $scope.programs.length; i++) {
-                                    if ($scope.programs[i].deleteStatus) {
-                                        $scope.programs.splice(i, 1);
-                                        i--;
+                        if (query.operations.length) {
+                            $scope.loadingProgramData=true;
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingProgramData=false;
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.programs.length; i++) {
+                                        if ($scope.programs[i].deleteStatus) {
+                                            $scope.programs.splice(i, 1);
+                                            i--;
+                                        }
                                     }
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in another table");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
                                 }
-                                $("#popupMessage").html("Deleted");
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
-                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                $("#popupMessage").html("This record is referred in another table");
-                                $('.popup').toggle("slide");
-                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                $('.popup').toggle("slide");
-                            }
-                            else {
-                                $("#popupMessage").html("Some error occur while deleting");
-                                $('.popup').toggle("slide");
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("please select at least one program before delete");
                             $('.popup').toggle("slide");
-                        });
+                        }
 
                     }
                     $scope.setProgramState = function (program) {
                         $scope.programdata["name"] = program.name ? program.name : "";
                         $scope.programdata["participation_id"] = program.participation_id ? program.participation_id : "";
-                        for(var i=0;i<$scope.imageTypes.length;i++){
-                            if(program.image_type==$scope.imageTypes[i].name){
-                                $scope.programdata.image_type=$scope.imageTypes[i];
+                        for (var i = 0; i < $scope.imageTypes.length; i++) {
+                            if (program.image_type == $scope.imageTypes[i].name) {
+                                $scope.programdata.image_type = $scope.imageTypes[i];
                                 break;
                             }
                         }
@@ -171,7 +178,7 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                             $scope.coolerOFile.fileExist = true;
                         }
                         $scope.showCoolerFile(program.cooler_template, false);
-						if (program.aisle_template) {
+                        if (program.aisle_template) {
                             $scope.aisleOFile.fileExist = true;
                         }
                         $scope.showAisleFile(program.aisle_template, false);
@@ -235,7 +242,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</div>' +
             '</div>' +
             '</td>' +
-            '</tr>'+
+            '</tr>' +
             '</div>' +
             '<div class="loadingImage" ng-hide="!loadingAddProgramData"><img src="images/loading.gif"></div>' +
             '</div>',
@@ -269,12 +276,12 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-							if (!$scope.coolerOFile.fileExist) {
+                            if (!$scope.coolerOFile.fileExist) {
                                 $("#popupMessage").html("Please upload cooler template");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-							if (!$scope.aisleOFile.fileExist) {
+                            if (!$scope.aisleOFile.fileExist) {
                                 $("#popupMessage").html("Please upload aisle template");
                                 $('.popup').toggle("slide");
                                 return false;
@@ -291,7 +298,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
 
                             $scope.newProgram["aisle_html"] = $scope.programdata.aisle_html;
                             $scope.newProgram["cooler_html"] = $scope.programdata.cooler_html;
-                            $scope.newProgram["image_type"]=$scope.programdata.image_type.name;
+                            $scope.newProgram["image_type"] = $scope.programdata.image_type.name;
                             /*end*/
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
@@ -309,7 +316,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                     $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                         if (data.response) {
                                             $scope.newProgram["image"] = data.response;
-											$scope.uploadCoolerTemplate(query);
+                                            $scope.uploadCoolerTemplate(query);
 
                                         }
                                         else {
@@ -341,7 +348,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             $scope.uploadAisleTemplate(query);
 
                         }
-                        else  {
+                        else {
                             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.coolerOFile.name)) {
                                 var cooler_file = {};
                                 cooler_file.name = $scope.coolerOFile.name;
@@ -378,7 +385,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             query.operations = [$scope.newProgram];
                             $scope.saveFunction(query);
                         }
-                        else  {
+                        else {
                             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.aisleOFile.name)) {
                                 var aisle_file = {};
                                 aisle_file.name = $scope.aisleOFile.name;

@@ -244,10 +244,13 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                         var query = {};
                         query.table = "storemanagers__cstore";
                         query.operations = angular.copy($scope.deleteStoreArray);
+                        if (query.operations.length) {
+                        $scope.loadingStoreData=true;
                         $scope.deleteStoreArray = [];
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                            $scope.loadingStoreData=false;
                             if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                 for (var i = 0; i < $scope.storeManagers.length; i++) {
                                     if ($scope.storeManagers[i].deleteStatus) {
@@ -275,6 +278,11 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
                             $("#popupMessage").html(err);
                             $('.popup').toggle("slide");
                         });
+                        }
+                        else {
+                            $("#popupMessage").html("please select at least one site before delete");
+                            $('.popup').toggle("slide");
+                        }
 
                     }
                     $scope.setStoreState = function (store) {
@@ -697,6 +705,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.loadingStatus = true;
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
+                                $scope.newStore["assigned_user"] = false;
                             }
                             var query = {};
                             query.table = "storemanagers__cstore";
@@ -708,6 +717,7 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["siteid"] = $scope.storedata.siteid;
                             $scope.newStore["contact"] = $scope.storedata.contact;
                             $scope.newStore["email"] = $scope.storedata.email;
+
                             if ($scope.storedata.selectedCountry) {
                                 $scope.newStore["countryid"] = {"_id": $scope.storedata.selectedCountry._id, "name": $scope.storedata.selectedCountry.name};
                             }

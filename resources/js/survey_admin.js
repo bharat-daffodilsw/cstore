@@ -22,7 +22,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
 
         $scope.loadingSurveyData = true;
         var query = {"table": "surveys__cstore"};
-        query.columns = ["title", "description", "survey_question", "survey_question.question", "survey_question.options","programid"];
+        query.columns = ["title", "description", "survey_question", "survey_question.question", "survey_question.options", "programid"];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
@@ -67,7 +67,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
         $scope.getAllSurveys(0, 10, column, searchText);
     }
     //$scope.getStores();
-    $scope.getProgramsForSurvey(null,null);
+    $scope.getProgramsForSurvey(null, null);
 });
 cstore.controller('addSurveyCtrl', function ($scope, $appService) {
     /*$scope.clearSurveyContent = function () {
@@ -103,7 +103,7 @@ cstore.controller('answeredStoreCtrl', function ($scope, $appService) {
         }
         $scope.loadingStatus = true;
         var query = {"table": "answered_survey__cstore"};
-        query.columns = [ "_id", "store_id", "survey_id", "answers","store_id.programid"];
+        query.columns = [ "_id", "store_id", "survey_id", "answers", "store_id.programid"];
         query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {"store_id.storename": {"$regex": "(" + searchText + ")", "$options": "-i"}};
@@ -162,7 +162,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + surveys.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th>Description<span class="sortWrap"><div class="sortUp" ng-click="setSurveyOrder(\'description\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setSurveyOrder(\'description\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th>Actions</th></tr><tr ng-repeat="survey in surveys"><td>' +
             '<input type="checkbox" ng-model="survey.deleteStatus"></td><td>{{survey.title}}</td><td>{{survey.programid.name}}</td><td>{{survey.description}}</td><td><a class="edit_btn"  ng-click="setSurveyAnsweredPath(survey._id)" href>Answered</a>' +
             '<a class="edit_btn" ng-click="setSurveyState(survey)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingSurveyData"><img src="images/loading.gif"></div></div>',
@@ -172,8 +172,8 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
-                    $scope.setSurveyAssignedPath = function (sessionid,programid) {
-                        window.location.href = "#!/assign-survey-store?id=" + sessionid + "&programid="+programid;
+                    $scope.setSurveyAssignedPath = function (sessionid, programid) {
+                        window.location.href = "#!/assign-survey-store?id=" + sessionid + "&programid=" + programid;
                     }
                     $scope.setSurveyAnsweredPath = function (sessionid) {
                         window.location.href = "#!/answered-survey-store?id=" + sessionid;
@@ -194,36 +194,44 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                         query.table = "surveys__cstore";
                         query.operations = angular.copy($scope.deleteSurveyArray);
                         $scope.deleteSurveyArray = [];
-                        var currentSession = $appService.getSession();
-                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
-                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
-                            if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
-                                for (var i = 0; i < $scope.surveys.length; i++) {
-                                    if ($scope.surveys[i].deleteStatus) {
-                                        $scope.surveys.splice(i, 1);
-                                        i--;
+                        if (query.operations.length) {
+                            $scope.loadingSurveyData = true;
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingSurveyData = false;
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.surveys.length; i++) {
+                                        if ($scope.surveys[i].deleteStatus) {
+                                            $scope.surveys.splice(i, 1);
+                                            i--;
+                                        }
                                     }
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in another table");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
                                 }
-                                $("#popupMessage").html("Deleted");
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
-                            } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
-                                $("#popupMessage").html("This record is referred in another table");
-                                $('.popup').toggle("slide");
-                            } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                $('.popup').toggle("slide");
-                            }
-                            else {
-                                $("#popupMessage").html("Some error occur while deleting");
-                                $('.popup').toggle("slide");
-                            }
-                            if (!$scope.$$phase) {
-                                $scope.$apply();
-                            }
-                        }, function (err) {
-                            $("#popupMessage").html(err);
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("please select at least one survey before delete");
                             $('.popup').toggle("slide");
-                        });
+                        }
 
                     }
                     $scope.setAssignedSurveyState = function (survey) {
@@ -256,7 +264,7 @@ cstore.directive('surveyList', ['$appService', function ($appService, $scope) {
                             }
                         }
                         if (survey.programid) {
-                            $scope.getProgramsForSurvey(survey.programid._id,survey._id);
+                            $scope.getProgramsForSurvey(survey.programid._id, survey._id);
                         }
                         window.location.href = "#!/edit-survey?q=" + survey._id;
                     }
@@ -292,7 +300,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td pull-left"><select-program-survey ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-survey><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
-            '<td class="half_td pull-left"><div multi-select  input-model="surveydata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '<td class="half_td pull-left"><div multi-select  input-model="surveydata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
             '</tbody></table></div>' +
             '<h2 class="sub-head-border">' +
