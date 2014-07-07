@@ -296,8 +296,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
                                 $scope.uploadCoolerTemplate(query);
-								//query.operations = [$scope.newProgram];
-                                //$scope.saveFunction(query);
+
                             }
                             else {
                                 if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)) {
@@ -310,11 +309,8 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                     $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
                                         if (data.response) {
                                             $scope.newProgram["image"] = data.response;
-                                            //console.log("query without cooler template111 " + JSON.stringify(query));
 											$scope.uploadCoolerTemplate(query);
-											
-                                            //query.operations = [$scope.newProgram];
-                                            //$scope.saveFunction(query);
+
                                         }
                                         else {
 
@@ -343,9 +339,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                         if (document.getElementById('uploadCoolerFile').files.length === 0) {
                             delete $scope.newProgram["cooler_template"];
                             $scope.uploadAisleTemplate(query);
-							//query.operations = [$scope.newProgram];
-							//console.log("query without cooler template 222 " + JSON.stringify(query));	
-                            //$scope.saveFunction(query);
+
                         }
                         else  {
                             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.coolerOFile.name)) {
@@ -359,9 +353,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                     if (coolerdata.response) {
                                         $scope.newProgram["cooler_template"] = coolerdata.response;
                                         $scope.uploadAisleTemplate(query);
-										//query.operations = [$scope.newProgram];
-                                        //console.log("query with cooler template " + JSON.stringify(query));
-										//$scope.saveFunction(query);
+
                                     }
                                     else {
 
@@ -384,7 +376,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                         if (document.getElementById('uploadAisleFile').files.length === 0) {
                             delete $scope.newProgram["aisle_template"];
                             query.operations = [$scope.newProgram];
-                           // console.log("query without aisle template 222 " + JSON.stringify(query));
                             $scope.saveFunction(query);
                         }
                         else  {
@@ -399,7 +390,6 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                     if (aisledata.response) {
                                         $scope.newProgram["aisle_template"] = aisledata.response;
                                         query.operations = [$scope.newProgram];
-                                        console.log("query with aisle template " + JSON.stringify(query));
                                         $scope.saveFunction(query);
                                     }
                                     else {

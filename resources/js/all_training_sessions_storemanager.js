@@ -14,7 +14,7 @@ cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $rou
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         if (searchText && searchText != "") {
-            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {"training_category.name": "asc"};
         query.max_rows = 8;

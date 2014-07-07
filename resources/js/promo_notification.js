@@ -109,7 +109,6 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                         mailContent["subject"] = $scope.notification.subject;
                         mailContent["html"]="<div>Hello<br/>"+ $scope.notification.mail_content+"</div><div>Thank You</div>";
                         $appService.sendNotification(mailContent, ASK, OSK, $scope.currentSession["usk"], function (callBackData) {
-                            console.log(JSON.stringify(callBackData));
                             $scope.loadingSendNotification = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Notification Sent");

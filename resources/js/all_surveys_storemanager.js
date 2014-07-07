@@ -26,7 +26,6 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
             $scope.surveys = surveyDetailData.response.data;
             for(var i=0; i < $scope.surveys.length; i++){
                 $scope.surveys[i].surveyAssignedStores=surveyDetailData.response.data[i].store_manager_id;
-                console.log(JSON.stringify($scope.surveys[i].surveyAssignedStores));
                 $scope.surveys[i].surveyQuestions=surveyDetailData.response.data[i].survey_question;
                 if ($scope.surveys[i].surveyQuestions.length > 0) {
                     for (var k = 0; k < $scope.surveys[i].surveyQuestions.length; k++) {
@@ -136,7 +135,6 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                 }
                             }
                             query.operations = [$scope.newSurveyAnswer];
-                            console.log(JSON.stringify(query));
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $scope.changeStatusOfSurvey(survey);
@@ -177,7 +175,6 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                     storeArray.push(statusObj);
                             $scope.newSurveyStatus.store_manager_id=storeArray;
                             query.operations = [$scope.newSurveyStatus];
-                            console.log(JSON.stringify(query));
                             $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
                                 $scope.loadingSurveyDetailData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {

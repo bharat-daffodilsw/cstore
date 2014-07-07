@@ -717,7 +717,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                             if(data.response.update[0].display_image.length){
                                                 var display_image=data.response.update[0].display_image;
                                                 $scope.promotiondata["display_image"]= BAAS_SERVER + "/file/render?filekey=" + display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
-//                                                console.log("704 src of display image"+ $scope.promotiondata["display_image"]);
                                                 $("#popupMessage").html("Saved successfully");
                                                 $('.popup').toggle("slide");
                                                 $scope.loadingAddPromotionData = false;

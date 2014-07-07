@@ -166,7 +166,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
                                 }
                             }
                             else {
-                                console.log(hash);
+                                //console.log(hash);
                             }
                         }
                         else {
