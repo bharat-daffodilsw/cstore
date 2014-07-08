@@ -93,7 +93,9 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                         $scope.promosArray = [];
                         for (var i = 0; i < $scope.promotions.length; i++) {
                             if (!$scope.promotions[i].optStatus || ($scope.promotions[i].store_manager_id.opt == true)) {
-                                $scope.promosArray.push($scope.promotions[i]._id);
+                                if ($scope.promotions[i].store_manager_id.opt) {
+                                    $scope.promosArray.push($scope.promotions[i]._id);
+                                }
                                 $scope.optArray.push({"_id": $scope.promotions[i]._id, "store_manager_id": [
                                     {"_id": $scope.promotions[i].store_manager_id._id, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
                                 ]});
@@ -162,7 +164,9 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.getInitialData(0);
-                                $scope.uploadTextFile(promos)
+                                if(promos.length){
+                                    $scope.uploadTextFile(promos)
+                                }
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
@@ -448,7 +452,9 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.getInitialData(0);
-                                $scope.uploadTextFile(promos)
+                                if(promos.length){
+                                    $scope.uploadTextFile(promos)
+                                }
                             } else {
                                 $("#popupMessage").html(callBackData.response);
                                 $('.popup').toggle("slide");
