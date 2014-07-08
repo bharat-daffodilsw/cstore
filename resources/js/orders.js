@@ -85,6 +85,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
         var payerId = $routeParams.PayerID;
         var mode = "sandbox";
         $appService.executePayment($scope.paymentId, payerId, mode, ASK, OSK, null, function (callBackData) {
+            $scope.loadingOrderData = false;
             if (callBackData.code == 200 && callBackData.status == "ok") {
                 $scope.getAllOrders(1, 10);
                 $scope.updatePopSoldCount($scope.testCartData, $scope.testCartData.product);
@@ -113,6 +114,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
             var completeOrderId = callBackData.response.data[0]._id;
             $scope.paymentId = callBackData.response.data[0].paymentId;
             if (callBackData.response.data[0].status == "In Progress" || callBackData.response.data[0].status == "Delivered") {
+                $scope.loadingOrderData = true;
                 var query = {};
                 query.table = "orders__cstore";
                 var completeOrder = {};
@@ -126,6 +128,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
                     } else {
                         $("#popupMessage").html(callBackData.response);
                         $('.popup').toggle("slide");
+                        $scope.loadingOrderData = false;
                     }
                     if (!$scope.$$phase) {
                         $scope.$apply();
@@ -133,6 +136,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
                 }, function (err) {
                     $("#popupMessage").html(err);
                     $('.popup').toggle("slide");
+                    $scope.loadingOrderData = false;
                 });
             }
             else {

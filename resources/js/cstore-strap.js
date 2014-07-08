@@ -67,7 +67,7 @@ appStrapServices.factory('$appService', [
             var that = this;
 
             var url = BAAS_SERVER + "/mail";
-            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+            this.getDataFromJQuery(url, params, "POST", "JSON", function (callBackData) {
                 callBack(callBackData);
             });
         }
@@ -193,7 +193,7 @@ appStrapServices.factory('$appService', [
 
 
             var url = BAAS_SERVER + "/execute/payment";
-            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+            this.getDataFromJQuery(url, params, "POST", "JSON", function (callBackData) {
                 callBack(callBackData);
             });
         }
@@ -322,7 +322,7 @@ appStrapServices.factory('$appService', [
 
             }
             var url = BAAS_SERVER + "/create/file/cstore";
-            this.getDataFromJQuery(url, params, "GET", "JSON", function (callBackData) {
+            this.getDataFromJQuery(url, params, "POST", "JSON", function (callBackData) {
                 callBack(callBackData);
             });
         }
