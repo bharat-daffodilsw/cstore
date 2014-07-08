@@ -134,7 +134,6 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Submitted");
                                 $('.popup').toggle("slide");
-                                $scope.setClosePath('promotions');
                             } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                 $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
                                 $('.popup').toggle("slide");
