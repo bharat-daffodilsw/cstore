@@ -76,9 +76,9 @@ cstore.directive('downloadFileList', ['$appService', function ($appService, $sco
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + downloadFiles.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-
+            '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setDownloadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setDownloadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th><span>Files</span></th>'+
-            '</tr><tr ng-repeat="file in downloadFiles"><td>{{file.title}}</td>' +
+            '</tr><tr ng-repeat="file in downloadFiles"><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
             '<td><div class="downloadFile"ng-repeat="subfile in file.file" ng-click="downloadFileLink(subfile)"><a ng-href={{downloadUrl}} target="_blank">{{subfile.name}}</a></div></td></div><div class="loadingImage" ng-hide="!loadingDownloadFileData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {

@@ -164,8 +164,9 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                         query.operations = angular.copy($scope.deleteProductCodeArray);
                         $scope.deleteProductCodeArray = [];
                         if (query.operations.length) {
-
+                            $scope.loadingProductCodeData=true;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingProductCodeData=false;
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.productCodes.length; i++) {
                                         if ($scope.productCodes[i].deleteStatus) {

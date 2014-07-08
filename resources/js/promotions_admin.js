@@ -615,6 +615,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            if (!tags || (tags.length==0)) {
+                                $("#popupMessage").html("Please select atleast one code");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.oFile.fileExist) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");

@@ -352,19 +352,19 @@ angular.module('multi-select', ['ng']).directive('multiSelect', [ '$sce', '$filt
             // Might give false positives so just ignore if everything's alright.
             validate = function () {
                 if (!( 'inputModel' in attrs )) {
-                    console.log('Multi-select error: input-model is not defined! (ID: ' + $scope.directiveId + ')');
+                    //console.log('Multi-select error: input-model is not defined! (ID: ' + $scope.directiveId + ')');
                 }
 
                 if (!( 'buttonLabel' in attrs )) {
-                    console.log('Multi-select error: button-label is not defined! (ID: ' + $scope.directiveId + ')');
+                    //console.log('Multi-select error: button-label is not defined! (ID: ' + $scope.directiveId + ')');
                 }
 
                 if (!( 'itemLabel' in attrs )) {
-                    console.log('Multi-select error: item-label is not defined! (ID: ' + $scope.directiveId + ')');
+                    //console.log('Multi-select error: item-label is not defined! (ID: ' + $scope.directiveId + ')');
                 }
 
                 if (!( 'tickProperty' in attrs )) {
-                    console.log('Multi-select error: tick-property is not defined! (ID: ' + $scope.directiveId + ')');
+                    //console.log('Multi-select error: tick-property is not defined! (ID: ' + $scope.directiveId + ')');
                 }
             }
 

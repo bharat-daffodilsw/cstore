@@ -155,7 +155,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
             '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()">Excel</button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()">PDF</button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>' +
-            '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program></filter-program></div>' +
+            '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program-site></filter-program-site></div>' +
             '<div class="pull-left filter_table"><filter-shift></filter-shift></div>' +
             '<div class="pull-left filter_table"><filter-brand></filter-brand></div>' +
             '<div ng-click="getMore(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
