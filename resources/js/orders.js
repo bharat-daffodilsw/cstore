@@ -103,7 +103,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
     }
     $scope.getCompletedOrder = function () {
         var query = {"table": "orders__cstore"};
-        query.columns = ["_id", "token", "paymentId"];
+        query.columns = ["_id", "token", "paymentId","status"];
         query.filter = {};
         query.filter["userid.username"] = $scope.currentUser.data.username;
         query.filter["token"] = $routeParams.token;

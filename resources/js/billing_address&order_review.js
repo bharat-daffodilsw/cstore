@@ -53,7 +53,7 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService, $routeParams
     $scope.getShoppingCart();
     $scope.getCanceledOrder = function () {
         var query = {"table": "orders__cstore"};
-        query.columns = ["_id", "token"];
+        query.columns = ["_id", "token","status"];
         query.filter = {};
         query.filter["userid.username"] = $scope.currentUser.data.username;
         query.filter["token"] = $routeParams.token;
