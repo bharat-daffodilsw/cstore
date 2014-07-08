@@ -675,6 +675,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 if($scope.promotiondata["demo_image"]){
                                     var imageTemp={"name":$scope.promotiondata["demo_image"][0].name,"key":$scope.promotiondata["demo_image"][0].key};
                                     $scope.newPromotion["display_image"] = [imageTemp];
+                                    $scope.promotiondata["display_image"] = BAAS_SERVER + "/file/render?filekey=" + $scope.newPromotion["display_image"][0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
                                 }
                                 else{
                                     delete $scope.newPromotion["display_image"];
