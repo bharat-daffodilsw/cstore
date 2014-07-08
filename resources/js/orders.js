@@ -256,19 +256,19 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         })
     }
     $scope.getOrderDetail();
-//    $scope.getOrderDetailPdf=function(){
-//        var templateId="abc";
-//        var query = {"table": "orders__cstore"};
-//        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "storeid", "bill_address", "shipping_address"];
-//        query.filter = {};
-//        query.filter["_id"] = $routeParams.orderid;
-//        $scope.orderDetailpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
-//        var a = document.createElement('a');
-//        a.href=$scope.orderDetailpdfurl;
-//        a.target = '_blank';
-//        document.body.appendChild(a);
-//        a.click();
-//    }
+    $scope.getOrderDetailPdf=function(){
+        var templateId="cstore_orderDetailPdf";
+        var query = {"table": "orders__cstore"};
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "storeid", "bill_address", "shipping_address"];
+        query.filter = {};
+        query.filter["_id"] = $routeParams.orderid;
+        $scope.orderDetailpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+templateId;
+        var a = document.createElement('a');
+        a.href=$scope.orderDetailpdfurl;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+    }
 });
 
 /*********************************Order View**************************************/
@@ -375,6 +375,7 @@ cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
             '<div><b>Manager Name</b> :{{savedAddressData.manager.name}}</div>' +
             '<div><b>Program Name</b> : {{savedAddressData.programid.name}}</div>' +
             '</div>' +
+            '<div class="store_program pull-left add_delete"><div class="add_btn pull-left"><button type="button" ng-click="getOrderDetailPdf()"><a href>PDF</a></button></div></div>' +
             '<div class="table_5 pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
