@@ -247,6 +247,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["decal_subdescription"] = promotion.decal_subdescription ? promotion.decal_subdescription : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
+                            $scope.promotiondata["demo_image"]=promotion.image;
                         }
                         if (promotion.display_image) {
                             $scope.promotiondata.display_image = BAAS_SERVER + "/file/render?filekey=" + promotion.display_image[0]["key"] + "&ask=" + ASK + "&osk=" + OSK;
@@ -670,7 +671,15 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     $scope.newPromotion["programid"] = {"name": $scope.promotiondata.selectedProgram.name, "_id": $scope.promotiondata.selectedProgram._id};
                                 }
                             }
-
+                            if (!$scope.promotiondata.selectedProgram.cooler_html && !$scope.promotiondata.selectedProgram.aisle_html) {
+                                if($scope.promotiondata["demo_image"]){
+                                    var imageTemp={"name":$scope.promotiondata["demo_image"][0].name,"key":$scope.promotiondata["demo_image"][0].key};
+                                    $scope.newPromotion["display_image"] = [imageTemp];
+                                }
+                                else{
+                                    delete $scope.newPromotion["display_image"];
+                                }
+                            }
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];

@@ -1106,6 +1106,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.clearPromotionNotificationContent();
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
+        $scope.promotiondata["demo_image"]="";
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
