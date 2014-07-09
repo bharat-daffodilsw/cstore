@@ -751,6 +751,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                                 $scope.loadingAddPromotionData = false;
                                             }
                                         }
+                                    }, function (err) {
+                                        $("#popupMessage").html(err.stack);
+                                        $('.popup').toggle("slide");
+                                        $scope.loadingAddPromotionData = false;
+
                                     })
                                 }
                                 else {
