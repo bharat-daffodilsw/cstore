@@ -69,7 +69,8 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
         })
     }
     $scope.getAllTextFilesList(1, 10);
-    $scope.getStores();
+    //$scope.getStores();
+    $scope.getStoresForFilter();
     $scope.getProgramList();
     $scope.filterTextFiles=function(column, searchText){
         $scope.show.preCursor = 0;

@@ -971,6 +971,25 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.trainingdata.stores = storeData.response.data;
             $scope.userdata.selectedStore = $scope.userdata.stores[0];
             $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
+            //$scope.filterdata.sites = storeData.response.data;
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getStoresForFilter = function () {
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["storename"];
+        query.orders = {"storename": "asc"};
+        query.filter = {};
+        if ($scope.currentUser["data"]) {
+            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            }
+        }
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.filterdata.sites = storeData.response.data;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);

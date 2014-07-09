@@ -72,7 +72,7 @@ cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
         $scope.getAllOrderReport(0, 200, column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter);
     }
     $scope.getProgramList();
-    $scope.getStores();
+    $scope.getStoresForFilter();
     $scope.filterByProgram=function(column, searchText,orderStartDate,orderEndDate,programFilter,siteFilter,statusFilter){
         $scope.show.preCursor = 0;
         $scope.show.currentCursor = 0;
