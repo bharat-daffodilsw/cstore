@@ -680,11 +680,13 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         //var shipping_address = {"recipient_name": "Perry Gupta", "type": "residential", "line1": "Building 4", "city": "Columbus", "state": "OH", "country_code": "US", "postal_code": "43215"};
                         var fixedAmount = $scope.cartData.total.amount.toFixed(2);
                         var amount = {"currency": $scope.cartData.total.type.currency, "total": fixedAmount, "details": {"tax": "0.00", "shipping": "0.00"}};
-                        var return_url = "http://cstore.daffodilapps.com/#!/orders";
-                        var cancel_url = "http://cstore.daffodilapps.com/#!/order-review";
+                        //var return_url = "http://cstore.daffodilapps.com/#!/orders";
+                        var return_url = "http://www.ecpromomarket.com/#!/orders";
+                        //var cancel_url = "http://cstore.daffodilapps.com/#!/order-review";
+                        var cancel_url = "http://www.ecpromomarket.com/#!/order-review";
                         var requestBody = {"products": products, "shipping_address": shipping_address, "amount": amount, "return_url": return_url, "cancel_url": cancel_url, "ask": ASK, "osk": OSK,"mode":"sandbox"};
                         var serviceUrl = "/rest/create/payment";
-                        $appService.createPayment(serviceUrl, requestBody, "GET", "JSON", function (callbackdata) {
+                        $appService.createPayment(serviceUrl, requestBody, "POST", "JSON", function (callbackdata) {
                             if(callbackdata.code==17){
                                 $("#popupMessage").html(callbackdata.response);
                                 $('.popup').toggle("slide");

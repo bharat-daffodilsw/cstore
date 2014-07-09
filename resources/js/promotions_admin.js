@@ -730,7 +730,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                         requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id};
                                     }
 
-                                    $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "GET", "JSON", function (data) {
+                                    $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "POST", "JSON", function (data) {
                                         if (data.code !== 200 && data.status != "ok") {
                                             $("#popupMessage").html("Error while creating image");
                                             $('.popup').toggle("slide");
