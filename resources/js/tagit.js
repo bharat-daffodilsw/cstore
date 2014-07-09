@@ -129,13 +129,22 @@
             return false;
         },
 
-            this.options.focus = function (event, ui) {
-                if (ui.item.label !== undefined && /^key/.test(event.originalEvent.originalEvent.type)) {
-                    self.input.val(ui.item.label);
-                    self.input.data('value', ui.item.value);
-                    return false;
-                }
-            };
+                this.options.focus = function (event, ui) {
+                    if (event.originalEvent.originalEvent) {
+                        if (ui.item.label !== undefined && /^key/.test(event.originalEvent.originalEvent.type)) {
+                            self.input.val(ui.item.label);
+                            self.input.data('value', ui.item.value);
+                            return false;
+                        }
+                    }
+                    else {
+                        if (ui.item.label !== undefined && /^key/.test(event.originalEvent.type)) {
+                            self.input.val(ui.item.label);
+                            self.input.data('value', ui.item.value);
+                            return false;
+                        }
+                    }
+                };
             this.options.autoFocus = !this.options.allowNewTags;
             this.input.autocomplete(this.options);
             this.options.select = os;
