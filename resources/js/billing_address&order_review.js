@@ -713,6 +713,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         }, function (jqxhr, error) {
                             $("#popupMessage").html("Please check your paypal info");
                             $('.popup').toggle("slide");
+                            $scope.loadingShoppingCartData = false;
                         });
 
                     }
@@ -774,6 +775,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         }, function (err) {
                             $("#popupMessage").html(err);
                             $('.popup').toggle("slide");
+                            $scope.loadingShoppingCartData = false;
                         });
                     }
                 }
