@@ -1397,6 +1397,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
                         if($scope.promotiondata.programs[i]._id == $scope.currentUser.data.programid){
                             $scope.currentUser["data"]["programName"] = $scope.promotiondata.programs[i].name;
+                            $scope.promotiondata.selectedProgram= $scope.promotiondata.programs[i];
                             $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id,null);
                             break;
                         }

@@ -387,7 +387,7 @@ angular.module('multi-select', ['ng']).directive('multiSelect', [ '$sce', '$filt
                     }
                 });
                 if (notThere === true) {
-                    console.log('Multi-select error: property "' + missingLabel + '" is not available in the input model. (Name: ' + $scope.directiveId + ')');
+                    //console.log('Multi-select error: property "' + missingLabel + '" is not available in the input model. (Name: ' + $scope.directiveId + ')');
                 }
             }
 
