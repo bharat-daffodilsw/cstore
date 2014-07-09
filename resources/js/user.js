@@ -227,6 +227,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
 
                     }
                     $scope.updateSiteStatusWhileDeleting = function (sitearray) {
+                        $scope.loadingUserData = true;
                         var siteList=[];
                         for (var i = 0; i < sitearray.length; i++) {
                             siteList.push({"_id": sitearray[i].storeid._id, "assigned_user": false});
@@ -235,6 +236,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                         query.table = "storemanagers__cstore";
                         query.operations = siteList;
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            $scope.loadingUserData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
@@ -399,12 +401,14 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                     }
                     $scope.updateSiteStatus = function (siteid) {
                         var siteList = {"_id": "", "assigned_user": ""};
+                        $scope.loadingUserData = true;
                         siteList["_id"]=siteid;
                         siteList["assigned_user"]=true;
                         var query = {};
                         query.table = "storemanagers__cstore";
                         query.operations = [siteList];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            $scope.loadingUserData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Saved");
                                 $('.popup').toggle("slide");

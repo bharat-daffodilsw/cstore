@@ -672,6 +672,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                     $scope.paypal = function (cart) {
                         var products = [];
+                        $scope.loadingShoppingCartData = true;
                         for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                             products.push({"name": $scope.shoppingCartProducts[i].name, "price": $scope.shoppingCartProducts[i].cost.amount.toFixed(2), "currency": $scope.shoppingCartProducts[i].cost.type.currency, "quantity": $scope.shoppingCartProducts[i].quantity});
                         }
@@ -687,6 +688,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             if(callbackdata.code==17){
                                 $("#popupMessage").html(callbackdata.response);
                                 $('.popup').toggle("slide");
+                                $scope.loadingShoppingCartData = false;
                             }
                             else{
                                 var response = callbackdata.response;
@@ -714,7 +716,6 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     }
                     $scope.saveOrder = function (cart, paymentId, token,redirectUrl) {
                         var order_date = new Date();
-                        //$scope.loadingShoppingCartData = true;
                         $scope.newOrder = {};
                         $scope.newOrder["bill_address"] = {};
                         $scope.newOrder["userid"] = {};
@@ -757,6 +758,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         query.table = "orders__cstore";
                         query.operations = [$scope.newOrder];
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            $scope.loadingShoppingCartData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 window.location.href=redirectUrl;
                             } else {
