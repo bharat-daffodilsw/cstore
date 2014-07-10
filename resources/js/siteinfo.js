@@ -743,8 +743,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["pos_version"] = $scope.storedata.pos_version;
                             $scope.newStore["postalcode"] = $scope.storedata.postalcode;
                             $scope.newStore["reward_point"] = ($scope.storedata.selectedRewardType.name == "Others") ? $scope.storedata.otherRewardType : $scope.storedata.selectedRewardType.name;
-                            $scope.newStore["shift"] = $scope.storedata.selectedShift.name;
-                            $scope.newStore["dealer"] = $scope.storedata.selectedDealer.name;
+                            $scope.newStore["shift"] = $scope.storedata.selectedShift ? $scope.storedata.selectedShift.name : "";
+                            $scope.newStore["dealer"] = $scope.storedata.selectedDealer ? $scope.storedata.selectedDealer.name : "";
                             $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                             $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
                             $scope.newStore["manager"]["name"] = $scope.storedata.manager.name;
