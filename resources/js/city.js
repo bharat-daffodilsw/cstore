@@ -171,8 +171,9 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         query.operations = angular.copy($scope.deleteCityArray);
                         $scope.deleteCityArray = [];
                         if (query.operations.length) {
-
+                            $scope.loadingCityData=true;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingCityData=false;
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         if ($scope.cities[i].deleteStatus) {
@@ -180,7 +181,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                             i--;
                                         }
                                     }
-
+                                    $scope.search();
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
@@ -261,6 +262,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                                     }
                                     for (var i = 0; i < $scope.cities.length; i++) {
                                         $scope.cities[i]["editStatus"] = false;
+                                        $scope.cities[i]["oldstatus"] = true;
                                     }
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);

@@ -142,9 +142,11 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                         query.operations = angular.copy($scope.deleteUserArray);
                         $scope.deleteUserArray = [];
                         if (query.operations.length) {
+                            $scope.loadingVenderData=true;
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingVenderData=false;
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.vendors.length; i++) {
                                         if ($scope.vendors[i].deleteStatus) {
@@ -152,6 +154,7 @@ cstore.directive('vendor', ['$appService', function ($appService, $scope) {
                                             i--;
                                         }
                                     }
+                                    $scope.search();
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
@@ -474,7 +477,9 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "vendors__cstore";
                         query.operations = [$scope.newVendor];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             $scope.loadingAddVenderData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Saved successfully");

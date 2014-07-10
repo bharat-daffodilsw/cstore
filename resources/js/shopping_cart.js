@@ -79,7 +79,9 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         var query = {};
                         query.table = "shopping_cart__cstore";
                         query.operations = [$scope.updateShoppingCartProduct];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.loadingShoppingCartData = false;
                                 //$("#popupMessage").html("Products are updated");

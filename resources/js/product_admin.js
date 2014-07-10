@@ -121,6 +121,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "products__cstore";
                         query.operations = angular.copy($scope.deleteProductArray);
+                        $scope.deleteProductArray = [];
                         if (query.operations.length) {
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
@@ -133,6 +134,7 @@ cstore.directive('productList', ['$appService', function ($appService, $scope) {
                                         i--;
                                     }
                                 }
+                                $scope.search();
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
                             } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
@@ -280,7 +282,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.loadingAddProductData = false;
                     $scope.saveProduct = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
-                        var regDecimalNumberOnly = /^[+]?\d[0-9\.-]*$/
+                        var regDecimalNumberOnly = /^\d[0-9\.]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             if (!$scope.productdata.name) {

@@ -148,6 +148,7 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                                         i--;
                                     }
                                 }
+                                $scope.search();
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
                             } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {

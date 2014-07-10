@@ -131,7 +131,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                     $scope.submitPromoOptOut=function(promos){
                         var storeid = $scope.currentUser.data.storeid;
                         var programid = $scope.currentUser.data.programid;
-                        $appService.createFile(storeid, programid,promos,ASK,OSK, null, function (callBackData) {
+                        $appService.createFile(storeid, programid,promos,ASK,OSK, $scope.CSession["usk"], function (callBackData) {
                             $scope.loadingSendNotification = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Submitted");
@@ -424,7 +424,7 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
                     $scope.submitPromoOptOut=function(promos){
                         var storeid = $scope.currentUser.data.storeid;
                         var programid = $scope.currentUser.data.programid;
-                        $appService.createFile(storeid, programid,promos,ASK,OSK, null, function (callBackData) {
+                        $appService.createFile(storeid, programid,promos,ASK,OSK, $scope.CSession["usk"], function (callBackData) {
                             $scope.loadingSendNotification = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("Submitted");

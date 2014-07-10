@@ -63,6 +63,9 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
             $scope.loadingPromoTextFileData = false;
             $scope.show.currentCursor = fileData.response.cursor;
             $scope.textFiles = fileData.response.data;
+            for (var i = 0; i < $scope.textFiles.length; i++) {
+                $scope.textFiles[i]["deleteStatus"] = false;
+            }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -131,7 +134,7 @@ cstore.directive('textFileList', ['$appService', function ($appService, $scope) 
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left">' +
-            '<div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
+            '<div class="delete_btn pull-left"><button ng-click="deletePromoTextFiles()"type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
             '<date-filter></date-filter>' +
             '</div>' +
@@ -145,11 +148,14 @@ cstore.directive('textFileList', ['$appService', function ($appService, $scope) 
             '</div>' +
             '<div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+            '<th></th>'+
             '<th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setFileOrder(\'siteid.storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setFileOrder(\'siteid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Date</span><span class="sortWrap"><div class="sortUp" ng-click="setFileOrder(\'date\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setFileOrder(\'date\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
             '<th><span>Text Files</span></th>' +
-            '</tr><tr ng-repeat="textfile in textFiles"><td>{{textfile.siteid.storename}}</td>' +
+            '</tr><tr ng-repeat="textfile in textFiles">' +
+            '<td><input type="checkbox" ng-model="textfile.deleteStatus">'+
+            '<td>{{textfile.siteid.storename}}</td>'+
             '<td>{{textfile.programid.name}}</td>' +
             '<td>{{textfile.date}}</td>' +
             '<td><div class="downloadTextFile" ng-repeat="subfile in textfile.text_files" ng-click="downloadTextFile(subfile)"><a>{{subfile.name}}</a></div></td></div><div class="loadingImage" ng-hide="!loadingPromoTextFileData"><img src="images/loading.gif"></div>',
@@ -168,6 +174,58 @@ cstore.directive('textFileList', ['$appService', function ($appService, $scope) 
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
                         $scope.getAllTextFilesList(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                    $scope.deletePromoTextFiles = function () {
+                        $scope.deleteTextFileArray = [];
+                        for (var i = 0; i < $scope.textFiles.length; i++) {
+                            if ($scope.textFiles[i].deleteStatus) {
+                                $scope.deleteTextFileArray.push({"_id": $scope.textFiles[i]._id, "__type__": "delete"});
+                            }
+                        }
+                        var query = {};
+                        query.table = "promo_text_files__cstore";
+                        query.operations = angular.copy($scope.deleteTextFileArray);
+
+                        if (query.operations.length) {
+                            $scope.loadingPromoTextFileData=true;
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingPromoTextFileData=false;
+                                if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
+                                    for (var i = 0; i < $scope.textFiles.length; i++) {
+                                        if ($scope.textFiles[i].deleteStatus) {
+                                            $scope.textFiles.splice(i, 1);
+                                            i--;
+                                        }
+                                    }
+                                    $scope.search();
+                                    $("#popupMessage").html("Deleted");
+                                    $('.popup').toggle("slide");
+                                } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
+                                    $("#popupMessage").html("This record is referred in another table");
+                                    $('.popup').toggle("slide");
+                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+                                    $('.popup').toggle("slide");
+                                }
+                                else {
+                                    $("#popupMessage").html("Some error occur while deleting");
+                                    $('.popup').toggle("slide");
+                                }
+                                if (!$scope.$$phase) {
+                                    $scope.$apply();
+                                }
+                            }, function (err) {
+                                $("#popupMessage").html(err);
+                                $('.popup').toggle("slide");
+                            });
+                        }
+                        else {
+                            $("#popupMessage").html("please select at least one vendor before delete");
+                            $('.popup').toggle("slide");
+                        }
+
                     }
                 }
             }

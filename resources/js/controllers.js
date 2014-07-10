@@ -1233,7 +1233,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var query = {};
         query.table = "shopping_cart__cstore";
         query.operations = [$scope.newShoppingCartProduct];
-        $appService.save(query, ASK, OSK, null, function (callBackData) {
+        var currentSession = $appService.getSession();
+        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+        $appService.save(query, ASK, OSK, usk, function (callBackData) {
             if (callBackData.code == 200 && callBackData.status == "ok") {
                 //$("#popupMessage").html("Product is added to cart");
                 //$('.popup').toggle("slide");
@@ -1298,7 +1300,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             var query = {};
             query.table = "shopping_cart__cstore";
             query.operations = [$scope.removeShoppingCartProduct];
-            $appService.save(query, ASK, OSK, null, function (callBackData) {
+            var currentSession = $appService.getSession();
+            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+            $appService.save(query, ASK, OSK, usk, function (callBackData) {
                 $scope.loadingShoppingCartData = false;
                 if (callBackData.code == 200 && callBackData.status == "ok") {
                     for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {

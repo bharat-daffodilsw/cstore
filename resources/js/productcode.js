@@ -174,7 +174,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                             i--;
                                         }
                                     }
-
+                                    $scope.search();
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
@@ -266,6 +266,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                                     }
                                     for (var i = 0; i < $scope.productCodes.length; i++) {
                                         $scope.productCodes[i]["editStatus"] = false;
+                                        $scope.productCodes[i]["oldstatus"] = true;
                                     }
                                 }
                                 else if ((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns") >= 0)) {

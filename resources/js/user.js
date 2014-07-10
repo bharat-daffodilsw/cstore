@@ -84,8 +84,6 @@ cstore.controller('userCtrl', function ($scope, $appService) {
 /********************ADD User  *****************/
 cstore.controller('addUserCtrl', function ($scope, $appService, $routeParams) {
     $appService.auth();
-    //$scope.getStores();
-    //$scope.getRoles();
 
 });
 
@@ -93,7 +91,9 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left"><div class="add_btn pull-left"><button ng-click="setPath(\'add-new-user\')" type="button">Add</button>' +
-            '</div><div class="delete_btn pull-left"><button ng-click="deleteUsers()"  type="button">Delete</button></div><div class="search_by pull-left">Search By<search-by></search-by></div>' +
+            '</div>' +
+//            '<div class="delete_btn pull-left"><button ng-click="deleteUsers()"  type="button">Delete</button></div>' +
+            '<div class="search_by pull-left">Search By<search-by></search-by></div>' +
             '<div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + users.length}} from start' +
@@ -159,6 +159,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                         $scope.updateSiteStatusWhileDeleting($scope.siteArray);
                                     }
                                     else {
+                                        $scope.search();
                                         $("#popupMessage").html("Deleted");
                                         $('.popup').toggle("slide");
                                     }
@@ -235,9 +236,12 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "storemanagers__cstore";
                         query.operations = siteList;
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             $scope.loadingUserData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
+                                $scope.search();
                                 $("#popupMessage").html("Deleted");
                                 $('.popup').toggle("slide");
                             } else {
@@ -357,7 +361,9 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "user_profiles__cstore";
                         query.operations = [$scope.newUser];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
@@ -407,7 +413,9 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         var query = {};
                         query.table = "storemanagers__cstore";
                         query.operations = [siteList];
-                        $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        var currentSession = $appService.getSession();
+                        var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                        $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             $scope.loadingUserData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $("#popupMessage").html("User Saved");

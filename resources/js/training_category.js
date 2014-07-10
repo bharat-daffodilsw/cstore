@@ -147,8 +147,9 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                         query.operations = angular.copy($scope.deleteTrainingCategoryArray);
                         $scope.deleteTrainingCategoryArray = [];
                         if (query.operations.length) {
-
+                            $scope.loadingTrainingCategoryData=true;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingTrainingCategoryData=false;
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.trainingCategories.length; i++) {
                                         if ($scope.trainingCategories[i].deleteStatus) {
@@ -156,7 +157,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                             i--;
                                         }
                                     }
-
+                                    $scope.search();
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
@@ -219,7 +220,9 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                             var query = {};
                             query.table = "training_categories__cstore";
                             query.operations = trainingCategoryList;
-                            $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
                                 $scope.loadingTrainingCategoryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
@@ -229,6 +232,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                                     }
                                     for (var i = 0; i < $scope.trainingCategories.length; i++) {
                                         $scope.trainingCategories[i]["editStatus"] = false;
+                                        $scope.trainingCategories[i]["oldstatus"] = true;
                                     }
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
                                     $("#popupMessage").html(JSON.parse(callBackData.responseText).response);

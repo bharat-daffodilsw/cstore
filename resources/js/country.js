@@ -130,9 +130,11 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                         query.operations = angular.copy($scope.deleteCountryArray);
                         $scope.deleteCountryArray = [];
                         if (query.operations.length) {
+                            $scope.loadingCountryData=true;
                             var currentSession = $appService.getSession();
                             var usk = currentSession["usk"] ? currentSession["usk"] : null;
                             $appService.save(query, ASK, OSK, usk, function (callBackData) {
+                                $scope.loadingCountryData=false;
                                 if (callBackData.response && callBackData.response.delete && callBackData.response.delete.length) {
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         if ($scope.countries[i].deleteStatus) {
@@ -140,7 +142,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                             i--;
                                         }
                                     }
-
+                                    $scope.search();
                                     $("#popupMessage").html("Deleted");
                                     $('.popup').toggle("slide");
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
@@ -204,7 +206,9 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                             var query = {};
                             query.table = "countries__cstore";
                             query.operations = countryList;
-                            $appService.save(query, ASK, OSK, null, function (callBackData) {
+                            var currentSession = $appService.getSession();
+                            var usk = currentSession["usk"] ? currentSession["usk"] : null;
+                            $appService.save(query, ASK, OSK, usk, function (callBackData) {
                                 $scope.loadingCountryData = false;
                                 if (callBackData.code == 200 && callBackData.status == "ok") {
                                     $("#popupMessage").html("Saved successfully");
@@ -214,6 +218,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                                     }
                                     for (var i = 0; i < $scope.countries.length; i++) {
                                         $scope.countries[i]["editStatus"] = false;
+                                        $scope.countries[i]["oldstatus"] = true;
                                     }
 
                                 } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
