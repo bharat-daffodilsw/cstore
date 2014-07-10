@@ -514,8 +514,8 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
             '<td class="half_td"><div class="margin_top">Manager Phone*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" maxlength="10" placeholder="" ng-model="storedata.contact"></td>' +
-            '<td class="half_td"><input type="text" maxlength="10" placeholder=""ng-model="storedata.manager.contact" ></td>' +
+            '<td class="half_td"><input type="text" maxlength="12" placeholder="" ng-model="storedata.contact"></td>' +
+            '<td class="half_td"><input type="text" maxlength="12" placeholder=""ng-model="storedata.manager.contact" ></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Email*</div></td>' +
