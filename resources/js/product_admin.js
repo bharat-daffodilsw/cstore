@@ -282,7 +282,8 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                     $scope.loadingAddProductData = false;
                     $scope.saveProduct = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
-                        var regDecimalNumberOnly = /^\d[0-9\.]*$/;
+                        //var regDecimalNumberOnly = /^\d[0-9\.]*$/;
+                        var regDecimalNumberOnly = /^[.]?\d[0-9\.]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             if (!$scope.productdata.name) {

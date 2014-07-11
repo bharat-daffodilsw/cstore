@@ -12,9 +12,7 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "threshold",
             {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
             {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
-            "offer_title",
             "reward_value",
-            "offer_description",
             "item_signage",
             "minimum_retail",
             "upc",
@@ -51,7 +49,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImageUrl}}"><img ng-src="{{promotion[0].displayImageUrl}}" /></a></div>' +
             '<div class="details_product pull-left"><div class="Qty">' +
             //'<div class="quantity_border"><b>Offer</b> : {{promotion[0].offer_title}}</div>' +
-            '<div class="offer_details ng-binding"><b>Offer Description</b> : {{promotion[0].offer_description}}</div>' +
+            //'<div class="offer_details ng-binding"><b>Offer Description</b> : {{promotion[0].offer_description}}</div>' +
             //'<div class="quantity_border"><b>Offer Type</b> : {{promotion[0].offer_type}}</div>' +
             '<div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>' +
             '<div class="quantity_border"><b>End Date</b> :{{promotion[0].end_date}} </div>' +
@@ -62,7 +60,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div class="quantity_border"><b>Item Signage</b> : {{promotion[0].item_signage}}</div>' +
             '<div class="quantity_border"><b>Minimum Retail</b> : {{promotion[0].minimum_retail.amount | currency}}</div>' +
             '<div class="quantity_border"><b>UPC/PLU/GROUP</b> : {{promotion[0].upc}}</div>' +
-            '<div class="product_code"><b>Codes</b> : <span ng-repeat="code in promotion[0].codes"><span ng-hide=$index==0  style="padding-right: 5px;">,</span>{{code}}</span></div>' +
+            '<div class="product_code"><b>Product Codes</b> : <span ng-repeat="code in promotion[0].codes"><span ng-hide=$index==0  style="padding-right: 5px;">,</span>{{code}}</span></div>' +
             '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile: function () {

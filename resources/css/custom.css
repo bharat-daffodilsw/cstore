@@ -252,7 +252,7 @@ a:hover {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
 .product_details_category {
@@ -374,8 +374,8 @@ a:hover {
 .img_product {
     padding: 5px;
     position: relative;
-    min-height: 440px;
-    max-height: 440px;
+    min-height: 365px;
+    max-height: 365px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1222,8 +1222,8 @@ table td input {
 
 .details_product {
     width: 54.5%;
-    min-height: 440px;
-    max-height: 440px;
+    min-height: 365px;
+    max-height: 365px;
     margin-top: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
