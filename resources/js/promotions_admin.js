@@ -551,7 +551,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                 },
                 post: function ($scope) {
                     $scope.loadingAddPromotionData = false;
-                    var regDecimalNumberOnly = /^[+]?\d[0-9\.-]*$/;
+                    var regDecimalNumberOnly = /^[.]?\d[0-9\.]*$/;
                     $scope.savePromotion = function () {
 
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;

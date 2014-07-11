@@ -331,7 +331,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (video_url && invalid_url) {
+                            if (video_url && video_url.length >0 && invalid_url) {
                                 $("#popupMessage").html("Please enter valid video url");
                                 $('.popup').toggle("slide");
                                 return false;
