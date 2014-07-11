@@ -357,7 +357,7 @@ cstore.directive('appMultiFileUpload', ['$appService', '$compile', function ($ap
         scope: false,
         template: "<div class='app-float-left'>" +
             "<input  onchange='angular.element(this).scope().uploadFileChange()' class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
-            '<span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
+            '<span class="loadingImage" ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
             "</div>",
         compile: function () {
             return {
@@ -677,7 +677,7 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
         scope: false,
         template: "<div class='app-float-left'>" +
             "<input  onchange='angular.element(this).scope().uploadFileChange()' class='app-float-left' type='file' id='uploadMultiImgfile'/>" +
-            '<span ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
+            '<span class="loadingImage" ng-show="uploadingimage" style="float:right; margin-top: -25px;"><img src="images/loading.gif"></span>' +
             "</div>",
         compile: function () {
             return {

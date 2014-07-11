@@ -97,6 +97,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         $scope.getAllPromotions(0, 10, column, searchText, filterDate);
     }
     $scope.getPrograms(null, null);
+    $scope.getAllVendorsList();
 });
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {

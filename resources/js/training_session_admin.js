@@ -255,7 +255,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<div>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr>' +
-            '<td><div class="margin_top">Video Url*</div></td>' +
+            '<td><div class="margin_top">Video Url</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td>' +
@@ -331,7 +331,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (video_url && (video_url.length == 0 || invalid_url)) {
+                            if (video_url && invalid_url) {
                                 $("#popupMessage").html("Please enter valid video url");
                                 $('.popup').toggle("slide");
                                 return false;
