@@ -2363,4 +2363,7 @@ label.multiSelect span:hover {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+.footer_4 img {
+    cursor:pointer;
+}
 

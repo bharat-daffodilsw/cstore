@@ -52,6 +52,7 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService, $routeParams
     $appService.auth();
     $scope.getShoppingCart();
     $scope.getCanceledOrder = function () {
+        $scope.loadingShoppingCartData=true;
         var query = {"table": "orders__cstore"};
         query.columns = ["_id", "token","status"];
         query.filter = {};
@@ -69,7 +70,10 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService, $routeParams
                 cancelOrder["status"] = "Cancelled";
                 query.operations = [cancelOrder];
                 $appService.save(query, ASK, OSK, null, function (callBackData) {
+                    $scope.loadingShoppingCartData=false;
                     if (callBackData.code == 200 && callBackData.status == "ok") {
+                        $("#popupMessage").html("You have cancelled this order");
+                        $('.popup').toggle("slide");
                     } else {
                         $("#popupMessage").html(callBackData.response);
                         $('.popup').toggle("slide");
@@ -78,6 +82,7 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService, $routeParams
                         $scope.$apply();
                     }
                 }, function (err) {
+                    $scope.loadingShoppingCartData=false;
                     $("#popupMessage").html(err);
                     $('.popup').toggle("slide");
                 });
@@ -85,10 +90,12 @@ cstore.controller('orderReviewCtrl', function ($scope, $appService, $routeParams
             else {
                 $("#popupMessage").html("You have already cancelled this order");
                 $('.popup').toggle("slide");
+                $scope.loadingShoppingCartData=false;
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
+            $scope.loadingShoppingCartData=false;
         })
     }
     var hash = window.location.hash;

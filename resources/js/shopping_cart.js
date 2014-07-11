@@ -49,7 +49,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
             '<button type="button"><a href>Checkout</a></button>' +
             '</div>' +
             '<div class="delete_btn pull-right">' +
-            '<button type="button" ng-click="continueShoppingPath()"><a href>Continue Shopping</a></button>' +
+            '<button type="button" ng-click="updatedOrder()"><a href>Continue Shopping</a></button>' +
             '</div></div></div></div>' +
             '<div class="loadingImage" ng-hide="!loadingShoppingCartData"><img src="images/loading.gif"></div>',
         compile: function () {
@@ -84,9 +84,12 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 $scope.loadingShoppingCartData = false;
-                                //$("#popupMessage").html("Products are updated");
-                                //$('.popup').toggle("slide");
-                                window.location.href = "#!/" + path;
+                                if(path){
+                                    window.location.href = "#!/" + path;
+                                }
+                                else {
+                                    window.location.href = "#!/";
+                                }
                                 //$scope.cartProducts.length++;
                             }
                             else {

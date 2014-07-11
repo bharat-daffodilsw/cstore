@@ -214,12 +214,21 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
         template: '<div class="footer pull-left"><div class="footer_3 pull-left">' +
             ' Copyright &copy; EC Loyalty Corporation 2014 <br> All Rights Reserved  </div><div class="footer_3 pull-left" ng-click="setFooterPath(\'terms-conditions\')"> Terms & Condition </div>' +
             '<div class="footer_3 pull-left" ng-click="setFooterPath(\'contact-us\')"> Contact us </div>' +
-            '<div class="footer_4 pull-left"><img src="images/logo.jpg"></div></div>',
+            '<div class="footer_4 pull-left"><img src="images/logo.jpg" ng-click="setFooterPath()"></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
                     $scope.setFooterPath = function (path) {
-                        window.location.href = "#!/" + path;
+                        if (path) {
+                            window.location.href = "#!/" + path;
+                        }
+                        else {
+                            var a = document.createElement('a');
+                            a.href = REDIRECT_URL;
+                            a.target = '_blank';
+                            document.body.appendChild(a);
+                            a.click();
+                        }
                     }
                 }
             }

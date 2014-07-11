@@ -7,7 +7,7 @@ var PROGRAMADMIN ="539fddda1e993c6e426860c4";
 var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
 var DOMAIN_NAME="http://www.ecpromomarket.com";
-
+var REDIRECT_URL="http://www.ecloyalty.com/";
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['multi-select','ngRoute', '$appstrap.services']);
 cstore.config(
