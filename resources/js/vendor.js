@@ -317,7 +317,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text"  placeholder="" ng-model="data.postalCode"></td>' +
-            '<td class="half_td"><input maxlength="10" type="text" ng-model="data.contact" placeholder=""></td>' +
+            '<td class="half_td"><input maxlength="12" type="text" ng-model="data.contact" placeholder=""></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Company*</div></td>' +

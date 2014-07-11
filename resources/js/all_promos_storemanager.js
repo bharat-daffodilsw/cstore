@@ -205,6 +205,7 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
             "store_manager_id",
             "promo_description",
             "threshold",
+            "display_image",
             "reward_value"
         ];
         query.filter = {};
@@ -309,6 +310,7 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
             "store_manager_id",
             "promo_description",
             "threshold",
+            "display_image",
             "reward_value"
         ];
         query.filter = {};

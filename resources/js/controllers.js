@@ -325,8 +325,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var hr = i >= 10 ? i + "" : "0" + i;
         $scope.promotiondata.hours.push(hr);
     }
-    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[12];
-    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[11];
+    $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
+    $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[23];
     for (var j = 0; j < 60; j++) {
         var min = j >= 10 ? j + "" : "0" + j;
         $scope.promotiondata.minutes.push(min);
@@ -407,8 +407,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
-        query.columns = ["firstname"];
-        query.orders = {"firstname": "asc"};
+        query.columns = ["firstname","companyid"];
+        query.orders = {"companyid.name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (vendorData) {
@@ -828,7 +828,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.showFile = function (file, updateScope) {
         if (updateScope) {
             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(file[0].name)) {
-                $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+                $scope.readonlyrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + file[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
                 $scope.readonlyrow.fileType = "imagefile";
                 $scope.readonlyrow.filenotexist = false;
                 $scope.readonlyrow.imgWidth = 75;
@@ -842,7 +842,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.row[$scope.colmetadata.expression] = file;
         }
         else if (file && file.length > 0) {
-            $scope.readonlyrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+            $scope.readonlyrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + file[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
             $scope.readonlyrow.fileType = "imagefile";
             $scope.readonlyrow.filenotexist = false;
             $scope.readonlyrow.imgWidth = 75;
@@ -855,7 +855,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.showCoolerFile = function (coolerFile, updateScope) {
         if (updateScope) {
             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(coolerFile[0].name)) {
-                $scope.readonlycoolerrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + coolerFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+                $scope.readonlycoolerrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + coolerFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
                 $scope.readonlycoolerrow.fileType = "imagefile";
                 $scope.readonlycoolerrow.filenotexist = false;
                 $scope.readonlycoolerrow.imgWidth = 75;
@@ -869,7 +869,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.coolerrow[$scope.colmetacoolerdata.expression] = coolerFile;
         }
         else if (coolerFile && coolerFile.length > 0) {
-            $scope.readonlycoolerrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + coolerFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+            $scope.readonlycoolerrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + coolerFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
             $scope.readonlycoolerrow.fileType = "imagefile";
             $scope.readonlycoolerrow.filenotexist = false;
             $scope.readonlycoolerrow.imgWidth = 75;
@@ -882,7 +882,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.showAisleFile = function (aisleFile, updateScope) {
         if (updateScope) {
             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(aisleFile[0].name)) {
-                $scope.readonlyaislerow.fileurl = BAAS_SERVER + "/file/render?filekey=" + aisleFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+                $scope.readonlyaislerow.fileurl = BAAS_SERVER + '/file/render?filekey=' + aisleFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
                 $scope.readonlyaislerow.fileType = "imagefile";
                 $scope.readonlyaislerow.filenotexist = false;
                 $scope.readonlyaislerow.imgWidth = 75;
@@ -896,7 +896,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.aislerow[$scope.colmetaaisledata.expression] = aisleFile;
         }
         else if (aisleFile && aisleFile.length > 0) {
-            $scope.readonlyaislerow.fileurl = BAAS_SERVER + "/file/render?filekey=" + aisleFile[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
+            $scope.readonlyaislerow.fileurl = BAAS_SERVER + '/file/render?filekey=' + aisleFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
             $scope.readonlyaislerow.fileType = "imagefile";
             $scope.readonlyaislerow.filenotexist = false;
             $scope.readonlyaislerow.imgWidth = 75;
@@ -1096,8 +1096,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearPromotionContent = function () {
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["end_date"] = "";
-        $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[12];
-        $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[11];
+        $scope.promotiondata.selectedStartHour = $scope.promotiondata.hours[0];
+        $scope.promotiondata.selectedEndHour = $scope.promotiondata.hours[23];
         $scope.promotiondata.selectedStartMinute = $scope.promotiondata.minutes[0];
         $scope.promotiondata.selectedEndMinute = $scope.promotiondata.minutes[59];
         $scope.promotiondata.selectedStartSecond = $scope.promotiondata.minutes[0];

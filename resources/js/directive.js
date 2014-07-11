@@ -451,7 +451,7 @@ cstore.directive('appFileUpload', ['$appService', '$compile', function ($appServ
             "<span><input ng-show='readonlyrow.filenotexist' type='file' id='uploadfile'/></span>" +
             "<div ng-hide='readonlyrow.filenotexist'>" +
             "<span>" +
-            "<div class='pic_preview'><img ng-src='{{readonlyrow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "<div class='pic_preview'><img ng-src='{{readonlyrow.fileurl}}'/></div>" +
             "</span>" +
             "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeFile()'/>" +
             "</div>" +
@@ -528,7 +528,7 @@ cstore.directive('appCoolerFileUpload', ['$appService', '$compile', function ($a
             "<span><input ng-show='readonlycoolerrow.filenotexist' type='file' id='uploadCoolerFile'/></span>" +
             "<div ng-hide='readonlycoolerrow.filenotexist'>" +
             "<span>" +
-            "<div class='pic_preview'><img ng-src='{{readonlycoolerrow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "<div class='pic_preview'><img ng-src='{{readonlycoolerrow.fileurl}}'/></div>" +
             "</span>" +
             "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeCoolerFile()'/>" +
             "</div>" +
@@ -603,7 +603,7 @@ cstore.directive('appAisleFileUpload', ['$appService', '$compile', function ($ap
             "<span><input ng-show='readonlyaislerow.filenotexist' type='file' id='uploadAisleFile'/></span>" +
             "<div ng-hide='readonlyaislerow.filenotexist'>" +
             "<span>" +
-            "<div class='pic_preview'><img ng-src='{{readonlyaislerow.fileurl}}&resize={\"width\":100}'/></div>" +
+            "<div class='pic_preview'><img ng-src='{{readonlyaislerow.fileurl}}'/></div>" +
             "</span>" +
             "<img src='images/icon_cross.gif'class='cross_icon' value='Remove' ng-click='removeAisleFile()'/>" +
             "</div>" +

@@ -467,7 +467,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.sponsor"></td>' +
-            '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.firstname for vendor in promotiondata.vendors"></select></td>' +
+            '<td class="half_td"><select class="brand" ng-model="promotiondata.vendorsList" ng-options="vendor.companyid.name for vendor in promotiondata.vendors"></select></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top"><div class="date_time pull-left">Start Date*</div><span class="hours">HH</span><span class="minutes">MM</span><span class="minutes">SS</span></div></td>' +

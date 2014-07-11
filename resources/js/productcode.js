@@ -205,6 +205,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                 },
                 post: function ($scope) {
                     var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                    var regAlphaNumeric =/^[a-z0-9]+$/i;
                     $scope.remove = function (index, refreshProductCodeId) {
                         if (!$scope.productCodes[index]["oldstatus"]) {
                             $scope.productCodes.splice(index, 1);
@@ -227,8 +228,13 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                             return el.editStatus == true;
                         });
                         for (var i = 0; i < productCodeList.length; i++) {
-                            if (!productCodeList[i].code || !regNumberOnly.test(productCodeList[i].code)) {
-                                $("#popupMessage").html("Please enter valid code");
+//                            if (!productCodeList[i].code || !regNumberOnly.test(productCodeList[i].code)) {
+//                                $("#popupMessage").html("Please enter valid code");
+//                                $('.popup').toggle("slide");
+//                                return false;
+//                            }
+                            if (!productCodeList[i].code) {
+                                $("#popupMessage").html("Please enter code");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
