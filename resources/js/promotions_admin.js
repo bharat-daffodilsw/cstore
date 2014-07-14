@@ -115,15 +115,19 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left">' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'promo-notification\')"><a href>Notification</a></button></div>' +
-            '<div class="add_btn pull-left"><button type="button" ng-click="downloadDisplayImages()"><a href>Download</a></button></div>' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
             '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()"><input id="filter_date" type="text" placeholder="Date" ng-model="promotiondata.filter_date" jqdatepicker /><span class="search_sign_3 pull-left"><a ng-click="filterByDate()"><img style="cursor: pointer width:30px;" src="images/Search.png"></a></span><input type="submit" style="display:none;"></form></div>' +
+            '</div>'+
+            '<div class="add_delete">'+
+            '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'promo-notification\')"><a href>Notification</a></button></div>' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="downloadDisplayImages()"><a href>Download</a></button></div>' +
             '<div ng-click="getMore(searchby.value,search.searchContent,promotiondata.filter_date)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + promotions.length}} from start</div>' +
-            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,promotiondata.filter_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
+            '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent,promotiondata.filter_date)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div>'+
+            '</div>'+
+            '<div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Promo Title</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'promo_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'promo_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
             '<th>Offer Title<span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_title\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_title\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
             '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
@@ -156,18 +160,20 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         for (var i = 0; i < $scope.promotions.length; i++) {
                             if ($scope.promotions[i].deleteStatus && $scope.promotions[i].display_image) {
                                 downloadImages.push({"_id": $scope.promotions[i]._id, "fileKey": $scope.promotions[i].display_image[0].key});
-                                if (downloadImages.length > 0) {
-                                    $scope.promotions[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + $scope.promotions[i].display_image[0].key + "&ask=" + ASK + "&osk=" + OSK;
-                                    var a = document.createElement('a');
-                                    a.href=$scope.promotions[i].fileUrl;
-                                    a.target = '_blank';
-                                    document.body.appendChild(a);
-                                    a.click();
-                                    a.remove();
-                                }
                             }
                         }
-                        if (!downloadImages.length || downloadImages.length == 0) {
+                        if (downloadImages.length > 0) {
+                            for (var i = 0; i < downloadImages.length; i++) {
+                                downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
+                                var a = document.createElement('a');
+                                a.href = downloadImages[i].fileUrl;
+                                //a.target = '_blank';
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                            }
+                        }
+                        else if (!downloadImages.length || downloadImages.length == 0) {
                             $("#popupMessage").html("No display image found for download");
                             $('.popup').toggle("slide");
                         }

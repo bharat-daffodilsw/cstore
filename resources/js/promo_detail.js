@@ -60,7 +60,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div class="Qty"><div class="quantity_border">Quantity : ' +
             '<select class="qty_select_1" ng-model="qty" ng-options="quantity for quantity in shoppingCartData.quantity">' +
             '</select></div>'+
-            '<div class="final_price">Promo Rate : <b>{{promotion[0].programid.promorate.amount | currency}}</b></div>'+
+            '<div class="final_price">Price : <b>{{promotion[0].programid.promorate.amount | currency}}</b></div>'+
             '<div class="add_to_btn pull-left">' +
             '<a href ng-click="addPromoToCart(promotion[0],qty)">ADD TO CART</a></div>'+
             '<div id="downloadImage" class="add_to_btn pull-left"><a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImage}}">DOWNLOAD</a></div>'+

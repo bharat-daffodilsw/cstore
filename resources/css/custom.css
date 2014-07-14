@@ -2364,4 +2364,15 @@ label.multiSelect span:hover {
 .footer_4 img {
     cursor:pointer;
 }
+.enable_border {
+    /* border-top: 1px dotted #DDD; */
+    padding-top: 5px;
+    /* padding-left: 10px; */
+    text-overflow: ellipsis;
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 

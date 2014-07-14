@@ -219,6 +219,14 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<td class="product_image half_td"><textarea ng-model="programdata.cooler_html" class="programTexarea"></textarea></td>' +
             '</tr>' +
             '<tr>' +
+            '<td class="half_td"><div class="margin_top">Image Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">Promo Rate*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td"><image-type></image-type></td>' +
+            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="programdata.promorate.amount"></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="margin_top">Program Image*</div></td>' +
             '<td class="half_td"><div class="margin_top">Cooler*</div></td>' +
             '</tr>' +
@@ -228,17 +236,9 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Aisle*</div></td>' +
-            '<td class="half_td"><div class="margin_top">Image Type</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
-            '<td class="half_td"><image-type></image-type></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Promo Rate*</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="programdata.promorate.amount"></td>' +
             '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveProgram()"><a href>Save</a></button>' +
