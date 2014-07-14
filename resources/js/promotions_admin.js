@@ -165,12 +165,12 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         if (downloadImages.length > 0) {
                             for (var i = 0; i < downloadImages.length; i++) {
                                 downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
-                                var a = document.createElement('a');
-                                a.href = downloadImages[i].fileUrl;
-                                a.target = '_self';
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
+                                downloadImages[i].a = document.createElement('a');
+                                downloadImages[i].a.href = downloadImages[i].fileUrl;
+                                downloadImages[i].a.target = '_blank';
+                                document.body.appendChild(downloadImages[i].a);
+                                downloadImages[i].a.click();
+                                downloadImages[i].a.remove();
                             }
                         }
                         else if (!downloadImages.length || downloadImages.length == 0) {
