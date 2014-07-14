@@ -214,6 +214,7 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
                         a.target = '_blank';
                         document.body.appendChild(a);
                         a.click();
+                        a.remove();
                     }
 				}
             }

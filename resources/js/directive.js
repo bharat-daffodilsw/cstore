@@ -219,15 +219,16 @@ cstore.directive('footer', ['$appService', function ($appService, $scope) {
             return {
                 pre: function ($scope) {
                     $scope.setFooterPath = function (path) {
-                        if (path) {
+                        if(path){
                             window.location.href = "#!/" + path;
                         }
-                        else {
+                        else{
                             var a = document.createElement('a');
-                            a.href = REDIRECT_URL;
+                            a.href=REDIRECT_URL;
                             a.target = '_blank';
                             document.body.appendChild(a);
                             a.click();
+                            a.remove();
                         }
                     }
                 }

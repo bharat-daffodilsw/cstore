@@ -46,7 +46,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "minimum_retail",
             "decal_description",
             "decal_subdescription",
-            "display_image"
+            "display_image",
+            "download_image"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -116,6 +117,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
         restrict: 'E',
         template: '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'promo-notification\')"><a href>Notification</a></button></div>' +
+            '<div class="add_btn pull-left"><button type="button" ng-click="downloadDisplayImages()"><a href>Download</a></button></div>' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-promotion\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deletePromotion()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
@@ -149,6 +151,29 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     }
                     $scope.setAssignedPromo = function (promotionid, programid) {
                         window.location.href = "#!/assign-promo?id=" + promotionid + "&programid=" + programid;
+                    }
+                    $scope.downloadDisplayImages = function () {
+                        var downloadImages = [];
+                        for (var i = 0; i < $scope.promotions.length; i++) {
+                            if ($scope.promotions[i].deleteStatus && $scope.promotions[i].download_image) {
+                                downloadImages.push({"_id": $scope.promotions[i]._id, "fileKey": $scope.promotions[i].download_image[0].key});
+                                if (downloadImages.length > 0) {
+                                    $scope.promotions[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + $scope.promotions[i].download_image[0].key + "&ask=" + ASK + "&osk=" + OSK;
+                                    console.log($scope.promotions[i].fileUrl);
+                                    var a = document.createElement('a');
+                                    a.href=$scope.promotions[i].fileUrl;
+                                    a.target = '_blank';
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    a.remove();
+                                }
+                                else {
+                                    $("#popupMessage").html("please select at least one promo before download");
+                                    $('.popup').toggle("slide");
+                                }
+                            }
+
+                        }
                     }
                     $scope.deletePromotionArray = [];
                     $scope.deletePromotion = function () {

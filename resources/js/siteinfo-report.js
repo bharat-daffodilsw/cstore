@@ -306,6 +306,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         a.target = '_blank';
                         document.body.appendChild(a);
                         a.click();
+                        a.remove();
                     }
                     $scope.getExportSites = function () {
                         var query = {"table": "storemanagers__cstore"};
@@ -335,6 +336,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         a.target = '_blank';
                         document.body.appendChild(a);
                         a.click();
+                        a.remove();
                     }
                 }
             }

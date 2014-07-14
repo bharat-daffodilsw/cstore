@@ -22,7 +22,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type"];
+        query.columns = ["name", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type","promorate"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -156,6 +156,7 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                     $scope.setProgramState = function (program) {
                         $scope.programdata["name"] = program.name ? program.name : "";
                         $scope.programdata["participation_id"] = program.participation_id ? program.participation_id : "";
+                        $scope.programdata["promorate"] = program.promorate ? program.promorate : "";
                         for (var i = 0; i < $scope.imageTypes.length; i++) {
                             if (program.image_type == $scope.imageTypes[i].name) {
                                 $scope.programdata.image_type = $scope.imageTypes[i];
@@ -207,7 +208,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.name"></td>' +
-            '<td class="product_image half_td"><input type="text" placeholder="" ng-model="programdata.participation_id"></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.participation_id"></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"> <div class="margin_top">Aisle Html*</div> </td>' +
@@ -234,6 +235,10 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><image-type></image-type></td>' +
             '</tr>' +
             '<tr>' +
+            '<td class="half_td"><div class="margin_top">Promo Rate*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="programdata.promorate.amount"></td>' +
             '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveProgram()"><a href>Save</a></button>' +
@@ -260,6 +265,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.saveProgram = function () {
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                        var regDecimalNumberOnly = /^[.]?\d[0-9\.]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             if (!$scope.programdata.name) {
@@ -287,6 +293,11 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            if (!$scope.programdata.promorate || !$scope.programdata.promorate.amount || !regDecimalNumberOnly.test($scope.programdata.promorate.amount)) {
+                                $("#popupMessage").html("Please enter valid promo rate");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             $scope.loadingAddProgramData = true;
                             var query = {};
                             query.table = "program__cstore";
@@ -295,12 +306,10 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             }
                             $scope.newProgram["name"] = $scope.programdata.name;
                             $scope.newProgram["participation_id"] = $scope.programdata.participation_id;
-                            /*bharat change*/
-
                             $scope.newProgram["aisle_html"] = $scope.programdata.aisle_html;
                             $scope.newProgram["cooler_html"] = $scope.programdata.cooler_html;
                             $scope.newProgram["image_type"] = $scope.programdata.image_type.name;
-                            /*end*/
+                            $scope.newProgram["promorate"] = {"amount": $scope.programdata.promorate.amount, "type": {"currency": "usd"}};
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
                                 $scope.uploadCoolerTemplate(query);

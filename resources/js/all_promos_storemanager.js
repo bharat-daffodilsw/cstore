@@ -19,7 +19,8 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             "store_manager_id",
             "promo_description",
             "threshold",
-            "reward_value"
+            "reward_value",
+            "programid.promorate"
         ];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
@@ -73,7 +74,9 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div>' +
             '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
-            '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
+            '</div>'+
+            '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
+            '</div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -206,7 +209,8 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
             "promo_description",
             "threshold",
             "display_image",
-            "reward_value"
+            "reward_value",
+            "programid.promorate"
         ];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
@@ -270,7 +274,7 @@ cstore.directive('submittedPromos', ['$appService', function ($appService, $scop
         restrict: 'E',
         template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">Selected Offers</div>' +
             '<div ng-hide="submittedPromos.length > 0">There are no selected offers.</div>' +
-            '<div class="all_promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in submittedPromos" ng-show="submittedPromos.length > 0"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
+            '<div class="promotions col-sm-3 col-md-3 pull-left" ng-repeat="promotion in submittedPromos" ng-show="submittedPromos.length > 0"><div class="products_img"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<img ng-src="{{promotion.displayImageUrl}}"/></a>' +
             '</div>'+
             '<div class="product_details"><a href="#!/promo?promoid={{promotion._id}}">' +
@@ -279,6 +283,7 @@ cstore.directive('submittedPromos', ['$appService', function ($appService, $scop
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
+            '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -311,7 +316,8 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
             "promo_description",
             "threshold",
             "display_image",
-            "reward_value"
+            "reward_value",
+            "programid.promorate"
         ];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
@@ -364,6 +370,7 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="Qty"><div class="quantity_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +
+            '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
             '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {

@@ -223,6 +223,7 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         a.target = '_blank';
                         document.body.appendChild(a);
                         a.click();
+                        a.remove();
                     }
                     $scope.getExportVendors = function () {
                         var query = {"table": "vendors__cstore"};
@@ -249,6 +250,7 @@ cstore.directive('vendorReport', ['$appService', function ($appService, $scope) 
                         a.target = '_blank';
                         document.body.appendChild(a);
                         a.click();
+                        a.remove();
                     }
                 }
             }

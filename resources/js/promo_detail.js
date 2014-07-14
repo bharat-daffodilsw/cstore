@@ -16,7 +16,9 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "item_signage",
             "minimum_retail",
             "upc",
-            "codes"
+            "codes",
+            "programid.promorate",
+            "download_image"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
@@ -48,24 +50,28 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
         template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
             '<a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImageUrl}}"><img ng-src="{{promotion[0].displayImageUrl}}" /></a></div>' +
             '<div class="details_product pull-left"><div class="Qty">' +
-            //'<div class="quantity_border"><b>Offer</b> : {{promotion[0].offer_title}}</div>' +
-            //'<div class="offer_details ng-binding"><b>Offer Description</b> : {{promotion[0].offer_description}}</div>' +
-            //'<div class="quantity_border"><b>Offer Type</b> : {{promotion[0].offer_type}}</div>' +
             '<div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>' +
             '<div class="quantity_border"><b>End Date</b> :{{promotion[0].end_date}} </div>' +
             '<div class="quantity_border"><b>Threshold</b> :{{promotion[0].threshold}} </div>' +
             '<div class="quantity_border"><b>Reward Value</b> :{{promotion[0].reward_value.amount | currency}} </div>' +
-            //'<div class="quantity_border"><b>Sponsor</b> : {{promotion[0].sponsor}}</div>' +
-            //'<div class="quantity_border"><b>Vendor</b> : {{promotion[0].vendorid.firstname}}</div>' +
             '<div class="quantity_border"><b>Item Signage</b> : {{promotion[0].item_signage}}</div>' +
             '<div class="quantity_border"><b>Minimum Retail</b> : {{promotion[0].minimum_retail.amount | currency}}</div>' +
             '<div class="quantity_border"><b>UPC/PLU/GROUP</b> : {{promotion[0].upc}}</div>' +
             '<div class="product_code"><b>Product Codes</b> : <span ng-repeat="code in promotion[0].codes"><span ng-hide=$index==0  style="padding-right: 5px;">,</span>{{code}}</span></div>' +
+            '<div class="Qty"><div class="quantity_border">Quantity : ' +
+            '<select class="qty_select_1" ng-model="qty" ng-options="quantity for quantity in shoppingCartData.quantity">' +
+            '</select></div>'+
+            '<div class="final_price">Promo Rate : <b>{{promotion[0].programid.promorate.amount | currency}}</b></div>'+
+            '<div class="add_to_btn pull-left">' +
+            '<a href ng-click="addPromoToCart(promotion[0],qty)">ADD TO CART</a></div>'+
+            '<div id="downloadImage" class="add_to_btn pull-left" ng-click="downloadImage(promotion[0].download_image)"><a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImage}}">DOWNLOAD</a></div>'+
+            '</div>'+
             '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
+                    $scope.qty = $scope.shoppingCartData.quantity[0];
                 },
                 post: function ($scope) {
                     $scope.CSession = $appService.getSession();

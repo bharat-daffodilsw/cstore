@@ -1168,6 +1168,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.aisleOFile.fileExist = false;
         $scope.hasHighlight.setup=true;
         $scope.hasHighlight.reports=false;
+        $scope.programdata["promorate"] = "";
+        $scope.programdata["participation_id"] = "";
     }
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
@@ -1211,20 +1213,37 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.getShoppingCartLength();
     $scope.addCart={"pop":{},"quantity":""};
     $scope.loadingPopularProductData = false;
+    $scope.addPromoToCart=function(promo,qty){
+        var promoObj = {"name": "", "cost": {}, "_id": ""};
+        promoObj.name=promo.promo_title;
+        if(promo.programid.promorate){
+            promoObj.cost=promo.programid.promorate;
+        }
+        else{
+            promoObj.cost={"amount": 0.00, "type": {"currency": "usd"}};
+        }
+        promoObj._id=promo._id;
+        $scope.showCartPopup(promoObj,qty);
+    }
     $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
         $scope.products = [];
         var productObj = {"name": "", "cost": {}, "quantity": "", "popid": ""};
         $scope.newShoppingCartProduct["userid"] = {"username": $scope.currentUser.data.username};
         //$scope.newShoppingCartProduct["sub_total"]={"amount":product.cost.amount*1,"type": {"currency": "usd"}};
-        productObj.name = product.name;
+        productObj.name = product.name ? product.name:"";
         if (quantity) {
             productObj.quantity = quantity;
         }
         else {
             productObj.quantity = 1;
         }
-        productObj.cost = {"amount": product.cost.amount, "type": {"currency": "usd"}};
+        if(product.cost){
+            productObj.cost = {"amount": product.cost.amount, "type": {"currency": "usd"}};
+        }
+        else{
+            productObj.cost = {"amount": 0.00, "type": {"currency": "usd"}};
+        }
         productObj.popid = product._id;
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;

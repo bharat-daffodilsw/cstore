@@ -100,6 +100,7 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
             a.target = '_blank';
             document.body.appendChild(a);
             a.click();
+            a.remove();
         }
     }
 });

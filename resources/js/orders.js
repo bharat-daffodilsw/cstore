@@ -272,6 +272,7 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         a.target = '_blank';
         document.body.appendChild(a);
         a.click();
+        a.remove();
     }
 });
 
