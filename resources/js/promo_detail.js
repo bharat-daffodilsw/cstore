@@ -17,8 +17,7 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "minimum_retail",
             "upc",
             "codes",
-            "programid.promorate",
-            "download_image"
+            "programid.promorate"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
@@ -64,7 +63,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div class="final_price">Promo Rate : <b>{{promotion[0].programid.promorate.amount | currency}}</b></div>'+
             '<div class="add_to_btn pull-left">' +
             '<a href ng-click="addPromoToCart(promotion[0],qty)">ADD TO CART</a></div>'+
-            '<div id="downloadImage" class="add_to_btn pull-left" ng-click="downloadImage(promotion[0].download_image)"><a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImage}}">DOWNLOAD</a></div>'+
+            '<div id="downloadImage" class="add_to_btn pull-left"><a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImage}}">DOWNLOAD</a></div>'+
             '</div>'+
             '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',

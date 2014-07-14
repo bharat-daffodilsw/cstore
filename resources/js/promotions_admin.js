@@ -46,8 +46,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "minimum_retail",
             "decal_description",
             "decal_subdescription",
-            "display_image",
-            "download_image"
+            "display_image"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -155,11 +154,10 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                     $scope.downloadDisplayImages = function () {
                         var downloadImages = [];
                         for (var i = 0; i < $scope.promotions.length; i++) {
-                            if ($scope.promotions[i].deleteStatus && $scope.promotions[i].download_image) {
-                                downloadImages.push({"_id": $scope.promotions[i]._id, "fileKey": $scope.promotions[i].download_image[0].key});
+                            if ($scope.promotions[i].deleteStatus && $scope.promotions[i].display_image) {
+                                downloadImages.push({"_id": $scope.promotions[i]._id, "fileKey": $scope.promotions[i].display_image[0].key});
                                 if (downloadImages.length > 0) {
-                                    $scope.promotions[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + $scope.promotions[i].download_image[0].key + "&ask=" + ASK + "&osk=" + OSK;
-                                    console.log($scope.promotions[i].fileUrl);
+                                    $scope.promotions[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + $scope.promotions[i].display_image[0].key + "&ask=" + ASK + "&osk=" + OSK;
                                     var a = document.createElement('a');
                                     a.href=$scope.promotions[i].fileUrl;
                                     a.target = '_blank';
@@ -167,12 +165,11 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                     a.click();
                                     a.remove();
                                 }
-                                else {
-                                    $("#popupMessage").html("please select at least one promo before download");
-                                    $('.popup').toggle("slide");
-                                }
                             }
-
+                        }
+                        if (!downloadImages.length || downloadImages.length == 0) {
+                            $("#popupMessage").html("No display image found for download");
+                            $('.popup').toggle("slide");
                         }
                     }
                     $scope.deletePromotionArray = [];
