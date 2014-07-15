@@ -170,7 +170,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                     while (new Date().getTime() < startTime + milliSeconds);
                                 }
                                 if(i>0){
-                                    sleep(5000);
+                                    sleep(50);
                                 }
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
