@@ -1,6 +1,7 @@
 cstore.controller('fileCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingFileData = false;
+    $scope.filterdata.filter_date="";
     $scope.venderSearch = [
         {"value": "title", "name": "Title"},
         {"value": "programid.name", "name": "Program"}
@@ -21,7 +22,7 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
 
         $scope.loadingFileData = true;
         var query = {"table": "file__cstore"};
-        query.columns = ["title", "programid", "store_manager_id", "file"];
+        query.columns = ["title", "programid", "store_manager_id", "file",{"expression": "__createdon", "format": "MM/DD/YYYY HH:mm"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
@@ -30,6 +31,9 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
         }
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+        }
+        if ($scope.filterdata.filter_date && $scope.filterdata.filter_date != "") {
+            query.filter["__createdon"] = new Date($scope.filterdata.filter_date);
         }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
@@ -79,6 +83,7 @@ cstore.controller('addFileCtrl', function ($scope, $appService, $routeParams) {
     }
 })
 
+
 /*************************upload file list**************************************/
 cstore.directive('uploadFileList', ['$appService', function ($appService, $scope) {
     return {
@@ -87,13 +92,16 @@ cstore.directive('uploadFileList', ['$appService', function ($appService, $scope
             '<div class="add_btn pull-left"><button type="button" ng-click="setPath(\'add-file\')"><a href>Add</a></button>' +
             '</div><div class="delete_btn pull-left"><button type="button" ng-click="deleteFile()"><a href>Delete</a></button></div><div class="search_by pull-left">Search By<search-by></search-by></div><div class="search_2 pull-left"><form ng-submit="search()"><input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<span class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></><input type="submit" style="display:none;"></form></div>' +
+            '<date-filter></date-filter>' +
             '<div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a href><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + uploadFiles.length}} from start</div>' +
             '<div class="nxt_btn pull-right" ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"><a href><img src="images/Aiga_rightarrow_inv.png"></a></div></div><div class="table pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th><span>Title</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'title\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'title\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+            '<th><span>Date</span><span class="sortWrap"><div class="sortUp" ng-click="setUploadFileOrder(\'__createdon\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setUploadFileOrder(\'__createdon\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>'+
             '<th></th></tr><tr ng-repeat="file in uploadFiles"><td>' +
             '<input type="checkbox" ng-model="file.deleteStatus"></td><td>{{file.title}}</td><td>{{file.programid.name}}</td>' +
+            '<td>{{file.__createdon}}</td>' +
             '<td><a class="edit_btn" ng-click="setFileState(file)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingFileData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -102,6 +110,11 @@ cstore.directive('uploadFileList', ['$appService', function ($appService, $scope
                         window.location.href = "#!/" + path;
                     }
                     $scope.search = function () {
+                        $scope.show.preCursor = 0;
+                        $scope.show.currentCursor = 0;
+                        $scope.getAllUploadFiles(1, 10, $scope.searchby.value, $scope.search.searchContent);
+                    }
+                    $scope.filterByDate = function () {
                         $scope.show.preCursor = 0;
                         $scope.show.currentCursor = 0;
                         $scope.getAllUploadFiles(1, 10, $scope.searchby.value, $scope.search.searchContent);

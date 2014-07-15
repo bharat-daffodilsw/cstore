@@ -868,3 +868,15 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
     };
 }]);
 
+cstore.directive('dateFilter', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()">' +
+            '<input id="filter_date" type="text" placeholder="Date" ng-model="filterdata.filter_date" jqdatepicker />' +
+            '<span class="search_sign_3 pull-left"><a ng-click="filterByDate()">' +
+            '<img style="cursor: pointer width:30px;" src="images/Search.png">' +
+            '</a></span>' +
+            '<input type="submit" style="display:none;"></form></div>'
+    }
+}]);
+

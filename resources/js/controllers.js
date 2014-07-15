@@ -286,7 +286,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Valero"},
         {"name": "Others"}
     ];
-    $scope.filterdata.brands=$scope.storedata.brands;
+    //$scope.filterdata.brands=$scope.storedata.brands;
     $scope.storedata.selectedBrand = $scope.storedata.brands[0];
     $scope.storedata.shifts = [
         {"name": "Day"},

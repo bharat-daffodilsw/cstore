@@ -380,7 +380,7 @@ cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
             '<div><b>Manager Name</b> :{{savedAddressData.manager.name}}</div>' +
             '<div><b>Program Name</b> : {{savedAddressData.programid.name}}</div>' +
             '</div>' +
-            '<div class="store_program pull-left add_delete"><div class="add_btn pull-left"><button type="button" ng-click="getOrderDetailPdf()"><a href>PDF</a></button></div></div>' +
+            '<div class="store_program pull-left add_delete"><div class="add_btn pull-left"><button type="button" ng-click="getOrderDetailPdf()"><a href>Download in PDF</a></button></div></div>' +
             '<div class="table_5 pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +

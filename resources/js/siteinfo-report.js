@@ -52,7 +52,7 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
             query.filter["shift"] = shiftFilter.name;
         }
         if (brandFilter && brandFilter != "") {
-            query.filter["brands"] = brandFilter.name;
+            query.filter["brands"] = brandFilter._id;
         }
         query.orders = {};
         if ($scope.sortingCol && $scope.sortingType) {
@@ -98,6 +98,21 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
         $scope.show.currentCursor = 0;
         $scope.getAllSiteInfoReport(1, 200, column, searchText, programFilter, shiftFilter,brandFilter);
     }
+    $scope.getBrandList = function () {
+        var query = {"table": "storemanagers__cstore"};
+        query.columns = ["brands"];
+        query.orders = {"brands": "asc"};
+        query.groups=["brands"];
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (brandData) {
+            $scope.filterdata.brands= brandData.response.data;
+        }, function (jqxhr, error) {
+            $("#popupMessage").html(error);
+            $('.popup').toggle("slide");
+        })
+    }
+    $scope.getBrandList();
     $scope.exportSites = function () {
         siteTableToExcel('siteTable', 'Site Info');
     }
@@ -140,7 +155,7 @@ cstore.directive('filterShift', ['$appService', function ($appService, $scope) {
 cstore.directive('filterBrand', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand filter_program" ng-model="filterdata.selectedBrand" ng-options="brand.name for brand in filterdata.brands" ng-change="filterSiteData(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"><option value="">-- Choose Brand --</option></select>'
+        template: '<select class="brand filter_program" ng-model="filterdata.selectedBrand" ng-options="brand._id for brand in filterdata.brands" ng-change="filterSiteData(searchby.value,search.searchContent,filterdata.selectedProgram,storedata.selectedShift,filterdata.selectedBrand)"><option value="">-- Choose Brand --</option></select>'
     }
 }]);
 cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
@@ -152,8 +167,8 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
             '<form ng-submit="search()">' +
             '<input type="text" placeholder="Search" name="search_theme_form"size="15" ng-model="search.searchContent"  title="Enter the terms you wish to search for." class="search_2">' +
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form>' +
-            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()">Excel</button></div>' +
-            '<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()">PDF</button></div>' +
+            '</div><div class="delete_btn pull-right"><button type="button" ng-click="getExportSites()">Download in Excel</button></div>' +
+            '<div class="delete_btn pull-right"><button type="button" ng-click="generatesitepdf()">Download in PDF</button></div>' +
             '<div class="delete_btn pull-right"><button type="button" ng-click="printSiteInfo(\'printSiteInfo\')">Print</button></div></div>' +
             '<div class="filter_div"><div class="pull-left filter_text">Filter</div><div class="pull-left filter_table"><filter-program-site></filter-program-site></div>' +
             '<div class="pull-left filter_table"><filter-shift></filter-shift></div>' +
