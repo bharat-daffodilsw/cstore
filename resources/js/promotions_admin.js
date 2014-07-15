@@ -169,8 +169,9 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                     var startTime = new Date().getTime();
                                     while (new Date().getTime() < startTime + milliSeconds);
                                 }
-
-                                sleep(5000);
+                                if(i>0){
+                                    sleep(5000);
+                                }
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
                                 //a.target = '_blank';
