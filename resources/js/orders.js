@@ -104,48 +104,51 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
     }
     $scope.getCompletedOrder = function () {
         var query = {"table": "orders__cstore"};
-        query.columns = ["_id", "token", "paymentId","status"];
+        query.columns = ["_id", "token", "paymentId", "status"];
         query.filter = {};
         query.filter["userid.username"] = $scope.currentUser.data.username;
         query.filter["token"] = $routeParams.token;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (callBackData) {
-            var completeOrderId = callBackData.response.data[0]._id;
-            $scope.paymentId = callBackData.response.data[0].paymentId;
-            if (callBackData.response.data[0].status == "In Progress" || callBackData.response.data[0].status == "Delivered") {
-                $scope.loadingOrderData = true;
-                var query = {};
-                query.table = "orders__cstore";
-                var completeOrder = {};
-                completeOrder["_id"] = completeOrderId;
-                completeOrder["status"] = "Ordered";
-                completeOrder["payerId"] = $routeParams.PayerID;
-                query.operations = [completeOrder];
-                $appService.save(query, ASK, OSK, null, function (callBackData) {
-                    if (callBackData.code == 200 && callBackData.status == "ok") {
-                        $scope.executePayment();
-                    } else {
-                        $("#popupMessage").html(callBackData.response);
+            if (callBackData.response.data && callBackData.response.data.length) {
+                var completeOrderId = callBackData.response.data[0]._id;
+                $scope.paymentId = callBackData.response.data[0].paymentId;
+                if (callBackData.response.data[0].status == "In Progress" || callBackData.response.data[0].status == "Delivered") {
+                    $scope.loadingOrderData = true;
+                    var query = {};
+                    query.table = "orders__cstore";
+                    var completeOrder = {};
+                    completeOrder["_id"] = completeOrderId;
+                    completeOrder["status"] = "Ordered";
+                    completeOrder["payerId"] = $routeParams.PayerID;
+                    query.operations = [completeOrder];
+                    $appService.save(query, ASK, OSK, null, function (callBackData) {
+                        if (callBackData.code == 200 && callBackData.status == "ok") {
+                            $scope.executePayment();
+                        } else {
+                            $("#popupMessage").html(callBackData.response);
+                            $('.popup').toggle("slide");
+                            $scope.loadingOrderData = false;
+                        }
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }, function (err) {
+                        $("#popupMessage").html(err);
                         $('.popup').toggle("slide");
                         $scope.loadingOrderData = false;
-                    }
-                    if (!$scope.$$phase) {
-                        $scope.$apply();
-                    }
-                }, function (err) {
-                    $("#popupMessage").html(err);
-                    $('.popup').toggle("slide");
-                    $scope.loadingOrderData = false;
-                });
-            }
-            else {
-                $scope.getAllOrders(1, 10);
+                    });
+                }
+                else {
+                    $scope.getAllOrders(1, 10);
+                }
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
+
     }
     $scope.removeCart = function (cart) {
         $scope.removeShoppingCart = {};
@@ -184,7 +187,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
             {"_id": "", "soldcount": ""}
         ];
         popList = pop.filter(function (el) {
-            if (el._id) {
+            if (el.popid) {
                 return el;
             }
         });
@@ -380,7 +383,7 @@ cstore.directive('orderDetail', ['$appService', function ($appService, $scope) {
             '<div><b>Manager Name</b> :{{savedAddressData.manager.name}}</div>' +
             '<div><b>Program Name</b> : {{savedAddressData.programid.name}}</div>' +
             '</div>' +
-            '<div class="store_program pull-left add_delete"><div class="add_btn pull-left"><button type="button" ng-click="getOrderDetailPdf()"><a href>Download in PDF</a></button></div></div>' +
+            '<div class="store_program pull-left add_delete"><div class="add_btn pull-left"><button type="button" ng-click="getOrderDetailPdf()"><a href>PDF</a></button></div></div>' +
             '<div class="table_5 pull-left">' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +

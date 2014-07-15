@@ -1222,7 +1222,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         else{
             promoObj.cost={"amount": 0.00, "type": {"currency": "usd"}};
         }
-        promoObj._id=promo._id;
+        //promoObj._id=promo._id;
         $scope.showCartPopup(promoObj,qty);
     }
     $scope.addToCart = function (product, quantity) {
@@ -1244,7 +1244,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         else{
             productObj.cost = {"amount": 0.00, "type": {"currency": "usd"}};
         }
-        productObj.popid = product._id;
+        productObj.popid = product._id ? product._id : "";
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;
         //$scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};
