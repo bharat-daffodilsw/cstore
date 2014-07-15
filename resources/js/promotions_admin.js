@@ -167,7 +167,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
                                 downloadImages[i].a = document.createElement('a');
                                 downloadImages[i].a.href = downloadImages[i].fileUrl;
-                                downloadImages[i].a.target = '_blank';
+                                downloadImages[i].a.target = '_self';
                                 document.body.appendChild(downloadImages[i].a);
                                 downloadImages[i].a.click();
                                 downloadImages[i].a.remove();
