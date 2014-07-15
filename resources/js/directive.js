@@ -82,16 +82,16 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<add-to-cart-pop-up></add-to-cart-pop-up><div class="admin_menu pull-left">' +
-            '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li>'+
-            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.setup}">Promos</a>'+
+            '<ul><li ng-click="inActivePromo()"><a href ="#!/all-pops" active-link="active">POP</a></li>'+
+            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.promos}">Promos</a>'+
             '<div class="setup promo_drop pull-left"><ul>'+
-            '<li><a href="#!/all-promos" active-link="active">Available Offers</a></li>' +
-            '<li><a href="#!/submitted-promos" active-link="active">Selected Offers</a></li>' +
-            '<li><a href="#!/disabled-promos" active-link="active">Disabled Offers</a></li>' +
+            '<li ng-click="activePromo()"><a href="#!/all-promos" active-link="active">Available Offers</a></li>' +
+            '<li ng-click="activePromo()"><a href="#!/submitted-promos" active-link="active">Selected Offers</a></li>' +
+            '<li ng-click="activePromo()"><a href="#!/disabled-promos" active-link="active">Disabled Offers</a></li>' +
             '</ul></div></li>'+
-            '<li><a href="#!/all-trainings" active-link="active">Training</a></li>' +
-            '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
-            '<li><a href ="#!/all-files" active-link="active">Files</a></li>'+
+            '<li ng-click="inActivePromo()"><a href="#!/all-trainings" active-link="active">Training</a></li>' +
+            '<li ng-click="inActivePromo()"><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
+            '<li ng-click="inActivePromo()"><a href ="#!/all-files" active-link="active">Files</a></li>'+
             '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li>'+
             '</ul></div>',
         compile: function () {
