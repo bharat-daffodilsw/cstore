@@ -165,9 +165,15 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         if (downloadImages.length > 0) {
                             for (var i = 0; i < downloadImages.length; i++) {
                                 downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
+                                function sleep(milliSeconds) {
+                                    var startTime = new Date().getTime();
+                                    while (new Date().getTime() < startTime + milliSeconds);
+                                }
+
+                                sleep(5000);
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
-                                a.target = '_blank';
+                                //a.target = '_blank';
                                 document.body.appendChild(a);
                                 a.click();
                                 a.remove();
