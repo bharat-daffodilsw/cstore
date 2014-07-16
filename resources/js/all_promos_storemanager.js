@@ -29,7 +29,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         //query.filter["store_manager_id.opt"] = true;
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
-            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.max_rows = 4;
         query.cursor = cursor;
@@ -219,7 +219,7 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
         query.filter["store_manager_id.submitted"] = true;
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
-            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.max_rows = 4;
         query.cursor = cursor;
@@ -326,7 +326,7 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
         query.filter["store_manager_id.opt"] = false;
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
-            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.max_rows = 4;
         query.cursor = cursor;

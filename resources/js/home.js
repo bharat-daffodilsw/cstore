@@ -39,7 +39,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
-            query.filter["promo_title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         query.orders = {"__createdon": "desc"};
         if (maxRow) {
@@ -68,7 +68,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         if (searchText && searchText != "") {
-            query.filter["training_session_id.title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
+            query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
         if (maxRow) {
             query.max_rows = maxRow;
