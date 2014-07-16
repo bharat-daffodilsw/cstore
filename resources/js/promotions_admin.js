@@ -747,6 +747,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 }, function (callbackerror) {
                                     $("#popupMessage").html(callbackerror);
                                     $('.popup').toggle("slide");
+                                    $scope.loadingAddPromotionData = false;
                                 });
                             }
                         }
@@ -803,8 +804,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 
                                 //$scope.setPathforPromotion("promotions");
                             }
-                            else if ((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns") >= 0)) {
-                                $("#popupMessage").html("There is duplicate value for promo title or offer titile");
+                            else if ((callBackData.response && callBackData.response.indexOf("duplicate key") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("duplicate key") >= 0)) {
+                                $("#popupMessage").html("There is duplicate value for promo title or offer title");
                                 $('.popup').toggle("slide");
                                 $scope.loadingAddPromotionData = false;
                             }
