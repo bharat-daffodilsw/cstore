@@ -209,7 +209,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
-    $scope.hasHighlight={"reports":false,"setup":false};
+    $scope.hasHighlight={"reports":false,"setup":false,"promos":false};
     $scope.notification={};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
@@ -286,7 +286,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "Valero"},
         {"name": "Others"}
     ];
-    $scope.filterdata.brands=$scope.storedata.brands;
+    //$scope.filterdata.brands=$scope.storedata.brands;
     $scope.storedata.selectedBrand = $scope.storedata.brands[0];
     $scope.storedata.shifts = [
         {"name": "Day"},
@@ -404,6 +404,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.deactiveHightLight=function(){
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
+    }
+    $scope.activePromo=function(){
+        $scope.hasHighlight.promos=true;
+    }
+    $scope.inActivePromo=function(){
+        $scope.hasHighlight.promos=false;
     }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
@@ -1222,7 +1228,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         else{
             promoObj.cost={"amount": 0.00, "type": {"currency": "usd"}};
         }
-        promoObj._id=promo._id;
+        //promoObj._id=promo._id;
         $scope.showCartPopup(promoObj,qty);
     }
     $scope.addToCart = function (product, quantity) {
@@ -1244,7 +1250,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         else{
             productObj.cost = {"amount": 0.00, "type": {"currency": "usd"}};
         }
-        productObj.popid = product._id;
+        productObj.popid = product._id ? product._id : "";
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;
         //$scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};

@@ -82,16 +82,16 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
         template: '<add-to-cart-pop-up></add-to-cart-pop-up><div class="admin_menu pull-left">' +
-            '<ul><li><a href ="#!/all-pops" active-link="active">POP</a></li>'+
-            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.setup}">Promos</a>'+
+            '<ul><li ng-click="inActivePromo()"><a href ="#!/all-pops" active-link="active">POP</a></li>'+
+            '<li id="setup"><a href ng-class="{\'active\': hasHighlight.promos}">Promos</a>'+
             '<div class="setup promo_drop pull-left"><ul>'+
-            '<li><a href="#!/all-promos" active-link="active">Available Offers</a></li>' +
-            '<li><a href="#!/submitted-promos" active-link="active">Selected Offers</a></li>' +
-            '<li><a href="#!/disabled-promos" active-link="active">Disabled Offers</a></li>' +
+            '<li ng-click="activePromo()"><a href="#!/all-promos" active-link="active">Available Offers</a></li>' +
+            '<li ng-click="activePromo()"><a href="#!/submitted-promos" active-link="active">Selected Offers</a></li>' +
+            '<li ng-click="activePromo()"><a href="#!/disabled-promos" active-link="active">Disabled Offers</a></li>' +
             '</ul></div></li>'+
-            '<li><a href="#!/all-trainings" active-link="active">Training</a></li>' +
-            '<li><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
-            '<li><a href ="#!/all-files" active-link="active">Files</a></li>'+
+            '<li ng-click="inActivePromo()"><a href="#!/all-trainings" active-link="active">Training</a></li>' +
+            '<li ng-click="inActivePromo()"><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
+            '<li ng-click="inActivePromo()"><a href ="#!/all-files" active-link="active">Files</a></li>'+
             '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li>'+
             '</ul></div>',
         compile: function () {
@@ -866,5 +866,17 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
             });
         }
     };
+}]);
+
+cstore.directive('dateFilter', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()">' +
+            '<input id="filter_date" type="text" placeholder="Date" ng-model="filterdata.filter_date" jqdatepicker />' +
+            '<span class="search_sign_3 pull-left"><a ng-click="filterByDate()">' +
+            '<img style="cursor: pointer width:30px;" src="images/Search.png">' +
+            '</a></span>' +
+            '<input type="submit" style="display:none;"></form></div>'
+    }
 }]);
 

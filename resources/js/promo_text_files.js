@@ -7,6 +7,7 @@
  */
 cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routeParams) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
+    $scope.filterdata.filter_date="";
     $scope.loadingPromoTextFileData = false;
     $scope.venderSearch = [
         {"value": "programid.name", "name": "Program"},
@@ -104,18 +105,6 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
         }
     }
 });
-
-cstore.directive('dateFilter', ['$appService', function ($appService, $scope) {
-    return {
-        restrict: 'E',
-        template: '<div class="pull-left order_date_filter"><form ng-submit="filterByDate()">' +
-            '<input id="filter_date" type="text" placeholder="Date" ng-model="filterdata.filter_date" jqdatepicker />' +
-            '<span class="search_sign_3 pull-left"><a ng-click="filterByDate()">' +
-            '<img style="cursor: pointer width:30px;" src="images/Search.png">' +
-            '</a></span>' +
-            '<input type="submit" style="display:none;"></form></div>'
-    }
-}]);
 
 cstore.directive('filterSites', ['$appService', function ($appService, $scope) {
     return {

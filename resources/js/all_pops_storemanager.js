@@ -63,7 +63,7 @@ cstore.directive('allproducts', ['$appService', function ($appService, $scope) {
             '<div class="pop_products">All POP </div><div class="products col-sm-3 col-md-3 pull-left" ng-repeat="product in allproducts" ng-show="allproducts.length">' +
             '<div class="products_img"><a href="#!/pop?popid={{product._id}}"><img ng-src="{{product.imageUrl}}"></a></div><div class="name"><a href="#!/pop?popid={{product._id}}">' +
             '{{product.name}}</a></div>'+
-            '<div class="category_name"><a href="#!/pop-category?q={{product.product_category._id}}">{{product.product_category.name}}</a></div>'+
+            '<div class="category_name">{{product.product_category.name}} <a href="#!/pop-category?q={{product.product_category._id}}"><b>See More</b></a></div>'+
             '<div class="product_details">' +
             '{{product.short_description}}</div><div class="price">' +
             '<a href>{{product.cost.amount | currency}}</a></div><div class="add_to_cart"ng-click="showCartPopup(product,null)"><a href>Add To Cart</a></div></div>' +

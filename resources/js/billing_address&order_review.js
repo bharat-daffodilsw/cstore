@@ -580,7 +580,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
             '</div>' +
             '<div class="add_delete pull-left">' +
             '<div class="add_btn pull-left"><button type="button" ng-click="setAddressState(cartData)"><a href="">Back</a></button></div>' +
-            '<div class="delete_btn pull-left"><button type="button" ng-click="paypal(cartData)"><a href="">Payment</a></button></div>' +
+            '<div class="delete_btn pull-left"><button type="button" ng-click="paypal(cartData)"><a href="">Pay Now</a></button></div>' +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -683,7 +683,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                             products.push({"name": $scope.shoppingCartProducts[i].name, "price": $scope.shoppingCartProducts[i].cost.amount.toFixed(2), "currency": $scope.shoppingCartProducts[i].cost.type.currency, "quantity": $scope.shoppingCartProducts[i].quantity});
                         }
-                        var shipping_address = {"recipient_name": $scope.savedShippingAddress.firstname + " " + $scope.savedShippingAddress.lastname, "type": "residential", "line1": $scope.savedShippingAddress.address, "city": $scope.savedShippingAddress.city.name, "state": $scope.savedShippingAddress.state.abbreviation, "country_code": "US", "postal_code": $scope.savedShippingAddress.zipcode};
+                        var shipping_address = {"recipient_name": $scope.savedShippingAddress.firstname + " " + $scope.savedShippingAddress.lastname, "type": "residential", "line1": $scope.savedShippingAddress.address, "city": $scope.savedShippingAddress.city.name, "state": $scope.savedShippingAddress.state.abbreviation, "country_code": $scope.savedShippingAddress.country.name, "postal_code": $scope.savedShippingAddress.zipcode};
                         //var shipping_address = {"recipient_name": "Perry Gupta", "type": "residential", "line1": "Building 4", "city": "Columbus", "state": "OH", "country_code": "US", "postal_code": "43215"};
                         var fixedAmount = $scope.cartData.total.amount.toFixed(2);
                         var amount = {"currency": $scope.cartData.total.type.currency, "total": fixedAmount, "details": {"tax": "0.00", "shipping": "0.00"}};

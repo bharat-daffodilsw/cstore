@@ -165,12 +165,21 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         if (downloadImages.length > 0) {
                             for (var i = 0; i < downloadImages.length; i++) {
                                 downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
-                                downloadImages[i].a = document.createElement('a');
-                                downloadImages[i].a.href = downloadImages[i].fileUrl;
-                                downloadImages[i].a.target = '_self';
-                                document.body.appendChild(downloadImages[i].a);
-                                downloadImages[i].a.click();
-                                downloadImages[i].a.remove();
+
+                                function sleep(milliSeconds) {
+                                    var startTime = new Date().getTime();
+                                    while (new Date().getTime() < startTime + milliSeconds);
+                                }
+                                if(i>0){
+                                    sleep(1000);
+                                }
+                                var a = document.createElement('a');
+                                a.href = downloadImages[i].fileUrl;
+                                //a.target = '_blank';
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+
                             }
                         }
                         else if (!downloadImages.length || downloadImages.length == 0) {
@@ -740,6 +749,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 }, function (callbackerror) {
                                     $("#popupMessage").html(callbackerror);
                                     $('.popup').toggle("slide");
+                                    $scope.loadingAddPromotionData = false;
                                 });
                             }
                         }
@@ -796,8 +806,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
 
                                 //$scope.setPathforPromotion("promotions");
                             }
-                            else if ((callBackData.response && callBackData.response.indexOf("Duplicate value for Unique columns") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("Duplicate value for Unique columns") >= 0)) {
-                                $("#popupMessage").html("There is duplicate value for promo title or offer titile");
+                            else if ((callBackData.response && callBackData.response.indexOf("duplicate key") >= 0 ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.indexOf("duplicate key") >= 0)) {
+                                $("#popupMessage").html("There is duplicate value for promo title or offer title");
                                 $('.popup').toggle("slide");
                                 $scope.loadingAddPromotionData = false;
                             }
