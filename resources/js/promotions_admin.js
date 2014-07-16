@@ -589,7 +589,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                     var regDecimalNumberOnly = /^[.]?\d[0-9\.]*$/;
                     $scope.savePromotion = function () {
 
-                        var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                        var regNumberOnly = /^\d[0-9]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             var tags = $scope.showTags($('#' + $scope.parentId).tagit("tags"));
