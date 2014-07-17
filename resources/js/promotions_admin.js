@@ -46,7 +46,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "minimum_retail",
             "decal_description",
             "decal_subdescription",
-            "display_image"
+            "display_image",
+            "notes"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -282,6 +283,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         $scope.promotiondata["minimum_retail"] = promotion.minimum_retail ? promotion.minimum_retail : "";
                         $scope.promotiondata["decal_description"] = promotion.decal_description ? promotion.decal_description : "";
                         $scope.promotiondata["decal_subdescription"] = promotion.decal_subdescription ? promotion.decal_subdescription : "";
+                        $scope.promotiondata["notes"] = promotion.notes ? promotion.notes : "";
                         if (promotion.image) {
                             $scope.oFile.fileExist = true;
                             $scope.promotiondata["demo_image"]=promotion.image;
@@ -538,6 +540,16 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><item-signage-select></item-signage-select></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="promotiondata.threshold"></td>' +
             '</tr>' +
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+            '<tr>' +
+            '<td><div class="margin_top">Notes</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="text_area"><textarea ng-model="promotiondata.notes"> </textarea></td>' +
+            '</tr>' +
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Program</div></td>' +
             '<td class="half_td"><div class="margin_top">Sites</div></td>' +
@@ -546,7 +558,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><select-program-promo ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-promo><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
             '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
-
             '<tr>' +
             '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
             '<td class="half_td"><div class="margin_top">Promo Image*</div></td>' +
@@ -563,6 +574,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
             '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="' + DOMAIN_NAME + '{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
             '</tr>' +
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
@@ -648,11 +661,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             //    $('.popup').toggle("slide");
                             //    return false;
                             //}
-                            if (($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1) {
-                                $("#popupMessage").html("You can select only one tag in " + $scope.promotiondata.selectedUpc.name);
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
+//                            if (($scope.promotiondata.selectedUpc.name == "PLU" || $scope.promotiondata.selectedUpc.name == "GROUP") && tags.length > 1) {
+//                                $("#popupMessage").html("You can select only one tag in " + $scope.promotiondata.selectedUpc.name);
+//                                $('.popup').toggle("slide");
+//                                return false;
+//                            }
                             if (!tags || (tags.length==0)) {
                                 $("#popupMessage").html("Please select atleast one code");
                                 $('.popup').toggle("slide");
@@ -695,6 +708,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["minimum_retail"] = {"amount": $scope.promotiondata.minimum_retail.amount, "type": {"currency": "usd"}};
                             $scope.newPromotion["decal_description"] = $scope.promotiondata.decal_description;
                             $scope.newPromotion["decal_subdescription"] = $scope.promotiondata.decal_subdescription;
+                            $scope.newPromotion["notes"] = $scope.promotiondata.notes ? $scope.promotiondata.notes:"";
                             if (tags && tags.length > 0) {
                                 $scope.newPromotion["codes"] = tags;
                             }
