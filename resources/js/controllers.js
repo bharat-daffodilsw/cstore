@@ -826,7 +826,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getProductCategories();
+    //$scope.getProductCategories();
     $scope.getFileExtension = function (filename) {
         var ext = /^.+\.([^.]+)$/.exec(filename);
         return ext == null ? "" : ext[1];
@@ -1016,7 +1016,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getTrainingCategories();
+    //$scope.getTrainingCategories();
     $scope.showDocFile = function (file, updateScope) {
         if (updateScope) {
             if ((/\.(doc|docx|pdf|ppt|pptx)$/i).test(file[0].name)) {
