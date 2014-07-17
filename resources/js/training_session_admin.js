@@ -70,6 +70,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
         $scope.getAllTrainingSessions(0, 10, column, searchText);
     }
     $scope.getProgramsForTraining(null,null);
+    $scope.getTrainingCategories();
 });
 
 cstore.controller('addTrainingSessionCtrl', function ($scope, $appService, $routeParams) {
