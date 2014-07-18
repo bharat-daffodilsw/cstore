@@ -76,60 +76,6 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
                     $scope.qty = $scope.shoppingCartData.quantity[0];
                 },
                 post: function ($scope) {
-                    $scope.CSession = $appService.getSession();
-                    $scope.changeAssignedPromoStatus = function () {
-                        if ($scope.CSession) {
-                            var query = {};
-                            $scope.loadingPromotionDetailData = true;
-                            $scope.newPromoStatus = {};
-                            $scope.newPromoStatus["store_manager_id"] = {};
-                            query.table = "promotions__cstore";
-                            $scope.newPromoStatus["_id"] = $scope.promotion[0]._id;
-                            var storeArray = [];
-                            var optStatusObj = {"_id": "", "opt": "", "__type__": ""};
-                            optStatusObj._id = $scope.currentUser.data.storeid;
-                            optStatusObj.opt = $scope.booleanOpt;
-
-                            //for(var i=0;i<$scope.assignedStoreManagers.length;i++){
-                            //    if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
-                            //        $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
-
-                            //    }
-                            //}
-                            optStatusObj.__type__ = "update";
-                            storeArray.push(optStatusObj);
-                            //var promoStoreArray = [];
-                            //for(var i=0;i<$scope.assignedStoreManagers.length;i++){
-                            //    if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
-                            //        $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
-                            //    }
-                            //    promoStoreArray.push({"_id": $scope.assignedStoreManagers[i]._id, "opt": $scope.assignedStoreManagers[i].opt});
-                            //}
-                            //$scope.newPromoStatus.store_manager_id = {data: promoStoreArray, "override": "true"};
-                            $scope.newPromoStatus.store_manager_id = storeArray;
-                            query.operations = [$scope.newPromoStatus];
-                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                                $scope.loadingPromotionDetailData = false;
-                                if (callBackData.code == 200 && callBackData.status == "ok") {
-                                    window.location.href = "#!/all-promos";
-                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                    $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html("some error while updating status");
-                                    $('.popup').toggle("slide");
-                                }
-                            }, function (err) {
-                                $("#popupMessage").html(err.stack);
-                                $('.popup').toggle("slide");
-                            });
-                        }
-                        else {
-                            $("#popupMessage").html("Please login first");
-                            $('.popup').toggle("slide");
-                        }
-                    }
                 }
             }
         }

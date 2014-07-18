@@ -1017,31 +1017,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     //$scope.getTrainingCategories();
-    $scope.showDocFile = function (file, updateScope) {
-        if (updateScope) {
-            if ((/\.(doc|docx|pdf|ppt|pptx)$/i).test(file[0].name)) {
-                $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
-                $scope.readonlydocrow.fileType = "documentfile";
-                $scope.readonlydocrow.filenotexist = false;
-                $scope.readonlydocrow.filename = file[0].name;
-            }
-            else {
-                $scope.readonlydocrow.filenotexist = true;
-                $scope.popuptext = "Please Upload document File only";
-                $('#pop_forgt').toggle("slide");
-            }
-            $scope.docrow[$scope.colmetadocdata.expression] = file;
-        }
-        else if (file && file.length > 0) {
-            $scope.readonlydocrow.fileurl = BAAS_SERVER + "/file/render?filekey=" + file[0][FILE_KEY] + "&ask=" + ASK + "&osk=" + OSK;
-            $scope.readonlydocrow.fileType = "documentfile";
-            $scope.readonlydocrow.filenotexist = false;
-            $scope.readonlydocrow.filename = file[0].name;
-        }
-        if (!$scope.$$phase) {
-            $scope.$apply();
-        }
-    }
     //clear content
     $scope.clearStoreContent = function () {
         $scope.storedata.manager = {};
