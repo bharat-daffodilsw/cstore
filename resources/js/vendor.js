@@ -333,7 +333,7 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
             '<td><div class="margin_top">Notes</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="text_area"><textarea ng-model="data.notes"> </textarea></textarea></td>' +
+            '<td class="text_area"><textarea ng-model="data.notes"> </textarea></td>' +
             '</tr>' +
             '</table>' +
             '</div>' +

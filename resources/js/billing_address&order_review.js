@@ -718,7 +718,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                             }
 
                         }, function (jqxhr, error) {
-                            $("#popupMessage").html("Please check your paypal info");
+                            $("#popupMessage").html("Provided shipping address is invalid.Please provide valid shipping address.");
                             $('.popup').toggle("slide");
                             $scope.loadingShoppingCartData = false;
                         });

@@ -1215,7 +1215,7 @@ table td input {
 
 .loadingImage img {
     width: 18%;
-    position: absolute;
+    position: fixed;
     right: 41%;
     top: 41%;
 }

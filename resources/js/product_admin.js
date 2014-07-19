@@ -68,6 +68,7 @@ cstore.controller('productList', function ($scope, $appService) {
         $scope.getAllProducts(0, 10, column, searchText);
     }
     $scope.getProgramList();
+    $scope.getProductCategories();
 });
 
 cstore.controller('addProductCtrl', function ($scope, $appService, $routeParams) {

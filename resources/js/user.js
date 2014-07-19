@@ -98,8 +98,9 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<div class="search_sign_2 pull-left"><a ng-click="search()"><img style="cursor: pointer" src="images/Search.png"></a></div><input type="submit" style="display:none;"></form></div><div ng-click="getMore(searchby.value,search.searchContent)" ng-show="show.currentCursor" class="prv_btn pull-right">' +
             '<a><img src="images/Aiga_rightarrow_invet.png"></a></div><div class="line_count pull-right">{{show.preCursor}}-{{show.preCursor + users.length}} from start' +
             '</div><div ng-show="show.preCursor" ng-click="getLess(searchby.value,search.searchContent)"class="nxt_btn pull-right"><a><img src="images/Aiga_rightarrow_inv.png"></a></div></div>' +
-            '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th></th><th>' +
-            '<span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'userid.firstname\',\'asc\',searchby.value,search.searchContent)"></div>' +
+            '<div class="table pull-left"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr>' +
+//            '<th></th>' +
+            '<th><span>Name</span> <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'userid.firstname\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'userid.firstname\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Email</span>' +
             '<span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'username\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'username\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Role</span>' +
@@ -111,7 +112,9 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'progarid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'progarmid.name\',\'desc\',searchby.value,search.searchContent)"></div></span></th>'+
             '<th></th>'+
-            '</tr><tr ng-repeat="user in users"><td><input type="checkbox" ng-model="user.deleteStatus"></td><td>{{user.userid.firstname}}</td><td>{{user.username}}' +
+            '</tr><tr ng-repeat="user in users">' +
+//            '<td><input type="checkbox" ng-model="user.deleteStatus"></td>' +
+            '<td>{{user.userid.firstname}}</td><td>{{user.username}}' +
             '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td><td ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{user.programid.name}}</td>' +
             '<td><a class="edit_btn" ng-show="user.userid.status==true" ng-click="toggleUserStatus(user)" href>Deactivate</a>'+
             '<a class="edit_btn" ng-show="user.userid.status==false" ng-click="toggleUserStatus(user)" href>Activate</a></td>'+

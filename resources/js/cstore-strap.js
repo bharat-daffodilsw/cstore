@@ -330,18 +330,6 @@ appStrapServices.factory('$appService', [
                 callBack(callBackData);
             });
         }
-        $appService.getCountries = function () {
-            var countries = {};
-            var query = {"table": "countries__cstore"};
-            query.columns = ["name", "_id"];
-            var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-            var serviceUrl = "/rest/data";
-            this.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
-                countries = countryData.response.data;
-            }, function (jqxhr, error) {
-            })
-            return countries;
-        }
         return $appService;
     }
 ]);

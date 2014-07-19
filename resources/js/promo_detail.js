@@ -17,7 +17,8 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "minimum_retail",
             "upc",
             "codes",
-            "programid.promorate"
+            "programid.promorate",
+            "notes"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();
@@ -65,7 +66,9 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<a href ng-click="addPromoToCart(promotion[0],qty)">ADD TO CART</a></div>'+
             '<div id="downloadImage" class="add_to_btn pull-left"><a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImage}}">DOWNLOAD</a></div>'+
             '</div>'+
-            '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div></div>' +
+            '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div>' +
+            '<div class="product_description col-sm-12 col-md-12 pull-left"><b>Notes : </b>{{promotion[0].notes}}</div>' +
+            '</div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -73,60 +76,6 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
                     $scope.qty = $scope.shoppingCartData.quantity[0];
                 },
                 post: function ($scope) {
-                    $scope.CSession = $appService.getSession();
-                    $scope.changeAssignedPromoStatus = function () {
-                        if ($scope.CSession) {
-                            var query = {};
-                            $scope.loadingPromotionDetailData = true;
-                            $scope.newPromoStatus = {};
-                            $scope.newPromoStatus["store_manager_id"] = {};
-                            query.table = "promotions__cstore";
-                            $scope.newPromoStatus["_id"] = $scope.promotion[0]._id;
-                            var storeArray = [];
-                            var optStatusObj = {"_id": "", "opt": "", "__type__": ""};
-                            optStatusObj._id = $scope.currentUser.data.storeid;
-                            optStatusObj.opt = $scope.booleanOpt;
-
-                            //for(var i=0;i<$scope.assignedStoreManagers.length;i++){
-                            //    if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
-                            //        $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
-
-                            //    }
-                            //}
-                            optStatusObj.__type__ = "update";
-                            storeArray.push(optStatusObj);
-                            //var promoStoreArray = [];
-                            //for(var i=0;i<$scope.assignedStoreManagers.length;i++){
-                            //    if($scope.assignedStoreManagers[i]._id==$scope.currentUser.data.storeid) {
-                            //        $scope.assignedStoreManagers[i].opt=$scope.booleanOpt;
-                            //    }
-                            //    promoStoreArray.push({"_id": $scope.assignedStoreManagers[i]._id, "opt": $scope.assignedStoreManagers[i].opt});
-                            //}
-                            //$scope.newPromoStatus.store_manager_id = {data: promoStoreArray, "override": "true"};
-                            $scope.newPromoStatus.store_manager_id = storeArray;
-                            query.operations = [$scope.newPromoStatus];
-                            $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {
-                                $scope.loadingPromotionDetailData = false;
-                                if (callBackData.code == 200 && callBackData.status == "ok") {
-                                    window.location.href = "#!/all-promos";
-                                } else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
-                                    $("#popupMessage").html(JSON.parse(callBackData.responseText).response);
-                                    $('.popup').toggle("slide");
-                                }
-                                else {
-                                    $("#popupMessage").html("some error while updating status");
-                                    $('.popup').toggle("slide");
-                                }
-                            }, function (err) {
-                                $("#popupMessage").html(err.stack);
-                                $('.popup').toggle("slide");
-                            });
-                        }
-                        else {
-                            $("#popupMessage").html("Please login first");
-                            $('.popup').toggle("slide");
-                        }
-                    }
                 }
             }
         }
