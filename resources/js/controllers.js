@@ -1070,7 +1070,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.userdata["lastname"] = "";
         $scope.userdata["password"] = "";
         $scope.userdata.selectedRole = $scope.userdata.roles[0];
-        $scope.userdata.selectedStore = $scope.userdata.roles[0];
+        $scope.userdata.selectedStore = $scope.userdata.stores[0];
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
     }
