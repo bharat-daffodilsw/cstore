@@ -747,7 +747,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 current_file.ask = ASK;
                                 current_file.osk = OSK;
                                 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    $scope.loadingAddPromotionData = false;
                                     if (data.response) {
                                         $scope.newPromotion["image"] = data.response;
                                         if (!$scope.promotiondata.selectedProgram.cooler_html && !$scope.promotiondata.selectedProgram.aisle_html) {
@@ -759,6 +758,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     else {
                                         $("#popupMessage").html("some error while uploading image please try again");
                                         $('.popup').toggle("slide");
+                                        $scope.loadingAddPromotionData = false;
                                     }
                                 }, function (callbackerror) {
                                     $("#popupMessage").html(callbackerror);
@@ -770,6 +770,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         else {
                             $("#popupMessage").html("Please login first");
                             $('.popup').toggle("slide");
+                            $scope.loadingAddPromotionData = false;
                         }
                     };
                     $scope.saveFunction = function (query) {
