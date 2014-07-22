@@ -40,7 +40,7 @@ cstore.controller('userCtrl', function ($scope, $appService) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
         }
         else {
-            query.orders["userid.firstname"] = "asc";
+            query.orders["roleid"] = "asc";
         }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
