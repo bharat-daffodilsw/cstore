@@ -120,10 +120,10 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
 //            '<td>{{user.storeid.storename}}</td>' +
             '<td ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{user.programid.name}}</td>' +
             '<td>' +
-            '<table class="ordered_products">' +
-            '<tr ng-repeat="site in user.stores_id"><td class="ordered_pop">{{site.storename}}</td></tr>' +
-            '</table>' +
-//            '<span ng-repeat="site in user.stores_id">{{site.storename}}</span>' +
+//            '<table class="ordered_products">' +
+//            '<tr ng-repeat="site in user.stores_id"><td class="ordered_pop">{{site.storename}}</td></tr>' +
+//            '</table>' +
+            '<span ng-repeat="site in user.stores_id">{{site.storename}},&nbsp;</span>' +
             '</td>'+
             '<td><a class="edit_btn" ng-show="user.userid.status==true" ng-click="toggleUserStatus(user)" href>Deactivate</a>'+
             '<a class="edit_btn" ng-show="user.userid.status==false" ng-click="toggleUserStatus(user)" href>Activate</a></td>'+
