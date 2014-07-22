@@ -558,7 +558,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><select-program-promo ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-promo><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
-            '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
@@ -693,7 +693,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             }
                             $scope.storeManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
-                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true, "submitted": false});
+                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid, "email": $scope.resultData[i].emailid, "opt": true, "submitted": false});
                             }
                             $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute + ":" + $scope.promotiondata.selectedEndSecond);
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;

@@ -72,6 +72,7 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                         $scope.loadingShoppingCartData = true;
                         $scope.updateShoppingCartProduct = {};
                         $scope.updateShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
+                        $scope.updateShoppingCartProduct["storeid"]={"_id":$scope.currentUser.data.storeid};
                         $scope.updateShoppingCartProduct["product"] = $scope.shoppingCartProducts;
                         $scope.updateShoppingCartProduct["sub_total"] = $scope.getTotal();
                         $scope.updateShoppingCartProduct["total"] = {"amount": $scope.updateShoppingCartProduct["sub_total"], "type": {"currency": "usd"}};

@@ -24,12 +24,12 @@ cstore.controller('userCtrl', function ($scope, $appService) {
         $scope.loadingUserData = true;
         var query = {"table": "user_profiles__cstore"};
 
-        query.columns = ["userid", "storeid", "roleid", "username","programid","userid.status"];
+        query.columns = ["userid", "storeid", "roleid", "username","programid","userid.status","stores_id","stores_id.programid"];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
                 query.filter["roleid._id"] = STOREMANAGER;
-                query.filter["storeid.programid._id"]=$scope.currentUser.data.programid;
+                query.filter["stores_id.programid._id"]=$scope.currentUser.data.programid;
             }
         }
         if (column && searchText && column != "" && searchText != "") {
@@ -105,17 +105,26 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
             '<span class="sortWrap"> <div class="sortUp" ng-click="setOrder(\'username\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'username\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Role</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'roleid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setOrder(\'roleid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Site Name</span>' +
-            ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
-            '<div class="sortDown" ng-click="setOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
+            '<div class="sortDown" ng-click="setOrder(\'roleid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
+//            '<th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'storeid.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
+//            '<div class="sortDown" ng-click="setOrder(\'storeid.storename\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
             '<th ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'"><span>Program</span>' +
             ' <span class="sortWrap"><div class="sortUp" ng-click="setOrder(\'progarid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setOrder(\'progarmid.name\',\'desc\',searchby.value,search.searchContent)"></div></span></th>'+
+            '<th>Sites</th>'+
             '<th></th>'+
             '</tr><tr ng-repeat="user in users">' +
 //            '<td><input type="checkbox" ng-model="user.deleteStatus"></td>' +
             '<td>{{user.userid.firstname}}</td><td>{{user.username}}' +
-            '</td><td>{{user.roleid.name}}</td><td>{{user.storeid.storename}}</td><td ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{user.programid.name}}</td>' +
+            '</td><td>{{user.roleid.name}}</td>' +
+//            '<td>{{user.storeid.storename}}</td>' +
+            '<td ng-hide="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{user.programid.name}}</td>' +
+            '<td>' +
+            '<table class="ordered_products">' +
+            '<tr ng-repeat="site in user.stores_id"><td class="ordered_pop">{{site.storename}}</td></tr>' +
+            '</table>' +
+//            '<span ng-repeat="site in user.stores_id">{{site.storename}}</span>' +
+            '</td>'+
             '<td><a class="edit_btn" ng-show="user.userid.status==true" ng-click="toggleUserStatus(user)" href>Deactivate</a>'+
             '<a class="edit_btn" ng-show="user.userid.status==false" ng-click="toggleUserStatus(user)" href>Activate</a></td>'+
             '</tr></table></div><div class="loadingImage" ng-hide="!loadingUserData"><img src="images/loading.gif"></div>',
@@ -131,15 +140,15 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                         $scope.getAllUsers(1, 10, $scope.searchby.value, $scope.search.searchContent);
                     }
                     $scope.deleteUserArray = [];
-                    $scope.siteArray=[];
+                    //$scope.siteArray=[];
                     $scope.deleteUsers = function () {
                         for (var i = 0; i < $scope.users.length; i++) {
                             if ($scope.users[i].deleteStatus) {
                                 $scope.deleteUserArray.push({"_id": $scope.users[i]._id, "__type__": "delete"});
                             }
-                            if ($scope.users[i].deleteStatus && $scope.users[i].storeid && ($scope.users[i].roleid._id==STOREMANAGER)) {
-                                $scope.siteArray.push({"_id": $scope.users[i]._id, "storeid": $scope.users[i].storeid});
-                            }
+//                            if ($scope.users[i].deleteStatus && $scope.users[i].storeid && ($scope.users[i].roleid._id==STOREMANAGER)) {
+//                                $scope.siteArray.push({"_id": $scope.users[i]._id, "storeid": $scope.users[i].storeid});
+//                            }
                         }
                         var query = {};
                         query.table = "user_profiles__cstore";
@@ -158,14 +167,14 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                             i--;
                                         }
                                     }
-                                    if($scope.siteArray && $scope.siteArray.length > 0){
-                                        $scope.updateSiteStatusWhileDeleting($scope.siteArray);
-                                    }
-                                    else {
+//                                    if($scope.siteArray && $scope.siteArray.length > 0){
+//                                        $scope.updateSiteStatusWhileDeleting($scope.siteArray);
+//                                    }
+//                                    else {
                                         $scope.search();
                                         $("#popupMessage").html("Deleted");
                                         $('.popup').toggle("slide");
-                                    }
+//                                    }
 
                                 } else if ((callBackData.response && callBackData.response.substring(0, 29) == "Opertion can not be processed" ) || (callBackData.responseText && JSON.parse(callBackData.responseText).response.substring(0, 29) == "Opertion can not be processed")) {
                                     $("#popupMessage").html("This record is referred in another table");
@@ -230,6 +239,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
 
 
                     }
+                    //To Be Removed
                     $scope.updateSiteStatusWhileDeleting = function (sitearray) {
                         $scope.loadingUserData = true;
                         var siteList=[];
@@ -303,7 +313,8 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
-            '<td class="half_td" ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
+            //'<td class="half_td" ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div multi-select  input-model="userdata.stores"  button-label="storename" item-label="storename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '<td class="half_td" ng-if="userdata.selectedRole._id==\'539fddda1e993c6e426860c4\'"><program-admin-select></program-admin-select></td>' +
             '</tr>' +
             '</tbody></table></div>' +
@@ -326,6 +337,14 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                 },
                 post: function ($scope) {
                     $scope.saveUser = function () {
+                        if ($scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6' && $scope.resultData) {
+                            $scope.storeArray = [];
+                            for (var i = 0; i < $scope.resultData.length; i++) {
+                                $scope.storeArray.push({"_id": $scope.resultData[i]._id, "storename": $scope.resultData[i].storename});
+                            }
+                            console.log("storeArray>>>>>  "+JSON.stringify($scope.storeArray));
+                        }
+
                         $scope.newUser = {};
                         if ($scope.userdata.firstname == "" || $scope.userdata.firstname == undefined) {
                             $("#popupMessage").html("Please enter your firstname");
@@ -335,17 +354,22 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                         var email = $scope.userdata.username;
                         if (regEmail.test(email) == false) {
-                            $("#popupMessage").html("please enter a valid email");
+                            $("#popupMessage").html("Please enter a valid email");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.userdata.password) {
-                            $("#popupMessage").html("please enter password");
+                            $("#popupMessage").html("Please enter password");
                             $('.popup').toggle("slide");
                             return false;
                         }
                         if (!$scope.userdata.selectedRole) {
-                            $("#popupMessage").html("please select role first");
+                            $("#popupMessage").html("Please select role first");
+                            $('.popup').toggle("slide");
+                            return false;
+                        }
+                        if ($scope.userdata.selectedRole._id == STOREMANAGER &&  $scope.storeArray.length==0) {
+                            $("#popupMessage").html("Please select at least one site");
                             $('.popup').toggle("slide");
                             return false;
                         }
@@ -355,10 +379,13 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $scope.newUser["roleid"] = {"_id": $scope.userdata.selectedRole._id, "name": $scope.userdata.selectedRole.name};
                         }
                         $scope.newUser["username"] = $scope.userdata.username;
-                        if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
-                            $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
+//                        if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
+//                            $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
+//                        }
+                        if ($scope.userdata.selectedRole._id == STOREMANAGER) {
+                            $scope.newUser["stores_id"] = $scope.storeArray;
                         }
-                        if ($scope.userdata.selectedProgram && $scope.userdata.selectedRole._id == '539fddda1e993c6e426860c4') {
+                        if ($scope.userdata.selectedProgram && $scope.userdata.selectedRole._id == PROGRAMADMIN) {
                             $scope.newUser["programid"] = {"_id": $scope.userdata.selectedProgram._id, "name": $scope.userdata.selectedProgram.name};
                         }
                         var query = {};
@@ -369,15 +396,15 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
-                                    $scope.updateSiteStatus($scope.userdata.selectedStore._id);
-                                }
-                                else {
+//                                if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
+//                                    $scope.updateSiteStatus($scope.userdata.selectedStore._id);
+//                                }
+//                                else {
                                     $("#popupMessage").html("User Saved");
                                     $('.popup').toggle("slide");
                                     $scope.clearUserContent();
                                     window.location.href = "#!/manage-users";
-                                }
+//                                }
 
 
                             }
@@ -408,6 +435,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
 
                         });
                     }
+                    //To be removed
                     $scope.updateSiteStatus = function (siteid) {
                         var siteList = {"_id": "", "assigned_user": ""};
                         $scope.loadingUserData = true;
