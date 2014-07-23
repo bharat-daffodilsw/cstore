@@ -288,7 +288,7 @@ appStrapServices.factory('$appService', [
         }
         $appService.deleteAllCookie = function () {
             $appService.delete_cookie("usk");
-            $appService.delete_cookie("role");
+            $appService.delete_cookie("roleid");
             $appService.delete_cookie("userid");
             $appService.delete_cookie("firstname");
             $appService.delete_cookie("storeid");

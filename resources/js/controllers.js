@@ -1172,24 +1172,26 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
 
     $scope.getShoppingCartLength = function () {
-        if ($scope.currentUser.data.roleid == STOREMANAGER) {
-            var query = {"table": "shopping_cart__cstore"};
-            query.columns = ["product", "userid"];
-            query.filter = {};
-            query.filter["userid._id"] = $scope.currentUser.data.userid;
-            var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-            var serviceUrl = "/rest/data";
-            $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
+        if ($scope.currentUser.data) {
+            if ($scope.currentUser.data.roleid == STOREMANAGER) {
+                var query = {"table": "shopping_cart__cstore"};
+                query.columns = ["product", "userid"];
+                query.filter = {};
+                query.filter["userid._id"] = $scope.currentUser.data.userid;
+                var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
 
-                //$scope.cartProducts=cartData.response.data[0].product;
-                if (cartData.response.data && cartData.response.data.length) {
-                    $scope.cartProducts.length = cartData.response.data[0].product.length;
-                    $scope.testCartData = cartData.response.data[0];
-                }
-            }, function (jqxhr, error) {
-                $("#popupMessage").html(error);
-                $('.popup').toggle("slide");
-            })
+                    //$scope.cartProducts=cartData.response.data[0].product;
+                    if (cartData.response.data && cartData.response.data.length) {
+                        $scope.cartProducts.length = cartData.response.data[0].product.length;
+                        $scope.testCartData = cartData.response.data[0];
+                    }
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                })
+            }
         }
     }
     $scope.getShoppingCartLength();
