@@ -27,10 +27,11 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
                                     $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
                                 }
                             }
+                            else{
+                                $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                            }
                         }
-                        else{
-                            $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
-                        }
+
                     }
                 }
             }
