@@ -24,11 +24,11 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
                         if ($scope.currentUser["data"]) {
                             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
                                 if(row.stores_id[m].programid._id==$scope.currentUser.data.programid){
-                                    $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                                    $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.stores_id[m].siteid+"-"+row.userid.firstname,"ticked":false});
                                 }
                             }
                             else{
-                                $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                                $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename":  row.stores_id[m].storename + "-" + row.stores_id[m].siteid + "-"+ row.userid.firstname,"ticked":false});
                             }
                         }
 

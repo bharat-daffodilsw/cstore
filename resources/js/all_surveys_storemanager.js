@@ -156,8 +156,9 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                             query.table = "surveys__cstore";
                             $scope.newSurveyStatus["_id"] = survey._id;
                             var storeArray = [];
-                                    var statusObj = {"_id": "", "status":"","__type__":""};
+                                    var statusObj = {"_id": "","email":"", "status":"","__type__":""};
                                     statusObj._id=$scope.currentUser.data.storeid;
+                                    statusObj.email=$scope.currentUser.data.username;
                                     statusObj.status="answered";
                                     statusObj.__type__="update";
                                     storeArray.push(statusObj);

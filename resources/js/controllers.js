@@ -1478,7 +1478,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.promotiondata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename, "ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname, "ticked": false});
                     }
                 }
             }
@@ -1506,13 +1506,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 //                        inputData[inp].ticked = false;
 //                    }
                     }
-                    $scope.inputData = inputData;
+
                 }, function (jqxhr, error) {
                     $("#popupMessage").html(error);
                     $('.popup').toggle("slide");
                 });
             }
-
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -1579,11 +1579,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.trainingdata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename,"ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname,"ticked": false});
                     }
                 }
             }
-            $scope.inputData = inputData;
             if (trainingid) {
                 var promoQuery = {"table": "training_session__cstore"};
                 promoQuery.columns = ["store_manager_id"];
@@ -1608,12 +1607,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 //                    }
                     }
 
-                    $scope.inputData = inputData;
+
                 }, function (jqxhr, error) {
                     $("#popupMessage").html(error);
                     $('.popup').toggle("slide");
                 });
             }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -1679,11 +1679,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.surveydata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename,"ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname,"ticked": false});
                     }
                 }
             }
-            $scope.inputData = inputData;
             if (surveyid) {
                 var promoQuery = {"table": "surveys__cstore"};
                 promoQuery.columns = ["store_manager_id"];
@@ -1707,12 +1706,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 //                            inputData[inp].ticked = false;
 //                        }
                     }
-                    $scope.inputData = inputData;
+
                 }, function (jqxhr, error) {
                     $("#popupMessage").html(error);
                     $('.popup').toggle("slide");
                 });
             }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -1779,11 +1779,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.filedata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename,"ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname,"ticked": false});
                     }
                 }
             }
-            $scope.inputData = inputData;
             if (fileid) {
                 var promoQuery = {"table": "file__cstore"};
                 promoQuery.columns = ["store_manager_id"];
@@ -1806,12 +1805,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 //                        inputData[inp].ticked = false;
 //                    }
                     }
-                    $scope.inputData = inputData;
+//                    $scope.inputData = inputData;
                 }, function (jqxhr, error) {
                     $("#popupMessage").html(error);
                     $('.popup').toggle("slide");
                 });
             }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
