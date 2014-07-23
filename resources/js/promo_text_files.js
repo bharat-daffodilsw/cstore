@@ -30,7 +30,6 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
         $scope.loadingPromoTextFileData = true;
         var query = {"table": "promo_text_files__cstore"};
         query.columns = ["programid", "siteid", "text_files", {"expression": "date", "format": "MM/DD/YYYY"}];
-        query.orders = {"__createdon": "desc"};
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
@@ -50,9 +49,11 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
             query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
         }
         query.orders = {};
-        query.orders["programid.name"] = "asc";
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
+        }
+        else{
+            query.orders = {"__createdon": "desc"};
         }
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
