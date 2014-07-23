@@ -469,6 +469,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                             }, function (err) {
                                 $("#popupMessage").html(err.stack);
                                 $('.popup').toggle("slide");
+                                $scope.loadingAddTrainingdata = false;
                             });
                         } else {
                             $("#popupMessage").html("Please login first");
