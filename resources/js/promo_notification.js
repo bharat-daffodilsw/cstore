@@ -21,7 +21,16 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
                 var row = $scope.userData[i];
                 if (row.stores_id) {
                     for (var m = 0; m < row.stores_id.length; m++) {
-                        $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid});
+                        if ($scope.currentUser["data"]) {
+                            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                if(row.stores_id[m].programid._id==$scope.currentUser.data.programid){
+                                    $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                                }
+                            }
+                        }
+                        else{
+                            $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.userid.firstname + "-" + row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                        }
                     }
                 }
             }
