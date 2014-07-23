@@ -36,7 +36,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var query = {"table": "promotions__cstore"};
         query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value","programid.promorate"];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -66,7 +66,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
 
         query.columns = ["store_manager_id", "title", "description"];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
         if (searchText && searchText != "") {
             query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
