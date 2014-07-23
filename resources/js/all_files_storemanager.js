@@ -26,6 +26,7 @@ cstore.controller('allFilesCtrl', function ($scope, $appService, $routeParams) {
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         query.filter["store_manager_id.email"] = $scope.currentUser.data.username;
+        query.unwindcolumns = {"store_manager_id": 1};
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
