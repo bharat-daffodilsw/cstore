@@ -100,7 +100,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                                     $scope.promosArray.push($scope.promotions[i]._id);
                                 }
                                 $scope.optArray.push({"_id": $scope.promotions[i]._id, "store_manager_id": [
-                                    {"_id": $scope.promotions[i].store_manager_id._id, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
+                                    {"_id": $scope.promotions[i].store_manager_id._id,"email": $scope.currentUser.data.username, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
                                 ]});
                             }
                         }
@@ -394,7 +394,7 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
                                 $scope.promosArray.push($scope.promotions[i]._id);
 
                                 $scope.optArray.push({"_id": $scope.promotions[i]._id, "store_manager_id": [
-                                    {"_id": $scope.promotions[i].store_manager_id._id, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
+                                    {"_id": $scope.promotions[i].store_manager_id._id,"email": $scope.currentUser.data.username, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
                                 ]});
                             }
                         }
