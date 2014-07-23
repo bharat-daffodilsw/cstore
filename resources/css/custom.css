@@ -69,6 +69,11 @@ a:hover {
 
 .location {
     margin-top: 33px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 42%;
+    color: #A20B0B;
 }
 
 .search {
@@ -107,8 +112,6 @@ a:hover {
 .country {
     color: #A20B0B;
     margin-left: 5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .add_count {
