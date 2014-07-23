@@ -12,6 +12,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         query.columns = ["description", "title", "survey_question", "store_manager_id"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
+        query.filter["store_manager_id.email"] = $scope.currentUser.data.username;
         query.filter["store_manager_id.status"] = "unanswered";
         query.unwindcolumns={"store_manager_id":1};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};

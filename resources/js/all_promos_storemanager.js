@@ -23,7 +23,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             "programid.promorate"
         ];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
         query.unwindcolumns = {"store_manager_id": 1};
         query.filter["store_manager_id.submitted"] = false;
         //query.filter["store_manager_id.opt"] = true;
@@ -213,7 +213,7 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
             "programid.promorate"
         ];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
         query.unwindcolumns = {"store_manager_id": 1};
         query.filter["store_manager_id.opt"] = true;
         query.filter["store_manager_id.submitted"] = true;
@@ -320,7 +320,7 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
             "programid.promorate"
         ];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
         query.unwindcolumns = {"store_manager_id": 1};
         query.filter["store_manager_id.submitted"] = true;
         query.filter["store_manager_id.opt"] = false;

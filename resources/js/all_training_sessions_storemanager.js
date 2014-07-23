@@ -13,6 +13,7 @@ cstore.controller('allTrainingSessionsCtrl', function ($scope, $appService, $rou
         query.columns = ["store_manager_id", "title", "description"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
+        query.filter["store_manager_id.email"] = $scope.currentUser.data.username;
         if (searchText && searchText != "") {
             query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
