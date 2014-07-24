@@ -315,7 +315,8 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         if ($scope.sortingCol && $scope.sortingType) {
                             pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
                         }
-                        $scope.sitepdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId=" + tempalateId;
+                        var timeZone = new Date().getTimezoneOffset();
+                        $scope.sitepdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId=" + tempalateId+"&state="+JSON.stringify({"timezone": timeZone});
                         var a = document.createElement('a');
                         a.href=$scope.sitepdfurl;
                         a.target = '_blank';
@@ -345,7 +346,8 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                         }
                         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
                         var serviceUrl = "/rest/export/excel";
-                        $scope.tempUrl = serviceUrl + "?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK;
+                        var timeZone = new Date().getTimezoneOffset();
+                        $scope.tempUrl = serviceUrl + "?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK+"&state="+JSON.stringify({"timezone": timeZone});
                         var a = document.createElement('a');
                         a.href=$scope.tempUrl;
                         a.target = '_blank';

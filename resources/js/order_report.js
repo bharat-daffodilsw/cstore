@@ -208,7 +208,8 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
                         if ($scope.sortingCol && $scope.sortingType) {
                             pdfquery.orders[$scope.sortingCol] = $scope.sortingType;
                         }
-                        $scope.orderpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId;
+                        var timeZone = new Date().getTimezoneOffset();
+                        $scope.orderpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(pdfquery) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+tempalateId+"&state="+JSON.stringify({"timezone": timeZone});
                         var a = document.createElement('a');
                         a.href=$scope.orderpdfurl;
                         a.target = '_blank';

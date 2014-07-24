@@ -269,7 +269,8 @@ cstore.controller('orderDetailCtrl', function ($scope, $appService, $routeParams
         query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "storeid", "bill_address", "shipping_address"];
         query.filter = {};
         query.filter["_id"] = $routeParams.orderid;
-        $scope.orderDetailpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+templateId;
+        var timeZone = new Date().getTimezoneOffset();
+        $scope.orderDetailpdfurl = BAAS_SERVER + "/export/pdf?query=" + JSON.stringify(query) + "&ask=" + ASK + "&osk=" + OSK + "&templateId="+templateId+"&state="+JSON.stringify({"timezone": timeZone});
         var a = document.createElement('a');
         a.href=$scope.orderDetailpdfurl;
         a.target = '_blank';
