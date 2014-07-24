@@ -76,7 +76,7 @@ cstore.controller('userCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllUsers(0, 10, column, searchText);
     }
-    $scope.getStores();
+    //$scope.getStores();
     $scope.getRoles();
     $scope.getProgramList();
 });
@@ -337,7 +337,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                 },
                 post: function ($scope) {
                     $scope.saveUser = function () {
-                        if ($scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6' && $scope.resultData) {
+                        if (($scope.userdata.selectedRole._id == STOREMANAGER || $scope.userdata.selectedRole._id == STOREADMIN) && $scope.resultData) {
                             $scope.storeArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
                                 $scope.storeArray.push({"_id": $scope.resultData[i]._id, "storename": $scope.resultData[i].storename});
@@ -368,7 +368,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if ($scope.userdata.selectedRole._id == STOREMANAGER &&  $scope.storeArray.length==0) {
+                        if (($scope.userdata.selectedRole._id == STOREMANAGER || $scope.userdata.selectedRole._id == STOREADMIN) &&  $scope.storeArray.length==0) {
                             $("#popupMessage").html("Please select at least one site");
                             $('.popup').toggle("slide");
                             return false;
@@ -382,7 +382,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
 //                        if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
 //                            $scope.newUser["storeid"] = {"_id": $scope.userdata.selectedStore._id, "storename": $scope.userdata.selectedStore.storename};
 //                        }
-                        if ($scope.userdata.selectedRole._id == STOREMANAGER) {
+                        if ($scope.userdata.selectedRole._id == STOREMANAGER || $scope.userdata.selectedRole._id == STOREADMIN) {
                             $scope.newUser["stores_id"] = $scope.storeArray;
                         }
                         if ($scope.userdata.selectedProgram && $scope.userdata.selectedRole._id == PROGRAMADMIN) {
@@ -396,15 +396,15 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {
                             $scope.loadingStatus = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-//                                if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == '531d4aa0bd1515ea1a9bbaf6') {
-//                                    $scope.updateSiteStatus($scope.userdata.selectedStore._id);
-//                                }
-//                                else {
+                                if ($scope.userdata.selectedStore && $scope.userdata.selectedRole._id == STOREMANAGER) {
+                                    $scope.updateSiteStatus($scope.storeArray);
+                                }
+                                else {
                                     $("#popupMessage").html("User Saved");
                                     $('.popup').toggle("slide");
                                     $scope.clearUserContent();
                                     window.location.href = "#!/manage-users";
-//                                }
+                                }
 
 
                             }
@@ -435,15 +435,15 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
 
                         });
                     }
-                    //To be removed
-                    $scope.updateSiteStatus = function (siteid) {
-                        var siteList = {"_id": "", "assigned_user": ""};
+                    $scope.updateSiteStatus = function (siteArray) {
+                        var siteList = [{"_id": "", "assigned_user": ""}];
                         $scope.loadingUserData = true;
-                        siteList["_id"]=siteid;
-                        siteList["assigned_user"]=true;
+                        for(var i=0;i<siteArray.length;i++){
+                            siteList.push({"_id":siteArray[i]._id,"assigned_user":true});
+                        }
                         var query = {};
                         query.table = "storemanagers__cstore";
-                        query.operations = [siteList];
+                        query.operations = siteList;
                         var currentSession = $appService.getSession();
                         var usk = currentSession["usk"] ? currentSession["usk"] : null;
                         $appService.save(query, ASK, OSK, usk, function (callBackData) {

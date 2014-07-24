@@ -12,7 +12,6 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         query.columns = ["description", "title", "survey_question", "store_manager_id"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
-        query.filter["store_manager_id.email"] = $scope.currentUser.data.username;
         query.filter["store_manager_id.status"] = "unanswered";
         query.unwindcolumns={"store_manager_id":1};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -156,9 +155,8 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                             query.table = "surveys__cstore";
                             $scope.newSurveyStatus["_id"] = survey._id;
                             var storeArray = [];
-                                    var statusObj = {"_id": "","email":"", "status":"","__type__":""};
+                                    var statusObj = {"_id": "", "status":"","__type__":""};
                                     statusObj._id=$scope.currentUser.data.storeid;
-                                    statusObj.email=$scope.currentUser.data.username;
                                     statusObj.status="answered";
                                     statusObj.__type__="update";
                                     storeArray.push(statusObj);

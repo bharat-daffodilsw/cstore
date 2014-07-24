@@ -8,6 +8,7 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
 var DOMAIN_NAME = "http://www.ecpromomarket.com";
 var REDIRECT_URL = "http://www.ecloyalty.com/";
+var STOREADMIN="";
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['multi-select', 'ngRoute', '$appstrap.services']);
 cstore.config(
@@ -961,32 +962,34 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getStores = function () {
-        var query = {"table": "storemanagers__cstore"};
-        query.columns = ["storename"];
-        query.orders = {"storename": "asc"};
-        query.filter = {};
-        if ($scope.currentUser["data"]) {
-            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
-                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+    $scope.getStores = function (role) {
+        if (role._id == STOREMANAGER || role._id == STOREADMIN) {
+            var query = {"table": "storemanagers__cstore"};
+            query.columns = ["storename"];
+            query.orders = {"storename": "asc"};
+            query.filter = {};
+            if ($scope.currentUser["data"]) {
+                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                    query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+                }
             }
+            if (role._id == STOREMANAGER) {
+                query.filter["assigned_user"] = false;
+            }
+            var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+            var serviceUrl = "/rest/data";
+            $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+                $scope.userdata.stores = storeData.response.data;
+                for (var i = 0; i < $scope.userdata.stores.length; i++) {
+                    $scope.userdata.stores[i].ticked = false;
+                }
+                $scope.userdata.selectedStore = $scope.userdata.stores[0];
+                //$scope.filterdata.sites = storeData.response.data;
+            }, function (jqxhr, error) {
+                $("#popupMessage").html(error);
+                $('.popup').toggle("slide");
+            })
         }
-        //query.filter["assigned_user"] = false;
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-        var serviceUrl = "/rest/data";
-        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
-            $scope.userdata.stores = storeData.response.data;
-            for (var i = 0; i < $scope.userdata.stores.length; i++) {
-                $scope.userdata.stores[i].ticked = false;
-            }
-            $scope.trainingdata.stores = storeData.response.data;
-            $scope.userdata.selectedStore = $scope.userdata.stores[0];
-            $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
-            //$scope.filterdata.sites = storeData.response.data;
-        }, function (jqxhr, error) {
-            $("#popupMessage").html(error);
-            $('.popup').toggle("slide");
-        })
     }
     $scope.getAssignedStores = function () {
         $scope.userAssignedStores = [];
@@ -1020,7 +1023,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.getAssignedStores();
         }
     }
-    //To be removed and add data in filterdata.sites in getStores method
     $scope.getStoresForFilter = function () {
         var query = {"table": "storemanagers__cstore"};
         query.columns = ["storename"];
@@ -1480,7 +1482,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.promotiondata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname, "ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename, "ticked": false});
                     }
                 }
             }
@@ -1581,7 +1583,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.trainingdata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname,"ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename,"ticked": false});
                     }
                 }
             }
@@ -1681,7 +1683,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.surveydata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname,"ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename,"ticked": false});
                     }
                 }
             }
@@ -1781,7 +1783,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 var row = $scope.filedata.stores[i];
                 for (var m = 0; m < row.stores_id.length; m++) {
                     if(row.stores_id[m].programid._id==programid){
-                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.userid.firstname,"ticked": false});
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename,"ticked": false});
                     }
                 }
             }

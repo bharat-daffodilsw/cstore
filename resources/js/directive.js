@@ -881,7 +881,7 @@ cstore.directive('storeCountrySelect', ['$appService', function ($appService, $s
 cstore.directive('roleSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles"></select>'
+        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles" ng-change="getStores(userdata.selectedRole)"></select>'
     }
 }]);
 
