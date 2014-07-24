@@ -313,16 +313,16 @@ appStrapServices.factory('$appService', [
                 return false;
             }
         }
-        $appService.createFile = function (storeId, programId, promos, ask, osk, usk, callBack) {
+        $appService.createFile = function (storeId, programId, promos,timeZone, ask, osk, usk, callBack) {
             if (!ask) {
                 throw "No ask found for saving";
             }
             var params;
             if (usk) {
-                params = {"storeId": storeId, "programId": programId, "ask": ask, "osk": osk, "usk": usk, "promos": JSON.stringify(promos)};
+                params = {"storeId": storeId, "programId": programId, "ask": ask, "osk": osk, "usk": usk, "promos": JSON.stringify(promos),"state": JSON.stringify({"timezone": timeZone})};
             }
             else {
-                params = {"storeId": storeId, "programId": programId, "ask": ask, "osk": osk, "promos": JSON.stringify(promos)};
+                params = {"storeId": storeId, "programId": programId, "ask": ask, "osk": osk, "promos": JSON.stringify(promos),"state": JSON.stringify({"timezone": timeZone})};
 
             }
             var url = BAAS_SERVER + "/create/file/cstore";
