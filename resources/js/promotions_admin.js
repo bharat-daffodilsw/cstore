@@ -775,11 +775,12 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             if (callBackData.code == 200 && callBackData.status == "ok") {
                                 if ($scope.promotiondata.selectedProgram && $scope.promotiondata.selectedProgram.cooler_html && $scope.promotiondata.selectedProgram.aisle_html) {
                                     var requestBody = {};
+                                    var timeZone = new Date().getTimezoneOffset();
                                     if (callBackData.response.insert) {
-                                        requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.insert[0]._id}
+                                        requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.insert[0]._id,"state": JSON.stringify({"timezone": timeZone})}
                                     }
                                     else {
-                                        requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id};
+                                        requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id,"state": JSON.stringify({"timezone": timeZone})};
                                     }
 
                                     $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "POST", "JSON", function (data) {
