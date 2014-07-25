@@ -34,7 +34,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
         var query = {"table": "promotions__cstore"};
-        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value","programid.promorate"];
+        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value","programid.promorate"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.filter["end_date"] = {"$gte": currentTime};

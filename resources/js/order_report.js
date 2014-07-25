@@ -22,7 +22,7 @@ cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
         $scope.loadingOrderReportData = true;
 
         var query = {"table": "orders__cstore"};
-        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+        query.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm:ss"}];
         query.filter = {};
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -46,7 +46,8 @@ cstore.controller('orderReportCtrl', function ($scope, $appService, $location) {
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (orderReportData) {
             $scope.loadingOrderReportData = false;
@@ -190,7 +191,7 @@ cstore.directive('orderReport', ['$appService', function ($appService, $scope,$w
 					$scope.generateorderpdf=function(){						
 						var tempalateId = "cstore_orderPdf";
 						var pdfquery = {"table": "orders__cstore"};
-						pdfquery.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+						pdfquery.columns = ["userid", "storeid","storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm:ss"}];
                         pdfquery.filter = {};
                         if ($scope.orderFilterData.start_date && $scope.orderFilterData.start_date != "" && $scope.orderFilterData.end_date && $scope.orderFilterData.end_date != "") {
 							pdfquery.filter["order_date"] = {"$gte":$scope.orderFilterData.start_date,"$lte": $scope.orderFilterData.end_date};

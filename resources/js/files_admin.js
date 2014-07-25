@@ -22,7 +22,7 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
 
         $scope.loadingFileData = true;
         var query = {"table": "file__cstore"};
-        query.columns = ["title", "programid", "store_manager_id", "file",{"expression": "__createdon", "format": "MM/DD/YYYY HH:mm"}];
+        query.columns = ["title", "programid", "store_manager_id", "file",{"expression": "__createdon", "format": "MM/DD/YYYY HH:mm:ss"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
@@ -42,7 +42,8 @@ cstore.controller('fileCtrl', function ($scope, $appService) {
         query.max_rows = limit;
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
-        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var timeZone = new Date().getTimezoneOffset();
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (fileData) {
             $scope.loadingFileData = false;

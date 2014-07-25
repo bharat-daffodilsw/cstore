@@ -1102,7 +1102,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata.codes = [];
         $scope.promotiondata["top_promo"] = false;
         $scope.oFile.fileExist = false;
-        $scope.getPrograms(null,null);
+        //$scope.getPrograms(null,null);
         $scope.clearPromotionNotificationContent();
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;

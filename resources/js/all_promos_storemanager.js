@@ -11,8 +11,8 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         $scope.promotionData.loadingData = true;
         var query = {"table": "promotions__cstore"};
         query.columns = [
-            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
-            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
+            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},
+            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"},
             "image",
             "display_image",
             "promo_title",
@@ -202,8 +202,8 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
         $scope.promotionData.loadingData = true;
         var query = {"table": "promotions__cstore"};
         query.columns = [
-            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
-            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
+            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},
+            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"},
             "image",
             "promo_title",
             "store_manager_id",
@@ -309,8 +309,8 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
         $scope.promotionData.loadingData = true;
         var query = {"table": "promotions__cstore"};
         query.columns = [
-            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},
-            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm"},
+            {"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},
+            {"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"},
             "image",
             "promo_title",
             "store_manager_id",

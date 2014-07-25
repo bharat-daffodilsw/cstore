@@ -29,7 +29,7 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
 
         $scope.loadingPromoTextFileData = true;
         var query = {"table": "promo_text_files__cstore"};
-        query.columns = ["programid", "siteid", "text_files", {"expression": "date", "format": "MM/DD/YYYY"}];
+        query.columns = ["programid", "siteid", "text_files", {"expression": "date", "format": "MM/DD/YYYY HH:mm:ss"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {

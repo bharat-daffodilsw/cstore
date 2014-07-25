@@ -33,7 +33,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
         $scope.loadingOrderData = true;
 
         var query = {"table": "orders__cstore"};
-        query.columns = ["userid", "storeid", "storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY"}];
+        query.columns = ["userid", "storeid", "storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm:ss"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
