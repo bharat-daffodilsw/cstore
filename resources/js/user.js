@@ -76,7 +76,6 @@ cstore.controller('userCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllUsers(0, 10, column, searchText);
     }
-    //$scope.getStores();
     $scope.getRoles();
     $scope.getProgramList();
 });
@@ -314,7 +313,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
             //'<td class="half_td" ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
-            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><div multi-select  input-model="userdata.stores"  button-label="storename" item-label="storename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\' || userdata.selectedRole._id==\'53d22fa0632112cf111fda6f\'"><div multi-select  input-model="userdata.stores"  button-label="storename" item-label="storename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '<td class="half_td" ng-if="userdata.selectedRole._id==\'539fddda1e993c6e426860c4\'"><program-admin-select></program-admin-select></td>' +
             '</tr>' +
             '</tbody></table></div>' +
@@ -342,7 +341,6 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                             for (var i = 0; i < $scope.resultData.length; i++) {
                                 $scope.storeArray.push({"_id": $scope.resultData[i]._id, "storename": $scope.resultData[i].storename});
                             }
-                            console.log("storeArray>>>>>  "+JSON.stringify($scope.storeArray));
                         }
 
                         $scope.newUser = {};
@@ -436,7 +434,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
                         });
                     }
                     $scope.updateSiteStatus = function (siteArray) {
-                        var siteList = [{"_id": "", "assigned_user": ""}];
+                        var siteList = [];
                         $scope.loadingUserData = true;
                         for(var i=0;i<siteArray.length;i++){
                             siteList.push({"_id":siteArray[i]._id,"assigned_user":true});

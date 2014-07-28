@@ -112,9 +112,7 @@ cstore.directive('productCategoryList', ['$appService', function ($appService, $
                 pre: function ($scope) {
                     $scope.addNewProductCategory = function () {
                         $scope.productCategories.push({ name: '', description: '' });
-                        //for (var i = 0; i < $scope.productCategories.length; i++) {
                         $scope.productCategories[$scope.productCategories.length - 1]["editStatus"] = true;
-                        //}
 
                     }
                     $scope.search = function () {

@@ -91,7 +91,6 @@ cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) 
                                 else {
                                     window.location.href = "#!/";
                                 }
-                                //$scope.cartProducts.length++;
                             }
                             else {
                                 $("#popupMessage").html(callBackData.response);

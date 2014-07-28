@@ -8,7 +8,7 @@ var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
 var DOMAIN_NAME = "http://www.ecpromomarket.com";
 var REDIRECT_URL = "http://www.ecloyalty.com/";
-var STOREADMIN="";
+var STOREADMIN="53d22fa0632112cf111fda6f";
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['multi-select', 'ngRoute', '$appstrap.services']);
 cstore.config(
@@ -429,8 +429,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    //$scope.getAllVendorsList();
-    if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+    if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN)) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
         $scope.displayData["menu"] = false;
@@ -539,8 +538,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 else {
                     countryid.selectedState = countryid.states[0];
                 }
-                // $scope.storedata.states = countryid.states;
-                //  $scope.storedata.selectedState = countryid.selectedState;
                 $scope.getEditCities(countryid, cityid);
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
@@ -570,8 +567,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     stateid.selectedCity = stateid.cities[0];
                 }
 
-                //$scope.storedata.cities = stateid.cities;
-                //$scope.storedata.selectedCity = stateid.selectedCity;
             }, function (jqxhr, error) {
             })
         } else {
@@ -610,7 +605,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
     /*********************************************************/
     $scope.getCountriesNew = function (countryid) {
-        //if(countryid.selectedCountry){
 
         var query = {"table": "countries__cstore"};
         query.columns = ["name"];
@@ -649,9 +643,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
         }, function (jqxhr, error) {
         })
-        //}else{
-        //  countryid.states = [];
-        //}
+
     }
 
     $scope.getStatesNew = function (countryid, stateid) {
@@ -661,9 +653,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             query.orders = {"name": "asc"};
             countryid.selectedState = {"_id": stateid};
             query.filter = {"countryid._id": countryid.selectedCountry._id};
-            //else {
-            //  query.filter ={"countryid._id":DEFAULTCOUNTRY};
-            // }
             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
@@ -830,7 +819,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    //$scope.getProductCategories();
     $scope.getFileExtension = function (filename) {
         var ext = /^.+\.([^.]+)$/.exec(filename);
         return ext == null ? "" : ext[1];
@@ -984,7 +972,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     $scope.userdata.stores[i].ticked = false;
                 }
                 $scope.userdata.selectedStore = $scope.userdata.stores[0];
-                //$scope.filterdata.sites = storeData.response.data;
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
                 $('.popup').toggle("slide");
@@ -997,7 +984,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         query.columns = ["stores_id", "stores_id.programid", "stores_id.programid.image", "stores_id.stateid.name"];
         query.filter = {};
         if ($scope.currentUser["data"]) {
-            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
                 query.filter["username"] = $scope.currentUser["data"]["username"];
             }
         }
@@ -1019,7 +1006,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     if ($scope.currentUser["data"]) {
-        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
             $scope.getAssignedStores();
         }
     }
@@ -1056,7 +1043,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    //$scope.getTrainingCategories();
     //clear content
     $scope.clearStoreContent = function () {
         $scope.storedata.manager = {};
@@ -1213,7 +1199,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
     $scope.getShoppingCartLength = function () {
         if ($scope.currentUser.data) {
-            if ($scope.currentUser.data.roleid == STOREMANAGER) {
+            if ($scope.currentUser.data.roleid == STOREMANAGER || $scope.currentUser.data.roleid == STOREADMIN) {
                 var query = {"table": "shopping_cart__cstore"};
                 query.columns = ["product", "userid"];
                 query.filter = {};
@@ -1247,7 +1233,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         else {
             promoObj.cost = {"amount": 0.00, "type": {"currency": "usd"}};
         }
-        //promoObj._id=promo._id;
         $scope.showCartPopup(promoObj, qty);
     }
     $scope.addToCart = function (product, quantity) {
@@ -1506,9 +1491,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
                             }
                         }
-//                    else {
-//                        inputData[inp].ticked = false;
-//                    }
+
                     }
 
                 }, function (jqxhr, error) {
@@ -1606,9 +1589,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
                             }
                         }
-//                    else {
-//                        inputData[inp].ticked = false;
-//                    }
+
                     }
 
 
@@ -1706,9 +1687,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
                             }
                         }
-//                        else {
-//                            inputData[inp].ticked = false;
-//                        }
+
                     }
 
                 }, function (jqxhr, error) {
@@ -1771,7 +1750,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         query.filter.roleid = STOREMANAGER;
         if (programid) {
             query.filter["stores_id.programid._id"] = programid;
-            //query.unwindcolumns = {"stores_id": 1};
         }
         query.orders = {"stores_id.storename": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -1805,11 +1783,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
                             }
                         }
-//                    else {
-//                        inputData[inp].ticked = false;
-//                    }
+
                     }
-//                    $scope.inputData = inputData;
                 }, function (jqxhr, error) {
                     $("#popupMessage").html(error);
                     $('.popup').toggle("slide");

@@ -36,7 +36,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var query = {"table": "promotions__cstore"};
         query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value","programid.promorate"];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.unwindcolumns = {"store_manager_id": 1};
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
@@ -67,7 +67,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
 
         query.columns = ["store_manager_id", "title", "description"];
         query.filter = {};
-        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid,"store_manager_id.email":$scope.currentUser.data.username};
+        query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.unwindcolumns = {"store_manager_id": 1};
         if (searchText && searchText != "") {
             query.filter["title"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -89,11 +89,10 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         })
     }
     if ($scope.currentUser["data"]) {
-        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
             $scope.getPopularProducts(8, $routeParams.search);
             $scope.getRecentPromotions(8, $routeParams.search);
             $scope.getAssignedTrainingSessions(4, $routeParams.search);
-            //$scope.getCarouselPromotions(4);
             $scope.homeView = {"storeManager": true, "admin": false,"programAdmin":false};
         }
         else if ($scope.currentUser["data"]["roleid"] == ADMIN) {

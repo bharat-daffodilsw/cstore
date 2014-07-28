@@ -3,7 +3,7 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
     $scope.loadingSendNotification=true;
     $scope.getAllAvailableMultipleUsers = function () {
         var query = {"table": "user_profiles__cstore"};
-        query.columns = ["username","stores_id","stores_id.siteid","userid"];
+        query.columns = ["username","stores_id","stores_id.siteid","userid","stores_id.programid"];
         query.filter = {};
         query.filter["roleid._id"] = STOREMANAGER;
         if ($scope.currentUser["data"]) {
@@ -24,11 +24,11 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
                         if ($scope.currentUser["data"]) {
                             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
                                 if(row.stores_id[m].programid._id==$scope.currentUser.data.programid){
-                                    $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.stores_id[m].siteid+"-"+row.userid.firstname,"ticked":false});
+                                    $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
                                 }
                             }
                             else{
-                                $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename":  row.stores_id[m].storename + "-" + row.stores_id[m].siteid + "-"+ row.userid.firstname,"ticked":false});
+                                $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename":  row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
                             }
                         }
 

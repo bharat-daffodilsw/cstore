@@ -675,8 +675,6 @@ cstore.directive('appAisleFileUpload', ['$appService', '$compile', function ($ap
                     };
                     if ($scope.aislerow[$scope.colmetaaisledata.expression]) {
                         $scope.showAisleFile($scope.aislerow[$scope.colmetaaisledata.expression], false);
-                        //changed 2804
-                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
 
                     } else if (!$scope.readonlyaislerow.fileurl) {
                         $scope.readonlyaislerow.filenotexist = true;
@@ -775,7 +773,6 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
                         $("#uploadMultiImgfile").val("");
-                        //  $scope.row[$scope.colmetadata.expression] = file;
                         if (index == 10)
                             $scope.imgFileLimitExceed = true;
                     };
@@ -788,7 +785,6 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
                     }
 
                     $scope.loadImgFile = function (evt) {
-                       // if ((/\.(doc|docx|xls|xlsx|pdf|ppt|pptx)$/i).test($scope.oFile.name)) {
                             var current_file = {};
                             $scope.uploadingimage = true;
                             current_file.name = $scope.oFile.name;
@@ -801,10 +797,7 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
                                     $scope.showMultiImgFile(data.response, $scope.filedata.uploadedimages.length);
                                 }
                             });
-                        //} else {
-                        //    $("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
-                        //    $('.popup').toggle("slide");
-                        //}
+
                     };
 
                     /* iElement.bind('change', function () {
@@ -881,7 +874,19 @@ cstore.directive('storeCountrySelect', ['$appService', function ($appService, $s
 cstore.directive('roleSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles" ng-change="getStores(userdata.selectedRole)"></select>'
+        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles" ng-change="getStores(userdata.selectedRole)"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+                    if ($scope.currentUser["data"]) {
+                        if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                            $scope.getStores($scope.userdata.selectedRole);
+                        }
+                    }
+                }, post: function ($scope) {
+                }
+            }
+        }
     }
 }]);
 

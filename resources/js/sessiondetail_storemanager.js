@@ -9,9 +9,6 @@ cstore.controller('sessionDetailCtrl', function ($scope, $appService, $routePara
         query.columns = ["store_manager_id", "description", "file", "title", "training_category_id", "video_url"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.sessionid};
-        //if (searchText && searchText != "") {
-        //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
-        //}
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
 
         var serviceUrl = "/rest/data";

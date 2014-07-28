@@ -145,9 +145,7 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                 pre: function ($scope) {
                     $scope.addNewCity = function () {
                         $scope.cities.push({ name: '', stateid: '' });
-                        //for (var i = 0; i < $scope.countries.length; i++) {
                         $scope.cities[$scope.cities.length - 1]["editStatus"] = true;
-                        //}
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -286,13 +284,6 @@ cstore.directive('cityList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.setCity = function (city) {
-                        //$scope.states[state].editStatus = true;
-                        //for (var i = 0; i < $scope.data.states.length; i++) {
-                        //  if ($scope.data.states[i]._id == vendor.state._id) {
-                        //    $scope.data.selectedState = $scope.data.states[i];
-                        //  break;
-                        // }
-                        // }
                         for (var i = 0; i < $scope.stateList.length; i++) {
                             if ($scope.stateList[i]._id == city.stateid._id) {
                                 city.stateid = $scope.stateList[i];

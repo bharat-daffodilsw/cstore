@@ -66,7 +66,6 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllSurveys(0, 10, column, searchText);
     }
-    //$scope.getStores();
     $scope.getProgramsForSurvey(null, null);
 });
 cstore.controller('addSurveyCtrl', function ($scope, $appService) {

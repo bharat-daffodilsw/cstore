@@ -69,7 +69,6 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
         var timeZone = new Date().getTimezoneOffset();
-        //timeZone = timeZone * 60000;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
@@ -176,7 +175,6 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 }
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
-                                //a.target = '_blank';
                                 document.body.appendChild(a);
                                 a.click();
                                 a.remove();
@@ -591,7 +589,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
         compile: function () {
             return {
                 pre: function ($scope) {
-                    //$scope.promotiondata["editImage"] = false;
                     $scope.loadingAddPromotionData = true;
                     $scope.newPromotion = {};
                     $scope.setPathforPromotion = function (path) {

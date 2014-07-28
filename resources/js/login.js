@@ -51,36 +51,6 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                             var firstname = callBackData.response.data[0].userid.firstname;
                             var userid = callBackData.response.data[0].userid._id;
                             var username = callBackData.response.data[0].username;
-                            //to be removed
-//                            if (callBackData.response.data[0] && callBackData.response.data[0]["storeid"]) {
-//                                var storeid = callBackData.response.data[0]["storeid"]._id;
-//                                var programid = callBackData.response.data[0]["storeid"].programid._id;
-//                                var stateName = callBackData.response.data[0].storeid.stateid.name;
-//                                if (!$appService.getCookie("selectedLoc")) {
-//                                    var c_name = "selectedLoc";
-//                                    document.cookie = c_name + "=" + escape(stateName);
-//                                    $scope.currentLoc["data"] = stateName;
-//                                }
-//                                var image = [
-//                                    {"image": ""}
-//
-//                                ];
-//                                for (var i = 0; i < callBackData.response.data.length; i++) {
-//                                    image[i]["image"] = callBackData.response.data[i].storeid.programid.image;
-//                                }
-//                                var setCompanyLogo = $appService.setUrls(image, 140, 88);
-//                                var companyLogoUrl = setCompanyLogo[0].imageUrl;
-//                                if (storeid) {
-//                                    var c_name = "storeid";
-//                                    document.cookie = c_name + "=" + escape(storeid);
-//                                    var c_name = "programid";
-//                                    document.cookie = c_name + "=" + escape(programid);
-//                                    if (companyLogoUrl) {
-//                                        var c_name = "companyLogoUrl";
-//                                        document.cookie = c_name + "=" + escape(companyLogoUrl);
-//                                    }
-//                                }
-//                            }
                             if (callBackData.response.data[0] && callBackData.response.data[0]["stores_id"] && callBackData.response.data[0]["stores_id"][0]) {
                                 var storeid = callBackData.response.data[0]["stores_id"][0]._id;
                                 var programid = callBackData.response.data[0]["stores_id"][0].programid ? callBackData.response.data[0]["stores_id"][0].programid._id:"";

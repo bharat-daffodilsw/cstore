@@ -26,7 +26,6 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.unwindcolumns = {"store_manager_id": 1};
         query.filter["store_manager_id.submitted"] = false;
-        //query.filter["store_manager_id.opt"] = true;
         query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
@@ -339,10 +338,6 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
             $scope.promotionData.loadingData = false;
             var rawData = $appService.setUrls(promoData.response.data, 291, 196);
             $scope.promotions = rawData;
-//            for (var k = 0; k < $scope.promotions.length; k++) {
-//                $scope.promotions[k]["optStatus"] = false;
-//            }
-
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -380,14 +375,6 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
                 },
                 post: function ($scope) {
                     $scope.CSession = $appService.getSession();
-
-//                    $scope.getOptData = function (index) {
-//                        for (var i = 0; i < $scope.promotions.length; i++) {
-//                            if ($scope.promotions[i]._id == $scope.promotions[index]._id) {
-//                                $scope.promotions[i]["optStatus"] = true;
-//                            }
-//                        }
-//                    }
                     $scope.changeOptInOutStatus = function () {
                         $scope.optArray = [];
                         $scope.promosArray = [];
