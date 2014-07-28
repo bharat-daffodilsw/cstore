@@ -69,7 +69,6 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.submitContact = function () {
                         $scope.CSession = $appService.getSession();
-                        //if ($scope.CSession) {
                             $scope.newContact = {};
                             var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                             var regNumberOnly = /^[+]?\d[0-9\-]*$/;
@@ -130,11 +129,7 @@ cstore.directive('contactPage', ['$appService', function ($appService, $scope) {
                                 $("#popupMessage").html(err);
                                 $('.popup').toggle("slide");
                             });
-                        //}
-                        //else {
-                        //    $("#popupMessage").html("Please login first");
-                        //    $('.popup').toggle("slide");
-                        //}
+
                     }
                 }
             }

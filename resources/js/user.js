@@ -313,7 +313,7 @@ cstore.directive('addUser', ['$appService', function ($appService, $scope) {
             '<tr>' +
             '<td class="half_td"><role-select></role-select></td>' +
             //'<td class="half_td" ng-if="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\'"><store-select></store-select></td>' +
-            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\' || userdata.selectedRole._id==\'53d22fa0632112cf111fda6f\'"><div multi-select  input-model="userdata.stores"  button-label="storename" item-label="storename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td" ng-show="userdata.selectedRole._id==\'531d4aa0bd1515ea1a9bbaf6\' || userdata.selectedRole._id==\'53d5fe79894f1e646d2ca754\'"><div multi-select  input-model="userdata.stores"  button-label="storename" item-label="storename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '<td class="half_td" ng-if="userdata.selectedRole._id==\'539fddda1e993c6e426860c4\'"><program-admin-select></program-admin-select></td>' +
             '</tr>' +
             '</tbody></table></div>' +
