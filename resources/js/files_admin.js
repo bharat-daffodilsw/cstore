@@ -215,7 +215,7 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><div class="margin_top">Sites</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div multi-select  input-model="filedata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
             '<tr><td><app-multi-any-file-upload></app-multi-any-file-upload></td></tr>' +
             '<tr><td>' +
@@ -278,7 +278,7 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
                             $scope.newFile["title"] = $scope.filedata.title;
                             $scope.fileStoreManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
-                                $scope.fileStoreManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid});
+                                $scope.fileStoreManagerArray.push({"_id": $scope.resultData[i].storeid, "email": $scope.resultData[i].emailid});
                             }
                             $scope.newFile["store_manager_id"] = {data: $scope.fileStoreManagerArray, "override": "true"};
                             if ($scope.currentUser["data"]) {

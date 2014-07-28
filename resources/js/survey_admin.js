@@ -66,7 +66,6 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     $scope.getLess = function (column, searchText) {
         $scope.getAllSurveys(0, 10, column, searchText);
     }
-    //$scope.getStores();
     $scope.getProgramsForSurvey(null, null);
 });
 cstore.controller('addSurveyCtrl', function ($scope, $appService) {
@@ -301,7 +300,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td pull-left"><select-program-survey ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-survey><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
-            '<td class="half_td pull-left"><div multi-select  input-model="surveydata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td pull-left"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
             '</tbody></table></div>' +
             '<h2 class="sub-head-border">' +
@@ -410,7 +409,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                             }
                             $scope.surveyStoreManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
-                                $scope.surveyStoreManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "status": "unanswered"});
+                                $scope.surveyStoreManagerArray.push({"_id": $scope.resultData[i].storeid, "email": $scope.resultData[i].emailid, "status": "unanswered"});
                             }
                             newSession["title"] = $scope.surveydata.title;
                             newSession["description"] = $scope.surveydata.description;
@@ -469,6 +468,7 @@ cstore.directive('addsurvey', ['$appService', function ($appService, $scope) {
                             }, function (err) {
                                 $("#popupMessage").html(err.stack);
                                 $('.popup').toggle("slide");
+                                $scope.loadingAddTrainingdata = false;
                             });
                         } else {
                             $("#popupMessage").html("Please login first");

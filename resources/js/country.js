@@ -106,9 +106,7 @@ cstore.directive('countryList', ['$appService', function ($appService, $scope) {
                 pre: function ($scope) {
                     $scope.addNewCountry = function () {
                         $scope.countries.push({ name: ''});
-                        //for (var i = 0; i < $scope.countries.length; i++) {
                         $scope.countries[$scope.countries.length - 1]["editStatus"] = true;
-                        //}
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;

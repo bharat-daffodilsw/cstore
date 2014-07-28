@@ -25,6 +25,7 @@ cstore.controller('allFilesCtrl', function ($scope, $appService, $routeParams) {
         query.columns = ["title","programid","store_manager_id","file",{"expression": "__createdon", "format": "MM/DD/YYYY HH:mm:ss"}];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
+        query.unwindcolumns = {"store_manager_id": 1};
         if (column && searchText && column != "" && searchText != "") {
             query.filter[column] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }

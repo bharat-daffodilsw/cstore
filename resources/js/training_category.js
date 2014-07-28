@@ -112,9 +112,7 @@ cstore.directive('trainingCategoryList', ['$appService', function ($appService, 
                 pre: function ($scope) {
                     $scope.addNewTrainingCategory = function () {
                         $scope.trainingCategories.push({ name: '', description: '' });
-                        //for (var i = 0; i < $scope.trainingCategories.length; i++) {
                         $scope.trainingCategories[$scope.trainingCategories.length - 1]["editStatus"] = true;
-                        //}
 
                     }
                     $scope.search = function () {

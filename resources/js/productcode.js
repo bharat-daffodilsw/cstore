@@ -1,10 +1,8 @@
 /****************************ProductCodeCtrls*************************************/
 cstore.controller('productCodesCtrl', function ($scope, $appService) {
 
-    //$scope.codeTypes=[{"name":"UPC"},{"name":"PLU"},{"name":"Group"}];
     $scope.types = ["GROUP", "PLU", "UPC"];
 
-    //$scope.codedata.selectedCodeType=$scope.codedata.codeTypes[0];
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingProductCodeData = false;
     $scope.venderSearch = [
@@ -51,7 +49,6 @@ cstore.controller('productCodesCtrl', function ($scope, $appService) {
                 $scope.productCodes[i]["deleteStatus"] = false;
                 $scope.productCodes[i]["editStatus"] = false;
                 $scope.productCodes[i]["oldstatus"] = true;
-                //$scope.productCodes[i].type=$scope.types[0];
             }
 
         }, function (jqxhr, error) {
@@ -138,9 +135,7 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                 pre: function ($scope) {
                     $scope.addNewProductCode = function () {
                         $scope.productCodes.push({ code: '', description: '', type: '' });
-                        //for (var i = 0; i < $scope.countries.length; i++) {
                         $scope.productCodes[$scope.productCodes.length - 1]["editStatus"] = true;
-                        //}
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -303,7 +298,6 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
                         for (var i = 0; i < $scope.types.length; i++) {
                             if ($scope.types[i] == productcode.type) {
                                 $scope.productCodes[i].type = $scope.types[i];
-                                //productCode.type = $scope.types[i];
                                 break;
                             }
                         }

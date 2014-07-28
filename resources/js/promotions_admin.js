@@ -69,7 +69,6 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
         query.cursor = $scope.show.currentCursor;
         query.$count = 1;
         var timeZone = new Date().getTimezoneOffset();
-        //timeZone = timeZone * 60000;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionData) {
@@ -166,6 +165,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         if (downloadImages.length > 0) {
                             for (var i = 0; i < downloadImages.length; i++) {
                                 downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
+
                                 function sleep(milliSeconds) {
                                     var startTime = new Date().getTime();
                                     while (new Date().getTime() < startTime + milliSeconds);
@@ -175,10 +175,10 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                 }
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
-                                //a.target = '_blank';
                                 document.body.appendChild(a);
                                 a.click();
                                 a.remove();
+
                             }
                         }
                         else if (!downloadImages.length || downloadImages.length == 0) {
@@ -556,7 +556,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><select-program-promo ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-promo><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
-            '<td class="half_td"><div multi-select  input-model="promotiondata.stores"  button-label="siteName" item-label="siteName" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
@@ -589,7 +589,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
         compile: function () {
             return {
                 pre: function ($scope) {
-                    //$scope.promotiondata["editImage"] = false;
                     $scope.loadingAddPromotionData = true;
                     $scope.newPromotion = {};
                     $scope.setPathforPromotion = function (path) {
@@ -691,7 +690,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             }
                             $scope.storeManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
-                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid._id, "email": $scope.resultData[i].userid.emailid, "opt": true, "submitted": false});
+                                $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid, "email": $scope.resultData[i].emailid, "opt": true, "submitted": false});
                             }
                             $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute + ":" + $scope.promotiondata.selectedEndSecond);
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
@@ -745,7 +744,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 current_file.ask = ASK;
                                 current_file.osk = OSK;
                                 $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
-                                    $scope.loadingAddPromotionData = false;
                                     if (data.response) {
                                         $scope.newPromotion["image"] = data.response;
                                         if (!$scope.promotiondata.selectedProgram.cooler_html && !$scope.promotiondata.selectedProgram.aisle_html) {
@@ -757,6 +755,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     else {
                                         $("#popupMessage").html("some error while uploading image please try again");
                                         $('.popup').toggle("slide");
+                                        $scope.loadingAddPromotionData = false;
                                     }
                                 }, function (callbackerror) {
                                     $("#popupMessage").html(callbackerror);
@@ -768,6 +767,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                         else {
                             $("#popupMessage").html("Please login first");
                             $('.popup').toggle("slide");
+                            $scope.loadingAddPromotionData = false;
                         }
                     };
                     $scope.saveFunction = function (query) {

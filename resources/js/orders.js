@@ -4,7 +4,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
     $scope.loadingOrderData = false;
     $scope.status = ["In Progress", "Cancelled", "Delivered"];
     if ($scope.currentUser["data"]) {
-        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
             $scope.venderSearch = [
                 {"value": "status", "name": "Status"}
             ];
@@ -36,7 +36,7 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
         query.columns = ["userid", "storeid", "storeid.programid", "status", "sub_total", "total", "product", {"expression": "order_date", "format": "MM/DD/YYYY HH:mm:ss"}];
         query.filter = {};
         if ($scope.currentUser["data"]) {
-            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
                 query.filter["storeid._id"] = $scope.currentUser["data"]["storeid"];
             }
         }
@@ -163,10 +163,8 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
                 if (cart.product.length > 0) {
                     $scope.cartProducts.length = $scope.cartProducts.length - cart.product.length;
                     for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
-                        //if ($scope.shoppingCartProducts[i]._id == product._id) {
                         $scope.shoppingCartProducts.splice(i, cart.product.length);
                         i--;
-                        //}
                     }
                 }
             } else {
@@ -317,7 +315,7 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope, $wi
             '<td><table class="ordered_products"><tr class="ordered_pop_name" ng-show="$index==0"><td class="ordered_pop">Name</td><td class="ordered_pop">Price</td><td class="ordered_pop">Qty</td></tr>' +
             '<tr ng-repeat="pop in order.product"><td class="ordered_pop pop_name">{{pop.name}}</td><td class="ordered_pop">{{pop.cost.amount}}</td><td class="ordered_pop">{{pop.quantity}}</td></tr></table></td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
             '{{order.storeid.storename}}</td><td ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'">' +
-            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td><span ng-if="currentUser.data.roleid == \'531d4aa0bd1515ea1a9bbaf6\'">{{order.status}}</span><order-status-select ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"></order-status-select></td>' +
+            '{{order.storeid.programid.name}}</td><td>{{order.total.amount | currency}}</td><td>{{order.order_date}}</td><td><span ng-if="currentUser.data.roleid == \'531d4aa0bd1515ea1a9bbaf6\' || currentUser.data.roleid == \'53d22fa0632112cf111fda6f\'">{{order.status}}</span><order-status-select ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'"></order-status-select></td>' +
             '<td><a class="edit_btn" ng-if="currentUser.data.roleid == \'531d4a79bd1515ea1a9bbaf5\'" ng-click="updateStatusOfOrder(order)" href>Change Status</a><a class="edit_btn" ng-click="setPath(order._id)" href>View Detail</a></td></tr></table>' +
             '</div><div class="loadingImage" ng-hide="!loadingOrderData"><img src="images/loading.gif"></div>',
         compile: function () {
@@ -348,7 +346,6 @@ cstore.directive('orderList', ['$appService', function ($appService, $scope, $wi
                         $appService.save(query, ASK, OSK, null, function (callBackData) {
                             $scope.loadingOrderData = false;
                             if (callBackData.code == 200 && callBackData.status == "ok") {
-                                //$scope.getAllOrders(1, 10);
                                 $("#popupMessage").html("Update Order Status");
                                 $('.popup').toggle("slide");
                             } else {

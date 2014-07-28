@@ -49,10 +49,11 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
             query.filter["programid._id"] = $scope.filterdata.selectedProgram._id;
         }
         query.orders = {};
+
         if ($scope.sortingCol && $scope.sortingType) {
             query.orders[$scope.sortingCol] = $scope.sortingType;
         }
-        else{
+        else {
             query.orders = {"__createdon": "desc"};
         }
         query.max_rows = limit;
@@ -74,7 +75,6 @@ cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routePar
         })
     }
     $scope.getAllTextFilesList(1, 10);
-    //$scope.getStores();
     $scope.getStoresForFilter();
     $scope.getProgramList();
     $scope.filterTextFiles=function(column, searchText){

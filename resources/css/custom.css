@@ -55,7 +55,8 @@ a:hover {
 }
 
 .add_cart {
-    width: 85px;
+    /*width: 85px;*/
+    width: 77px;
     color: #FFF;
     margin-top: 20px;
 }
@@ -73,11 +74,13 @@ a:hover {
     /*white-space: nowrap;*/
     /*width: 42%;*/
     /*color: #A20B0B;*/
+
 }
 
 .search {
     position: relative;
-    width: 41%;
+    /*width: 41%;*/
+    width: 39%;
     margin-top: 30px;
     margin-left: 5px;
 }
@@ -231,7 +234,7 @@ a:hover {
     background-color: black;
 }
 
-#sign_out li:hover a {
+#sign_out li:hover > a {
     float: left;
     color: white;
     width: 100%;
@@ -594,7 +597,9 @@ a:hover {
     font-size: 16px;
     margin-top: 10px;
 }
-
+#sign_out ul li:hover > .site_menu {
+    display: block;
+}
 .setup {
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     display: none;
@@ -604,6 +609,17 @@ a:hover {
     width: 200px;
     right: 5px;
     z-index: 1000000;
+}
+.site_menu {
+    margin-left: 170px;
+    top: 44px;
+    position: absolute;
+    background: #b88a3f;
+    display: none;
+    width: 190px;
+    max-height: 225px;
+    overflow: auto;
+    color:#000;
 }
 
 .setup ul li {
@@ -2379,5 +2395,13 @@ label.multiSelect span:hover {
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+.activeUser {
+    background-color: #000;
+}
+
+.activeUser a{
+    font-size: 17px;
+    color: #fff;
 }
 

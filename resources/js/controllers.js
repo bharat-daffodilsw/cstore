@@ -3,13 +3,14 @@ var ASK = "531829f47754938f0ecfd3c7";
 var OSK = "531972e05fccddeb550a04a3";
 var STOREMANAGER = "531d4aa0bd1515ea1a9bbaf6";
 var ADMIN = "531d4a79bd1515ea1a9bbaf5";
-var PROGRAMADMIN ="539fddda1e993c6e426860c4";
+var PROGRAMADMIN = "539fddda1e993c6e426860c4";
 var VENDOR = "vendors";
 var DEFAULTCOUNTRY = "531d3e9b8826fc304706a460"; //united states
-var DOMAIN_NAME="http://www.ecpromomarket.com";
-var REDIRECT_URL="http://www.ecloyalty.com/";
+var DOMAIN_NAME = "http://www.ecpromomarket.com";
+var REDIRECT_URL = "http://www.ecloyalty.com/";
+var STOREADMIN="53d22fa0632112cf111fda6f";
 // Declare app level module which depends on filters, and services
-var cstore = angular.module('cstore', ['multi-select','ngRoute', '$appstrap.services']);
+var cstore = angular.module('cstore', ['multi-select', 'ngRoute', '$appstrap.services']);
 cstore.config(
     function ($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('!');
@@ -161,17 +162,17 @@ cstore.config(
             }).when('/order-detail', {
                 templateUrl: '../order-detail',
                 controller: 'orderDetailCtrl'
-            }).when('/contact-us',{
-                templateUrl:'../contact-us',
-                controller:'contactPageCtrl'
-            }).when('/terms-conditions',{
-                templateUrl:'../terms-privacy'
-            }).when('/promo-notification',{
-                templateUrl:'../promo-notification',
-                controller:'promoNotificationCtrl'
-            }).when('/files',{
-                templateUrl:'../files',
-                controller:'fileCtrl'
+            }).when('/contact-us', {
+                templateUrl: '../contact-us',
+                controller: 'contactPageCtrl'
+            }).when('/terms-conditions', {
+                templateUrl: '../terms-privacy'
+            }).when('/promo-notification', {
+                templateUrl: '../promo-notification',
+                controller: 'promoNotificationCtrl'
+            }).when('/files', {
+                templateUrl: '../files',
+                controller: 'fileCtrl'
             }).when('/add-file', {
                 templateUrl: '../add-file',
                 controller: 'addFileCtrl'
@@ -209,13 +210,13 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
-    $scope.hasHighlight={"reports":false,"setup":false,"promos":false};
-    $scope.notification={};
+    $scope.hasHighlight = {"reports": false, "setup": false, "promos": false};
+    $scope.notification = {};
     $scope.search = {"searchContent": ""};
     $scope.cartProducts = {"length": ""};
-    $scope.orderFilterData={"start_date":"","end_date":""};
-    $scope.filterdata={"programs":[],"selectedProgram":"","companies":[],"selectedCompany":"","states":[],"selectedState":"","status":[],"selectedStatus":"","sites":[],"selectedSite":"","brands":[],"selectedBrand":""};
-    $scope.download={"orders":[]};
+    $scope.orderFilterData = {"start_date": "", "end_date": ""};
+    $scope.filterdata = {"programs": [], "selectedProgram": "", "companies": [], "selectedCompany": "", "states": [], "selectedState": "", "status": [], "selectedStatus": "", "sites": [], "selectedSite": "", "brands": [], "selectedBrand": ""};
+    $scope.download = {"orders": []};
     $scope.currentLoc = {"data": ""};
     $scope.currentLoc["data"] = $appService.getLocation();
     $scope.file = {};
@@ -305,7 +306,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
     $scope.productdata = {"productCategories": [], "vendors": [], "selectedProductCategory": "", "selectedVendor": "", "programs": [], "selectedProgram": ""};
     $scope.userdata = {"roles": [], "selectedRole": "", "stores": [], "selectedStore": ""};
-    $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedStartSecond": "", "selectedEndHour": "", "selectedEndMinute": "","selectedEndSecond": "","seconds":[]};
+    $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedStartSecond": "", "selectedEndHour": "", "selectedEndMinute": "", "selectedEndSecond": "", "seconds": []};
     $scope.promotiondata.offerTypes = [
         {"name": "NPROD"}
     ];
@@ -338,7 +339,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.promotiondata.selectedEndSecond = $scope.promotiondata.seconds[59];
     $scope.trainingdata = {"trainingCategories": [], "selectedTrainingCategory": "", "stores": [], "assignedStore": "", "uploadedimages": []};
     $scope.surveydata = {};
-    $scope.filedata={"uploadedimages": [],"selectedProgram":"","programs":[]};
+    $scope.filedata = {"uploadedimages": [], "selectedProgram": "", "programs": []};
     $scope.codedata = {"codeTypes": [], "selectedCodeType": ""};
     $scope.codedata.codeTypes = [
         {"name": "UPC"},
@@ -359,7 +360,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.filterdata.status = [
         {"name": "In Progress"},
         {"name": "Delivered"},
-        {"name":"Cancelled"},
+        {"name": "Cancelled"},
         {"name": "Ordered"},
         {"name": "Shipped"}
     ];
@@ -370,10 +371,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     for (var i = 1; i <= 10; i++) {
         $scope.shoppingCartData.quantity.push(i);
     }
-    $scope.imageTypes=[{name:"jpg"},{name:"png"}];
+    $scope.imageTypes = [
+        {name: "jpg"},
+        {name: "png"}
+    ];
 
     $scope.programdata = {};
-    $scope.programdata["image_type"]=$scope.imageTypes[0];
+    $scope.programdata["image_type"] = $scope.imageTypes[0];
     $scope.location = '';
     $scope.allAssignedSurveys = [];
     $scope.getURLParam = function (strParamName) {
@@ -393,27 +397,27 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
         return unescape(strReturn);
     }
-    $scope.activeHightLight=function(){
-        $scope.hasHighlight.setup=true;
-        $scope.hasHighlight.reports=false;
+    $scope.activeHightLight = function () {
+        $scope.hasHighlight.setup = true;
+        $scope.hasHighlight.reports = false;
     }
-    $scope.activeHightLightReports=function(){
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=true;
+    $scope.activeHightLightReports = function () {
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = true;
     }
-    $scope.deactiveHightLight=function(){
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+    $scope.deactiveHightLight = function () {
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
-    $scope.activePromo=function(){
-        $scope.hasHighlight.promos=true;
+    $scope.activePromo = function () {
+        $scope.hasHighlight.promos = true;
     }
-    $scope.inActivePromo=function(){
-        $scope.hasHighlight.promos=false;
+    $scope.inActivePromo = function () {
+        $scope.hasHighlight.promos = false;
     }
     $scope.getAllVendorsList = function () {
         var query = {"table": "vendors__cstore"};
-        query.columns = ["firstname","companyid"];
+        query.columns = ["firstname", "companyid"];
         query.orders = {"companyid.name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
@@ -425,13 +429,12 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    //$scope.getAllVendorsList();
-    if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == STOREMANAGER) {
+    if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN)) {
         $scope.displayData["options"] = true;
         $scope.displayData["cart"] = true;
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = true;
-        $scope.displayData["role"] = {"admin": false, "storeManager": true,"programAdmin":false};
+        $scope.displayData["role"] = {"admin": false, "storeManager": true, "programAdmin": false};
         if ($scope.currentUser["data"]["companyLogoUrl"]) {
             $scope.displayData["companyLogo"] = true;
         }
@@ -445,21 +448,21 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = true;
         $scope.displayData["loggedIn"] = true;
-        $scope.displayData["role"] = {"admin": true, "storeManager": false,"programAdmin":false};
+        $scope.displayData["role"] = {"admin": true, "storeManager": false, "programAdmin": false};
     }
     else if ($scope.currentUser["data"] && $scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
         $scope.displayData["options"] = false;
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = true;
         $scope.displayData["loggedIn"] = true;
-        $scope.displayData["role"] = {"admin": false, "storeManager": false,"programAdmin":true};
+        $scope.displayData["role"] = {"admin": false, "storeManager": false, "programAdmin": true};
     }
     else {
         $scope.displayData["options"] = false;
         $scope.displayData["cart"] = false;
         $scope.displayData["menu"] = false;
         $scope.displayData["loggedIn"] = false;
-        $scope.displayData["role"] = {"admin": false, "storeManager": false,"programAdmin":false};
+        $scope.displayData["role"] = {"admin": false, "storeManager": false, "programAdmin": false};
         $scope.displayData["companyLogo"] = false;
     }
 
@@ -535,8 +538,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                 else {
                     countryid.selectedState = countryid.states[0];
                 }
-                // $scope.storedata.states = countryid.states;
-                //  $scope.storedata.selectedState = countryid.selectedState;
                 $scope.getEditCities(countryid, cityid);
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
@@ -566,8 +567,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     stateid.selectedCity = stateid.cities[0];
                 }
 
-                //$scope.storedata.cities = stateid.cities;
-                //$scope.storedata.selectedCity = stateid.selectedCity;
             }, function (jqxhr, error) {
             })
         } else {
@@ -606,7 +605,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
     /*********************************************************/
     $scope.getCountriesNew = function (countryid) {
-        //if(countryid.selectedCountry){
 
         var query = {"table": "countries__cstore"};
         query.columns = ["name"];
@@ -645,9 +643,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
         }, function (jqxhr, error) {
         })
-        //}else{
-        //  countryid.states = [];
-        //}
+
     }
 
     $scope.getStatesNew = function (countryid, stateid) {
@@ -657,9 +653,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             query.orders = {"name": "asc"};
             countryid.selectedState = {"_id": stateid};
             query.filter = {"countryid._id": countryid.selectedCountry._id};
-            //else {
-            //  query.filter ={"countryid._id":DEFAULTCOUNTRY};
-            // }
             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (stateData) {
@@ -770,7 +763,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.data["email"] = "";
         $scope.data["otherCategory"] = "";
         $scope.data["otherCompany"] = "";
-        $scope.data.notes="";
+        $scope.data.notes = "";
         //$scope.data["selectedCompany"] = $scope.data.companies[0];
         $scope.data["selectedVendorCategory"] = $scope.data.vendorCategories[0];
         for (var i = 0; i < $scope.data.countries.length; i++) {
@@ -782,8 +775,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.getStatesNew($scope.data, false);
         $scope.getCitiesNew($scope.data, false);
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
     $scope.logOut = function () {
         $appService.deleteAllCookie();
@@ -826,7 +819,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    //$scope.getProductCategories();
     $scope.getFileExtension = function (filename) {
         var ext = /^.+\.([^.]+)$/.exec(filename);
         return ext == null ? "" : ext[1];
@@ -834,7 +826,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.showFile = function (file, updateScope) {
         if (updateScope) {
             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(file[0].name)) {
-                $scope.readonlyrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + file[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
+                $scope.readonlyrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + file[0][FILE_KEY] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":170,"height":120}';
                 $scope.readonlyrow.fileType = "imagefile";
                 $scope.readonlyrow.filenotexist = false;
                 $scope.readonlyrow.imgWidth = 75;
@@ -848,7 +840,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.row[$scope.colmetadata.expression] = file;
         }
         else if (file && file.length > 0) {
-            $scope.readonlyrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + file[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
+            $scope.readonlyrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + file[0][FILE_KEY] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":170,"height":120}';
             $scope.readonlyrow.fileType = "imagefile";
             $scope.readonlyrow.filenotexist = false;
             $scope.readonlyrow.imgWidth = 75;
@@ -861,7 +853,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.showCoolerFile = function (coolerFile, updateScope) {
         if (updateScope) {
             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(coolerFile[0].name)) {
-                $scope.readonlycoolerrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + coolerFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
+                $scope.readonlycoolerrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + coolerFile[0][FILE_KEY] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":170,"height":120}';
                 $scope.readonlycoolerrow.fileType = "imagefile";
                 $scope.readonlycoolerrow.filenotexist = false;
                 $scope.readonlycoolerrow.imgWidth = 75;
@@ -875,7 +867,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.coolerrow[$scope.colmetacoolerdata.expression] = coolerFile;
         }
         else if (coolerFile && coolerFile.length > 0) {
-            $scope.readonlycoolerrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + coolerFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
+            $scope.readonlycoolerrow.fileurl = BAAS_SERVER + '/file/render?filekey=' + coolerFile[0][FILE_KEY] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":170,"height":120}';
             $scope.readonlycoolerrow.fileType = "imagefile";
             $scope.readonlycoolerrow.filenotexist = false;
             $scope.readonlycoolerrow.imgWidth = 75;
@@ -888,7 +880,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.showAisleFile = function (aisleFile, updateScope) {
         if (updateScope) {
             if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test(aisleFile[0].name)) {
-                $scope.readonlyaislerow.fileurl = BAAS_SERVER + '/file/render?filekey=' + aisleFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
+                $scope.readonlyaislerow.fileurl = BAAS_SERVER + '/file/render?filekey=' + aisleFile[0][FILE_KEY] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":170,"height":120}';
                 $scope.readonlyaislerow.fileType = "imagefile";
                 $scope.readonlyaislerow.filenotexist = false;
                 $scope.readonlyaislerow.imgWidth = 75;
@@ -902,7 +894,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.aislerow[$scope.colmetaaisledata.expression] = aisleFile;
         }
         else if (aisleFile && aisleFile.length > 0) {
-            $scope.readonlyaislerow.fileurl = BAAS_SERVER + '/file/render?filekey=' + aisleFile[0][FILE_KEY] + '&ask='+ ASK + '&osk=' + OSK+ '&resize={"width":170,"height":120}';
+            $scope.readonlyaislerow.fileurl = BAAS_SERVER + '/file/render?filekey=' + aisleFile[0][FILE_KEY] + '&ask=' + ASK + '&osk=' + OSK + '&resize={"width":170,"height":120}';
             $scope.readonlyaislerow.fileType = "imagefile";
             $scope.readonlyaislerow.filenotexist = false;
             $scope.readonlyaislerow.imgWidth = 75;
@@ -939,7 +931,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     };
 
     $scope.getRoles = function () {
-        //change
         var query = {"table": "roles__cstore"};
         query.columns = ["name"];
         query.orders = {"name": "asc"};
@@ -959,29 +950,65 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getStores = function () {
-        var query = {"table": "storemanagers__cstore"};
-        query.columns = ["storename"];
-        query.orders = {"storename": "asc"};
+    $scope.getStores = function (role) {
+        if (role._id == STOREMANAGER || role._id == STOREADMIN) {
+            var query = {"table": "storemanagers__cstore"};
+            query.columns = ["storename"];
+            query.orders = {"storename": "asc"};
+            query.filter = {};
+            if ($scope.currentUser["data"]) {
+                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                    query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+                }
+            }
+            if (role._id == STOREMANAGER) {
+                query.filter["assigned_user"] = false;
+            }
+            var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+            var serviceUrl = "/rest/data";
+            $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
+                $scope.userdata.stores = storeData.response.data;
+                for (var i = 0; i < $scope.userdata.stores.length; i++) {
+                    $scope.userdata.stores[i].ticked = false;
+                }
+                $scope.userdata.selectedStore = $scope.userdata.stores[0];
+            }, function (jqxhr, error) {
+                $("#popupMessage").html(error);
+                $('.popup').toggle("slide");
+            })
+        }
+    }
+    $scope.getAssignedStores = function () {
+        $scope.userAssignedStores = [];
+        var query = {"table": "user_profiles__cstore"};
+        query.columns = ["stores_id", "stores_id.programid", "stores_id.programid.image", "stores_id.stateid.name"];
         query.filter = {};
         if ($scope.currentUser["data"]) {
-            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
-                query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
+            if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
+                query.filter["username"] = $scope.currentUser["data"]["username"];
             }
         }
-        query.filter["assigned_user"] = false;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
-            $scope.userdata.stores = storeData.response.data;
-            $scope.trainingdata.stores = storeData.response.data;
-            $scope.userdata.selectedStore = $scope.userdata.stores[0];
-            $scope.trainingdata.assignedStore = $scope.trainingdata.stores[0];
-            //$scope.filterdata.sites = storeData.response.data;
+            $scope.userAssignedStores = storeData.response.data[0].stores_id;
+            for (var i = 0; i < $scope.userAssignedStores.length; i++) {
+                if ($scope.currentUser.data.storeid && $scope.userAssignedStores[i]._id == $scope.currentUser.data.storeid) {
+                    $scope.userAssignedStores[i].userActive = true;
+                }
+                else {
+                    $scope.userAssignedStores[i].userActive = false;
+                }
+            }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
+    }
+    if ($scope.currentUser["data"]) {
+        if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {
+            $scope.getAssignedStores();
+        }
     }
     $scope.getStoresForFilter = function () {
         var query = {"table": "storemanagers__cstore"};
@@ -1016,7 +1043,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    //$scope.getTrainingCategories();
     //clear content
     $scope.clearStoreContent = function () {
         $scope.storedata.manager = {};
@@ -1047,8 +1073,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.storedata.selectedShift = "";
         $scope.storedata.selectedDealer = "";
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
     $scope.clearProductContent = function () {
         $scope.productdata["name"] = "";
@@ -1061,8 +1087,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.productdata.selectedProductCategory = $scope.productdata.productCategories[0];
         $scope.productdata.selectedProgram = $scope.productdata.programs[0];
         $scope.oFile.fileExist = false;
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
     $scope.clearUserContent = function () {
         $scope.userdata["username"] = "";
@@ -1104,10 +1130,10 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.oFile.fileExist = false;
         //$scope.getPrograms(null,null);
         $scope.clearPromotionNotificationContent();
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
-        $scope.promotiondata["demo_image"]="";
-        $scope.promotiondata["notes"]="";
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
+        $scope.promotiondata["demo_image"] = "";
+        $scope.promotiondata["notes"] = "";
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";
@@ -1117,9 +1143,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.trainingdata["uploadedimages"] = [];
         $scope.trainingdata["editImages"] = [];
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
-        $scope.getProgramsForTraining(null,null);
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+        $scope.getProgramsForTraining(null, null);
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
     $scope.clearSurveyContent = function () {
         $scope.surveydata["title"] = "";
@@ -1127,13 +1153,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.questions = [
             {"optionArr": [], "question": "", "type": $scope.listType[0], "addOption": true}
         ];
-        $scope.getProgramsForSurvey(null,null);
+        $scope.getProgramsForSurvey(null, null);
         if (!$scope.$$phase) {
             $scope.$apply();
         }
         $scope.setPath('surveys');
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
     $scope.clearProgramContent = function () {
         $scope.programdata["name"] = "";
@@ -1148,36 +1174,39 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.programdata["cooler_html"] = "";
         $scope.readonlyaislerow.fileurl = "";
         $scope.aisleOFile.fileExist = false;
-        $scope.hasHighlight.setup=true;
-        $scope.hasHighlight.reports=false;
+        $scope.hasHighlight.setup = true;
+        $scope.hasHighlight.reports = false;
         $scope.programdata["promorate"] = "";
         $scope.programdata["participation_id"] = "";
     }
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
-        $scope.orderFilterData.end_date="";
+        $scope.orderFilterData.end_date = "";
     }
     $scope.clearPromotionNotificationContent = function () {
-        $scope.notification.subject="";
-        $scope.notification.mail_content="";
+        $scope.notification.subject = "";
+        $scope.notification.mail_content = "";
     }
     $scope.clearFileContent = function () {
         $scope.filedata["title"] = "";
         $scope.filedata["file"] = "";
-        $scope.getProgramsForFiles(null,null);
+        $scope.getProgramsForFiles(null, null);
         $scope.filedata["uploadedimages"] = [];
         $scope.filedata["editImages"] = [];
-        $scope.hasHighlight.setup=false;
-        $scope.hasHighlight.reports=false;
+        $scope.hasHighlight.setup = false;
+        $scope.hasHighlight.reports = false;
     }
 
     $scope.getShoppingCartLength = function () {
         if ($scope.currentUser.data) {
-            if ($scope.currentUser.data.roleid == STOREMANAGER) {
+
+            if ($scope.currentUser.data.roleid == STOREMANAGER || $scope.currentUser.data.roleid == STOREADMIN) {
+
                 var query = {"table": "shopping_cart__cstore"};
                 query.columns = ["product", "userid"];
                 query.filter = {};
                 query.filter["userid._id"] = $scope.currentUser.data.userid;
+                query.filter["storeid._id"] = $scope.currentUser.data.storeid;
                 var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
                 var serviceUrl = "/rest/data";
                 $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
@@ -1195,43 +1224,41 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         }
     }
     $scope.getShoppingCartLength();
-    $scope.addCart={"pop":{},"quantity":""};
+    $scope.addCart = {"pop": {}, "quantity": ""};
     $scope.loadingPopularProductData = false;
-    $scope.addPromoToCart=function(promo,qty){
+    $scope.addPromoToCart = function (promo, qty) {
         var promoObj = {"name": "", "cost": {}, "_id": ""};
-        promoObj.name=promo.promo_title;
-        if(promo.programid.promorate){
-            promoObj.cost=promo.programid.promorate;
+        promoObj.name = promo.promo_title;
+        if (promo.programid.promorate) {
+            promoObj.cost = promo.programid.promorate;
         }
-        else{
-            promoObj.cost={"amount": 0.00, "type": {"currency": "usd"}};
+        else {
+            promoObj.cost = {"amount": 0.00, "type": {"currency": "usd"}};
         }
-        //promoObj._id=promo._id;
-        $scope.showCartPopup(promoObj,qty);
+        $scope.showCartPopup(promoObj, qty);
     }
     $scope.addToCart = function (product, quantity) {
         $scope.newShoppingCartProduct = {};
         $scope.products = [];
         var productObj = {"name": "", "cost": {}, "quantity": "", "popid": ""};
         $scope.newShoppingCartProduct["userid"] = {"username": $scope.currentUser.data.username};
-        //$scope.newShoppingCartProduct["sub_total"]={"amount":product.cost.amount*1,"type": {"currency": "usd"}};
-        productObj.name = product.name ? product.name:"";
+        $scope.newShoppingCartProduct["storeid"] = {"_id": $scope.currentUser.data.storeid};
+        productObj.name = product.name ? product.name : "";
         if (quantity) {
             productObj.quantity = quantity;
         }
         else {
             productObj.quantity = 1;
         }
-        if(product.cost){
+        if (product.cost) {
             productObj.cost = {"amount": product.cost.amount, "type": {"currency": "usd"}};
         }
-        else{
+        else {
             productObj.cost = {"amount": 0.00, "type": {"currency": "usd"}};
         }
         productObj.popid = product._id ? product._id : "";
         $scope.products.push(productObj);
         $scope.newShoppingCartProduct["product"] = $scope.products;
-        //$scope.newShoppingCartProduct["$inc"] = {"sub_total": (product.cost.amount*productObj.quantity)};
         $scope.newShoppingCartProduct["__type__"] = "insertifnotexist";
         var query = {};
         query.table = "shopping_cart__cstore";
@@ -1240,8 +1267,6 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var usk = currentSession["usk"] ? currentSession["usk"] : null;
         $appService.save(query, ASK, OSK, usk, function (callBackData) {
             if (callBackData.code == 200 && callBackData.status == "ok") {
-                //$("#popupMessage").html("Product is added to cart");
-                //$('.popup').toggle("slide");
                 window.location.href = "#!/shopping-cart";
                 $scope.cartProducts.length++;
             } else {
@@ -1256,19 +1281,20 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         });
     }
-    $scope.showCartPopup=function(product,quantity){
+    $scope.showCartPopup = function (product, quantity) {
         $("#popupMessage2").html("Please confirm Add to Card on this item");
         $('.popup2').toggle("slide");
-        $scope.addCart.pop=product;
-        $scope.addCart.quantity=quantity;
+        $scope.addCart.pop = product;
+        $scope.addCart.quantity = quantity;
     }
     $scope.shoppingCartProducts = {"total": "", "grandTotal": ""};
     $scope.getShoppingCart = function () {
         $scope.loadingShoppingCartData = true;
         var query = {"table": "shopping_cart__cstore"};
-        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address", "same_shipping_address","shipping_address.state.abbreviation"];
+        query.columns = ["product", "shipping_charges", "sub_total", "total", "userid", "bill_address", "shipping_address", "same_shipping_address", "shipping_address.state.abbreviation"];
         query.filter = {};
         query.filter["userid._id"] = $scope.currentUser.data.userid;
+        query.filter["storeid._id"] = $scope.currentUser.data.storeid;
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (cartData) {
@@ -1296,6 +1322,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.loadingShoppingCartData = true;
             $scope.products = [];
             $scope.removeShoppingCartProduct["userid"] = {"_id": $scope.currentUser.data.userid};
+            $scope.removeShoppingCartProduct["storeid"] = {"_id": $scope.currentUser.data.storeid};
             $scope.products.push({"_id": product._id, "__type__": "delete"});
             $scope.removeShoppingCartProduct["product"] = $scope.products;
             $scope.removeShoppingCartProduct["__type__"] = "insertifnotexist";
@@ -1343,8 +1370,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     $scope.userdata.selectedProgram = $scope.productdata.programs[i];
                     //break;
                 }
-                else if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) && ($scope.productdata.programs[i]._id == $scope.currentUser.data.programid)){
-                   $scope.currentUser["data"]["programName"] = $scope.productdata.programs[i].name;
+                else if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) && ($scope.productdata.programs[i]._id == $scope.currentUser.data.programid)) {
+                    $scope.currentUser["data"]["programName"] = $scope.productdata.programs[i].name;
                 }
             }
             $scope.filterdata.programs = programData.response.data;
@@ -1382,36 +1409,36 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         })
     }
     /****************multiSelectStoreFor Promotion*********************/
-    $scope.getPrograms = function (programid,promotionid) {
+    $scope.getPrograms = function (programid, promotionid) {
         var query = {"table": "program__cstore"};
-        query.columns = ["name","aisle_html","cooler_html"];
+        query.columns = ["name", "aisle_html", "cooler_html"];
         query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.promotiondata.programs = programData.response.data;
-            if(programid || promotionid){
-                for( var i = 0; i< $scope.promotiondata.programs.length;i++){
-                    if($scope.promotiondata.programs[i]._id==programid){
+            if (programid || promotionid) {
+                for (var i = 0; i < $scope.promotiondata.programs.length; i++) {
+                    if ($scope.promotiondata.programs[i]._id == programid) {
                         $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[i];
                         break;
                     }
                 }
-                $scope.getProgramSelectedStore(programid,promotionid);
+                $scope.getProgramSelectedStore(programid, promotionid);
             }
             else {
                 for (var i = 0; i < $scope.promotiondata.programs.length; i++) {
-                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
-                        if($scope.promotiondata.programs[i]._id == $scope.currentUser.data.programid){
+                    if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)) {
+                        if ($scope.promotiondata.programs[i]._id == $scope.currentUser.data.programid) {
                             $scope.currentUser["data"]["programName"] = $scope.promotiondata.programs[i].name;
-                            $scope.promotiondata.selectedProgram= $scope.promotiondata.programs[i];
-                            $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id,null);
+                            $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[i];
+                            $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id, null);
                             break;
                         }
                     }
                     else if ($scope.promotiondata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[i];
-                        $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id,null);
+                        $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id, null);
                         break;
                     }
                 }
@@ -1421,50 +1448,67 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getProgramSelectedStore = function (programid,promotionid) {
+    $scope.getProgramSelectedStore = function (programid, promotionid) {
+        $scope.promotiondata.stores = [];
+        $scope.inputData = [];
+        $scope.assignedStoreManagers = [];
         var query = {"table": "user_profiles__cstore"};
-        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.columns = [ "_id", "userid", "stores_id", "stores_id.programid"];
         query.filter = {};
         query.filter.roleid = STOREMANAGER;
-        if(programid){
-            query.filter["storeid.programid._id"] = programid;
+        if (programid) {
+            query.filter["stores_id.programid._id"] = programid;
         }
-        query.orders = {"storeid.storename": "asc"};
+        query.orders = {"stores_id.storename": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.promotiondata.stores = storeData.response.data;
-            var promoQuery = {"table": "promotions__cstore"};
-            promoQuery.columns = ["store_manager_id"];
-            promoQuery.filter = {"_id": promotionid};
-            var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
-            var serviceUrl = "/rest/data";
-            $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storePromoData) {
-                for(var j =0;j <$scope.promotiondata.stores.length;j++){
-                    if (storePromoData.response.data && storePromoData.response.data.length > 0 && storePromoData.response.data[0].store_manager_id && storePromoData.response.data[0].store_manager_id.length) {
-                        $scope.assignedStoreManagers = storePromoData.response.data[0].store_manager_id;
-                        for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
-                            if ($scope.promotiondata.stores[j].storeid._id == $scope.assignedStoreManagers[k]._id) {
-                                $scope.promotiondata.stores[j].ticked=true;
+            var inputData = [];
+            for (var i = 0; i < $scope.promotiondata.stores.length; i++) {
+                var row = $scope.promotiondata.stores[i];
+                for (var m = 0; m < row.stores_id.length; m++) {
+                    if(row.stores_id[m].programid._id==programid){
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename, "ticked": false});
+                    }
+                }
+            }
+            $scope.inputData = inputData;
+            if (promotionid) {
+                var promoQuery = {"table": "promotions__cstore"};
+                promoQuery.columns = ["store_manager_id"];
+                promoQuery.filter = {"_id": promotionid};
+                var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storePromoData) {
+
+                    for (var inp = 0; inp < inputData.length; inp++) {
+                        if (storePromoData.response.data && storePromoData.response.data.length > 0 && storePromoData.response.data[0].store_manager_id && storePromoData.response.data[0].store_manager_id.length) {
+                            $scope.assignedStoreManagers = storePromoData.response.data[0].store_manager_id;
+                            for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                    inputData[inp].ticked = true;
+                                    break;
+                                }
+
                             }
                         }
+
                     }
-                    else{
-                        $scope.promotiondata.stores[j].ticked=false;
-                    }
-                    $scope.promotiondata.stores[j].siteName=$scope.promotiondata.stores[j].storeid.storename;
-                }
-            }, function (jqxhr, error) {
-                $("#popupMessage").html(error);
-                $('.popup').toggle("slide");
-            });
+
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
     /************************multiSelectStoreForTraining**********************************************/
-    $scope.getProgramsForTraining = function (programid,trainingid) {
+    $scope.getProgramsForTraining = function (programid, trainingid) {
         var query = {"table": "program__cstore"};
         query.columns = ["name"];
         query.orders = {"name": "asc"};
@@ -1472,27 +1516,27 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.trainingdata.programs = programData.response.data;
-            if(programid || trainingid){
-                for( var i = 0; i< $scope.trainingdata.programs.length;i++){
-                    if($scope.trainingdata.programs[i]._id==programid){
+            if (programid || trainingid) {
+                for (var i = 0; i < $scope.trainingdata.programs.length; i++) {
+                    if ($scope.trainingdata.programs[i]._id == programid) {
                         $scope.trainingdata.selectedProgram = $scope.trainingdata.programs[i];
                         break;
                     }
                 }
-                $scope.getProgramSelectedStoreForTraining(programid,trainingid);
+                $scope.getProgramSelectedStoreForTraining(programid, trainingid);
             }
             else {
                 for (var i = 0; i < $scope.trainingdata.programs.length; i++) {
-                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
-                        if($scope.trainingdata.programs[i]._id == $scope.currentUser.data.programid){
+                    if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)) {
+                        if ($scope.trainingdata.programs[i]._id == $scope.currentUser.data.programid) {
                             $scope.currentUser["data"]["programName"] = $scope.trainingdata.programs[i].name;
-                            $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id,null);
+                            $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id, null);
                             break;
                         }
                     }
                     else if ($scope.trainingdata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.trainingdata.selectedProgram = $scope.trainingdata.programs[i];
-                        $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id,null);
+                        $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id, null);
                         break;
                     }
                 }
@@ -1503,53 +1547,67 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getProgramSelectedStoreForTraining = function (programid,trainingid) {
+    $scope.getProgramSelectedStoreForTraining = function (programid, trainingid) {
+        $scope.trainingdata.stores = [];
+        $scope.inputData = [];
+        $scope.assignedStoreManagers = [];
         var query = {"table": "user_profiles__cstore"};
-        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.columns = [ "_id", "stores_id", "stores_id.programid", "userid"];
         query.filter = {};
         query.filter.roleid = STOREMANAGER;
-        if(programid){
-            query.filter["storeid.programid._id"] = programid;
+        if (programid) {
+            query.filter["stores_id.programid._id"] = programid;
         }
-        query.orders = {"storeid.storename": "asc"};
+        query.orders = {"stores_id.storename": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.trainingdata.stores = storeData.response.data;
-            var promoQuery = {"table": "training_session__cstore"};
-            promoQuery.columns = ["store_manager_id"];
-            promoQuery.filter = {"_id": trainingid};
-            var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
-            var serviceUrl = "/rest/data";
-            $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeTrainingData) {
-                for(var j =0;j <$scope.trainingdata.stores.length;j++){
-                    if (storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length) {
-                        $scope.trainingAssignedStoreManagers = storeTrainingData.response.data[0].store_manager_id;
-                        for (var k = 0; k < $scope.trainingAssignedStoreManagers.length; k++) {
-                            if ($scope.trainingdata.stores[j].storeid._id == $scope.trainingAssignedStoreManagers[k]._id) {
-                                $scope.trainingdata.stores[j].ticked=true;
-                            }
-                            //else {
-                            //    $scope.promotiondata.stores[j].ticked=false;
-                            //}
-                        }
+            var inputData = [];
+            for (var i = 0; i < $scope.trainingdata.stores.length; i++) {
+                var row = $scope.trainingdata.stores[i];
+                for (var m = 0; m < row.stores_id.length; m++) {
+                    if(row.stores_id[m].programid._id==programid){
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename,"ticked": false});
                     }
-                    else{
-                        $scope.trainingdata.stores[j].ticked=false;
-                    }
-                    $scope.trainingdata.stores[j].siteName=$scope.trainingdata.stores[j].storeid.storename;
                 }
-            }, function (jqxhr, error) {
-                $("#popupMessage").html(error);
-                $('.popup').toggle("slide");
-            });
+            }
+            if (trainingid) {
+                var promoQuery = {"table": "training_session__cstore"};
+                promoQuery.columns = ["store_manager_id"];
+                promoQuery.filter = {"_id": trainingid};
+                var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeTrainingData) {
+
+                    for (var inp = 0; inp < inputData.length; inp++) {
+                        if (storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length) {
+                            $scope.assignedStoreManagers = storeTrainingData.response.data[0].store_manager_id;
+                            for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                    inputData[inp].ticked = true;
+                                    break;
+                                }
+
+                            }
+                        }
+
+                    }
+
+
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
     /************************multiSelectStoreForSurvey**********************************************/
-    $scope.getProgramsForSurvey = function (programid,surveyid) {
+    $scope.getProgramsForSurvey = function (programid, surveyid) {
         var query = {"table": "program__cstore"};
         query.columns = ["name"];
         query.orders = {"name": "asc"};
@@ -1557,27 +1615,27 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.surveydata.programs = programData.response.data;
-            if(programid || surveyid){
-                for( var i = 0; i< $scope.surveydata.programs.length;i++){
-                    if($scope.surveydata.programs[i]._id==programid){
+            if (programid || surveyid) {
+                for (var i = 0; i < $scope.surveydata.programs.length; i++) {
+                    if ($scope.surveydata.programs[i]._id == programid) {
                         $scope.surveydata.selectedProgram = $scope.surveydata.programs[i];
                         break;
                     }
                 }
-                $scope.getProgramSelectedStoreForSurvey(programid,surveyid);
+                $scope.getProgramSelectedStoreForSurvey(programid, surveyid);
             }
             else {
                 for (var i = 0; i < $scope.surveydata.programs.length; i++) {
-                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
-                        if($scope.surveydata.programs[i]._id == $scope.currentUser.data.programid){
+                    if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)) {
+                        if ($scope.surveydata.programs[i]._id == $scope.currentUser.data.programid) {
                             $scope.currentUser["data"]["programName"] = $scope.surveydata.programs[i].name;
-                            $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id,null);
+                            $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id, null);
                             break;
                         }
                     }
                     else if ($scope.surveydata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.surveydata.selectedProgram = $scope.surveydata.programs[i];
-                        $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id,null);
+                        $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id, null);
                         break;
                     }
                 }
@@ -1587,53 +1645,66 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getProgramSelectedStoreForSurvey = function (programid,surveyid) {
+    $scope.getProgramSelectedStoreForSurvey = function (programid, surveyid) {
+        $scope.surveydata.stores = [];
+        $scope.inputData = [];
+        $scope.assignedStoreManagers = [];
         var query = {"table": "user_profiles__cstore"};
-        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.columns = [ "_id", "stores_id", "stores_id.programid", "userid"];
         query.filter = {};
         query.filter.roleid = STOREMANAGER;
-        if(programid){
-            query.filter["storeid.programid._id"] = programid;
+        if (programid) {
+            query.filter["stores_id.programid._id"] = programid;
         }
-        query.orders = {"storeid.storename": "asc"};
+        query.orders = {"stores_id.storename": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.surveydata.stores = storeData.response.data;
-            var promoQuery = {"table": "surveys__cstore"};
-            promoQuery.columns = ["store_manager_id"];
-            promoQuery.filter = {"_id": surveyid};
-            var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
-            var serviceUrl = "/rest/data";
-            $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeSurveyData) {
-                for(var j =0;j <$scope.surveydata.stores.length;j++){
-                    if (storeSurveyData.response.data && storeSurveyData.response.data.length > 0 && storeSurveyData.response.data[0].store_manager_id && storeSurveyData.response.data[0].store_manager_id.length) {
-                        $scope.surveyAssignedStoreManagers = storeSurveyData.response.data[0].store_manager_id;
-                        for (var k = 0; k < $scope.surveyAssignedStoreManagers.length; k++) {
-                            if ($scope.surveydata.stores[j].storeid._id == $scope.surveyAssignedStoreManagers[k]._id) {
-                                $scope.surveydata.stores[j].ticked=true;
-                            }
-                            //else {
-                            //    $scope.promotiondata.stores[j].ticked=false;
-                            //}
-                        }
+            var inputData = [];
+            for (var i = 0; i < $scope.surveydata.stores.length; i++) {
+                var row = $scope.surveydata.stores[i];
+                for (var m = 0; m < row.stores_id.length; m++) {
+                    if(row.stores_id[m].programid._id==programid){
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename,"ticked": false});
                     }
-                    else{
-                        $scope.surveydata.stores[j].ticked=false;
-                    }
-                    $scope.surveydata.stores[j].siteName=$scope.surveydata.stores[j].storeid.storename;
                 }
-            }, function (jqxhr, error) {
-                $("#popupMessage").html(error);
-                $('.popup').toggle("slide");
-            });
+            }
+            if (surveyid) {
+                var promoQuery = {"table": "surveys__cstore"};
+                promoQuery.columns = ["store_manager_id"];
+                promoQuery.filter = {"_id": surveyid};
+                var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeSurveyData) {
+
+                    for (var inp = 0; inp < inputData.length; inp++) {
+                        if (storeSurveyData.response.data && storeSurveyData.response.data.length > 0 && storeSurveyData.response.data[0].store_manager_id && storeSurveyData.response.data[0].store_manager_id.length) {
+                            $scope.assignedStoreManagers = storeSurveyData.response.data[0].store_manager_id;
+                            for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                    inputData[inp].ticked = true;
+                                    break;
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
         })
     }
     /********************************multiSelectStoreForFiles*********************************************************/
-    $scope.getProgramsForFiles = function (programid,fileid) {
+    $scope.getProgramsForFiles = function (programid, fileid) {
         var query = {"table": "program__cstore"};
         query.columns = ["name"];
         query.orders = {"name": "asc"};
@@ -1641,27 +1712,27 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (programData) {
             $scope.filedata.programs = programData.response.data;
-            if(programid || fileid){
-                for( var i = 0; i< $scope.filedata.programs.length;i++){
-                    if($scope.filedata.programs[i]._id==programid){
+            if (programid || fileid) {
+                for (var i = 0; i < $scope.filedata.programs.length; i++) {
+                    if ($scope.filedata.programs[i]._id == programid) {
                         $scope.filedata.selectedProgram = $scope.filedata.programs[i];
                         break;
                     }
                 }
-                $scope.getProgramSelectedStoreForFiles(programid,fileid);
+                $scope.getProgramSelectedStoreForFiles(programid, fileid);
             }
             else {
                 for (var i = 0; i < $scope.filedata.programs.length; i++) {
-                    if($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)){
-                        if($scope.filedata.programs[i]._id == $scope.currentUser.data.programid){
+                    if ($scope.currentUser["data"] && ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN)) {
+                        if ($scope.filedata.programs[i]._id == $scope.currentUser.data.programid) {
                             $scope.currentUser["data"]["programName"] = $scope.filedata.programs[i].name;
-                            $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id,null);
+                            $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id, null);
                             break;
                         }
                     }
                     else if ($scope.filedata.programs[i]._id == "53743f7af36413a56b280897") {
                         $scope.filedata.selectedProgram = $scope.filedata.programs[i];
-                        $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id,null);
+                        $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id, null);
                         break;
                     }
                 }
@@ -1671,43 +1742,57 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getProgramSelectedStoreForFiles = function (programid,trainingid) {
+    $scope.getProgramSelectedStoreForFiles = function (programid, fileid) {
+        $scope.filedata.stores = [];
+        $scope.inputData = [];
+        $scope.assignedStoreManagers = [];
         var query = {"table": "user_profiles__cstore"};
-        query.columns = [ "_id","storeid","storeid.programid","userid"];
+        query.columns = [ "_id", "stores_id", "stores_id.programid", "userid"];
         query.filter = {};
         query.filter.roleid = STOREMANAGER;
-        if(programid){
-            query.filter["storeid.programid._id"] = programid;
+        if (programid) {
+            query.filter["stores_id.programid._id"] = programid;
         }
-        query.orders = {"storeid.storename": "asc"};
+        query.orders = {"stores_id.storename": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
             $scope.filedata.stores = storeData.response.data;
-            var promoQuery = {"table": "file__cstore"};
-            promoQuery.columns = ["store_manager_id"];
-            promoQuery.filter = {"_id": trainingid};
-            var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
-            var serviceUrl = "/rest/data";
-            $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeFileData) {
-                for(var j =0;j <$scope.filedata.stores.length;j++){
-                    if (storeFileData.response.data && storeFileData.response.data.length > 0 && storeFileData.response.data[0].store_manager_id && storeFileData.response.data[0].store_manager_id.length) {
-                        $scope.fileAssignedStoreManagers = storeFileData.response.data[0].store_manager_id;
-                        for (var k = 0; k < $scope.fileAssignedStoreManagers.length; k++) {
-                            if ($scope.filedata.stores[j].storeid._id == $scope.fileAssignedStoreManagers[k]._id) {
-                                $scope.filedata.stores[j].ticked=true;
+            var inputData = [];
+            for (var i = 0; i < $scope.filedata.stores.length; i++) {
+                var row = $scope.filedata.stores[i];
+                for (var m = 0; m < row.stores_id.length; m++) {
+                    if(row.stores_id[m].programid._id==programid){
+                        inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename,"ticked": false});
+                    }
+                }
+            }
+            if (fileid) {
+                var promoQuery = {"table": "file__cstore"};
+                promoQuery.columns = ["store_manager_id"];
+                promoQuery.filter = {"_id": fileid};
+                var promoQueryParams = {query: JSON.stringify(promoQuery), "ask": ASK, "osk": OSK};
+                var serviceUrl = "/rest/data";
+                $appService.getDataFromJQuery(serviceUrl, promoQueryParams, "GET", "JSON", function (storeFileData) {
+                    for (var inp = 0; inp < inputData.length; inp++) {
+                        if (storeFileData.response.data && storeFileData.response.data.length > 0 && storeFileData.response.data[0].store_manager_id && storeFileData.response.data[0].store_manager_id.length) {
+                            $scope.assignedStoreManagers = storeFileData.response.data[0].store_manager_id;
+                            for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                    inputData[inp].ticked = true;
+                                    break;
+                                }
+
                             }
                         }
+
                     }
-                    else{
-                        $scope.filedata.stores[j].ticked=false;
-                    }
-                    $scope.filedata.stores[j].siteName=$scope.filedata.stores[j].storeid.storename;
-                }
-            }, function (jqxhr, error) {
-                $("#popupMessage").html(error);
-                $('.popup').toggle("slide");
-            });
+                }, function (jqxhr, error) {
+                    $("#popupMessage").html(error);
+                    $('.popup').toggle("slide");
+                });
+            }
+            $scope.inputData = inputData;
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");

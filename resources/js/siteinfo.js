@@ -287,7 +287,6 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
 
                     }
                     $scope.setStoreState = function (store) {
-                        //$scope.storedata.pos_version.name = store.pos_version;
                         $scope.storedata["address"] = store.address ? store.address : "";
                         $scope.storedata["address2"] = store.address2 ? store.address2 : "";
                         $scope.storedata["pump_brand"] = store.pump_brand ? store.pump_brand : "";
@@ -706,7 +705,6 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.loadingStatus = true;
                             if ($scope.storedata["storeid"]) {
                                 $scope.newStore["_id"] = $scope.storedata["storeid"];
-                                $scope.newStore["assigned_user"] = false;
                             }
                             var query = {};
                             query.table = "storemanagers__cstore";
@@ -748,6 +746,9 @@ cstore.directive('addStoreManager', ['$appService', function ($appService, $scop
                             $scope.newStore["manager"]["email"] = $scope.storedata.manager.email;
                             $scope.newStore["manager"]["contact"] = $scope.storedata.manager.contact;
                             $scope.newStore["manager"]["name"] = $scope.storedata.manager.name;
+                            if (!$scope.storedata["storeid"]) {
+                                $scope.newStore["assigned_user"] = false;
+                            }
                             query.operations = [$scope.newStore];
                             $scope.saveFunction(query);
                         }

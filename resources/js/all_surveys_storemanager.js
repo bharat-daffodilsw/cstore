@@ -14,12 +14,7 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         query.filter["store_manager_id.status"] = "unanswered";
         query.unwindcolumns={"store_manager_id":1};
-        //query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid, "_id": $routeParams.surveyid};
-        //if (searchText && searchText != "") {
-        //    query.filter["training_session_id.file.name"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
-        //}
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (surveyDetailData) {
             $scope.loadingSurveyDetailData = false;
@@ -30,7 +25,6 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
                 if ($scope.surveys[i].surveyQuestions.length > 0) {
                     for (var k = 0; k < $scope.surveys[i].surveyQuestions.length; k++) {
                         if ($scope.surveys[i].surveyQuestions[k].options) {
-                            //$scope.surveyQuestions[i].optionArray = $scope.surveyQuestions[i].options;
                             for (var j = 0; j < $scope.surveys[i].surveyQuestions[k].options.length; j++) {
 
                                 if ($scope.surveys[i].surveyQuestions[k].options.length) {
@@ -44,10 +38,6 @@ cstore.controller('surveyDetailCtrl', function ($scope, $appService, $routeParam
                     }
                 }
             }
-            //if (surveyDetailData.response.data[0].survey_question) {
-            //    $scope.surveyQuestions = surveyDetailData.response.data[0].survey_question;
-            //}
-
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -112,10 +102,7 @@ cstore.directive('surveyDetail', ['$appService', function ($appService, $scope) 
                                 if($scope.surveys[tempid]._id==survey._id){
                                     for (var i = 0; i < $scope.surveys[tempid].surveyQuestions.length; i++) {
                                         if ($scope.surveys[tempid].surveyQuestions[i].options && $scope.surveys[tempid].surveyQuestions[i].survey_type == "radio") {
-                                            //for (j = 0; j < $scope.surveyQuestions[i].options.length; j++){
-
                                             $scope.newSurveyAnswer["answers"][i] = $scope.surveys[tempid].surveyQuestions[i].radioAns;
-                                            //}
                                         }
                                         else if ($scope.surveys[tempid].surveyQuestions[i].options && $scope.surveys[tempid].surveyQuestions[i].survey_type == "checkbox") {
                                             var temp = [];

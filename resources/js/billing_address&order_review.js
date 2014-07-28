@@ -353,6 +353,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         $scope.newBillingAddress["shipping_address"] = {};
                         $scope.loadingSavedAddress = true;
                         $scope.newBillingAddress["userid"] = {"_id": $scope.currentUser.data.userid};
+                        $scope.newBillingAddress["storeid"]={"_id" : $scope.currentUser.data.storeid};
                         $scope.newBillingAddress["same_shipping_address"] = $scope.billingdata.same_shipping_address;
                         $scope.newBillingAddress["bill_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
                         $scope.newBillingAddress["bill_address"]["lastname"] = $scope.billingdata.bill_address.lastname;

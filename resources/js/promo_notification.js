@@ -3,12 +3,12 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
     $scope.loadingSendNotification=true;
     $scope.getAllAvailableMultipleUsers = function () {
         var query = {"table": "user_profiles__cstore"};
-        query.columns = ["username","storeid.siteid","storeid.storename"];
+        query.columns = ["username","stores_id","stores_id.siteid","userid","stores_id.programid"];
         query.filter = {};
         query.filter["roleid._id"] = STOREMANAGER;
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
-                query.filter["storeid.programid._id"]=$scope.currentUser.data.programid;
+                query.filter["stores_id.programid._id"]=$scope.currentUser.data.programid;
             }
         }
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
@@ -16,10 +16,24 @@ cstore.controller('promoNotificationCtrl', function ($scope, $appService, $route
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
             $scope.loadingSendNotification=false;
             $scope.userData = userData.response.data;
-            for(var i=0;i<$scope.userData.length;i++){
+            $scope.inputData = [];
+            for (var i = 0; i < $scope.userData.length; i++) {
                 var row = $scope.userData[i];
-                row["label"] = row.storeid.siteid + " - " + row.storeid.storename
-                row.ticked=false;
+                if (row.stores_id) {
+                    for (var m = 0; m < row.stores_id.length; m++) {
+                        if ($scope.currentUser["data"]) {
+                            if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                                if(row.stores_id[m].programid._id==$scope.currentUser.data.programid){
+                                    $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename": row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                                }
+                            }
+                            else{
+                                $scope.inputData.push({"emailid": row.userid.emailid, "storeid": row.stores_id[m]._id, "sitename":  row.stores_id[m].storename + "-" + row.stores_id[m].siteid,"ticked":false});
+                            }
+                        }
+
+                    }
+                }
             }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
@@ -40,7 +54,7 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
             '<td class="half_td"><div class="margin_top">Subject*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div multi-select  input-model="userData"  button-label="label" item-label="label" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
+            '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '<td class="half_td"><input type="text" placeholder="" ng-model="notification.subject"></td>' +
             '</tr>' +
             '<tr>' +
@@ -65,27 +79,10 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                         window.location.href="#!/"+ path;
                         $scope.clearPromotionNotificationContent();
                     }
-                    $scope.getAllAvailableUsers = function () {
-                        var query = {"table": "user_profiles__cstore"};
-                        query.columns = ["username"];
-                        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
-                        var serviceUrl = "/rest/data";
-                        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (userData) {
-                            $scope.availableUserTags = [];
-                            for (var i = 0; i < userData.response.data.length; i++) {
-                                $scope.availableUserTags.push(userData.response.data[i].username);
-                            }
-                            $('#user_tags').tagit({"tagSource": $scope.availableUserTags, "allowNewTags": false, "triggerKeys": ['enter', 'comma', 'tab']});
-                        }, function (jqxhr, error) {
-                            $("#popupMessage").html(error);
-                            $('.popup').toggle("slide");
-                        })
-                    }
-                    //$scope.getAllAvailableUsers();
                     $scope.sendMailNotification=function(){
                         $scope.notification.users=[];
                         for (var i = 0; i < $scope.resultData.length; i++) {
-                            $scope.notification.users.push($scope.resultData[i].username);
+                            $scope.notification.users.push($scope.resultData[i].emailid);
                         }
                         $scope.currentSession = $appService.getSession();
                         if (!$scope.notification.users || ($scope.notification.users.length == 0)) {
@@ -103,9 +100,15 @@ cstore.directive('promoNotification', ['$appService', function ($appService, $sc
                             $('.popup').toggle("slide");
                             return false;
                         }
+                        var uniqueUsers = [];
+                        $scope.notification.users.forEach(function(value) {
+                            if (uniqueUsers.indexOf(value) == -1) {
+                                uniqueUsers.push(value);
+                            }
+                        });
                         $scope.loadingSendNotification=true;
                         var mailContent= {}
-                        mailContent["to"] = $scope.notification.users;
+                        mailContent["to"] = uniqueUsers;
                         mailContent["subject"] = $scope.notification.subject;
                         mailContent["html"]="<div>Hello<br/>"+ $scope.notification.mail_content+"</div><div>Thank You</div>";
                         $appService.sendNotification(mailContent, ASK, OSK, $scope.currentSession["usk"], function (callBackData) {

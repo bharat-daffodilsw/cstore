@@ -40,7 +40,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                 if (usk) {
 
                     var query = {"table": "user_profiles__cstore"};
-                    query.columns = ["userid", "roleid", "storeid", "storeid.programid", "storeid.programid.image", "storeid.stateid.name", "username", "programid", "userid.status"];
+                    query.columns = ["userid", "roleid", "storeid", "storeid.programid", "storeid.programid.image", "storeid.stateid.name", "username", "programid", "userid.status","stores_id", "stores_id.programid", "stores_id.programid.image", "stores_id.stateid.name"];
                     query.filter = {"userid": "{_CurrentUserId}", "userid.status": true};
                     var params = {"query": JSON.stringify(query), "ask": ASK, "osk": OSK, "usk": usk};
 
@@ -51,10 +51,10 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
                             var firstname = callBackData.response.data[0].userid.firstname;
                             var userid = callBackData.response.data[0].userid._id;
                             var username = callBackData.response.data[0].username;
-                            if (callBackData.response.data[0] && callBackData.response.data[0]["storeid"]) {
-                                var storeid = callBackData.response.data[0]["storeid"]._id;
-                                var programid = callBackData.response.data[0]["storeid"].programid._id;
-                                var stateName = callBackData.response.data[0].storeid.stateid.name;
+                            if (callBackData.response.data[0] && callBackData.response.data[0]["stores_id"] && callBackData.response.data[0]["stores_id"][0]) {
+                                var storeid = callBackData.response.data[0]["stores_id"][0]._id;
+                                var programid = callBackData.response.data[0]["stores_id"][0].programid ? callBackData.response.data[0]["stores_id"][0].programid._id:"";
+                                var stateName = callBackData.response.data[0].stores_id[0].stateid ? callBackData.response.data[0].stores_id[0].stateid.name:"";
                                 if (!$appService.getCookie("selectedLoc")) {
                                     var c_name = "selectedLoc";
                                     document.cookie = c_name + "=" + escape(stateName);
@@ -65,7 +65,9 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
 
                                 ];
                                 for (var i = 0; i < callBackData.response.data.length; i++) {
-                                    image[i]["image"] = callBackData.response.data[i].storeid.programid.image;
+                                    if(callBackData.response.data[i].stores_id[0].programid){
+                                        image[i]["image"] = callBackData.response.data[i].stores_id[0].programid.image;
+                                    }
                                 }
                                 var setCompanyLogo = $appService.setUrls(image, 140, 88);
                                 var companyLogoUrl = setCompanyLogo[0].imageUrl;

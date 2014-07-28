@@ -9,7 +9,6 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (countryData) {
             $scope.countryList = countryData.response.data;
-            //$scope.countryList.selectedCountry = $scope.state.countries[0];
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
@@ -27,7 +26,6 @@ cstore.controller('stateCtrl', function ($scope, $appService) {
         {"value": "countryid.name", "name": "Country"}
     ];
     $scope.searchby = $scope.venderSearch[0];
-    //$scope.states = [];
     $appService.auth();
     $scope.getAllStates = function (direction, limit, column, searchText) {
         if ($scope.loadingStateData) {
@@ -157,9 +155,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                 pre: function ($scope) {
                     $scope.addNewState = function () {
                         $scope.states.push({ name: '', countryid: '' });
-                        //for (var i = 0; i < $scope.countries.length; i++) {
                         $scope.states[$scope.states.length - 1]["editStatus"] = true;
-                        //}
                     }
                     $scope.search = function () {
                         $scope.show.preCursor = 0;
@@ -302,13 +298,7 @@ cstore.directive('stateList', ['$appService', function ($appService, $scope) {
                         }
                     }
                     $scope.setState = function (state) {
-                        //$scope.states[state].editStatus = true;
-                        //for (var i = 0; i < $scope.data.states.length; i++) {
-                        //  if ($scope.data.states[i]._id == vendor.state._id) {
-                        //    $scope.data.selectedState = $scope.data.states[i];
-                        //  break;
-                        // }
-                        // }
+
                         for (var i = 0; i < $scope.countryList.length; i++) {
                             if ($scope.countryList[i]._id == state.countryid._id) {
                                 state.countryid = $scope.countryList[i];

@@ -5,8 +5,14 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
             '</div><div class="dropdown pull-left"><div class="logo1 pull-left"><a href="/"><img src="/images/main_logo.png"/></a>' +
 
             '</div><store-header ng-show="displayData.cart"></store-header><div ng-show="displayData.options" class="logo pull-right"><a href="/"><img ng-show="displayData.companyLogo" ng-src="{{currentUser.data.companyLogoUrl}}"/><img ng-hide="displayData.companyLogo" src="images/main_logo02.png"></a></div><div class="username pull-right"><div ng-show="displayData.loggedIn" class="user pull-left">{{currentUser.data.firstname}}</div>' +
-            '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out" ">' +
-            '<ul><li class="active"><a href = "/#!/profile">Profile</a></li><li><a ng-click="logOut()">' +
+            '<div ng-show="displayData.loggedIn" id="my_profile" class="pull-left"><img src="images/logout.png"><div class="pull-left" id="sign_out">' +
+            '<ul><li class="active"><a href = "/#!/profile">Profile</a></li>' +
+            '<li ng-show="displayData.options" class="active"><a href>Sites</a>' +
+            '<div class="site_menu pull-left"><ul>' +
+            '<li ng-show="displayData.options" ng-repeat="assignedStore in userAssignedStores" ng-click="changeStore(assignedStore)" ng-class="{\'activeUser\': assignedStore.userActive}"><a href>{{assignedStore.storename}}</a></li>' +
+            '</ul></div>' +
+            '</li>'+
+            '<li><a ng-click="logOut()">' +
             'Sign Out</a></li></ul></div></div></div></div>' +
             '<admin-menu ng-show="displayData.menu"></admin-menu><store-menu ng-show="displayData.options"></store-menu></div>' +
             '<div class="popup" style="display:none;">' +
@@ -24,6 +30,43 @@ cstore.directive('topHeader', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.cancelAlertPopup = function () {
                         $('.popup').toggle("slide");
+                    }
+                    $scope.changeStore = function (store) {
+                        if ($scope.userAssignedStores) {
+                            var storeid = store._id;
+                            var programid = store.programid ? store.programid._id:"";
+                            var stateName = store.stateid ? store.stateid.name:"";
+                            var image = [
+                                {"image": ""}
+                            ];
+                            if(store.programid &&store.programid.image){
+                                image[0]["image"] = store.programid.image;
+                            }
+                            var setCompanyLogo = $appService.setUrls(image, 140, 88);
+                            var companyLogoUrl = setCompanyLogo[0].imageUrl;
+                            if (storeid) {
+                                var c_name = "storeid";
+                                document.cookie = c_name + "=" + escape(storeid);
+                                var c_name = "programid";
+                                document.cookie = c_name + "=" + escape(programid);
+                                var c_name = "selectedLoc";
+                                document.cookie = c_name + "=" + escape(stateName);
+                                if (companyLogoUrl) {
+                                    var c_name = "companyLogoUrl";
+                                    document.cookie = c_name + "=" + escape(companyLogoUrl);
+                                }
+                            }
+                            for (var i = 0; i < $scope.userAssignedStores.length; i++) {
+                                if ($scope.userAssignedStores[i]._id == store._id) {
+                                    $scope.userAssignedStores[i].userActive = true;
+                                    break;
+                                }
+                                else {
+                                    $scope.userAssignedStores[i].userActive = false;
+                                }
+                            }
+                            window.location.href = "/";
+                        }
                     }
                 }
             }
@@ -119,7 +162,7 @@ cstore.directive('storeHeader', ['$appService', function ($appService, $scope) {
             '<div class="search_sign pull-left" ng-click="search()"><a href><img src="images/Search.png"></a></div></div><div class="location pull-left">' +
             ' <span class="where_i">I am in</span><span class="loction_img pull-left"><img src="images/location.png">' +
             '</span><span class="country">{{currentLoc.data.selectedLoc}}</span></div><div class="add_cart pull-right"ng-click="setPathForCart(\'shopping-cart\')"><div class="addcart_link pull-left"><a href>' +
-            '<img src="images/finalcart.png"></a></div><div class="add_count pull-left">({{cartProducts.length}})</div></div></div></div>',
+            '<img src="images/finalcart.png"></a></div><div class="add_count pull-left" ng-show="cartProducts.length">({{cartProducts.length}})</div></div></div></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -632,8 +675,6 @@ cstore.directive('appAisleFileUpload', ['$appService', '$compile', function ($ap
                     };
                     if ($scope.aislerow[$scope.colmetaaisledata.expression]) {
                         $scope.showAisleFile($scope.aislerow[$scope.colmetaaisledata.expression], false);
-                        //changed 2804
-                        //$scope.showFile($scope.row[$scope.colmetadata.expression], true);
 
                     } else if (!$scope.readonlyaislerow.fileurl) {
                         $scope.readonlyaislerow.filenotexist = true;
@@ -732,7 +773,6 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
                         $scope.imgFilenotexist = false;
                         $scope.uploadingimage = false;
                         $("#uploadMultiImgfile").val("");
-                        //  $scope.row[$scope.colmetadata.expression] = file;
                         if (index == 10)
                             $scope.imgFileLimitExceed = true;
                     };
@@ -745,7 +785,6 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
                     }
 
                     $scope.loadImgFile = function (evt) {
-                       // if ((/\.(doc|docx|xls|xlsx|pdf|ppt|pptx)$/i).test($scope.oFile.name)) {
                             var current_file = {};
                             $scope.uploadingimage = true;
                             current_file.name = $scope.oFile.name;
@@ -758,10 +797,7 @@ cstore.directive('appMultiAnyFileUpload', ['$appService', '$compile', function (
                                     $scope.showMultiImgFile(data.response, $scope.filedata.uploadedimages.length);
                                 }
                             });
-                        //} else {
-                        //    $("#popupMessage").html("You can upload doc,ppt,xls and pdf file only");
-                        //    $('.popup').toggle("slide");
-                        //}
+
                     };
 
                     /* iElement.bind('change', function () {
@@ -838,7 +874,19 @@ cstore.directive('storeCountrySelect', ['$appService', function ($appService, $s
 cstore.directive('roleSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles"></select>'
+        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles" ng-change="getStores(userdata.selectedRole)"></select>',
+        compile: function () {
+            return{
+                pre: function ($scope) {
+                    if ($scope.currentUser["data"]) {
+                        if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                            $scope.getStores($scope.userdata.selectedRole);
+                        }
+                    }
+                }, post: function ($scope) {
+                }
+            }
+        }
     }
 }]);
 
