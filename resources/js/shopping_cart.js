@@ -3,6 +3,7 @@ cstore.controller('shoppingCartCtrl', function ($scope, $appService) {
     $appService.auth();
     $scope.grandTotal = 0;
     $scope.getShoppingCart();
+    $scope.inActivePromo();
 });
 
 cstore.directive('shoppingCart', ['$appService', function ($appService, $scope) {

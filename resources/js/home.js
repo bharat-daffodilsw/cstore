@@ -2,6 +2,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
     $scope.homeView = {};
     $scope.myInterval = 5000;
     $scope.loadingPopularProductData = false;
+    $scope.inActivePromo();
     $scope.getPopularProducts = function (maxRow, searchText) {
         $scope.loadingPopularProductData = true;
         var query = {"table": "products__cstore"};

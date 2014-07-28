@@ -1266,6 +1266,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         query.operations = [$scope.newShoppingCartProduct];
         var currentSession = $appService.getSession();
         var usk = currentSession["usk"] ? currentSession["usk"] : null;
+        $scope.inActivePromo();
         $appService.save(query, ASK, OSK, usk, function (callBackData) {
             if (callBackData.code == 200 && callBackData.status == "ok") {
                 window.location.href = "#!/shopping-cart";
