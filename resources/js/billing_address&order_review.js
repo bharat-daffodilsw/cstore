@@ -306,11 +306,11 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.billingdata.shipping_address.lastname) {
-                                $("#popupMessage").html("Please enter shipping info lastname");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
+//                            if (!$scope.billingdata.shipping_address.lastname) {
+//                                $("#popupMessage").html("Please enter shipping info lastname");
+//                                $('.popup').toggle("slide");
+//                                return false;
+//                            }
                             if (!$scope.billingdata.shipping_address.address) {
                                 $("#popupMessage").html("Please enter shipping info address");
                                 $('.popup').toggle("slide");
@@ -343,7 +343,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                                 return false;
                             }
                             if (!shipping_email || regEmail.test(shipping_email) == false) {
-                                $("#popupMessage").html("Please enter a valid shipping info email id");
+                                $("#popupMessage").html("Please enter valid shipping info email id");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
@@ -653,7 +653,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                     $scope.setAddressState = function (cart) {
                         if (cart.bill_address) {
                             $scope.billingdata["bill_address"]["firstname"] = cart.bill_address.firstname ? cart.bill_address.firstname : "";
-                            $scope.billingdata["bill_address"]["lastname"] = cart.bill_address.lastname ? cart.bill_address.lastname : "";
+                            //$scope.billingdata["bill_address"]["lastname"] = cart.bill_address.lastname ? cart.bill_address.lastname : "";
                             $scope.billingdata["bill_address"]["address"] = cart.bill_address.address ? cart.bill_address.address : "";
                             $scope.billingdata["bill_address"]["address_2"] = cart.bill_address.address_2 ? cart.bill_address.address_2 : "";
                             $scope.billingdata["bill_address"]["zipcode"] = cart.bill_address.zipcode ? cart.bill_address.zipcode : "";
@@ -666,7 +666,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         $scope.billingdata["same_shipping_address"] = cart.same_shipping_address;
                         if (!cart.same_shipping_address && cart.shipping_address) {
                             $scope.billingdata["shipping_address"]["firstname"] = cart.shipping_address.firstname ? cart.shipping_address.firstname : "";
-                            $scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
+                            //$scope.billingdata["shipping_address"]["lastname"] = cart.shipping_address.lastname ? cart.shipping_address.lastname : "";
                             $scope.billingdata["shipping_address"]["address"] = cart.shipping_address.address ? cart.shipping_address.address : "";
                             $scope.billingdata["shipping_address"]["address_2"] = cart.shipping_address.address_2 ? cart.shipping_address.address_2 : "";
                             $scope.billingdata["shipping_address"]["zipcode"] = cart.shipping_address.zipcode ? cart.shipping_address.zipcode : "";
