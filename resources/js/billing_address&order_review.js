@@ -139,12 +139,12 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '<div class="saved_address">Billing Information</div>' +
             '<table width="100%" border="0" cellspac1ing="0" cellpadding="0">' +
             '<tr>' +
-            '<td><div class="margin_top">First Name*</div></td>' +
-            '<td><div class="margin_top">Last Name*</div></td>' +
+            '<td><div class="margin_top">Name*</div></td>' +
+            //'<td><div class="margin_top">Last Name*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td><input type="text" placeholder="" ng-model="billingdata.bill_address.firstname"></td>' +
-            '<td><input type="text" placeholder="" ng-model="billingdata.bill_address.lastname"></td>' +
+            '<td class="text_area"><input type="text" placeholder="" ng-model="billingdata.bill_address.firstname"></td>' +
+            //'<td><input type="text" placeholder="" ng-model="billingdata.bill_address.lastname"></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -189,7 +189,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
             '<td class="half_td"><div class="margin_top">Extension</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><input type="text" placeholder=""ng-model="billingdata.bill_address.phone"></td>' +
+            '<td class="half_td"><input type="text" placeholder=""ng-model="billingdata.bill_address.phone" maxlength="12"></td>' +
             '<td class="half_td"><input type="text" placeholder=""ng-model="billingdata.bill_address.ext"></td>' +
             '</tr>' +
             '</table>' +
@@ -258,11 +258,11 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                             $('.popup').toggle("slide");
                             return false;
                         }
-                        if (!$scope.billingdata.bill_address.lastname) {
-                            $("#popupMessage").html("Please enter billing info lastname");
-                            $('.popup').toggle("slide");
-                            return false;
-                        }
+//                        if (!$scope.billingdata.bill_address.lastname) {
+//                            $("#popupMessage").html("Please enter billing info lastname");
+//                            $('.popup').toggle("slide");
+//                            return false;
+//                        }
                         if (!$scope.billingdata.bill_address.address) {
                             $("#popupMessage").html("Please enter billing info address");
                             $('.popup').toggle("slide");
@@ -356,7 +356,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         $scope.newBillingAddress["storeid"]={"_id" : $scope.currentUser.data.storeid};
                         $scope.newBillingAddress["same_shipping_address"] = $scope.billingdata.same_shipping_address;
                         $scope.newBillingAddress["bill_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
-                        $scope.newBillingAddress["bill_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
+//                        $scope.newBillingAddress["bill_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
                         $scope.newBillingAddress["bill_address"]["address"] = $scope.billingdata.bill_address.address;
                         $scope.newBillingAddress["bill_address"]["address_2"] = $scope.billingdata.bill_address.address_2;
                         $scope.newBillingAddress["bill_address"]["zipcode"] = $scope.billingdata.bill_address.zipcode;
@@ -374,7 +374,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         }
                         if ($scope.billingdata.same_shipping_address == true) {
                             $scope.newBillingAddress["shipping_address"]["firstname"] = $scope.billingdata.bill_address.firstname;
-                            $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
+//                            $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.bill_address.lastname;
                             $scope.newBillingAddress["shipping_address"]["address"] = $scope.billingdata.bill_address.address;
                             $scope.newBillingAddress["shipping_address"]["address_2"] = $scope.billingdata.bill_address.address_2;
                             $scope.newBillingAddress["shipping_address"]["zipcode"] = $scope.billingdata.bill_address.zipcode;
@@ -393,7 +393,7 @@ cstore.directive('billingAddress', ['$appService', function ($appService, $scope
                         }
                         else {
                             $scope.newBillingAddress["shipping_address"]["firstname"] = $scope.billingdata.shipping_address.firstname;
-                            $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.shipping_address.lastname;
+//                            $scope.newBillingAddress["shipping_address"]["lastname"] = $scope.billingdata.shipping_address.lastname;
                             $scope.newBillingAddress["shipping_address"]["address"] = $scope.billingdata.shipping_address.address;
                             $scope.newBillingAddress["shipping_address"]["address_2"] = $scope.billingdata.shipping_address.address_2;
                             $scope.newBillingAddress["shipping_address"]["zipcode"] = $scope.billingdata.shipping_address.zipcode;
@@ -447,13 +447,13 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
             '<td>' +
             '<div class="margin_top">First Name*</div>' +
             '</td>' +
-            '<td>' +
-            '<div class="margin_top">Last Name*</div>' +
-            '</td>' +
+//            '<td>' +
+//            '<div class="margin_top">Last Name*</div>' +
+//            '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.firstname"></td>' +
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.lastname"></td>' +
+            '<td class="text_area"><input type="text" placeholder="" ng-model="billingdata.shipping_address.firstname"></td>' +
+//            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.lastname"></td>' +
             '</tr>' +
             '</table>' +
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
@@ -506,7 +506,7 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
             '</td>' +
             '</tr>' +
             '<tr>' +
-            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.phone"></td>' +
+            '<td><input type="text" placeholder="" ng-model="billingdata.shipping_address.phone" maxlength="12"></td>' +
             '<td><input type="text" placeholder=""ng-model="billingdata.shipping_address.ext"></td>' +
             '</tr>' +
             '</table>' +
@@ -684,7 +684,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         for (var i = 0; i < $scope.shoppingCartProducts.length; i++) {
                             products.push({"name": $scope.shoppingCartProducts[i].name, "price": $scope.shoppingCartProducts[i].cost.amount.toFixed(2), "currency": $scope.shoppingCartProducts[i].cost.type.currency, "quantity": $scope.shoppingCartProducts[i].quantity});
                         }
-                        var shipping_address = {"recipient_name": $scope.savedShippingAddress.firstname + " " + $scope.savedShippingAddress.lastname, "type": "residential", "line1": $scope.savedShippingAddress.address, "city": $scope.savedShippingAddress.city.name, "state": $scope.savedShippingAddress.state.abbreviation, "country_code": $scope.savedShippingAddress.country.name, "postal_code": $scope.savedShippingAddress.zipcode};
+                        var shipping_address = {"recipient_name": $scope.savedShippingAddress.firstname, "type": "residential", "line1": $scope.savedShippingAddress.address, "city": $scope.savedShippingAddress.city.name, "state": $scope.savedShippingAddress.state.abbreviation, "country_code": $scope.savedShippingAddress.country.name, "postal_code": $scope.savedShippingAddress.zipcode};
                         //var shipping_address = {"recipient_name": "Perry Gupta", "type": "residential", "line1": "Building 4", "city": "Columbus", "state": "OH", "country_code": "US", "postal_code": "43215"};
                         var fixedAmount = $scope.cartData.total.amount.toFixed(2);
                         var amount = {"currency": $scope.cartData.total.type.currency, "total": fixedAmount, "details": {"tax": "0.00", "shipping": "0.00"}};

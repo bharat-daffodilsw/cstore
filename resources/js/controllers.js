@@ -211,6 +211,7 @@ cstore.config(
 
 cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.currentUser = {"data": ""};
+    $scope.activeStore={"storename":""};
     $scope.hasHighlight = {"reports": false, "setup": false, "promos": false};
     $scope.notification = {};
     $scope.search = {"searchContent": ""};
@@ -996,6 +997,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             for (var i = 0; i < $scope.userAssignedStores.length; i++) {
                 if ($scope.currentUser.data.storeid && $scope.userAssignedStores[i]._id == $scope.currentUser.data.storeid) {
                     $scope.userAssignedStores[i].userActive = true;
+                    $scope.activeStore=$scope.userAssignedStores[i];
                 }
                 else {
                     $scope.userAssignedStores[i].userActive = false;
@@ -1214,7 +1216,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
 
                     //$scope.cartProducts=cartData.response.data[0].product;
                     if (cartData.response.data && cartData.response.data.length) {
-                        $scope.cartProducts.length = cartData.response.data[0].product.length;
+                        if(cartData.response.data[0].product){
+                            $scope.cartProducts.length = cartData.response.data[0].product.length;
+                        }
                         $scope.testCartData = cartData.response.data[0];
                     }
                 }, function (jqxhr, error) {

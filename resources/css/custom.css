@@ -563,7 +563,7 @@ a:hover {
 
 .admin_menu ul li {
     display: inline;
-    padding: 0px 5px;
+    padding: 10px 5px;
     color: #000;
     font-size: 17px;
     position: relative;
@@ -571,6 +571,12 @@ a:hover {
 }
 
 .admin_menu ul li a:hover {
+    background-color: #b88a3f;
+    font-size: 17px;
+    color: #000;
+}
+
+.admin_menu ul li:hover {
     background-color: #b88a3f;
     font-size: 17px;
     color: #000;
@@ -588,7 +594,7 @@ a:hover {
 
 .admin_menu ul li a {
     color: #FFF;
-    padding: 10px 5px;
+    padding: 8px 5px;
 }
 
 .matter {
@@ -607,7 +613,7 @@ a:hover {
     position: absolute;
     margin-top: 7px;
     width: 200px;
-    right: 5px;
+    right: 0px;
     z-index: 1000000;
 }
 .site_menu {
@@ -2332,8 +2338,8 @@ label.multiSelect span:hover {
 }
 .category_name {
     font-size: 13px;
-    min-height: 16px;
-    max-height: 16px;
+    min-height: 18px;
+    max-height: 18px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2359,7 +2365,7 @@ label.multiSelect span:hover {
 }
 .promo_drop {
     width: 150px !important;
-    left: 5px !important;
+    left: 0px !important;
 }
 .hours {
     margin-left: 2%;
@@ -2403,5 +2409,12 @@ label.multiSelect span:hover {
 .activeUser a{
     font-size: 17px;
     color: #fff;
+}
+.active_store{
+    color: white !important;
+    padding: 0 15px!important;
+}
+li.active_store.pull-right:hover {
+    background: none;
 }
 

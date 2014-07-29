@@ -360,7 +360,6 @@ cstore.directive('addVendor', ['$appService', function ($appService, $scope) {
                     $scope.newVendor = {};
                     $scope.setPathforVender = function (path) {
                         $scope.clearContent();
-                        $scope.removeCategoryValue();
                         window.location.href = "#!/" + path;
                     }
                     $scope.removeCategoryValue = function () {

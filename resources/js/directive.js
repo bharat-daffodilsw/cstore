@@ -79,7 +79,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
         restrict: "E",
         template: '<div class="admin_menu pull-left">' +
             '<ul>'+
-            '<li ng-click="clearContent()"><a href ="#!/vendors" active-link="active">Vendor</a></li>'+
+            '<li ng-click="clearContent()"><a href ="#!/vendors" id="vendor" active-link="active" >Vendor</a></li>'+
             '<li ng-click="clearStoreContent()"><a href="#!/site-info" active-link="active">Site Info</a></li>'+
             '<li id="users"><a href="#!/manage-users" ng-click="clearUserContent()" active-link="active">Users</a></li>'+
             '<li id="pops" ng-click="clearProductContent()"><a href="#!/pops" active-link="active">POP</a></li>' +
@@ -136,6 +136,7 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
             '<li ng-click="inActivePromo()"><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
             '<li ng-click="inActivePromo()"><a href ="#!/all-files" active-link="active">Files</a></li>'+
             '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li>'+
+            '<li class="active_store pull-right">{{activeStore.storename}}</li>'+
             '</ul></div>',
         compile: function () {
             return {
