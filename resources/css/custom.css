@@ -622,12 +622,14 @@ a:hover {
     position: absolute;
     background: #b88a3f;
     display: none;
-    width: 190px;
+    width: 200px;
     max-height: 225px;
     overflow: auto;
     color:#000;
 }
-
+.site_menu ul li a{
+    font-size:14px;
+}
 .setup ul li {
     padding: 0;
     color: #000;
@@ -2413,6 +2415,7 @@ label.multiSelect span:hover {
 .active_store{
     color: white !important;
     padding: 0 15px!important;
+    font-size: 16px !important;
 }
 li.active_store.pull-right:hover {
     background: none;
