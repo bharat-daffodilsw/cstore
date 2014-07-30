@@ -382,6 +382,21 @@ a:hover {
 .img_product {
     padding: 5px;
     position: relative;
+    min-height: 450px;
+    max-height: 450px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    max-width: 44%;
+    min-width: 44%;
+    margin: .5%;
+}
+.img_promo {
+    padding: 5px;
+    position: relative;
     min-height: 540px;
     max-height: 540px;
     overflow: hidden;
@@ -395,7 +410,7 @@ a:hover {
     margin: .5%;
 }
 
-.img_product img {
+.img_product img,.img_promo img {
     max-width: 550px;
     max-height: 350px;
     margin: auto;
@@ -530,7 +545,7 @@ a:hover {
 }
 
 @media (max-width: 1080px) {
-    .img_product {
+    .img_product,.img_promo {
         width: 44%;
     }
 
@@ -538,7 +553,7 @@ a:hover {
         padding-top: 1%
     }
 
-    .details_product {
+    .details_product,.details_promo {
         width: 44.9%;
     }
 
@@ -1251,13 +1266,19 @@ table td input {
 
 .details_product {
     width: 54.5%;
-    min-height: 540px;
-    /*max-height: 540px;*/
+    min-height: 450px;
+    max-height: 450px;
     margin-top: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
 }
-
+.details_promo {
+    width: 54.5%;
+    min-height: 540px;
+    margin-top: .5%;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+    padding: 10px;
+}
 .visible {
     visibility: hidden;
 }
