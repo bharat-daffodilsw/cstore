@@ -102,8 +102,8 @@ appStrapServices.factory('$appService', [
             $.support.cors = true;
 
             $.ajax({
-                //type:"POST",
-                type:"GET",
+                type:"POST",
+                //type:"GET",
                 url: url,
                 data: requestBody,
                 crossDomain: true,

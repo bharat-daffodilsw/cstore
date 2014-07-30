@@ -47,9 +47,9 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
 cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_product pull-left">' +
+        template: '<div class="category pull-left"><div class="pop_products"><a href="/">Home</a> > <a href="#!/all-promos">Promotions</a> > {{promotion[0].promo_title}}</div><div class="img_promo pull-left">' +
             '<a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImageUrl}}"><img ng-src="{{promotion[0].displayImageUrl}}" /></a></div>' +
-            '<div class="details_product pull-left"><div class="Qty">' +
+            '<div class="details_promo pull-left"><div class="Qty">' +
             '<div class="quantity_border"><b>Start Date</b> :{{promotion[0].start_date}} </div>' +
             '<div class="quantity_border"><b>End Date</b> :{{promotion[0].end_date}} </div>' +
             '<div class="quantity_border"><b>Threshold</b> :{{promotion[0].threshold}} </div>' +
