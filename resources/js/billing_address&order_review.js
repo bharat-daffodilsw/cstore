@@ -692,7 +692,7 @@ cstore.directive('orderReview', ['$appService', function ($appService, $scope) {
                         var return_url = "http://www.ecpromomarket.com/#!/orders";
                         //var cancel_url = "http://cstore.daffodilapps.com/#!/order-review";
                         var cancel_url = "http://www.ecpromomarket.com/#!/order-review";
-                        var requestBody = {"products": products, "shipping_address": shipping_address, "amount": amount, "return_url": return_url, "cancel_url": cancel_url, "ask": ASK, "osk": OSK,"mode":"sandbox"};
+                        var requestBody = {"products": products, "shipping_address": shipping_address, "amount": amount, "return_url": return_url, "cancel_url": cancel_url, "ask": ASK, "osk": OSK,"mode":"live"};
                         var serviceUrl = "/rest/create/payment";
                         $appService.createPayment(serviceUrl, requestBody, "POST", "JSON", function (callbackdata) {
                             if(callbackdata.code==17){

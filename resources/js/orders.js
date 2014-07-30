@@ -83,8 +83,8 @@ cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) 
     }
     $scope.executePayment = function () {
         var payerId = $routeParams.PayerID;
-        var mode = "sandbox";
-//          var mode = "live";
+//        var mode = "sandbox";
+          var mode = "live";
         $appService.executePayment($scope.paymentId, payerId, mode, ASK, OSK, null, function (callBackData) {
             $scope.loadingOrderData = false;
             if (callBackData.code == 200 && callBackData.status == "ok") {

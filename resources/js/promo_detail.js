@@ -58,6 +58,7 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div class="quantity_border"><b>Minimum Retail</b> : {{promotion[0].minimum_retail.amount | currency}}</div>' +
             '<div class="quantity_border"><b>UPC/PLU/GROUP</b> : {{promotion[0].upc}}</div>' +
             '<div class="product_code"><b>Product Codes</b> : <span ng-repeat="code in promotion[0].codes"><span ng-hide=$index==0  style="padding-right: 5px;">,</span>{{code}}</span></div>' +
+            '<div class="product_code"><b>Notes</b> : {{promotion[0].notes}}</div>' +
             '<div class="Qty"><div class="quantity_border">Quantity : ' +
             '<select class="qty_select_1" ng-model="qty" ng-options="quantity for quantity in shoppingCartData.quantity">' +
             '</select></div>'+
@@ -67,7 +68,6 @@ cstore.directive('promoDetail', ['$appService', function ($appService, $scope) {
             '<div id="downloadImage" class="add_to_btn pull-left"><a target="_blank" href="' + DOMAIN_NAME + '{{promotion[0].downloadImage}}">DOWNLOAD</a></div>'+
             '</div>'+
             '</div></div><div class="product_description col-sm-12 col-md-12 pull-left">{{promotion[0].promo_description}}</div>' +
-            '<div class="product_description col-sm-12 col-md-12 pull-left"><b>Notes : </b>{{promotion[0].notes}}</div>' +
             '</div>' +
             '<div class="loadingImage" ng-hide="!loadingPromotionDetailData"><img src="images/loading.gif"></div>',
         compile: function () {
