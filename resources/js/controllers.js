@@ -957,7 +957,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
     $scope.getStores = function (role, storeArray) {
         if (role._id == STOREMANAGER || role._id == STOREADMIN) {
-            $scope.loadingUserData = true;
+            $scope.loadingStatus = true;
             var query = {"table": "storemanagers__cstore"};
             query.columns = ["storename", "assigned_user"];
             query.orders = {"storename": "asc"};
@@ -974,7 +974,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
                 $scope.userdata.stores = storeData.response.data;
-                $scope.loadingUserData = false;
+                $scope.loadingStatus = false;
                 var stores = [];
                 for (var i = 0; i < $scope.userdata.stores.length; i++) {
                     if (storeArray) {
@@ -1008,7 +1008,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
                 $('.popup').toggle("slide");
-                $scope.loadingUserData = false;
+                $scope.loadingStatus = false;
             })
         }
     }
