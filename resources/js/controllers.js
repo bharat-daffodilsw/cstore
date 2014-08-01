@@ -204,6 +204,9 @@ cstore.config(
             }).when('/disabled-promos', {
                 templateUrl: '../disabled-promos',
                 controller: 'disabledPromotionsCtrl'
+            }).when('/edit-user', {
+                templateUrl: '../add-new-user',
+                controller: 'addUserCtrl'
             }).otherwise(
 //            {"redirectTo":"/login.html"}
             );
@@ -307,7 +310,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     ];
     $scope.storedata.selectedLoyaltyStatus = $scope.storedata.loyalty_status[0];
     $scope.productdata = {"productCategories": [], "vendors": [], "selectedProductCategory": "", "selectedVendor": "", "programs": [], "selectedProgram": ""};
-    $scope.userdata = {"roles": [], "selectedRole": "", "stores": [], "selectedStore": ""};
+    $scope.userdata = {"roles": [], "selectedRole": "", "stores": [], "selectedStore": "","stores_id":[]};
     $scope.promotiondata = {"offerTypes": [], "selectedOfferType": "", "itemSignage": [], "selectedItemSignage": "", "upc": [], "selectedUpc": "", "hours": [], "minutes": [], "selectedStartHour": "", "selectedStartMinute": "", "selectedStartSecond": "", "selectedEndHour": "", "selectedEndMinute": "", "selectedEndSecond": "", "seconds": []};
     $scope.promotiondata.offerTypes = [
         {"name": "NPROD"}
@@ -952,10 +955,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $('.popup').toggle("slide");
         })
     }
-    $scope.getStores = function (role) {
+    $scope.getStores = function (role, storeArray) {
         if (role._id == STOREMANAGER || role._id == STOREADMIN) {
+            $scope.loadingUserData = true;
             var query = {"table": "storemanagers__cstore"};
-            query.columns = ["storename"];
+            query.columns = ["storename", "assigned_user"];
             query.orders = {"storename": "asc"};
             query.filter = {};
             if ($scope.currentUser["data"]) {
@@ -963,20 +967,48 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                     query.filter["programid._id"] = $scope.currentUser["data"]["programid"];
                 }
             }
-            if (role._id == STOREMANAGER) {
+            if (role._id == STOREMANAGER && (!storeArray || storeArray == null)) {
                 query.filter["assigned_user"] = false;
             }
             var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
             var serviceUrl = "/rest/data";
             $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (storeData) {
                 $scope.userdata.stores = storeData.response.data;
+                $scope.loadingUserData = false;
+                var stores = [];
                 for (var i = 0; i < $scope.userdata.stores.length; i++) {
-                    $scope.userdata.stores[i].ticked = false;
+                    if (storeArray) {
+                        if (role._id == STOREADMIN) {
+                            for (var j = 0; j < storeArray.length; j++) {
+                                if ($scope.userdata.stores[i]._id == storeArray[j]._id) {
+                                    $scope.userdata.stores[i].ticked = true;
+                                }
+                            }
+                        }
+                        if (role._id == STOREMANAGER) {
+                            if ($scope.userdata.stores[i].assigned_user == false) {
+                                stores.push({"_id": $scope.userdata.stores[i]._id, "storename": $scope.userdata.stores[i].storename, "ticked": false});
+                            }
+                            else if (storeArray) {
+                                for (var j = 0; j < storeArray.length; j++) {
+                                    if ($scope.userdata.stores[i]._id == storeArray[j]._id) {
+                                        stores.push({"_id": $scope.userdata.stores[i]._id, "storename": $scope.userdata.stores[i].storename, "ticked": true})
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        $scope.userdata.stores[i].ticked = false;
+                    }
                 }
-                $scope.userdata.selectedStore = $scope.userdata.stores[0];
+                if (role._id == STOREMANAGER && storeArray) {
+                    $scope.userdata.stores = stores;
+                }
             }, function (jqxhr, error) {
                 $("#popupMessage").html(error);
                 $('.popup').toggle("slide");
+                $scope.loadingUserData = false;
             })
         }
     }
@@ -1099,7 +1131,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.userdata["lastname"] = "";
         $scope.userdata["password"] = "";
         $scope.userdata.selectedRole = $scope.userdata.roles[0];
-        $scope.userdata.selectedStore = $scope.userdata.stores[0];
+        //$scope.userdata.selectedStore = $scope.userdata.stores[0];
         $scope.hasHighlight.setup=false;
         $scope.hasHighlight.reports=false;
     }
@@ -1131,7 +1163,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.promotiondata.codes = [];
         $scope.promotiondata["top_promo"] = false;
         $scope.oFile.fileExist = false;
-        //$scope.getPrograms(null,null);
+        $scope.getPrograms(null,null);
         $scope.clearPromotionNotificationContent();
         $scope.hasHighlight.setup = false;
         $scope.hasHighlight.reports = false;
@@ -1492,7 +1524,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                         if (storePromoData.response.data && storePromoData.response.data.length > 0 && storePromoData.response.data[0].store_manager_id && storePromoData.response.data[0].store_manager_id.length) {
                             $scope.assignedStoreManagers = storePromoData.response.data[0].store_manager_id;
                             for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
-                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id) {
                                     inputData[inp].ticked = true;
                                     break;
                                 }
@@ -1590,7 +1622,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                         if (storeTrainingData.response.data && storeTrainingData.response.data.length > 0 && storeTrainingData.response.data[0].store_manager_id && storeTrainingData.response.data[0].store_manager_id.length) {
                             $scope.assignedStoreManagers = storeTrainingData.response.data[0].store_manager_id;
                             for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
-                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id) {
                                     inputData[inp].ticked = true;
                                     break;
                                 }
@@ -1688,7 +1720,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                         if (storeSurveyData.response.data && storeSurveyData.response.data.length > 0 && storeSurveyData.response.data[0].store_manager_id && storeSurveyData.response.data[0].store_manager_id.length) {
                             $scope.assignedStoreManagers = storeSurveyData.response.data[0].store_manager_id;
                             for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
-                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id) {
                                     inputData[inp].ticked = true;
                                     break;
                                 }
@@ -1784,7 +1816,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                         if (storeFileData.response.data && storeFileData.response.data.length > 0 && storeFileData.response.data[0].store_manager_id && storeFileData.response.data[0].store_manager_id.length) {
                             $scope.assignedStoreManagers = storeFileData.response.data[0].store_manager_id;
                             for (var k = 0; k < $scope.assignedStoreManagers.length; k++) {
-                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id && inputData[inp].emailid == $scope.assignedStoreManagers[k].email) {
+                                if (inputData[inp].storeid == $scope.assignedStoreManagers[k]._id) {
                                     inputData[inp].ticked = true;
                                     break;
                                 }

@@ -97,6 +97,7 @@ cstore.directive('adminMenu', ['$appService', function ($appService, $scope) {
             '<li id="cities" ng-click="activeHightLight()"><a href="#!/cities" active-link="highlight">Cities</a></li>'+
             '<li id="states" ng-click="activeHightLight()"><a href="#!/states" active-link="highlight">States</a></li>'+
             '<li id="countries" ng-click="activeHightLight()"><a href="#!/countries"active-link="highlight">Countries</a></li>'+
+            //'<li ng-click="activeHightLight()"><a href="#!/mail-template" active-link="highlight">Mail Template</a></li>' +
             '</ul></div></li>'+
             '<li id="setup" ng-hide="displayData.role.programAdmin"><a href ng-class="{\'active\': hasHighlight.reports}">Reports</a>'+
             '<div class="setup pull-left"><ul>'+
@@ -875,13 +876,13 @@ cstore.directive('storeCountrySelect', ['$appService', function ($appService, $s
 cstore.directive('roleSelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',
-        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles" ng-change="getStores(userdata.selectedRole)"></select>',
+        template: '<select class="brand" ng-model="userdata.selectedRole" ng-options="role.name for role in userdata.roles" ng-change="getStores(userdata.selectedRole,null)"></select>',
         compile: function () {
             return{
                 pre: function ($scope) {
                     if ($scope.currentUser["data"]) {
                         if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
-                            $scope.getStores($scope.userdata.selectedRole);
+                            $scope.getStores($scope.userdata.selectedRole,null);
                         }
                     }
                 }, post: function ($scope) {

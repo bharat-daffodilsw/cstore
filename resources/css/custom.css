@@ -2297,7 +2297,7 @@ label.multiSelect span:hover {
 
 .multipleOuterDiv {
     overflow: auto;
-    height: 230px;
+    height: 180px;
 }
 .multiSelect input { width: 62% !important;}
 .opt_button {

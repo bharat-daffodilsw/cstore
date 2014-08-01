@@ -2,6 +2,8 @@
 cstore.controller('orderListCtrl', function ($scope, $appService, $routeParams) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingOrderData = false;
+    $scope.orderFilterData.end_date="";
+    $scope.orderFilterData.start_date="";
     $scope.status = ["In Progress", "Cancelled", "Delivered"];
     if ($scope.currentUser["data"]) {
         if ($scope.currentUser["data"]["roleid"] == STOREMANAGER || $scope.currentUser["data"]["roleid"] == STOREADMIN) {

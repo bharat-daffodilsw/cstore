@@ -2,6 +2,8 @@ cstore.controller('siteInfoReportCtrl', function ($scope, $appService, $location
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingSiteInfoReportData = false;
     $scope.filterdata.selectedProgram="";
+    $scope.storedata.selectedShift="";
+    $scope.filterdata.selectedBrand="";
     $scope.venderSearch = [
         {"value": "siteid", "name": "Site Id"},
         {"value": "storename", "name": "Site Name"},
@@ -309,7 +311,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                             pdfquery.filter["shift"] = $scope.storedata.selectedShift.name;
                         }
                         if ($scope.filterdata.selectedBrand && $scope.filterdata.selectedBrand != "") {
-                            pdfquery.filter["brands"] = $scope.filterdata.selectedBrand.name;
+                            pdfquery.filter["brands"] = $scope.filterdata.selectedBrand._id;
                         }
                         pdfquery.orders = {};
                         if ($scope.sortingCol && $scope.sortingType) {
@@ -338,7 +340,7 @@ cstore.directive('siteReport', ['$appService', function ($appService, $scope) {
                             query.filter["shift"] = $scope.storedata.selectedShift.name;
                         }
                         if ($scope.filterdata.selectedBrand && $scope.filterdata.selectedBrand != "") {
-                            query.filter["brands"] = $scope.filterdata.selectedBrand.name;
+                            query.filter["brands"] = $scope.filterdata.selectedBrand._id;
                         }
                         query.orders = {};
                         if ($scope.sortingCol && $scope.sortingType) {

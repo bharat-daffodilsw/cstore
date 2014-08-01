@@ -129,7 +129,9 @@ cstore.directive('productCodeList', ['$appService', function ($appService, $scop
             '<a class="edit_btn" ng-click="productCode.editStatus=true;setProductCode(productCode)" ng-hide="productCode.editStatus">Edit</a>' +
             '<a class="edit_btn" ng-click="remove($index,productCode._id)" ng-show="productCode.editStatus">Cancel</a></td></tr>' +
             '</table><div class="add_new"><a href ng-click="addNewProductCode()">' +
-            '+ Click Here To Add New Product Code</a></div></div><div class="loadingImage" ng-hide="!loadingProductCodeData"><img src="images/loading.gif"></div>',
+            '+ Click Here To Add New Product Code</a></div></div><div class="add_delete pull-left"><div class="add_btn pull-left"><button type="button" ng-click="saveProductCodes()"><a href="">' +
+            'Save</a></button></div></div>'+
+            '<div class="loadingImage" ng-hide="!loadingProductCodeData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
