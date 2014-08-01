@@ -880,11 +880,6 @@ cstore.directive('roleSelect', ['$appService', function ($appService, $scope) {
         compile: function () {
             return{
                 pre: function ($scope) {
-                    if ($scope.currentUser["data"]) {
-                        if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
-                            $scope.getStores($scope.userdata.selectedRole,null);
-                        }
-                    }
                 }, post: function ($scope) {
                 }
             }

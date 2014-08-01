@@ -950,6 +950,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (roleData) {
             $scope.userdata.roles = roleData.response.data;
             $scope.userdata.selectedRole = $scope.userdata.roles[0];
+            if ($scope.currentUser["data"]) {
+                if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
+                    $scope.getStores($scope.userdata.selectedRole, null);
+                }
+            }
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
