@@ -445,7 +445,7 @@ cstore.directive('shippingAddress', ['$appService', function ($appService, $scop
         template: '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<td>' +
-            '<div class="margin_top">First Name*</div>' +
+            '<div class="margin_top">Name*</div>' +
             '</td>' +
 //            '<td>' +
 //            '<div class="margin_top">Last Name*</div>' +
