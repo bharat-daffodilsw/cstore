@@ -100,13 +100,11 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
                                 if ($scope.promotions[i].store_manager_id.opt) {
                                     $scope.promosArray.push($scope.promotions[i]._id);
                                 }
-                                console.log(JSON.stringify($scope.promotions[i]));
                                 $scope.optArray.push({"_id": $scope.promotions[i]._id, "store_manager_id": [
                                     {"_id": $scope.promotions[i].store_manager_id._id, "opt": $scope.promotions[i].store_manager_id.opt, "submitted": true, "__type__": "update"}
                                 ]});
                             }
                         }
-                        console.log(JSON.stringify($scope.optArray));
                         if (!$scope.promotions.length || $scope.promotions.length == 0) {
                             $("#popupMessage").html("There is no promo for submission");
                             $('.popup').toggle("slide");
