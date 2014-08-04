@@ -47,7 +47,9 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "decal_description",
             "decal_subdescription",
             "display_image",
-            "notes"
+            "notes",
+            "end_date_string",
+            "start_date_string"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -133,7 +135,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th>' +
             '<th><span>Offer Type</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'offer_type\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'offer_type\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div>	</span></th><th><span>Item Signage</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'item_signage\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'item_signage\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>Start Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'start_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'start_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th><span>End Date</span><span class="sortWrap"><div class="sortUp" ng-click="setPromotionOrder(\'end_date\',\'asc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div><div class="sortDown" ng-click="setPromotionOrder(\'end_date\',\'desc\',searchby.value,search.searchContent,promotiondata.filter_date)"></div></span></th><th></th></tr><tr ng-repeat="promotion in promotions"><td>' +
             '<input type="checkbox" ng-model="promotion.deleteStatus"></td><td>{{promotion.promo_title}}</td><td>{{promotion.offer_title}}</td><td>{{promotion.programid.name}}</td><td>' +
-            '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date}}</td><td>{{promotion.end_date}}</td>' +
+            '{{promotion.offer_type}}</td><td>{{promotion.item_signage}}</td><td>{{promotion.start_date_string}}</td><td>{{promotion.end_date_string}}</td>' +
             '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
@@ -243,13 +245,13 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                         var endMinArray = [];
                         var startArray = [];
                         var startMinArray = [];
-                        if (promotion["end_date"]) {
-                            endArray = promotion["end_date"].split(" ");
+                        if (promotion["end_date_string"]) {
+                            endArray = promotion["end_date_string"].split(" ");
                             endMinArray = endArray[1].split(":");
                         }
                         $scope.promotiondata.end_date = endArray[0];
-                        if (promotion["start_date"]) {
-                            startArray = promotion["start_date"].split(" ");
+                        if (promotion["start_date_string"]) {
+                            startArray = promotion["start_date_string"].split(" ");
                             startMinArray = startArray[1].split(":");
                         }
                         $scope.promotiondata.start_date = startArray[0];
@@ -693,6 +695,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.storeManagerArray.push({"_id": $scope.resultData[i].storeid, "email": $scope.resultData[i].emailid, "opt": true, "submitted": false});
                             }
                             $scope.newPromotion["end_date"] = new Date($scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute + ":" + $scope.promotiondata.selectedEndSecond);
+                            $scope.newPromotion["end_date_string"] = $scope.promotiondata.end_date + " " + $scope.promotiondata.selectedEndHour + ":" + $scope.promotiondata.selectedEndMinute + ":" + $scope.promotiondata.selectedEndSecond;
                             $scope.newPromotion["item_signage"] = $scope.promotiondata.selectedItemSignage.name;
                             $scope.newPromotion["offer_description"] = $scope.promotiondata.offer_description;
                             $scope.newPromotion["offer_title"] = $scope.promotiondata.offer_title;
@@ -702,6 +705,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             $scope.newPromotion["reward_value"] = {"amount": $scope.promotiondata.reward_value.amount, "type": {"currency": "usd"}};
                             $scope.newPromotion["sponsor"] = $scope.promotiondata.sponsor;
                             $scope.newPromotion["start_date"] = new Date($scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute + ":" + $scope.promotiondata.selectedStartSecond);
+                            $scope.newPromotion["start_date_string"] = $scope.promotiondata.start_date + " " + $scope.promotiondata.selectedStartHour + ":" + $scope.promotiondata.selectedStartMinute + ":" + $scope.promotiondata.selectedStartSecond;
                             $scope.newPromotion["threshold"] = $scope.promotiondata.threshold;
                             $scope.newPromotion["store_manager_id"] = {data: $scope.storeManagerArray, "override": "true"};
                             $scope.newPromotion["minimum_retail"] = {"amount": $scope.promotiondata.minimum_retail.amount, "type": {"currency": "usd"}};

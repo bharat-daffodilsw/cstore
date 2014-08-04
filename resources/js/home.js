@@ -35,7 +35,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var currentTime = new Date();
         currentTime.setMinutes(currentTime.getMinutes());
         var query = {"table": "promotions__cstore"};
-        query.columns = [{"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value","programid.promorate"];
+        query.columns = ["start_date_string","end_date_string",{"expression": "start_date", "format": "MM/DD/YYYY HH:mm:ss"},{"expression": "end_date", "format": "MM/DD/YYYY HH:mm:ss"}, "image","display_image", "promo_title","store_manager_id","promo_description","threshold","reward_value","programid.promorate"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.unwindcolumns = {"store_manager_id": 1};
@@ -142,8 +142,8 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
             '<a href="#!/promo?promoid={{promotion._id}}"><img title="{{promotion.promo_title}}" ng-src="{{promotion.displayImageUrl}}"/>' +
             '</a></div>'+
             '<div class="product_details"><a href="#!/promo?promoid={{promotion._id}}"><b>{{promotion.promo_description}}</b></a></div>'+
-            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>'+
-            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>'+
+            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date_string}}</div>'+
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date_string}}</div>'+
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>'+
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>'+
             '<div class="add_to_cart" ng-click="addPromoToCart(promotion,null)"><a href>Add To Cart</a></div>'+

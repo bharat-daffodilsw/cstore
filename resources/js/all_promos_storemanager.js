@@ -20,7 +20,9 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
             "promo_description",
             "threshold",
             "reward_value",
-            "programid.promorate"
+            "programid.promorate",
+            "start_date_string",
+            "end_date_string"
         ];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
@@ -68,8 +70,8 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="product_details"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<b>{{promotion.promo_description}}</b></a></div>' +
             '<div class="detail_outer">' +
-            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div>: {{promotion.start_date}}</div>' +
-            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div>: {{promotion.start_date_string}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date_string}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div>' +
             '<div class="Qty"><div class="enable_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
@@ -212,7 +214,9 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
             "threshold",
             "display_image",
             "reward_value",
-            "programid.promorate"
+            "programid.promorate",
+            "start_date_string",
+            "end_date_string"
         ];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
@@ -281,8 +285,8 @@ cstore.directive('submittedPromos', ['$appService', function ($appService, $scop
             '</div>'+
             '<div class="product_details"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<b>{{promotion.promo_description}}</b></a></div>' +
-            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>' +
-            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
+            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date_string}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date_string}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
@@ -319,7 +323,9 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
             "threshold",
             "display_image",
             "reward_value",
-            "programid.promorate"
+            "programid.promorate",
+            "start_date_string",
+            "end_date_string"
         ];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
@@ -363,8 +369,8 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
             '</div>'+
             '<div class="product_details"><a href="#!/promo?promoid={{promotion._id}}">' +
             '<b>{{promotion.promo_description}}</b></a></div>' +
-            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date}}</div>' +
-            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date}}</div>' +
+            '<div class="detail_outer"><div class="promo_details"><div class="left_align_promo pull-left"><b>Start Date</b></div> : {{promotion.start_date_string}}</div>' +
+            '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date_string}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="Qty"><div class="enable_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +

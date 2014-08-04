@@ -901,7 +901,7 @@ cstore.directive('jqdatepicker', [ '$appService', function ($appService, $scope)
         link: function ($scope, element, attrs, ngModelCtrl) {
             var model = attrs.ngModel.split(".");
             $(element).datepicker({
-                dateFormat: 'mm/dd/yy',
+                dateFormat: 'yy/mm/dd',
                 onSelect: function (date) {
                     if (!$scope[model[0]])
                         $scope[model[0]] = {};
