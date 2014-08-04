@@ -8,6 +8,8 @@
 cstore.controller('promoTextFilesCtrl', function ($scope, $appService, $routeParams) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.filterdata.filter_date="";
+    $scope.filterdata.selectedProgram="";
+    $scope.filterdata.selectedSite="";
     $scope.loadingPromoTextFileData = false;
     $scope.venderSearch = [
         {"value": "programid.name", "name": "Program"},

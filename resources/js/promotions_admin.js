@@ -2,6 +2,7 @@
 cstore.controller('promotionCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingPromotionData = false;
+    $scope.promotiondata.filter_date="";
     $scope.venderSearch = [
         {"value": "promo_title", "name": "Promo Title"},
         {"value": "offer_title", "name": "Offer Title"},
