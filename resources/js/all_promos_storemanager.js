@@ -2,6 +2,7 @@
 cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routeParams) {
     var currentTime = new Date();
     currentTime.setMinutes(currentTime.getMinutes());
+    $scope.activePromo();
     $scope.promotionData = {"loadingData": false, "available": false};
     $scope.promotions = [];
     $scope.getAllPromos = function (cursor, searchText) {

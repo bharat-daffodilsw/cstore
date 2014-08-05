@@ -1222,6 +1222,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
         $scope.orderFilterData.end_date = "";
+        $scope.hasHighlight.promos = false;
     }
     $scope.clearPromotionNotificationContent = function () {
         $scope.notification.subject = "";
