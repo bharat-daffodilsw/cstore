@@ -1218,6 +1218,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.hasHighlight.reports = false;
         $scope.programdata["promorate"] = "";
         $scope.programdata["participation_id"] = "";
+        $scope.programdata["dpi"] = "";
     }
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";

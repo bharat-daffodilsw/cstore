@@ -22,7 +22,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type","promorate"];
+        query.columns = ["name", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type","promorate","dpi"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -157,6 +157,7 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                         $scope.programdata["name"] = program.name ? program.name : "";
                         $scope.programdata["participation_id"] = program.participation_id ? program.participation_id : "";
                         $scope.programdata["promorate"] = program.promorate ? program.promorate : "";
+                        $scope.programdata["dpi"] = program.dpi ? program.dpi : "";
                         for (var i = 0; i < $scope.imageTypes.length; i++) {
                             if (program.image_type == $scope.imageTypes[i].name) {
                                 $scope.programdata.image_type = $scope.imageTypes[i];
@@ -236,9 +237,13 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Aisle*</div></td>' +
+            '<td class="half_td"><div class="margin_top">DPI</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.dpi"></td>' +
+            '</tr>'+
+            '<tr>'+
             '<td class="half_td"><div class="save_close pull-left">' +
             '<div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveProgram()"><a href>Save</a></button>' +
@@ -264,7 +269,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                 },
                 post: function ($scope) {
                     $scope.saveProgram = function () {
-                        var regNumberOnly = /^[+]?\d[0-9\-]*$/;
+                        var regNumberOnly = /^\d[0-9]*$/;
                         var regDecimalNumberOnly = /^[.]?\d[0-9\.]*$/;
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
@@ -298,6 +303,11 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+                            if (!regNumberOnly.test($scope.programdata.dpi)) {
+                                $("#popupMessage").html("Please enter valid dpi");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             $scope.loadingAddProgramData = true;
                             var query = {};
                             query.table = "program__cstore";
@@ -310,6 +320,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             $scope.newProgram["cooler_html"] = $scope.programdata.cooler_html;
                             $scope.newProgram["image_type"] = $scope.programdata.image_type.name;
                             $scope.newProgram["promorate"] = {"amount": $scope.programdata.promorate.amount, "type": {"currency": "usd"}};
+                            $scope.newProgram["dpi"] = $scope.programdata.dpi;
                             if (document.getElementById('uploadfile').files.length === 0) {
                                 delete $scope.newProgram["image"];
                                 $scope.uploadCoolerTemplate(query);
