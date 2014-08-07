@@ -140,7 +140,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
-                pre: function ($scope) {
+                pre: function ($scope,$q) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }

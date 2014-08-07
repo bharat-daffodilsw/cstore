@@ -1184,6 +1184,9 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.trainingdata["editImages"] = [];
         $scope.trainingdata.selectedTrainingCategory = $scope.trainingdata.trainingCategories[0];
         $scope.getProgramsForTraining(null, null);
+        $scope.oFile.fileExist = false;
+        $scope.trainingdata["image"] = "";
+        $scope.readonlyrow.fileurl = "";
         $scope.hasHighlight.setup = false;
         $scope.hasHighlight.reports = false;
     }

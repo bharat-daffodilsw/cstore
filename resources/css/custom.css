@@ -1541,14 +1541,14 @@ span.sortWrap {
 }
 
 .short_product_details {
-    margin-top: 10px;
     font-size: 13px;
-    max-height: 200px;
-    min-height: 200px;
+    margin: 5px 0;
+    max-height: 55px;
+    min-height: 55px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 100;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 
@@ -2355,8 +2355,8 @@ label.multiSelect span:hover {
     margin: .5%;
     box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
     padding: 10px;
-    min-height: 220px;
-    max-height: 220px;
+    min-height: 287px;
+    max-height: 287px;
     overflow: hidden;
 }
 .category_name {

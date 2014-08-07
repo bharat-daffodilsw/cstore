@@ -24,7 +24,7 @@ cstore.controller('trainingSessionCtrl', function ($scope, $appService) {
 
         $scope.loadingTrainingSessionData = true;
         var query = {"table": "training_session__cstore"};
-        query.columns = ["title", "description", "file", "training_category_id", "video_url","programid"];
+        query.columns = ["title", "description", "file","image", "training_category_id", "video_url","programid"];
         query.filter = {};
         if ($scope.currentUser["data"]) {
             if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {
@@ -182,7 +182,10 @@ cstore.directive('trainingSessionList', ['$appService', function ($appService, $
                         $scope.trainingdata["title"] = trainingSession.title ? trainingSession.title : "";
                         $scope.trainingdata["video_url"] = trainingSession.video_url ? trainingSession.video_url : "";
                         $scope.trainingdata["description"] = trainingSession.description ? trainingSession.description : "";
-
+                        if (trainingSession.image) {
+                            $scope.oFile.fileExist = true;
+                        }
+                        $scope.showFile(trainingSession.image, false);
                         if (trainingSession.training_category_id._id) {
                             for (var j = 0; j < $scope.trainingdata.trainingCategories.length; j++) {
                                 if ($scope.trainingdata.trainingCategories[j]._id == trainingSession.training_category_id._id) {
@@ -269,22 +272,34 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '</ul>' +
             '</td>' +
             '</tr>' +
+            '</table>'+
+            '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
-            '<td class="half_td pull-left"><div class="margin_top">Program*</div></td>' +
-            '<td class="half_td pull-left"><div class="margin_top">Sites</div></td>' +
+            '<td class="half_td"><div class="margin_top">Program*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Sites</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td pull-left"><select-program-training ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-training><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
-            '<td class="half_td pull-left"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
+            '<td class="half_td"><select-program-training ng-if="currentUser.data.roleid==\'531d4a79bd1515ea1a9bbaf5\'"></select-program-training><span ng-if="currentUser.data.roleid==\'539fddda1e993c6e426860c4\'">{{currentUser.data.programName}}</span></td>' +
+            '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
             '</tr>'+
-            '<tr><td><app-multi-file-upload></app-multi-img-file-upload></td></tr>' +
-            '<tr><td>' +
+            '<tr>' +
+            '<td class="half_td"><div class="margin_top">Image*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Files*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
+            '<td class="half_td"><app-multi-file-upload></app-multi-img-file-upload>' +
+            '</td>' +
+            '</tr>' +
+            '<tr><td class="half_td"></td>' +
+            '<td>' +
             '<ul class="uploadList">' +
             '<li ng-repeat="uploadedimage in trainingdata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
             '<img src="images/icon_cross.gif" style="width: 3%;margin-left: 8px;" value="Remove" ng-click="removeImgFile($index)">' +
             '</li>' +
             '</ul>' +
-            '</td></tr>' +
+            '</td>' +
+            '</tr>' +
             '</tbody></table></div><table width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>' +
             '<tr><td><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="saveTrainingSession()"><a href>Save</a></button>' +
@@ -342,6 +357,11 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             //    $('.popup').toggle("slide");
                             //    return false;
                             //}
+//                            if (!$scope.oFile.fileExist) {
+//                                $("#popupMessage").html("Please upload image");
+//                                $('.popup').toggle("slide");
+//                                return false;
+//                            }
                             if (!$scope.trainingdata.uploadedimages || $scope.trainingdata.uploadedimages.length == 0) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
@@ -370,17 +390,42 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 }
                             }
                             $scope.newSession["store_manager_id"] = {data: $scope.trainingAssignedStoreManagerArray, "override": "true"};
-                            if ($scope.trainingdata.uploadedimages && $scope.trainingdata.uploadedimages.length == 0) {
+                            if (document.getElementById('uploadfile').files.length === 0) {
+                                delete $scope.newSession["image"];
                                 query.operations = [$scope.newSession];
-                                $scope.saveFunction(query);
+                                $scope.uploadMultipleFiles(query);
                             }
                             else {
-                                $scope.newSession["file"] = [];
-                                for (j = 0; j < $scope.trainingdata.uploadedimages.length; j++) {
-                                    $scope.newSession["file"][j] = $scope.trainingdata.uploadedimages[j].image[0];
+                                if ((/\.(gif|jpg|jpeg|tiff|png|bmp)$/i).test($scope.oFile.name)) {
+                                    var current_file = {};
+                                    current_file.name = $scope.oFile.name;
+                                    current_file.type = $scope.oFile.type;
+                                    current_file.contents = $scope.oFile.data;
+                                    current_file.ask = ASK;
+                                    current_file.osk = OSK;
+                                    $appService.getDataFromJQuery(BAAS_SERVER + '/file/upload', current_file, "POST", "JSON", function (data) {
+                                        if (data.response) {
+                                            $scope.newSession["image"] = data.response;
+                                            query.operations = [$scope.newSession];
+                                            $scope.uploadMultipleFiles(query);
+                                        }
+                                        else {
+                                            $("#popupMessage").html("some error while uploading image please try again");
+                                            $('.popup').toggle("slide");
+                                            $scope.loadingAddTrainingdata = false;
+
+                                        }
+                                    }, function (callbackerror) {
+                                        $("#popupMessage").html(callbackerror);
+                                        $('.popup').toggle("slide");
+                                        $scope.loadingAddTrainingdata = false;
+                                    });
                                 }
-                                query.operations = [$scope.newSession];
-                                $scope.saveFunction(query);
+                                else {
+                                    $("#popupMessage").html("Please Upload Image File only");
+                                    $('.popup').toggle("slide");
+                                    $scope.loadingAddTrainingdata = false;
+                                }
                             }
                         }
                         else {
@@ -388,6 +433,20 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             $('.popup').toggle("slide");
                         }
                     };
+                    $scope.uploadMultipleFiles=function(query){
+                        if ($scope.trainingdata.uploadedimages && $scope.trainingdata.uploadedimages.length == 0) {
+                            query.operations = [$scope.newSession];
+                            $scope.saveFunction(query);
+                        }
+                        else {
+                            $scope.newSession["file"] = [];
+                            for (j = 0; j < $scope.trainingdata.uploadedimages.length; j++) {
+                                $scope.newSession["file"][j] = $scope.trainingdata.uploadedimages[j].image[0];
+                            }
+                            query.operations = [$scope.newSession];
+                            $scope.saveFunction(query);
+                        }
+                    }
                     $scope.saveFunction = function (query) {
 
                         $appService.save(query, ASK, OSK, $scope.CSession["usk"], function (callBackData) {

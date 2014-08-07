@@ -66,7 +66,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         $scope.loadingAssignedTrainingSessionData = true;
         var query = {"table": "training_session__cstore"};
 
-        query.columns = ["store_manager_id", "title", "description"];
+        query.columns = ["store_manager_id", "title", "description","image"];
         query.filter = {};
         query.filter = {"store_manager_id._id": $scope.currentUser.data.storeid};
         query.unwindcolumns = {"store_manager_id": 1};
@@ -83,7 +83,7 @@ cstore.controller('homeCtrl', function ($scope, $appService, $location, $routePa
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (sessionData) {
             $scope.loadingAssignedTrainingSessionData = false;
-            $scope.assignedTrainingSessions = sessionData.response.data;
+            $scope.assignedTrainingSessions = $appService.setUrls(sessionData.response.data, 291, 196);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
@@ -161,10 +161,12 @@ cstore.directive('recentPromotions', ['$appService', function ($appService, $sco
 cstore.directive('assignedTrainingSessions', ['$appService', function ($appService, $scope) {
     return{
         restrict: "E",
-        template: '<div ng-show="assignedTrainingSessions.length > 0"><div class="category pull-left"><div class="pop_products">Training Sessions<a href="#!/all-trainings">( View all )</a>' +
-            '</div><div class="trainings col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions">' +
-            '<div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div><div class="short_product_details">{{assignedTrainingSession.description}}</div>' +
-            '</div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div></div>'
+        template: '<div class="category pull-left" ng-show="assignedTrainingSessions.length > 0"><div class="pop_products">Training Sessions<a href="#!/all-trainings">( View all )</a>' +
+            '</div><div class="trainings col-sm-3 col-md-3 pull-left" ng-repeat="assignedTrainingSession in assignedTrainingSessions"><div class="products_img">' +
+            '<a href="#!/training-session?sessionid={{assignedTrainingSession._id}}"><img title="{{assignedTrainingSession.title}}" ng-src="{{assignedTrainingSession.imageUrl}}"/>' +
+            '</a></div><div class="name"><a href="#!/training-session?sessionid={{assignedTrainingSession._id}}">{{assignedTrainingSession.title}}</a></div>'+
+            '<div class="short_product_details">' +
+            '{{assignedTrainingSession.description}}</div></div></div><div class="loadingImage" ng-hide="!loadingAssignedTrainingSessionData"><img src="images/loading.gif"></div>'
     }
 }]);
 

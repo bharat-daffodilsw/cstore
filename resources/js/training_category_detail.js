@@ -11,7 +11,7 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
         }
         $scope.categoryData.loadingData = true;
         var query = {"table": "training_session__cstore"};
-        query.columns = ["store_manager_id", "title", "description", "training_category_id"];
+        query.columns = ["store_manager_id", "title", "description", "training_category_id","image"];
         query.filter = {};
         query.filter["store_manager_id._id"] = $scope.currentUser.data.storeid;
         if (filter && filter != undefined && filter != "undefined") {
@@ -30,7 +30,7 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (trainingCategoryDetailData) {
-            var rawData = trainingCategoryDetailData.response.data;
+            var rawData = $appService.setUrls(trainingCategoryDetailData.response.data, 291, 196);
 
             if ($scope.sessions.length) {
                 for (var i = 0; i < rawData.length; i++) {
@@ -77,10 +77,14 @@ cstore.controller('trainingCategoryDetailCtrl', function ($scope, $appService, $
 cstore.directive('trainingCategoryDetail', ['$appService', function ($appService, $scope) {
     return{
         restrict: 'E',
-        template: '<div class="m_bar pull-left"><div class="category pull-left"><div class="pop_products">{{sessions[0].training_category_id.name}}</div>' +
-            '<div class="trainings col-sm-3 col-md-3 pull-left" ng-repeat="session in sessions">' +
-            '<div class="name"><a href="#!/training-session?sessionid={{session._id}}">{{session.title}}</a></div>' +
-            '<div class="short_product_details">{{session.description}}</div></div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
+        template: '<div class="m_bar pull-left">'+
+            '<div class="category pull-left"><div class="pop_products">{{sessions[0].training_category_id.name}}' +
+            '</div><div class="trainings col-sm-3 col-md-3 pull-left" ng-repeat="session in sessions"><div class="products_img">' +
+            '<a href="#!/training-session?sessionid={{session._id}}"><img title="{{session.title}}" ng-src="{{session.imageUrl}}"/>' +
+            '</a></div><div class="name"><a href="#!/training-session?sessionid={{session._id}}">{{session.title}}</a></div>'+
+            '<div class="short_product_details">' +
+            '{{session.description}}</div></div></div>'+
+            '</div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!categoryData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {

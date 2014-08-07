@@ -303,11 +303,11 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!regNumberOnly.test($scope.programdata.dpi)) {
-                                $("#popupMessage").html("Please enter valid dpi");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
+//                            if (!regNumberOnly.test($scope.programdata.dpi)) {
+//                                $("#popupMessage").html("Please enter valid dpi");
+//                                $('.popup').toggle("slide");
+//                                return false;
+//                            }
                             $scope.loadingAddProgramData = true;
                             var query = {};
                             query.table = "program__cstore";
