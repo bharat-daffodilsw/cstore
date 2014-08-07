@@ -357,11 +357,11 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             //    $('.popup').toggle("slide");
                             //    return false;
                             //}
-//                            if (!$scope.oFile.fileExist) {
-//                                $("#popupMessage").html("Please upload image");
-//                                $('.popup').toggle("slide");
-//                                return false;
-//                            }
+                            if (!$scope.oFile.fileExist) {
+                                $("#popupMessage").html("Please upload image");
+                                $('.popup').toggle("slide");
+                                return false;
+                            }
                             if (!$scope.trainingdata.uploadedimages || $scope.trainingdata.uploadedimages.length == 0) {
                                 $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
