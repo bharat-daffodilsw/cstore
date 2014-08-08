@@ -1,5 +1,5 @@
 /****************************Promotion***************************************************/
-cstore.controller('promotionCtrl', function ($scope, $appService) {
+cstore.controller('promotionCtrl', function ($scope, $appService,$http) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingPromotionData = false;
     $scope.promotiondata.filter_date="";
@@ -101,6 +101,7 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
     }
     $scope.getPrograms(null, null);
     $scope.getAllVendorsList();
+
 });
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
@@ -114,7 +115,7 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
     }
 });
 
-cstore.directive('promotionList', ['$appService', function ($appService, $scope) {
+cstore.directive('promotionList', ['$appService', function ($appService,$http, $scope) {
     return {
         restrict: 'E',
         template: '<div class="add_delete pull-left">' +
@@ -140,7 +141,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
             '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
-                pre: function ($scope,$q) {
+                pre: function ($scope,$http) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
@@ -174,7 +175,7 @@ cstore.directive('promotionList', ['$appService', function ($appService, $scope)
                                     while (new Date().getTime() < startTime + milliSeconds);
                                 }
                                 if(i>0){
-                                    sleep(1000);
+                                    sleep(4000);
                                 }
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
