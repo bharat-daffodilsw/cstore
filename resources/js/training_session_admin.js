@@ -283,15 +283,15 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
             '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>'+
             '</tr>'+
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Image*</div></td>' +
             '<td class="half_td"><div class="margin_top">Files*</div></td>' +
+            '<td class="half_td"><div class="margin_top">Image*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '<td class="half_td"><app-multi-file-upload></app-multi-img-file-upload>' +
+            '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</td>' +
             '</tr>' +
-            '<tr><td class="half_td"></td>' +
+            '<tr>' +
             '<td>' +
             '<ul class="uploadList">' +
             '<li ng-repeat="uploadedimage in trainingdata.uploadedimages"><div class="uploadLink"><a href="{{uploadedimage.fileurl}}">{{uploadedimage.filename}}</a></div>' +
@@ -357,13 +357,13 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             //    $('.popup').toggle("slide");
                             //    return false;
                             //}
-                            if (!$scope.oFile.fileExist) {
-                                $("#popupMessage").html("Please upload image");
+                            if (!$scope.trainingdata.uploadedimages || $scope.trainingdata.uploadedimages.length == 0) {
+                                $("#popupMessage").html("Please upload file");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.trainingdata.uploadedimages || $scope.trainingdata.uploadedimages.length == 0) {
-                                $("#popupMessage").html("Please upload file");
+                            if (!$scope.oFile.fileExist) {
+                                $("#popupMessage").html("Please upload image");
                                 $('.popup').toggle("slide");
                                 return false;
                             }
