@@ -1,5 +1,5 @@
 /****************************Promotion***************************************************/
-cstore.controller('promotionCtrl', function ($scope, $appService,$http) {
+cstore.controller('promotionCtrl', function ($scope, $appService) {
     $scope.show = {"pre": false, "next": true, "preCursor": 0, "currentCursor": 0};
     $scope.loadingPromotionData = false;
     $scope.promotiondata.filter_date="";
@@ -141,7 +141,7 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
             '<td><a class="edit_btn" ng-click="setPromotionState(promotion)" href>Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingPromotionData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
-                pre: function ($scope,$http) {
+                pre: function ($scope) {
                     $scope.setPath = function (path) {
                         window.location.href = "#!/" + path;
                     }
@@ -175,7 +175,7 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
                                     while (new Date().getTime() < startTime + milliSeconds);
                                 }
                                 if(i>0){
-                                    sleep(4000);
+                                    sleep(5000);
                                 }
                                 var a = document.createElement('a');
                                 a.href = downloadImages[i].fileUrl;
