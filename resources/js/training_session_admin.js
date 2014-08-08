@@ -362,11 +362,11 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                                 $('.popup').toggle("slide");
                                 return false;
                             }
-                            if (!$scope.oFile.fileExist) {
-                                $("#popupMessage").html("Please upload image");
-                                $('.popup').toggle("slide");
-                                return false;
-                            }
+//                            if (!$scope.oFile.fileExist) {
+//                                $("#popupMessage").html("Please upload image");
+//                                $('.popup').toggle("slide");
+//                                return false;
+//                            }
                             $scope.loadingAddTrainingdata = true;
                             $scope.trainingAssignedStoreManagerArray = [];
                             for (var i = 0; i < $scope.resultData.length; i++) {
