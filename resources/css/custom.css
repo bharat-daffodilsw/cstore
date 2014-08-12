@@ -2316,6 +2316,9 @@ label.multiSelect span:hover {
     /*margin-left: 280px;*/
     /*text-align: left;*/
 }
+.downloadFile a{
+    text-decoration: underline;
+}
 .vendor_report {
    /* max-width: 1200px;   */
     overflow: auto;

@@ -33,8 +33,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
         if (searchText && searchText != "") {
             query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        query.max_rows = 4;
-        query.cursor = cursor;
+        //query.cursor = cursor;
         var timeZone = new Date().getTimezoneOffset();
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
@@ -78,7 +77,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="Qty"><div class="enable_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
             '</div>'+
             '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
-            '</div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
+            '</div></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
@@ -222,11 +221,11 @@ cstore.controller('submittedPromotionsCtrl', function ($scope, $appService, $rou
         query.unwindcolumns = {"store_manager_id": 1};
         query.filter["store_manager_id.opt"] = true;
         query.filter["store_manager_id.submitted"] = true;
-        query.filter["end_date"] = {"$gte": currentTime};
+        //query.filter["end_date"] = {"$gte": currentTime};
         if (searchText && searchText != "") {
             query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        query.max_rows = 4;
+        query.max_rows = 12;
         query.cursor = cursor;
         var timeZone = new Date().getTimezoneOffset();
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
@@ -335,8 +334,7 @@ cstore.controller('disabledPromotionsCtrl', function ($scope, $appService, $rout
         if (searchText && searchText != "") {
             query.filter["promo_description"] = {"$regex": "(" + searchText + ")", "$options": "-i"};
         }
-        query.max_rows = 4;
-        query.cursor = cursor;
+        //query.cursor = cursor;
         var timeZone = new Date().getTimezoneOffset();
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK, "state": JSON.stringify({"timezone": timeZone})};
         var serviceUrl = "/rest/data";
@@ -374,7 +372,7 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
             '<div class="Qty"><div class="enable_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +
             '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
-            '</div></div></div><div id="scrollDiv"></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
+            '</div></div></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {

@@ -10,6 +10,7 @@ var DOMAIN_NAME = "http://www.ecpromomarket.com";
 var REDIRECT_URL = "http://www.ecloyalty.com/";
 //var STOREADMIN="53d22fa0632112cf111fda6f"; // developers cstore database
 var STOREADMIN="53d5fe79894f1e646d2ca754";
+var OPENROAD="53743f7af36413a56b280897";
 // Declare app level module which depends on filters, and services
 var cstore = angular.module('cstore', ['multi-select', 'ngRoute', '$appstrap.services']);
 cstore.config(
@@ -1413,7 +1414,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
             $scope.productdata.programs = programData.response.data;
             $scope.userdata.programs = programData.response.data;
             for (var i = 0; i < $scope.productdata.programs.length; i++) {
-                if ($scope.productdata.programs[i]._id == "53743f7af36413a56b280897") {
+                if ($scope.productdata.programs[i]._id == OPENROAD) {
                     $scope.productdata.selectedProgram = $scope.productdata.programs[i];
                     $scope.userdata.selectedProgram = $scope.productdata.programs[i];
                     //break;
@@ -1484,7 +1485,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                             break;
                         }
                     }
-                    else if ($scope.promotiondata.programs[i]._id == "53743f7af36413a56b280897") {
+                    else if ($scope.promotiondata.programs[i]._id == OPENROAD) {
                         $scope.promotiondata.selectedProgram = $scope.promotiondata.programs[i];
                         $scope.getProgramSelectedStore($scope.promotiondata.programs[i]._id, null);
                         break;
@@ -1582,7 +1583,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                             break;
                         }
                     }
-                    else if ($scope.trainingdata.programs[i]._id == "53743f7af36413a56b280897") {
+                    else if ($scope.trainingdata.programs[i]._id == OPENROAD) {
                         $scope.trainingdata.selectedProgram = $scope.trainingdata.programs[i];
                         $scope.getProgramSelectedStoreForTraining($scope.trainingdata.programs[i]._id, null);
                         break;
@@ -1681,7 +1682,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                             break;
                         }
                     }
-                    else if ($scope.surveydata.programs[i]._id == "53743f7af36413a56b280897") {
+                    else if ($scope.surveydata.programs[i]._id == OPENROAD) {
                         $scope.surveydata.selectedProgram = $scope.surveydata.programs[i];
                         $scope.getProgramSelectedStoreForSurvey($scope.surveydata.programs[i]._id, null);
                         break;
@@ -1778,7 +1779,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
                             break;
                         }
                     }
-                    else if ($scope.filedata.programs[i]._id == "53743f7af36413a56b280897") {
+                    else if ($scope.filedata.programs[i]._id == OPENROAD) {
                         $scope.filedata.selectedProgram = $scope.filedata.programs[i];
                         $scope.getProgramSelectedStoreForFiles($scope.filedata.programs[i]._id, null);
                         break;
