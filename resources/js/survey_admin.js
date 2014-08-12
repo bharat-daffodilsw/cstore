@@ -496,7 +496,7 @@ cstore.directive('surveyAnsweredStore', ['$appService', function ($appService, $
             '<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'store_id.storename\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setStoreNameOrder(\'store_id.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th><th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setStoreNameOrder(\'store_id.programid.name\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setStoreNameOrder(\'store_id.programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
-            '</tr><tr ng-repeat="store in storesName"><td><a ng-click = "setQuesAns(store)">{{store.store_id.storename}}</a></td><td>{{store.store_id.programid.name}}</td>' +
+            '</tr><tr ng-repeat="store in storesName"><td class="downloadFile"><a ng-click = "setQuesAns(store)">{{store.store_id.storename}}</a></td><td>{{store.store_id.programid.name}}</td>' +
             '</tr></table></div><div class="loadingImage" ng-show="loadingStatus"><img src="images/loading.gif"></div></div>',
         compile: function () {
             return {
