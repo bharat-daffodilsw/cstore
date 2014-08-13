@@ -50,7 +50,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "display_image",
             "notes",
             "end_date_string",
-            "start_date_string"
+            "start_date_string",
+            "upc_type"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -328,6 +329,14 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
                                 }
                             }
                         }
+                        if (promotion.upc_type && $scope.promotiondata.upc_type) {
+                            for (var j = 0; j < $scope.promotiondata.upc_type.length; j++) {
+                                if ($scope.promotiondata.upc_type[j].name == promotion.upc_type) {
+                                    $scope.promotiondata.selectedUpcType = $scope.promotiondata.upc_type[j];
+                                    break;
+                                }
+                            }
+                        }
                         if (promotion.programid) {
                             $scope.getPrograms(promotion.programid._id, promotion._id);
                         }
@@ -357,6 +366,17 @@ cstore.directive('offerTypeSelect', ['$appService', function ($appService, $scop
     return {
         restrict: 'E',
         template: '<select class="brand" ng-model="promotiondata.selectedOfferType" ng-options="offerType.name for offerType in promotiondata.offerTypes"></select>',
+        compile: function () {
+            return{
+            }
+        }
+    }
+}]);
+
+cstore.directive('upcTypeSelect', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="brand" ng-model="promotiondata.selectedUpcType" ng-options="upcType.name for upcType in promotiondata.upc_type"></select>',
         compile: function () {
             return{
             }
@@ -563,6 +583,14 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><div multi-select  input-model="inputData"  button-label="sitename" item-label="sitename" tick-property="ticked" max-labels="3" output-model="resultData"></div></td>' +
             '</tr>' +
             '<tr>' +
+            '<td class="half_td"><div class="margin_top">Minimum Retail*</div></td>' +
+            '<td class="half_td"><div class="margin_top">UPC Type*</div></td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
+            '<td class="half_td"><upc-type-select></upc-type-select></td>' +
+            '</tr>' +
+            '<tr>' +
             '<td class="half_td"><div class="margin_top">UPC/PLU/GROUP*</div></td>' +
             '<td class="half_td"><div class="margin_top">Promo Image*</div></td>' +
             '</tr>' +
@@ -570,17 +598,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><upc-select></upc-select></td>' +
             '<td class="product_image half_td"><app-file-upload></app-file-upload></td>' +
             '</tr>' +
-            '<tr>' +
-            '<td class="half_td"><div class="margin_top">Minimum Retail*</div></td>' +
-            '<td class="half_td"><div class="margin_top" ng-show="promotiondata.display_image">Display Image</div></td>' +
-            '</tr>' +
-            '<tr>' +
-            '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="promotiondata.minimum_retail.amount"></td>' +
-            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="' + DOMAIN_NAME + '{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
-            '</tr>' +
             '</table>'+
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
+            '<td class="half_td"><div class="margin_top" ng-show="promotiondata.display_image">Display Image</div></td>' +
+            '</tr>'+
+            '<tr>' +
+            '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="' + DOMAIN_NAME + '{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div><div class="delete_btn pull-left">' +
@@ -718,6 +742,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.newPromotion["codes"] = tags;
                             }
                             $scope.newPromotion["upc"] = $scope.promotiondata.selectedUpc.name;
+                            $scope.newPromotion["upc_type"] = $scope.promotiondata.selectedUpcType.name;
                             $scope.newPromotion["vendorid"] = {"_id": $scope.promotiondata.vendorsList._id};
                             if ($scope.currentUser["data"]) {
                                 if ($scope.currentUser["data"]["roleid"] == PROGRAMADMIN) {

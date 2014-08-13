@@ -328,6 +328,11 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         {"name": "UPC"}
     ];
     $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
+    $scope.promotiondata.upc_type = [
+        {"name": "combo"},
+        {"name": "single"}
+    ];
+    $scope.promotiondata.selectedUpcType = $scope.promotiondata.upc_type[0];
     for (var i = 0; i < 24; i++) {
         var hr = i >= 10 ? i + "" : "0" + i;
         $scope.promotiondata.hours.push(hr);
@@ -1175,6 +1180,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
         $scope.hasHighlight.reports = false;
         $scope.promotiondata["demo_image"] = "";
         $scope.promotiondata["notes"] = "";
+        $scope.promotiondata.selectedUpcType = $scope.promotiondata.upc_type[0];
     }
     $scope.clearTrainingSessionContent = function () {
         $scope.trainingdata["title"] = "";

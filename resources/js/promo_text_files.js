@@ -145,7 +145,7 @@ cstore.directive('textFileList', ['$appService', function ($appService, $scope) 
             '<th><span>Site Name</span><span class="sortWrap"><div class="sortUp" ng-click="setFileOrder(\'siteid.storename\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setFileOrder(\'siteid.storename\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Program</span><span class="sortWrap"><div class="sortUp" ng-click="setFileOrder(\'programid.name\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setFileOrder(\'programid.name\',\'desc\',searchby.value,search.searchContent)"></div>	</span></th>' +
             '<th><span>Date</span><span class="sortWrap"><div class="sortUp" ng-click="setFileOrder(\'date\',\'asc\',searchby.value,search.searchContent)"></div><div class="sortDown" ng-click="setFileOrder(\'date\',\'desc\',searchby.value,search.searchContent)"></div></span></th>' +
-            '<th><span>Text Files</span></th>' +
+            '<th><span>Click Link To Download Text Files</span></th>' +
             '</tr><tr ng-repeat="textfile in textFiles">' +
             '<td><input type="checkbox" ng-model="textfile.deleteStatus">'+
             '<td>{{textfile.siteid.storename}}</td>'+
