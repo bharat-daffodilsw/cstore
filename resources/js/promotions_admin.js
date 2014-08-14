@@ -164,27 +164,18 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
                         var downloadImages = [];
                         for (var i = 0; i < $scope.promotions.length; i++) {
                             if ($scope.promotions[i].deleteStatus && $scope.promotions[i].display_image) {
-                                downloadImages.push({"_id": $scope.promotions[i]._id, "fileKey": $scope.promotions[i].display_image[0].key});
+                                downloadImages.push('"'+$scope.promotions[i].display_image[0].key+'"');
                             }
                         }
                         if (downloadImages.length > 0) {
-                            for (var i = 0; i < downloadImages.length; i++) {
-                                downloadImages[i].fileUrl = BAAS_SERVER + "/file/download?filekey=" + downloadImages[i].fileKey + "&ask=" + ASK + "&osk=" + OSK;
-
-                                function sleep(milliSeconds) {
-                                    var startTime = new Date().getTime();
-                                    while (new Date().getTime() < startTime + milliSeconds);
-                                }
-                                if(i>0){
-                                    sleep(8000);
-                                }
-                                var a = document.createElement('a');
-                                a.href = downloadImages[i].fileUrl;
-                                document.body.appendChild(a);
-                                a.click();
-                                a.remove();
-
-                            }
+                            var fileUrl = BAAS_SERVER + "/multiple/file/download?fileKeyArray=[" + downloadImages + "]&ask=" + ASK + "&osk=" + OSK;
+                            console.log(fileUrl);
+                            var a = document.createElement('a');
+                            a.href = fileUrl;
+                            a.target="_blank";
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
                         }
                         else if (!downloadImages.length || downloadImages.length == 0) {
                             $("#popupMessage").html("No display image found for download");
