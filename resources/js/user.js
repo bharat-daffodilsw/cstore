@@ -228,7 +228,7 @@ cstore.directive('userList', ['$appService', function ($appService, $scope) {
                                 if (user.userid.status == false && user.roleid._id == STOREMANAGER) {
                                     $scope.updateSiteStatusWhileDeleting(user.stores_id);
                                 }
-                                else if (user.userid.status == true && user.roleid._id == STOREMANAGER) {
+                                else if (user.userid.status == true && (user.roleid._id == STOREMANAGER || user.roleid._id == STOREADMIN)) {
                                     $("#popupMessage").html("Please Assign Sites to "+ user.userid.firstname);
                                     $('.popup').toggle("slide");
                                 }
