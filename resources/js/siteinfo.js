@@ -127,6 +127,7 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
             '<tr>' +
             '<th></th>' +
+            '<th></th>' +
             '<th><span>Site Id</span>' +
             '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'siteid\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setStoreOrder(\'siteid\',\'desc\',searchby.value,search.searchContent)"></div>' +
@@ -215,14 +216,17 @@ cstore.directive('storeManagerList', ['$appService', function ($appService, $sco
             '<span class="sortWrap"><div class="sortUp" ng-click="setStoreOrder(\'dealer\',\'asc\',searchby.value,search.searchContent)"></div>' +
             '<div class="sortDown" ng-click="setStoreOrder(\'dealer\',\'desc\',searchby.value,search.searchContent)"></div>' +
             '</span></th>'+
-            '<th></th>' +
-            '</tr><tr ng-repeat="storeManager in storeManagers"><td>' +
-            '<input type="checkbox"ng-model="storeManager.deleteStatus"></td><td>{{storeManager.siteid}}</td><td>{{storeManager.storename}}</td><td>{{storeManager.programid.name}}</td><td>{{storeManager.manager.name}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.contact}}</td>' +
+//            '<th></th>' +
+            '</tr><tr ng-repeat="storeManager in storeManagers">' +
+            '<td><input type="checkbox"ng-model="storeManager.deleteStatus"></td>' +
+            '<td><a class="edit_btn" ng-click="setStoreState(storeManager)">Edit</a></td>' +
+            '<td>{{storeManager.siteid}}</td><td>{{storeManager.storename}}</td><td>{{storeManager.programid.name}}</td><td>{{storeManager.manager.name}}</td><td>{{storeManager.shift}}</td><td>{{storeManager.contact}}</td>' +
             '<td>{{storeManager.manager.contact}}</td><td>{{storeManager.email}}</td><td>{{storeManager.manager.email}}</td><td>{{storeManager.address}}</td><td>{{storeManager.countryid.name}}</td>' +
             '<td>{{storeManager.stateid.name}}</td><td>{{storeManager.cityid.name}}</td><td>{{storeManager.postalcode}}</td><td>{{storeManager.pos_type}}</td><td>{{storeManager.pos_version}}</td><td>{{storeManager.loyalty_status}}</td><td>{{storeManager.reward_point}}</td>'+
             '<td>{{storeManager.brands}}</td><td>{{storeManager.pump_brand}}</td><td>{{storeManager.pump_model}}</td>' +
             '<td>{{storeManager.dealer}}</td>' +
-            '<td><a class="edit_btn" ng-click="setStoreState(storeManager)">Edit</a></td></tr></table></div><div class="loadingImage" ng-hide="!loadingStoreData"><img src="images/loading.gif"></div>',
+//            '<td><a class="edit_btn" ng-click="setStoreState(storeManager)">Edit</a></td>' +
+            '</tr></table></div><div class="loadingImage" ng-hide="!loadingStoreData"><img src="images/loading.gif"></div>',
         compile: function () {
             return {
                 pre: function ($scope) {
