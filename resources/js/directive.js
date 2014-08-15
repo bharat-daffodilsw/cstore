@@ -131,7 +131,7 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
             '<div class="setup promo_drop pull-left"><ul>'+
             '<li ng-click="activePromo()"><a href="#!/all-promos" active-link="active">Available Offers</a></li>' +
             '<li ng-click="activePromo()"><a href="#!/submitted-promos" active-link="active">Selected Offers</a></li>' +
-            '<li ng-click="activePromo()"><a href="#!/disabled-promos" active-link="active">Disabled Offers</a></li>' +
+//            '<li ng-click="activePromo()"><a href="#!/disabled-promos" active-link="active">Disabled Offers</a></li>' +
             '</ul></div></li>'+
             '<li ng-click="inActivePromo()"><a href="#!/all-trainings" active-link="active">Training</a></li>' +
             '<li ng-click="inActivePromo()"><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
