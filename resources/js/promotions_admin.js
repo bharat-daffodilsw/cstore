@@ -168,8 +168,7 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
                             }
                         }
                         if (downloadImages.length > 0) {
-                            var fileUrl = BAAS_SERVER + "/multiple/file/download?fileKeyArray=[" + downloadImages + "]&ask=" + ASK + "&osk=" + OSK;
-                            console.log(fileUrl);
+                            var fileUrl = BAAS_SERVER + "/multiple/file/download?fileKeyArray=[" + downloadImages + "]&ask=" + ASK + "&osk=" + OSK;                           
                             var a = document.createElement('a');
                             a.href = fileUrl;
                             a.target="_blank";
