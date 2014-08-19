@@ -329,8 +329,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     ];
     $scope.promotiondata.selectedUpc = $scope.promotiondata.upc[0];
     $scope.promotiondata.upc_type = [
-        {"name": "combo"},
-        {"name": "single"}
+        {"name": "single"},
+        {"name": "combo"}
     ];
     $scope.promotiondata.selectedUpcType = $scope.promotiondata.upc_type[0];
     for (var i = 0; i < 24; i++) {

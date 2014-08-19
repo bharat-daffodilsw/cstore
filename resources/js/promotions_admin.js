@@ -102,7 +102,6 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
     }
     $scope.getPrograms(null, null);
     $scope.getAllVendorsList();
-
 });
 
 cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParams) {
@@ -113,6 +112,13 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
     }
     else {
         delete $scope.promotiondata["promotionid"];
+    }
+    $scope.cloneData=function(){
+        $scope.promotiondata["promo_title"] = "";
+        $scope.promotiondata["offer_title"] = "";
+        $scope.promotiondata["display_image"] = "";
+        $scope.promotiondata["demo_image"] = "";
+        $scope.getPrograms(null,null);
     }
 });
 
@@ -597,7 +603,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="product_image half_td"><span ng-show="promotiondata.display_image"><a target="_blank" href="' + DOMAIN_NAME + '{{promotiondata.display_image}}"><img ng-src="{{promotiondata.display_image}}"></a></span></td>' +
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
-            '</div><div class="delete_btn pull-left">' +
+            '</div>'+
+            '<div class="delete_btn pull-left" ng-hide="promotiondata.promotionid">' +
+            '<button type="button" ng-click="cloneData()"><a href>Clone</a></button>' +
+            '</div>'+
+            '<div class="delete_btn pull-left">' +
             '<button type="button" ng-click="setPathforPromotion(\'promotions\')"><a href="">Close</a></button>' +
             '</div></div></td>' +
             '</tr>' +
