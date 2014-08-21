@@ -1,7 +1,7 @@
 cstore.controller('allCategory', function ($scope, $appService, $routeParams) {
     $scope.allProductData = {"loadingData": false, "available": false};
-
     $scope.allproducts = [];
+    $appService.auth();
     $scope.getProductList = function (cursor, searchText) {
         if ($scope.allProductData.loadingData) {
             return false;

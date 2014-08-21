@@ -213,7 +213,7 @@ cstore.config(
             );
     });
 
-cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
+cstore.controller('mainCtrl', function ($scope, $appService, $location, $http,$routeParams) {
     $scope.currentUser = {"data": ""};
     $scope.activeStore={"storename":""};
     $scope.hasHighlight = {"reports": false, "setup": false, "promos": false};
@@ -478,8 +478,8 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http) {
     }
 
     var hash = window.location.hash;
-    if (($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") && hash.indexOf("resetpassword") == -1) {
-        window.location.href = "#!/login";
+    if (($scope.currentUser["data"] == null || $scope.currentUser["data"] == "null") && hash.indexOf("resetpassword") == -1 && !$routeParams.code) {
+        //window.location.href = "#!/login";
         return false;
     } else if (hash.indexOf("resetpassword") >= 0) {
         delete $scope.displayData;

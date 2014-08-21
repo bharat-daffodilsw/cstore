@@ -1,4 +1,4 @@
-cstore.controller('loginCtrl', function ($scope, $appService, $location) {
+cstore.controller('loginCtrl', function ($scope, $appService, $location,$routeParams) {
     $appService.unauth();
     $scope.login = function () {
         var username = $("#username").val();
@@ -170,4 +170,42 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location) {
             return;
         });
     };
+    $scope.checkVerification = function(code){
+        $.ajax({
+            url : BAAS_SERVER+"/verifyuser?code="+code,
+            success : function(result){
+                result = JSON.parse(result);
+                if(result.code == 200){
+                    $scope.popuptext="Your account has been activated so please try logging in.";
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                    $("#popupMessage").html($scope.popuptext);
+                    $('.popup').toggle("slide");
+                } else{
+                    $scope.popuptext="Wrong verification link please click the verification link again.";
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                    $("#popupMessage").html($scope.popuptext);
+                    $('.popup').toggle("slide");
+                }
+            },
+            error : function(jqXHR){
+                if(jqXHR.status){
+                    $scope.popuptext="Wrong verification link please click the verification link again.";
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                    $("#popupMessage").html($scope.popuptext);
+                    $('.popup').toggle("slide");
+                }
+            }
+        });
+    }
+
+    var hash = window.location.hash;
+    if((hash.indexOf("#!/login") >= 0) && $routeParams.code){
+        $scope.checkVerification($routeParams.code);
+    }
 });

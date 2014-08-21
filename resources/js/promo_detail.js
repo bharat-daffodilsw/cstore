@@ -1,5 +1,6 @@
 cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams) {
     $scope.inActivePromo();
+    $appService.auth();
     $scope.getPromoDetail = function () {
         $scope.loadingPromotionDetailData = true;
 

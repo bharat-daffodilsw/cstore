@@ -5,6 +5,7 @@ cstore.controller('allPromotionsCtrl', function ($scope, $appService, $routePara
     $scope.activePromo();
     $scope.promotionData = {"loadingData": false, "available": false};
     $scope.promotions = [];
+    $appService.auth();
     $scope.getAllPromos = function (cursor, searchText) {
         if ($scope.promotionData.loadingData) {
             return false;

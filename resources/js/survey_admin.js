@@ -9,6 +9,7 @@ cstore.controller('surveyCtrl', function ($scope, $appService) {
     ];
     $scope.searchby = $scope.venderSearch[0];
     $scope.surveys = [];
+    $appService.auth();
     $scope.getAllSurveys = function (direction, limit, column, searchText) {
         if ($scope.loadingSurveyData) {
             return false;

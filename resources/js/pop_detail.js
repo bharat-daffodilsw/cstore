@@ -1,4 +1,5 @@
 cstore.controller('productDetailCtrl', function ($scope, $appService, $routeParams) {
+    $appService.auth();
     $scope.getProductDetail = function () {
         $scope.loadingProductDetailData = true;
 
