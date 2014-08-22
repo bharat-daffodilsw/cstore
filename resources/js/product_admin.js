@@ -282,6 +282,7 @@ cstore.directive('addProduct', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddProductData = false;
                     $scope.saveProduct = function () {
+                        $scope.newProduct = {};
                         var regNumberOnly = /^[+]?\d[0-9\-]*$/;
                         //var regDecimalNumberOnly = /^\d[0-9\.]*$/;
                         var regDecimalNumberOnly = /^[.]?\d[0-9\.]*$/;

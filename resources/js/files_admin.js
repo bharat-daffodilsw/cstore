@@ -249,7 +249,7 @@ cstore.directive('addFile', ['$appService', function ($appService, $scope) {
                 post: function ($scope) {
                     $scope.loadingAddFileData = false;
                     $scope.saveFile = function () {
-
+                        $scope.newFile = {};
                         $scope.CSession = $appService.getSession();
                         if ($scope.CSession) {
                             if (!$scope.filedata.title) {

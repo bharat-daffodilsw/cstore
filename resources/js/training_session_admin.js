@@ -372,6 +372,7 @@ cstore.directive('addTrainingSession', ['$appService', function ($appService, $s
                             for (var i = 0; i < $scope.resultData.length; i++) {
                                 $scope.trainingAssignedStoreManagerArray.push({"_id": $scope.resultData[i].storeid, "email": $scope.resultData[i].emailid});
                             }
+                            $scope.newSession = {};
                             var query = {};
                             query.table = "training_session__cstore";
                             if ($scope.trainingdata["trainingSessionId"]) {

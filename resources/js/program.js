@@ -309,6 +309,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
 //                                return false;
 //                            }
                             $scope.loadingAddProgramData = true;
+                            $scope.newProgram = {};
                             var query = {};
                             query.table = "program__cstore";
                             if ($scope.programdata["programid"]) {
