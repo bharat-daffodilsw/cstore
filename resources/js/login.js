@@ -5,17 +5,17 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
         var password = $("#password").val();
         var regEmail = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         if (regEmail.test(username) == false) {
-            $("#popupMessage").html("Please enter a valid email id");
+            $("#popupMessage").html("Please enter valid email");
             $('.popup').toggle("slide");
             return;
         }
         if (username == "" || username == undefined) {
-            $("#popupMessage").html("Please enter vaild email");
+            $("#popupMessage").html("Please enter valid email");
             $('.popup').toggle("slide");
             return;
         }
         if (!password) {
-            $("#popupMessage").html("Enter your password");
+            $("#popupMessage").html("Please enter your password");
             $('.popup').toggle("slide");
             return;
         }
@@ -105,12 +105,12 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
                             window.location.href = "/";
                         }
                         else {
-                            $("#popupMessage").html("You are currently deactivated.Please Contact admin");
+                            $("#popupMessage").html("You are currently deactivated.Please contact admin");
                             $('.popup').toggle("slide");
                             return;
                         }
                     }, function (err) {
-                        $("#popupMessage").html("error while making request");
+                        $("#popupMessage").html("Error while making request");
                         $('.popup').toggle("slide");
                         return;
                     });
@@ -131,7 +131,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
                 return;
             }
             else {
-                $("#popupMessage").html("error while making request");
+                $("#popupMessage").html("Error while making request");
                 $('.popup').toggle("slide");
                 return;
             }
@@ -176,14 +176,14 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
             success : function(result){
                 result = JSON.parse(result);
                 if(result.code == 200){
-                    $scope.popuptext="Your account has been activated so please try logging in.";
+                    $scope.popuptext="Your account has been activated.Please try logging in.";
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
                     $("#popupMessage").html($scope.popuptext);
                     $('.popup').toggle("slide");
                 } else{
-                    $scope.popuptext="Wrong verification link please click the verification link again.";
+                    $scope.popuptext="Wrong verification link.Please click the verification link again.";
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
@@ -193,7 +193,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
             },
             error : function(jqXHR){
                 if(jqXHR.status){
-                    $scope.popuptext="Wrong verification link please click the verification link again.";
+                    $scope.popuptext="Wrong verification link.Please click the verification link again.";
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
