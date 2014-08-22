@@ -712,7 +712,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                             }
 
                             $scope.loadingAddPromotionData = true;
-
+                            $scope.newPromotion={};
                             var query = {};
                             query.table = "promotions__cstore";
                             if ($scope.promotiondata["promotionid"]) {
@@ -773,6 +773,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     delete $scope.newPromotion["image"];
                                 }
                                 query.operations = [$scope.newPromotion];
+                                delete $scope.newPromotion;
                                 $scope.saveFunction(query);
                             }
                             else {
@@ -789,6 +790,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                             $scope.newPromotion["display_image"] = data.response;
                                         }
                                         query.operations = [$scope.newPromotion];
+                                        delete $scope.newPromotion;
                                         $scope.saveFunction(query);
                                     }
                                     else {
