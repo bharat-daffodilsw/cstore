@@ -821,7 +821,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     }
                                     else {
                                         requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id,"state": JSON.stringify({"timezone": timeZone})};
-                                        //$scope.promotiondata.promotionid=callBackData.response.update[0]._id;
+                                        $scope.promotiondata.promotionid=callBackData.response.update[0]._id;
                                     }
 
                                     $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "POST", "JSON", function (data) {
@@ -853,6 +853,12 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     })
                                 }
                                 else {
+                                    if (callBackData.response.insert) {
+                                        $scope.promotiondata.promotionid=callBackData.response.insert[0]._id;
+                                    }
+                                    else if(callBackData.response.update) {
+                                        $scope.promotiondata.promotionid=callBackData.response.update[0]._id;
+                                    }
                                     $("#popupMessage").html("Saved successfully");
                                     $('.popup').toggle("slide");
                                     $scope.loadingAddPromotionData = false;
