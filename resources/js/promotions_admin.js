@@ -117,7 +117,9 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         $scope.promotiondata["promo_title"] = "";
         $scope.promotiondata["offer_title"] = "";
         $scope.promotiondata["display_image"] = "";
-        $scope.promotiondata["demo_image"] = "";
+        $scope.promotiondata["promotionid"]="";
+        //$scope.promotiondata["demo_image"] = "";
+        console.log($scope.promotiondata.demo_image);
         $scope.getPrograms(null,null);
     }
 });
@@ -604,7 +606,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
             '<td class="half_td"><div class="save_close pull-left"><div class="add_btn pull-left">' +
             '<button type="button" ng-click="savePromotion()"><a href>Save</a></button>' +
             '</div>'+
-            '<div class="delete_btn pull-left" ng-hide="promotiondata.promotionid">' +
+            '<div class="delete_btn pull-left" ng-show="promotiondata.promotionid">' +
             '<button type="button" ng-click="cloneData()"><a href>Clone</a></button>' +
             '</div>'+
             '<div class="delete_btn pull-left">' +
@@ -763,7 +765,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 }
                             }
                             if (document.getElementById('uploadfile').files.length === 0) {
-                                delete $scope.newPromotion["image"];
+                                if($scope.promotiondata["demo_image"]){
+                                    var imageTemp={"name":$scope.promotiondata["demo_image"][0].name,"key":$scope.promotiondata["demo_image"][0].key};
+                                    $scope.newPromotion["image"] = [imageTemp];
+                                }
+                                else{
+                                    delete $scope.newPromotion["image"];
+                                }
                                 query.operations = [$scope.newPromotion];
                                 $scope.saveFunction(query);
                             }
@@ -809,9 +817,11 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                     var timeZone = new Date().getTimezoneOffset();
                                     if (callBackData.response.insert) {
                                         requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.insert[0]._id,"state": JSON.stringify({"timezone": timeZone})}
+                                        $scope.promotiondata.promotionid=callBackData.response.insert[0]._id;
                                     }
                                     else {
                                         requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id,"state": JSON.stringify({"timezone": timeZone})};
+                                        //$scope.promotiondata.promotionid=callBackData.response.update[0]._id;
                                     }
 
                                     $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "POST", "JSON", function (data) {
