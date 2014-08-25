@@ -121,6 +121,7 @@ cstore.controller('addPromotionCtrl', function ($scope, $appService, $routeParam
         //$scope.promotiondata["demo_image"] = "";
         console.log($scope.promotiondata.demo_image);
         $scope.getPrograms(null,null);
+        $scope.removeFile();
     }
 });
 
@@ -765,15 +766,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 }
                             }
                             if (document.getElementById('uploadfile').files.length === 0) {
-                                if($scope.promotiondata["demo_image"]){
-                                    var imageTemp={"name":$scope.promotiondata["demo_image"][0].name,"key":$scope.promotiondata["demo_image"][0].key};
-                                    $scope.newPromotion["image"] = [imageTemp];
-                                }
-                                else{
-                                    delete $scope.newPromotion["image"];
-                                }
+                                delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];
-                                delete $scope.newPromotion;
                                 $scope.saveFunction(query);
                             }
                             else {
@@ -790,7 +784,6 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                             $scope.newPromotion["display_image"] = data.response;
                                         }
                                         query.operations = [$scope.newPromotion];
-                                        delete $scope.newPromotion;
                                         $scope.saveFunction(query);
                                     }
                                     else {
