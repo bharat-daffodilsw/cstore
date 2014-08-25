@@ -22,7 +22,8 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
             "programid.promorate",
             "notes",
             "start_date_string",
-            "end_date_string"
+            "end_date_string",
+            "download_image"
         ];
         query.filter = {"_id": $routeParams.promoid};
         var timeZone = new Date().getTimezoneOffset();

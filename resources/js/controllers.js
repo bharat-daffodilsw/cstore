@@ -386,9 +386,13 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http,$r
         {name: "jpg"},
         {name: "png"}
     ];
-
+    $scope.imageServiceType = [
+        {name: "Phantom"},
+        {name: "GM"}
+    ];
     $scope.programdata = {};
     $scope.programdata["image_type"] = $scope.imageTypes[0];
+    $scope.programdata["image_service"] =$scope.imageServiceType[0];
     $scope.location = '';
     $scope.allAssignedSurveys = [];
     $scope.getURLParam = function (strParamName) {
@@ -1229,6 +1233,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http,$r
         $scope.programdata["promorate"] = "";
         $scope.programdata["participation_id"] = "";
         $scope.programdata["dpi"] = "";
+        $scope.programdata["image_service"] =$scope.imageServiceType[0];
     }
     $scope.clearOrderContent = function () {
         $scope.orderFilterData.start_date = "";
@@ -1466,7 +1471,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http,$r
     /****************multiSelectStoreFor Promotion*********************/
     $scope.getPrograms = function (programid, promotionid) {
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "aisle_html", "cooler_html"];
+        query.columns = ["name", "aisle_html", "cooler_html","image_service"];
         query.orders = {"name": "asc"};
         var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
         var serviceUrl = "/rest/data";

@@ -22,7 +22,7 @@ cstore.controller('programList', function ($scope, $appService) {
         $scope.loadingProgramData = true;
 
         var query = {"table": "program__cstore"};
-        query.columns = ["name", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type","promorate","dpi"];
+        query.columns = ["name","image_service", "image", "cooler_template", "aisle_template", "participation_id", "aisle_html", "cooler_html", "image_type","promorate","dpi"];
 
         if (column && searchText && column != "" && searchText != "") {
             query.filter = {};
@@ -164,6 +164,12 @@ cstore.directive('programList', ['$appService', function ($appService, $scope) {
                                 break;
                             }
                         }
+                        for (var i = 0; i < $scope.imageServiceType.length; i++) {
+                            if (program.image_service == $scope.imageServiceType[i].name) {
+                                $scope.programdata.image_service = $scope.imageServiceType[i];
+                                break;
+                            }
+                        }
                         if (program.image) {
                             $scope.oFile.fileExist = true;
                         }
@@ -212,20 +218,28 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.participation_id"></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"> <div class="margin_top">Aisle Html*</div> </td>' +
-            '<td class="product_image half_td"><div class="margin_top">Cooler Html*</div></td>' +
+            '<td class="half_td"> <div class="margin_top">Aisle HTML/JSON*</div> </td>' +
+            '<td class="product_image half_td"><div class="margin_top">Cooler HTML/JSON*</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"> <textarea ng-model="programdata.aisle_html" class="programTexarea"></textarea> </td>' +
             '<td class="product_image half_td"><textarea ng-model="programdata.cooler_html" class="programTexarea"></textarea></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><div class="margin_top">Image Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">Service Type</div></td>' +
             '<td class="half_td"><div class="margin_top">Promo Rate*</div></td>' +
             '</tr>' +
             '<tr>' +
-            '<td class="half_td"><image-type></image-type></td>' +
+            '<td class="half_td"><service-type></service-type></td>' +
             '<td class="half_td">$ <input style="width: 91%;" type="text" placeholder="" ng-model="programdata.promorate.amount"></td>' +
+            '</tr>' +
+            '<tr ng-show="programdata.image_service.name==\'Phantom\'">' +
+            '<td class="half_td"><div class="margin_top">Image Type</div></td>' +
+            '<td class="half_td"><div class="margin_top">DPI</div></td>' +
+            '</tr>' +
+            '<tr ng-show="programdata.image_service.name == \'Phantom\'">' +
+            '<td class="half_td"><image-type></image-type></td>' +
+            '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.dpi"></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Program Image*</div></td>' +
@@ -237,11 +251,9 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
             '</tr>' +
             '<tr>' +
             '<td class="half_td"><div class="margin_top">Aisle*</div></td>' +
-            '<td class="half_td"><div class="margin_top">DPI</div></td>' +
             '</tr>' +
             '<tr>' +
             '<td class="product_image half_td"><app-aisle-file-upload></app-aisle-file-upload></td>' +
-            '<td class="half_td"><input type="text" placeholder="" ng-model="programdata.dpi"></td>' +
             '</tr>'+
             '<tr>'+
             '<td class="half_td"><div class="save_close pull-left">' +
@@ -278,6 +290,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+
                             if (!$scope.programdata.participation_id) {
                                 $("#popupMessage").html("Please enter participation id");
                                 $('.popup').toggle("slide");
@@ -303,6 +316,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                                 $('.popup').toggle("slide");
                                 return false;
                             }
+
 //                            if (!regNumberOnly.test($scope.programdata.dpi)) {
 //                                $("#popupMessage").html("Please enter valid dpi");
 //                                $('.popup').toggle("slide");
@@ -320,6 +334,7 @@ cstore.directive('addProgram', ['$appService', function ($appService, $scope) {
                             $scope.newProgram["aisle_html"] = $scope.programdata.aisle_html;
                             $scope.newProgram["cooler_html"] = $scope.programdata.cooler_html;
                             $scope.newProgram["image_type"] = $scope.programdata.image_type.name;
+                            $scope.newProgram["image_service"] = $scope.programdata.image_service.name;
                             $scope.newProgram["promorate"] = {"amount": $scope.programdata.promorate.amount, "type": {"currency": "usd"}};
                             $scope.newProgram["dpi"] = $scope.programdata.dpi;
                             if (document.getElementById('uploadfile').files.length === 0) {
