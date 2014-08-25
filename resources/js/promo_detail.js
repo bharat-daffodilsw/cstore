@@ -31,7 +31,7 @@ cstore.controller('promoDetailCtrl', function ($scope, $appService, $routeParams
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (promotionDetailData) {
             $scope.loadingPromotionDetailData = false;
-            $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 350);
+            $scope.promotion = $appService.setUrls(promotionDetailData.response.data, 550, 540);
             $scope.assignedStoreManagers = promotionDetailData.response.data[0].store_manager_id;
             for (var i = 0; i < $scope.assignedStoreManagers.length; i++) {
                 if ($scope.assignedStoreManagers[i]._id == $scope.currentUser.data.storeid) {

@@ -11,7 +11,7 @@ cstore.controller('productDetailCtrl', function ($scope, $appService, $routePara
         var serviceUrl = "/rest/data";
         $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (productDetailData) {
             $scope.loadingProductDetailData = false;
-            $scope.product = $appService.setUrls(productDetailData.response.data, 550, 350);
+            $scope.product = $appService.setUrls(productDetailData.response.data, 550, 450);
         }, function (jqxhr, error) {
             $("#popupMessage").html(error);
             $('.popup').toggle("slide");
