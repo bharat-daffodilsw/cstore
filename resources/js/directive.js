@@ -857,6 +857,14 @@ cstore.directive('imageType', ['$appService', function ($appService, $scope) {
     }
 }]);
 
+cstore.directive('serviceType', ['$appService', function ($appService, $scope) {
+    return {
+        restrict: 'E',
+        template: '<select class="select_city"  ng-model="programdata.image_service" ng-options="type.name for type in imageServiceType"></select>'
+
+    }
+}]);
+
 cstore.directive('storeCountrySelect', ['$appService', function ($appService, $scope) {
     return {
         restrict: 'E',

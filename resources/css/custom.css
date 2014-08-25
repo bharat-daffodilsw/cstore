@@ -411,8 +411,8 @@ a:hover {
 }
 
 .img_product img,.img_promo img {
-    max-width: 550px;
-    max-height: 350px;
+    max-width: 99.9%;
+    max-height: 99.9%;
     margin: auto;
     position: absolute;
     left: 0;
@@ -912,8 +912,8 @@ tr {
 }
 
 .products_img img {
-    max-width: 291px;
-    max-height: 196px;
+    max-width: 99.9%;
+    max-height: 99.9%;
     margin: auto;
     position: absolute;
     left: 0;
@@ -2444,4 +2444,13 @@ label.multiSelect span:hover {
 li.active_store.pull-right:hover {
     background: none;
 }
-
+/*image width auto change*/
+div.products_img img{
+    width: auto ! important;
+}
+div.img_product img{
+    width: auto !important;
+}
+div.img_promo  img{
+   width: auto !important;
+}

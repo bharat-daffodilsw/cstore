@@ -51,7 +51,8 @@ cstore.controller('promotionCtrl', function ($scope, $appService) {
             "notes",
             "end_date_string",
             "start_date_string",
-            "upc_type"
+            "upc_type",
+            "download_image"
         ];
         query.filter = {};
         if ($scope.currentUser["data"]) {
@@ -172,8 +173,8 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
                     $scope.downloadDisplayImages = function () {
                         var downloadImages = [];
                         for (var i = 0; i < $scope.promotions.length; i++) {
-                            if ($scope.promotions[i].deleteStatus && $scope.promotions[i].display_image) {
-                                downloadImages.push('"'+$scope.promotions[i].display_image[0].key+'"');
+                            if ($scope.promotions[i].deleteStatus && $scope.promotions[i].download_image) {
+                                downloadImages.push('"'+$scope.promotions[i].download_image[0].key+'"');
                             }
                         }
                         if (downloadImages.length > 0) {
@@ -769,6 +770,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 delete $scope.newPromotion["image"];
                                 query.operations = [$scope.newPromotion];
                                 $scope.saveFunction(query);
+
                             }
                             else {
                                 var current_file = {};
@@ -818,8 +820,13 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                         requestBody = {"ask": ASK, "osk": OSK, "promoid": callBackData.response.update[0]._id,"state": JSON.stringify({"timezone": timeZone})};
                                         $scope.promotiondata.promotionid=callBackData.response.update[0]._id;
                                     }
-
-                                    $appService.getDataFromJQuery("/rest/create/image/cstore", requestBody, "POST", "JSON", function (data) {
+                                    var servicePath="";
+                                    if($scope.promotiondata.selectedProgram.image_service && $scope.promotiondata.selectedProgram.image_service == "Phantom" ){
+                                        servicePath="/rest/create/image/cstore";
+                                    }else if($scope.promotiondata.selectedProgram.image_service && $scope.promotiondata.selectedProgram.image_service == "GM"){
+                                        servicePath="/rest/create/gmimage/cstore";
+                                    }
+                                    $appService.getDataFromJQuery(servicePath, requestBody, "POST", "JSON", function (data) {
                                         if (data.code !== 200 && data.status != "ok") {
                                             $("#popupMessage").html("Error while creating image");
                                             $('.popup').toggle("slide");
