@@ -2444,4 +2444,13 @@ label.multiSelect span:hover {
 li.active_store.pull-right:hover {
     background: none;
 }
-
+/*image width auto change*/
+div.products_img img{
+    width: auto ! important;
+}
+div.img_product img{
+    width: auto !important;
+}
+div.img_promo  img{
+   width: auto !important;
+}
