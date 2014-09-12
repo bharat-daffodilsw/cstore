@@ -2243,6 +2243,8 @@ label.multiSelect span {
 
 .multiSelect .show {
     display: inline-block;
+    overflow: auto;
+    height: 300px;
 }
 
 .multiSelect .hide {
@@ -2295,10 +2297,10 @@ label.multiSelect span:hover {
     width:22px;
 }
 
-.multipleOuterDiv {
-    overflow: auto;
-    height: 180px;
-}
+/*.multipleOuterDiv {*/
+    /*overflow: auto;*/
+    /*height: 180px;*/
+/*}*/
 .multiSelect input { width: 62% !important;}
 .opt_button {
     margin-top: 0;
