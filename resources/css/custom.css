@@ -631,6 +631,20 @@ a:hover {
     right: 0px;
     z-index: 1000000;
 }
+.store_list{
+    margin-top: 5px!important;
+    right: 13px!important;
+    max-height: 450px;
+    overflow: auto;
+}
+li .activeUser a{
+    float: left;
+    width: 100%;
+    background-color: #000;
+    font-size: 17px;
+    color: #FFF!important;
+    text-decoration: none;
+}
 .site_menu {
     margin-left: 170px;
     top: 44px;
@@ -2424,11 +2438,12 @@ label.multiSelect span:hover {
     padding-top: 5px;
     /* padding-left: 10px; */
     text-overflow: ellipsis;
-    font-size: 14px;
+    font-size: 16px;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    color: red;
 }
 .activeUser {
     background-color: #000;

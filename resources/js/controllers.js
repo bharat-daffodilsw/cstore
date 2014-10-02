@@ -387,7 +387,7 @@ cstore.controller('mainCtrl', function ($scope, $appService, $location, $http,$r
         {name: "png"}
     ];
     $scope.imageServiceType = [
-        {name: "Phantom"},
+        // {name: "Phantom"},
         {name: "GM"}
     ];
     $scope.programdata = {};
