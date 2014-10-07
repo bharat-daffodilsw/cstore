@@ -95,10 +95,10 @@ cstore.directive('storeMenu', ['$appService', function ($appService, $scope) {
             '<li ng-click="inActivePromo()"><a active-link="active" href="#!/all-surveys" >Surveys</a></li>' +
             '<li ng-click="inActivePromo()"><a href ="#!/all-files" active-link="active">Files</a></li>'+
             '<li ng-click="clearOrderContent()"><a active-link="active" href="#!/orders">Orders</a></li>'+
-            '<li class="active_store pull-right">{{activeStore.storename}}</li>'+
-            '<li id="setup" class="active_store pull-right"><a href>My Sites</a><img src="images/sites_down_arrow.png">'+
+            '<li id="setup" class="active_store pull-right"><a href>My Sites</a><img style="width:16px;" src="images/sites_down_arrow.png">'+
             '<div class="setup store_list pull-left"><ul>'+
             '<li ng-repeat="assignedStore in userAssignedStores"ng-click="changeStore(assignedStore)" ng-class="{\'activeUser\': assignedStore.userActive}"><a href>{{assignedStore.storename}}</a></li>' +
+			'<li class="active_store pull-right">{{activeStore.storename}}</li>'+
             '</ul></div></li>'+
             '</ul></div>',
         compile: function () {
