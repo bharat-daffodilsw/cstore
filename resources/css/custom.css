@@ -2434,16 +2434,19 @@ label.multiSelect span:hover {
     cursor:pointer;
 }
 .enable_border {
-    /* border-top: 1px dotted #DDD; */
     padding-top: 5px;
-    /* padding-left: 10px; */
     text-overflow: ellipsis;
-    font-size: 16px;
+    font-size: 18px;
+	font-weight: bold;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: red;
+}
+.enable_checkbox {
+	width:16px;
+	height:16px;
 }
 .activeUser {
     background-color: #000;
