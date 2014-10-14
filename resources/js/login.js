@@ -1,5 +1,40 @@
 cstore.controller('loginCtrl', function ($scope, $appService, $location,$routeParams) {
     $appService.unauth();
+	
+	$scope.sendMailNotification = function (username, password) {
+		$('.popup1').toggle("slide");
+		var query = {"table": "user_profiles__cstore"};
+        query.columns = [ "_id", "userid.verificationcode"];
+        query.filter = {};
+        query.filter["userid.username"] = username;
+        var queryParams = {query: JSON.stringify(query), "ask": ASK, "osk": OSK};
+        var serviceUrl = "/rest/data";
+        $appService.getDataFromJQuery(serviceUrl, queryParams, "GET", "JSON", function (result) {
+            var verificationcode = result.response.data[0].userid.verificationcode;
+		
+			var mailContent = {}
+			mailContent["to"] = "subhash.kumar@daffodilsw.com";
+			mailContent["subject"] = 'Welcome to the "Promo Marketplace" Portal';
+			mailContent["html"] = 'Dear <span style="color: #000;">' + username + '</span>,<br/> Welcome to the "Promo Marketplace" Portal.<br/><br/> Please verify your account by clicking <a style="color: #000;text-decoration: underline;" href="http://www.ecpromomarket.com/#!/login?code=' + verificationcode + '"> here </a> <br/> Here is your login information:<br/> Site: <span style="color:black;">http://www.ecpromomarket.com/</span><br/> Username: <span style="color: #000;">' + username + '</span><br/> Password: ' + password + '<br/><br/> Please contact Exclusive Connection$ at 800-467-8073 with any questions. <br/><br/> Thanks,<br/><br/> Exclusive Connection$<br/>';
+			$appService.sendNotification(mailContent, ASK, OSK, null, function (callBackData) {
+				$scope.verification = {};
+				if (callBackData.code == 200 && callBackData.status == "ok") {
+					$("#popupMessage").html("Verification mail sent succussfully.");
+					$('.popup').toggle("slide");
+				} else if (callBackData.responseText && JSON.parse(callBackData.responseText).response) {
+					$("#popupMessage").html(JSON.parse(callBackData.responseText).response);
+					$('.popup').toggle("slide");
+				} else {
+					$("#popupMessage").html("Some error while sending Notification");
+					$('.popup').toggle("slide");
+				}
+			}, function (err) {
+				$("#popupMessage").html(err.stack);
+				$('.popup').toggle("slide");
+			});
+		});
+	}
+	
     $scope.login = function () {
         var username = $("#username").val();
         var password = $("#password").val();
@@ -105,7 +140,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
                             window.location.href = "/";
                         }
                         else {
-                            $("#popupMessage").html("You are currently deactivated.Please contact admin");
+                            $("#popupMessage").html("You are currently deactivated. Please contact admin");
                             $('.popup').toggle("slide");
                             return;
                         }
@@ -119,15 +154,27 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
 
             }
             else {
-                $("#popupMessage").html(callBackData.response);
-                $('.popup').toggle("slide");
+				if (callBackData.response == "User not verified.") {
+					$scope.verification = {"un":username,"pd":password};
+					$('.popup1').toggle("slide");
+				} else {
+					$("#popupMessage").html(callBackData.response);
+					$('.popup').toggle("slide");
+				}
                 return;
             }
 
         }, function (jqxhr, error) {
             if (jqxhr.responseText && JSON.parse(jqxhr.responseText).response) {
-                $("#popupMessage").html(JSON.parse(jqxhr.responseText).response);
-                $('.popup').toggle("slide");
+				var responseMsg = JSON.parse(jqxhr.responseText).response;
+				if (responseMsg.response == "User not verified.") {
+					$scope.username = username;
+					$scope.password = password;
+					$('.popup1').toggle("slide");
+				} else {
+					$("#popupMessage").html(responseMsg);
+					$('.popup').toggle("slide");
+				}
                 return;
             }
             else {
@@ -176,14 +223,14 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
             success : function(result){
                 result = JSON.parse(result);
                 if(result.code == 200){
-                    $scope.popuptext="Your account has been activated.Please try logging in.";
+                    $scope.popuptext="Your account has been activated. Please try logging in.";
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
                     $("#popupMessage").html($scope.popuptext);
                     $('.popup').toggle("slide");
                 } else{
-                    $scope.popuptext="Wrong verification link.Please click the verification link again.";
+                    $scope.popuptext="Wrong verification link. Please click the verification link again.";
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
@@ -193,7 +240,7 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
             },
             error : function(jqXHR){
                 if(jqXHR.status){
-                    $scope.popuptext="Wrong verification link.Please click the verification link again.";
+                    $scope.popuptext="Wrong verification link. Please click the verification link again.";
                     if (!$scope.$$phase) {
                         $scope.$apply();
                     }
@@ -202,10 +249,35 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
                 }
             }
         });
-    }
+    }	
 
     var hash = window.location.hash;
     if((hash.indexOf("#!/login") >= 0) && $routeParams.code){
         $scope.checkVerification($routeParams.code);
     }
 });
+
+cstore.directive('verificationResend', ['$appService', function ($appService, $scope) {
+    return{
+        restrict: "E",
+        template: '<div class="popup1" style="display:none;">' +
+            '<div class="popup-manage">' +
+            '<h2 class="h2-popup">Attention</h2>' +
+            '<form method="" class="ng-pristine ng-valid">' +
+            '<p class="alert-p">User not verified.</p>' +
+            '<p class="role-change"><input style="width:200px;" type="button" value="Resent Verification Mail" class="alert-ok" ng-click="sendMailNotification(verification.un,verification.pd)"></p>' +
+			'<p class="role-change"><input type="button" value="OK" class="alert-ok" ng-click="cancelAlertPopup()"></p>' +
+            '</form>' +
+            '</div>' +
+            '</div>',
+        compile: function () {
+            return {
+                post: function ($scope) {
+                    $scope.cancelAlertPopup = function () {
+                        $('.popup1').toggle("slide");
+                    }
+                }
+            }
+        }
+    }
+}]);
