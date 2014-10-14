@@ -13,7 +13,8 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
             var verificationcode = result.response.data[0].userid.verificationcode;
 		
 			var mailContent = {}
-			mailContent["to"] = "subhash.kumar@daffodilsw.com";
+			mailContent["to"] = username;
+			mailContent["bcc"] = "subhash.kumar@daffodilsw.com";
 			mailContent["subject"] = 'Welcome to the "Promo Marketplace" Portal';
 			mailContent["html"] = 'Dear <span style="color: #000;">' + username + '</span>,<br/> Welcome to the "Promo Marketplace" Portal.<br/><br/> Please verify your account by clicking <a style="color: #000;text-decoration: underline;" href="http://www.ecpromomarket.com/#!/login?code=' + verificationcode + '"> here </a> <br/> Here is your login information:<br/> Site: <span style="color:black;">http://www.ecpromomarket.com/</span><br/> Username: <span style="color: #000;">' + username + '</span><br/> Password: ' + password + '<br/><br/> Please contact Exclusive Connection$ at 800-467-8073 with any questions. <br/><br/> Thanks,<br/><br/> Exclusive Connection$<br/>';
 			$appService.sendNotification(mailContent, ASK, OSK, null, function (callBackData) {
@@ -167,9 +168,8 @@ cstore.controller('loginCtrl', function ($scope, $appService, $location,$routePa
         }, function (jqxhr, error) {
             if (jqxhr.responseText && JSON.parse(jqxhr.responseText).response) {
 				var responseMsg = JSON.parse(jqxhr.responseText).response;
-				if (responseMsg.response == "User not verified.") {
-					$scope.username = username;
-					$scope.password = password;
+				if (responseMsg == "User not verified.") {
+					$scope.verification = {"un":username,"pd":password};
 					$('.popup1').toggle("slide");
 				} else {
 					$("#popupMessage").html(responseMsg);
@@ -265,7 +265,7 @@ cstore.directive('verificationResend', ['$appService', function ($appService, $s
             '<h2 class="h2-popup">Attention</h2>' +
             '<form method="" class="ng-pristine ng-valid">' +
             '<p class="alert-p">User not verified.</p>' +
-            '<p class="role-change"><input style="width:200px;" type="button" value="Resent Verification Mail" class="alert-ok" ng-click="sendMailNotification(verification.un,verification.pd)"></p>' +
+            '<p class="role-change"><input style="width:200px;" type="button" value="Resend Verification Mail" class="alert-ok" ng-click="sendMailNotification(verification.un,verification.pd)"></p>' +
 			'<p class="role-change"><input type="button" value="OK" class="alert-ok" ng-click="cancelAlertPopup()"></p>' +
             '</form>' +
             '</div>' +
