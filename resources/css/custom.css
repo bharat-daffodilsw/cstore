@@ -2452,6 +2452,10 @@ label.multiSelect span:hover {
 	width:20px;
 	height:20px;
 }
+.enable_checkbox {
+	width:16px;
+	height:16px;
+}
 .activeUser {
     background-color: #000;
 }

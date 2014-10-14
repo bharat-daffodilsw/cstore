@@ -75,7 +75,7 @@ cstore.directive('allPromos', ['$appService', function ($appService, $scope) {
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date_string}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div>' +
-            '<div class="Qty"><div class="enable_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/> </div></div>' +
+            '<div class="Qty"><div class="enable_border">Enable Promotion: <input class="enable_checkbox" type="checkbox" ng-model="promotion.store_manager_id.opt" ng-click="getOptData($index)"/></div></div>' +
             '</div>'+
             '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
             '</div></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
@@ -371,7 +371,7 @@ cstore.directive('disabledPromos', ['$appService', function ($appService, $scope
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>End Date</b></div> : {{promotion.end_date_string}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Threshold</b></div> : {{promotion.threshold}}</div>' +
             '<div class="promo_details"><div class="left_align_promo pull-left"><b>Reward Value</b></div>: {{promotion.reward_value.amount | currency}}</div></div>' +
-            '<div class="Qty"><div class="enable_border">Enable: <input type="checkbox" ng-model="promotion.store_manager_id.opt"/> </div></div>' +
+            '<div class="Qty"><div class="enable_border">Enable Promotion: <input class="enable_checkbox" type="checkbox" ng-model="promotion.store_manager_id.opt"/></div></div>' +
             '<div class="add_to_cart" ng-click="addPromoToCart(promotion)"><a href>Add To Cart</a></div>'+
             '</div></div></div><div class="loadingImage" ng-hide="!promotionData.loadingData"><img src="images/loading.gif"></div>',
         compile: function () {
