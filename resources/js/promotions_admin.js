@@ -233,7 +233,8 @@ cstore.directive('promotionList', ['$appService', function ($appService,$http, $
                                     $scope.$apply();
                                 }
                             }, function (err) {
-                                $("#popupMessage").html(err);
+								var msg = err.stack ? err.stack : (err.responseJSON && err.responseJSON.stack ? err.responseJSON.stack : "Unknown error took place.");
+                                $("#popupMessage").html(msg);
                                 $('.popup').toggle("slide");
                             });
                         }
@@ -827,6 +828,7 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                         servicePath="/rest/create/gmimage/cstore";
                                     }
                                     $appService.getDataFromJQuery(servicePath, requestBody, "POST", "JSON", function (data) {
+									
                                         if (data.code !== 200 && data.status != "ok") {
                                             $("#popupMessage").html("Error while creating image");
                                             $('.popup').toggle("slide");
@@ -848,7 +850,8 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                             }
                                         }
                                     }, function (err) {
-                                        $("#popupMessage").html(err.stack);
+										var msg = err.stack ? err.stack : (err.responseJSON && err.responseJSON.stack ? err.responseJSON.stack : "Unknown error took place.");
+                                        $("#popupMessage").html(msg);
                                         $('.popup').toggle("slide");
                                         $scope.loadingAddPromotionData = false;
 
@@ -887,10 +890,10 @@ cstore.directive('addPromotion', ['$appService', function ($appService, $scope) 
                                 $scope.$apply();
                             }
                         }, function (err) {
-                            $("#popupMessage").html(err.stack);
+							var msg = err.stack ? err.stack : (err.responseJSON && err.responseJSON.stack ? err.responseJSON.stack : "Unknown error took place.");
+                            $("#popupMessage").html(msg);
                             $('.popup').toggle("slide");
                             $scope.loadingAddPromotionData = false;
-
                         });
                     }
 
